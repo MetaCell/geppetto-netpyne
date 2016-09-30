@@ -57,7 +57,7 @@ define(function (require) {
 
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', {pythonNotebookPath: "http://localhost:8888/notebooks/code/geppetto-luna-code/org.geppetto.python/jupyter-frontend/geppetto_demo.ipynb"}, document.getElementById("pythonConsole"));
 		
-		require('geppetto/js/components/jupyter/GeppettoJupyter');
+		require('components/jupyter/GeppettoJupyter');
 		
 		GEPPETTO.G.setIdleTimeOut(-1);
 
