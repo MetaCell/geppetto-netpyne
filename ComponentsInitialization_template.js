@@ -53,7 +53,7 @@ define(function (require) {
 		$("#sim").css("background-color","#3e2723");
 		
 		//Create python console
-		var pythonNotebookPath = "";
+		var pythonNotebookPath = "http://localhost:8888/notebooks/Untitled.ipynb?kernel_name=python3";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', {pythonNotebookPath: pythonNotebookPath}, document.getElementById("pythonConsole"));
 		
         //Remove idle time out warning
