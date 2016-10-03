@@ -53,7 +53,7 @@ define(function (require) {
 		$("#sim").css("background-color","#3e2723");
 		
 		//Create python console
-		var pythonNotebookPath = "";
+		var pythonNotebookPath = "http://localhost:8888/notebooks/code/libs/neuron-ui-demo.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', {pythonNotebookPath: pythonNotebookPath}, document.getElementById("pythonConsole"));
 		
         //Remove idle time out warning
