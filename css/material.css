@@ -274,7 +274,7 @@ input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit
     color: #d1d1d1
 }
 
-input:not([type]),input[type=text],input[type=password],input[type=email],input[type=url],input[type=time],input[type=date],input[type=datetime],input[type=datetime-local],input[type=tel],input[type=number],input[type=search],textarea.materialize-textarea {
+input:not([type]),.material input[type=text],input[type=password],input[type=email],input[type=url],input[type=time],input[type=date],input[type=datetime],input[type=datetime-local],input[type=tel],input[type=number],input[type=search],textarea.materialize-textarea {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid #9e9e9e;
@@ -7540,7 +7540,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 nav a {
-    -webkit-font-smoothing: antialiased 
+    -webkit-font-smoothing: antialiased
 }
 
 nav ul li a:hover,nav ul li.active {
