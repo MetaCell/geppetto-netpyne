@@ -92,7 +92,8 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
 
         //Add geppetto jupyter connector
-        require('components/jupyter/GeppettoJupyter');
-
+        require('components/geppetto-jupyter/GeppettoJupyterModelSync');
+        require('components/geppetto-jupyter/GeppettoJupyterGUISync');
+        require('components/geppetto-jupyter/GeppettoJupyterWidgetSync');
     };
 });
