@@ -36,9 +36,12 @@ define(function (require) {
 
             GEPPETTO.ControlPanel.setColumns(['variablePath', 'controls']);
 
-            GEPPETTO.ControlPanel.setDataFilter(function (entities) {
-
-                return window.Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesOfMetaType(GEPPETTO.Resources.STATE_VARIABLE_TYPE));
+            GEPPETTO.ControlPanel.setDataFilter(function () {
+                var filteredData = []
+                if (window.Instances && window.Instances.length > 0 ){
+                    filteredData = window.Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesOfMetaType(GEPPETTO.Resources.STATE_VARIABLE_TYPE));
+                }
+                return filteredData;
             });
             GEPPETTO.ControlPanel.setControlsConfig({
                 "VisualCapability": {},
