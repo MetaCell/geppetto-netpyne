@@ -9,36 +9,36 @@ define(function (require) {
         document.getElementsByTagName("head")[0].appendChild(link);
 
         //Logo initialization
-        GEPPETTO.ComponentFactory.addComponent('LOGO', {logo: 'gpt-gpt_logo'}, document.getElementById("geppettologo"));
+        GEPPETTO.ComponentFactory.addComponent('LOGO', { logo: 'gpt-gpt_logo' }, document.getElementById("geppettologo"));
 
         //Control panel initialization
-        GEPPETTO.ComponentFactory.addComponent('CONTROLPANEL', {}, document.getElementById("controlpanel"), function(){
+        GEPPETTO.ComponentFactory.addComponent('CONTROLPANEL', {}, document.getElementById("controlpanel"), function () {
 
 
             GEPPETTO.ControlPanel.setColumnMeta([
-            {"columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()"},
-            {
-                "columnName": "variablePath",
-                "order": 2,
-                "locked": false,
-                "displayName": "Variable",
-                "source": "$entity$.getName()"
-            },
-            {
-                "columnName": "controls",
-                "order": 4,
-                "locked": false,
-                "customComponent": GEPPETTO.ControlsComponent,
-                "displayName": "Controls",
-                "source": "",
-                "action": "GEPPETTO.ControlPanel.refresh();"
-            }]);
+                { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
+                {
+                    "columnName": "variablePath",
+                    "order": 2,
+                    "locked": false,
+                    "displayName": "Variable",
+                    "source": "$entity$.getName()"
+                },
+                {
+                    "columnName": "controls",
+                    "order": 4,
+                    "locked": false,
+                    "customComponent": GEPPETTO.ControlsComponent,
+                    "displayName": "Controls",
+                    "source": "",
+                    "action": "GEPPETTO.ControlPanel.refresh();"
+                }]);
 
             GEPPETTO.ControlPanel.setColumns(['variablePath', 'controls']);
 
             GEPPETTO.ControlPanel.setDataFilter(function () {
                 var filteredData = []
-                if (window.Instances && window.Instances.length > 0 ){
+                if (window.Instances && window.Instances.length > 0) {
                     filteredData = window.Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesOfMetaType(GEPPETTO.Resources.STATE_VARIABLE_TYPE));
                 }
                 return filteredData;
@@ -55,23 +55,30 @@ define(function (require) {
                     }
                 }
             });
-            GEPPETTO.ControlPanel.setControls({"VisualCapability": [], "Common": ['plot']});
+            GEPPETTO.ControlPanel.setControls({ "VisualCapability": [], "Common": ['plot'] });
 
             GEPPETTO.ControlPanel.addData(window.Instances);
 
-            GEPPETTO.on(Events.Model_loaded,function(){
+            GEPPETTO.on(Events.Model_loaded, function () {
                 GEPPETTO.ControlPanel.refresh();
             });
 
 
         });
 
+
+        // GEPPETTO.on(Events.Select, function (instance) {
+        //     G.addWidget(0).plotData(instance.getChildren()[0]);
+        // });
+
+
+
         //Spotlight initialization
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"));
 
         //Create python console
         var pythonNotebookPath = "http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb";
-        GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', {pythonNotebookPath: pythonNotebookPath}, document.getElementById("pythonConsole"));
+        GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         //Experiments table initialization
         GEPPETTO.ComponentFactory.addComponent('EXPERIMENTSTABLE', {}, document.getElementById("experiments"));
@@ -80,7 +87,7 @@ define(function (require) {
         GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', {}, document.getElementById("sim-toolbar"));
 
         //Foreground initialization
-        GEPPETTO.ComponentFactory.addComponent('FOREGROUND', {dropDown: false}, document.getElementById("foreground-toolbar"));
+        GEPPETTO.ComponentFactory.addComponent('FOREGROUND', { dropDown: false }, document.getElementById("foreground-toolbar"));
 
 
 
@@ -98,5 +105,7 @@ define(function (require) {
         require('components/geppetto-jupyter/GeppettoJupyterModelSync');
         require('components/geppetto-jupyter/GeppettoJupyterGUISync');
         require('components/geppetto-jupyter/GeppettoJupyterWidgetSync');
+
+
     };
 });
