@@ -66,13 +66,6 @@ define(function (require) {
 
         });
 
-
-        // GEPPETTO.on(Events.Select, function (instance) {
-        //     G.addWidget(0).plotData(instance.getChildren()[0]);
-        // });
-
-
-
         //Spotlight initialization
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"));
 
@@ -86,12 +79,11 @@ define(function (require) {
         //Simulation controls initialization
         GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', {}, document.getElementById("sim-toolbar"));
 
+        //Camera controls initialization
+		GEPPETTO.ComponentFactory.addComponent('CAMERACONTROLS', {}, document.getElementById("camera-controls"));
+
         //Foreground initialization
         GEPPETTO.ComponentFactory.addComponent('FOREGROUND', { dropDown: false }, document.getElementById("foreground-toolbar"));
-
-
-
-
 
         //Customise layout
         $("#github").hide();
