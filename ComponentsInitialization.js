@@ -171,7 +171,6 @@ define(function (require) {
 
         //Customise layout
         $("#github").hide();
-        $("#sim").css("background-color", "#3e2723");
 
 
         //Remove idle time out warning
