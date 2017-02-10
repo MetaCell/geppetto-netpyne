@@ -128,7 +128,7 @@ define(function (require) {
         }, document.getElementById("ControlsMenuButton"), function(comp){window.controlsMenuButton = comp;});
 
         //Simulation controls initialization
-        GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', {}, document.getElementById("sim-toolbar"));
+        GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', { hideRun: true }, document.getElementById("sim-toolbar"));
 
         //Camera controls initialization
 		GEPPETTO.ComponentFactory.addComponent('CAMERACONTROLS', {}, document.getElementById("camera-controls"));
