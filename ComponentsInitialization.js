@@ -19,59 +19,26 @@ define(function (require) {
         GEPPETTO.ComponentFactory.addComponent('LOGO', { logo: 'gpt-gpt_logo' }, document.getElementById("geppettologo"));
 
         //Control panel initialization
-        GEPPETTO.ComponentFactory.addComponent('CONTROLPANEL', {}, document.getElementById("controlpanel"), function () {
+        GEPPETTO.ComponentFactory.addComponent('CONTROLPANEL', {
+                useBuiltInFilters: true,
+                listenToInstanceCreationEvents: false,
+                enablePagination:true,
+                resultsPerPage: 10
+            }, document.getElementById("controlpanel"),
+            function () {
+                // whatever gets passed we keep
+                var passThroughDataFilter = function (entities) {
+                    return entities;
+                };
 
-
-            GEPPETTO.ControlPanel.setColumnMeta([
-                { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
-                {
-                    "columnName": "variablePath",
-                    "order": 2,
-                    "locked": false,
-                    "displayName": "Variable",
-                    "source": "$entity$.getName()"
-                },
-                {
-                    "columnName": "controls",
-                    "order": 4,
-                    "locked": false,
-                    "customComponent": GEPPETTO.ControlsComponent,
-                    "displayName": "Controls",
-                    "source": "",
-                    "action": "GEPPETTO.ControlPanel.refresh();"
-                }]);
-
-            GEPPETTO.ControlPanel.setColumns(['variablePath', 'controls']);
-
-            GEPPETTO.ControlPanel.setDataFilter(function () {
-                var filteredData = []
-                if (window.Instances && window.Instances.length > 0) {
-                    filteredData = window.Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesOfMetaType(GEPPETTO.Resources.STATE_VARIABLE_TYPE));
-                }
-                return filteredData;
-            });
-            GEPPETTO.ControlPanel.setControlsConfig({
-                "VisualCapability": {},
-                "Common": {
-                    "plot": {
-                        "id": "plot",
-                        "actions": ["G.addWidget(0).plotData($instance$).setSize(273.8,556.8).setPosition(130,35).setName($instance$.getPath());"],
-                        "icon": "fa-area-chart",
-                        "label": "Plot",
-                        "tooltip": "Plot variable"
-                    }
-                }
-            });
-            GEPPETTO.ControlPanel.setControls({ "VisualCapability": [], "Common": ['plot'] });
-
-            GEPPETTO.ControlPanel.addData(window.Instances);
-
-            GEPPETTO.on(Events.Model_loaded, function () {
-                GEPPETTO.ControlPanel.refresh();
+                // set data filter
+                GEPPETTO.ControlPanel.setDataFilter(passThroughDataFilter);
             });
 
-
+        GEPPETTO.on(Events.Model_loaded, function () {
+            GEPPETTO.ControlPanel.refresh();
         });
+
 
         //Spotlight initialization
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"));
