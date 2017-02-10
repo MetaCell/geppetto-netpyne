@@ -83,26 +83,25 @@ define(function (require) {
         //Experiments table initialization
         GEPPETTO.ComponentFactory.addComponent('EXPERIMENTSTABLE', {}, document.getElementById("experiments"));
 
-        window.getRecordedMembranePotentials = function() {
+        window.getAllWatchedVariable = function(){
             return Project.getActiveExperiment().getWatchedVariables(true, false);
-            // var instances = Project.getActiveExperiment().getWatchedVariables(true, false);
-            // var v = [];
-            // for (var i = 0; i < instances.length; i++) {
-            //     if (instances[i].getInstancePath().endsWith(".v")) {
-            //         v.push(instances[i]);
-            //     }
-            // }
-            // return v;
-        };
+        }
 
-        // window.addBrightnessFunction = function(){
-        //     for(var membranePotentialsIndex in window.getRecordedMembranePotentials()){
-        //         //modulation = statevariable
-        //         //instance =geometry
-        //             G.addBrightnessListener(instance, modulation, normalizationFunction)
+        window.removeBrightnessFunction = function(){
+            G.removeBrightnessFunctionBulkSimplified(getAllWatchedVariable(),false);
+        }
 
-        //             }
-        // }
+        window.addBrightnessFunction = function(){
+            var watchedVariables = getAllWatchedVariable();
+            for(var membranePotentialsIndex in watchedVariables){
+                var membranePotential = watchedVariables[membranePotentialsIndex]
+                var geometries = membranePotential.getVariable().getWrappedObj().geometries;
+                for (var geometryIndex in geometries){
+                    G.addBrightnessListener(geometries[geometryIndex], membranePotential, function(x){return ((x/1000)+0.07)/0.1;});
+                }
+            }
+            G.brightnessFunctionSet = true;
+        }
 
         var configuration = {
             id: "controlsMenuButton",
@@ -140,11 +139,12 @@ define(function (require) {
                 condition: "GEPPETTO.G.isBrightnessFunctionSet()",
                 value: "apply_voltage",
                 false: {
-                    action: "G.addBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(), function(x){return (x+0.07)/0.1;});"
-                    
+                    // action: "G.addBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(), function(x){return (x+0.07)/0.1;});"
+                    action: "window.addBrightnessFunction()"
                 },
                 true: {
-                    action: "G.removeBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(),false);"
+                    //action: "G.removeBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(),false);"
+                    action: "window.removeBrightnessFunction()"
                 }
             }, {
                 label: "Show simulation time",
