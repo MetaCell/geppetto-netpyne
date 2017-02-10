@@ -83,8 +83,7 @@ define(function (require) {
                 right: 550
             },
             menuSize: {
-                height: "auto",
-                width: 300
+                height: "auto"
             },
             menuItems: [{
                 label: "Plot all recorded variables",
