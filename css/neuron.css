@@ -8,5 +8,4 @@
 
 .controlsMenuButton:disabled {
 	background: 0;
-	color: @orange;
 }
