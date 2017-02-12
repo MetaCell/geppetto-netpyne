@@ -54,6 +54,10 @@ define(function (require) {
             return Project.getActiveExperiment().getWatchedVariables(true, false);
         }
 
+        window.removeAllPanels = function(){
+            $(".fa-close").parent().click();
+        }
+
         window.removeBrightnessFunction = function(){
             G.removeBrightnessFunctionBulkSimplified(getAllWatchedVariable(),false);
         }
