@@ -83,6 +83,37 @@ define(function (require) {
                 });
         };
 
+        window.customJupyterModelLoad = function(module,model){
+
+            // Close any previous panel
+            window.removeAllPanels();
+
+            GEPPETTO.trigger(window.Events.Show_spinner, "Initialising NEURON");
+
+            window.IPython.notebook.restart_kernel({confirm: false}).then(function() {
+
+                // IPython.notebook.execute_all_cells();
+
+                // Load Neuron Basic GUI
+                // FIXME This is NEURON specific and should move elsewhere
+                var kernel = IPython.notebook.kernel;
+                kernel.execute('import neuron_geppetto');
+                kernel.execute('neuron_geppetto.init()');
+
+                kernel.execute('from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync');
+                // Load Model
+                if (module != undefined && module != "" && model != undefined  && model != ""){
+                    kernel.execute('import importlib');
+                    kernel.execute('python_module = importlib.import_module("models.' + module +'")');
+                    kernel.execute('GeppettoJupyterModelSync.current_python_model = getattr( python_module, "' + model + '")()');
+                    kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
+                }
+                else{
+                    kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
+                }
+            });
+        }
+
         var configuration = {
             id: "controlsMenuButton",
             openByDefault: false,
