@@ -52,15 +52,15 @@ define(function (require) {
 
         window.getAllWatchedVariable = function(){
             return Project.getActiveExperiment().getWatchedVariables(true, false);
-        }
+        };
 
         window.removeAllPanels = function(){
             $(".fa-close").parent().click();
-        }
+        };
 
         window.removeBrightnessFunction = function(){
             G.removeBrightnessFunctionBulkSimplified(getAllWatchedVariable(),false);
-        }
+        };
 
         window.addBrightnessFunction = function(){
             var watchedVariables = getAllWatchedVariable();
@@ -72,7 +72,16 @@ define(function (require) {
                 }
             }
             G.brightnessFunctionSet = true;
-        }
+        };
+
+        window.plotAllRecordedVariables = function() {
+            Project.getActiveExperiment().playAll();
+            var plt = G.addWidget(0).setName('Recorded Variables');
+            $.each(Project.getActiveExperiment().getWatchedVariables(true, false),
+                function(index, value) {
+                    plt.plotData(value)
+                });
+        };
 
         var configuration = {
             id: "controlsMenuButton",
