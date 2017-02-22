@@ -35,7 +35,7 @@ define(function (require) {
                 GEPPETTO.ControlPanel.setDataFilter(passThroughDataFilter);
             });
 
-        GEPPETTO.on(Events.Model_loaded, function () {
+        GEPPETTO.on(GEPPETTO.Events.Model_loaded, function () {
             GEPPETTO.ControlPanel.refresh();
         });
 
