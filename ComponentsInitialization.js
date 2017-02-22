@@ -88,7 +88,7 @@ define(function (require) {
             // Close any previous panel
             window.removeAllPanels();
 
-            GEPPETTO.trigger(window.Events.Show_spinner, "Initialising NEURON");
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NEURON");
 
             window.IPython.notebook.restart_kernel({confirm: false}).then(function() {
 
@@ -166,7 +166,7 @@ define(function (require) {
 
 
         //Home button initialization
-         GEPPETTO.ComponentFactory.addComponent('CONTROLSMENUBUTTON', {
+         GEPPETTO.ComponentFactory.addComponent('MENUBUTTON', {
                 configuration: configuration
         }, document.getElementById("ControlsMenuButton"), function(comp){window.controlsMenuButton = comp;});
 
