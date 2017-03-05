@@ -187,9 +187,9 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
 
         //Add geppetto jupyter connector
-        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/components/geppetto-jupyter/GeppettoJupyterModelSync');
-        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/components/geppetto-jupyter/GeppettoJupyterGUISync');
-        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/components/geppetto-jupyter/GeppettoJupyterWidgetSync');
+        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
+        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
 
 
     };
