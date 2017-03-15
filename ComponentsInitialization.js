@@ -185,6 +185,7 @@ define(function (require) {
 
         //Remove idle time out warning
         GEPPETTO.G.setIdleTimeOut(-1);
+        GEPPETTO.SceneController.setLinesThreshold(20000);
 
         //Add geppetto jupyter connector
         require('components/geppetto-jupyter/GeppettoJupyterModelSync');
