@@ -44,7 +44,7 @@ define(function (require) {
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"));
 
         //Create python console
-        var pythonNotebookPath = "http://"+window.location.hostname+":"+window.location.port+"/notebooks/libs/neuron-ui-demo.ipynb";
+        var pythonNotebookPath = "http://"+window.location.hostname+":"+window.location.port+"/notebooks/neuron_ui/neuron-ui-demo.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         //Experiments table initialization
