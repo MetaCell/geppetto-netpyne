@@ -189,9 +189,9 @@ define(function (require) {
         GEPPETTO.SceneController.setLinesThreshold(20000);
 
         //Add geppetto jupyter connector
-        require('../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
-        require('../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
-        require('../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
+        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
+        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
 
 
     };
