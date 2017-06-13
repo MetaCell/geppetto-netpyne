@@ -44,7 +44,7 @@ define(function (require) {
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"));
 
         //Create python console
-        var pythonNotebookPath = "http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb";
+        var pythonNotebookPath = "http://"+window.location.hostname+":"+window.location.port+"/notebooks/neuron-ui-demo.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         //Experiments table initialization
@@ -97,14 +97,15 @@ define(function (require) {
                 // Load Neuron Basic GUI
                 // FIXME This is NEURON specific and should move elsewhere
                 var kernel = IPython.notebook.kernel;
-                kernel.execute('import neuron_geppetto');
+                kernel.execute('from neuron_ui import neuron_geppetto');
                 kernel.execute('neuron_geppetto.init()');
 
-                kernel.execute('from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync');
+                // kernel.execute('from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync');
+                kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
                 // Load Model
                 if (module != undefined && module != "" && model != undefined  && model != ""){
                     kernel.execute('import importlib');
-                    kernel.execute('python_module = importlib.import_module("models.' + module +'")');
+                    kernel.execute('python_module = importlib.import_module("neuron_ui.models.' + module +'")');
                     kernel.execute('GeppettoJupyterModelSync.current_python_model = getattr( python_module, "' + model + '")()');
                     kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
                 }
@@ -185,6 +186,7 @@ define(function (require) {
 
         //Remove idle time out warning
         GEPPETTO.G.setIdleTimeOut(-1);
+        GEPPETTO.SceneController.setLinesThreshold(20000);
 
         //Add geppetto jupyter connector
         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
