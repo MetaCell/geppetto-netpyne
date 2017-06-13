@@ -59,7 +59,7 @@ define(function (require) {
         };
 
         window.removeBrightnessFunction = function(){
-            G.removeBrightnessFunctionBulkSimplified(getAllWatchedVariable(),false);
+            GEPPETTO.SceneController.removeColorFunction(GEPPETTO.SceneController.getColorFunctionInstances());
         };
 
         window.addBrightnessFunction = function(){
@@ -68,10 +68,9 @@ define(function (require) {
                 var membranePotential = watchedVariables[membranePotentialsIndex]
                 var geometries = membranePotential.getVariable().getWrappedObj().geometries;
                 for (var geometryIndex in geometries){
-                    G.addBrightnessListener(geometries[geometryIndex], membranePotential, function(x){return ((x/1000)+0.07)/0.1;});
+                    GEPPETTO.SceneController.addColorFunction(geometries[geometryIndex], membranePotential, function(x){return ((x/1000)+0.07)/0.1;});
                 }
             }
-            G.brightnessFunctionSet = true;
         };
 
         window.plotAllRecordedVariables = function() {
@@ -147,7 +146,8 @@ define(function (require) {
                 value: "play_speed_100"
             }, {
                 label: "Apply voltage colouring to morphologies",
-                condition: "GEPPETTO.G.isBrightnessFunctionSet()",
+                radio: true,
+                condition: "GEPPETTO.SceneController.getColorFunctionInstances().length > 0",
                 value: "apply_voltage",
                 false: {
                     // action: "G.addBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(), function(x){return (x+0.07)/0.1;});"
