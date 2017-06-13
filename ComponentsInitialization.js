@@ -174,8 +174,10 @@ define(function (require) {
         //Simulation controls initialization
         GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', { hideRun: true }, document.getElementById("sim-toolbar"));
 
-        //Camera controls initialization
-		GEPPETTO.ComponentFactory.addComponent('CAMERACONTROLS', {}, document.getElementById("camera-controls"));
+		//Canvas initialisation
+		GEPPETTO.ComponentFactory.addComponent('CANVAS', {}, document.getElementById("sim"), function () {
+            this.displayAllInstances();
+        });
 
         //Foreground initialization
         GEPPETTO.ComponentFactory.addComponent('FOREGROUND', { dropDown: false }, document.getElementById("foreground-toolbar"));
