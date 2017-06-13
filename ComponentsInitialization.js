@@ -35,7 +35,7 @@ define(function (require) {
                 GEPPETTO.ControlPanel.setDataFilter(passThroughDataFilter);
             });
 
-        GEPPETTO.on(Events.Model_loaded, function () {
+        GEPPETTO.on(GEPPETTO.Events.Model_loaded, function () {
             GEPPETTO.ControlPanel.refresh();
         });
 
@@ -88,7 +88,7 @@ define(function (require) {
             // Close any previous panel
             window.removeAllPanels();
 
-            GEPPETTO.trigger(window.Events.Show_spinner, "Initialising NEURON");
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NEURON");
 
             window.IPython.notebook.restart_kernel({confirm: false}).then(function() {
 
@@ -189,9 +189,9 @@ define(function (require) {
         GEPPETTO.SceneController.setLinesThreshold(20000);
 
         //Add geppetto jupyter connector
-        require('components/geppetto-jupyter/GeppettoJupyterModelSync');
-        require('components/geppetto-jupyter/GeppettoJupyterGUISync');
-        require('components/geppetto-jupyter/GeppettoJupyterWidgetSync');
+        require('../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
+        require('../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        require('../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
 
 
     };
