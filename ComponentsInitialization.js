@@ -167,7 +167,7 @@ define(function (require) {
 
 
         //Home button initialization
-         GEPPETTO.ComponentFactory.addComponent('CONTROLSMENUBUTTON', {
+         GEPPETTO.ComponentFactory.addComponent('MENUBUTTON', {
                 configuration: configuration
         }, document.getElementById("ControlsMenuButton"), function(comp){window.controlsMenuButton = comp;});
 
