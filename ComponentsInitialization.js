@@ -78,7 +78,8 @@ define(function (require) {
             var plt = G.addWidget(0).setName('Recorded Variables');
             $.each(Project.getActiveExperiment().getWatchedVariables(true, false),
                 function(index, value) {
-                    plt.plotData(value)
+                    plt.plotData(value);
+                    plt.updateAxis(value.getInstancePath());
                 });
         };
 
