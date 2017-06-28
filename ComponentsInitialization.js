@@ -195,7 +195,7 @@ define(function (require) {
         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
         GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
         GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
-        GEPPETTO.GeppettoWidgetManager = require('./../../js/communication/geppettoJupyter/GeppettoWidgetManager');
+        
 
     };
 });
