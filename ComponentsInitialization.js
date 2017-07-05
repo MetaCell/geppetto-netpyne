@@ -35,7 +35,7 @@ define(function (require) {
                 GEPPETTO.ControlPanel.setDataFilter(passThroughDataFilter);
             });
 
-        GEPPETTO.on(Events.Model_loaded, function () {
+        GEPPETTO.on(GEPPETTO.Events.Model_loaded, function () {
             GEPPETTO.ControlPanel.refresh();
         });
 
@@ -59,7 +59,7 @@ define(function (require) {
         };
 
         window.removeBrightnessFunction = function(){
-            G.removeBrightnessFunctionBulkSimplified(getAllWatchedVariable(),false);
+            GEPPETTO.SceneController.removeColorFunction(GEPPETTO.SceneController.getColorFunctionInstances());
         };
 
         window.addBrightnessFunction = function(){
@@ -68,10 +68,9 @@ define(function (require) {
                 var membranePotential = watchedVariables[membranePotentialsIndex]
                 var geometries = membranePotential.getVariable().getWrappedObj().geometries;
                 for (var geometryIndex in geometries){
-                    G.addBrightnessListener(geometries[geometryIndex], membranePotential, function(x){return ((x/1000)+0.07)/0.1;});
+                    GEPPETTO.SceneController.addColorFunction(geometries[geometryIndex], membranePotential, function(x){return ((x/1000)+0.07)/0.1;});
                 }
             }
-            G.brightnessFunctionSet = true;
         };
 
         window.plotAllRecordedVariables = function() {
@@ -79,7 +78,8 @@ define(function (require) {
             var plt = G.addWidget(0).setName('Recorded Variables');
             $.each(Project.getActiveExperiment().getWatchedVariables(true, false),
                 function(index, value) {
-                    plt.plotData(value)
+                    plt.plotData(value);
+                    plt.updateAxis(value.getInstancePath());
                 });
         };
 
@@ -88,7 +88,7 @@ define(function (require) {
             // Close any previous panel
             window.removeAllPanels();
 
-            GEPPETTO.trigger(window.Events.Show_spinner, "Initialising NEURON");
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NEURON");
 
             window.IPython.notebook.restart_kernel({confirm: false}).then(function() {
 
@@ -147,7 +147,8 @@ define(function (require) {
                 value: "play_speed_100"
             }, {
                 label: "Apply voltage colouring to morphologies",
-                condition: "GEPPETTO.G.isBrightnessFunctionSet()",
+                radio: true,
+                condition: "GEPPETTO.SceneController.getColorFunctionInstances().length > 0",
                 value: "apply_voltage",
                 false: {
                     // action: "G.addBrightnessFunctionBulkSimplified(window.getRecordedMembranePotentials(), function(x){return (x+0.07)/0.1;});"
@@ -167,15 +168,17 @@ define(function (require) {
 
 
         //Home button initialization
-         GEPPETTO.ComponentFactory.addComponent('CONTROLSMENUBUTTON', {
+         GEPPETTO.ComponentFactory.addComponent('MENUBUTTON', {
                 configuration: configuration
         }, document.getElementById("ControlsMenuButton"), function(comp){window.controlsMenuButton = comp;});
 
         //Simulation controls initialization
         GEPPETTO.ComponentFactory.addComponent('SIMULATIONCONTROLS', { hideRun: true }, document.getElementById("sim-toolbar"));
 
-        //Camera controls initialization
-		GEPPETTO.ComponentFactory.addComponent('CAMERACONTROLS', {}, document.getElementById("camera-controls"));
+		//Canvas initialisation
+		GEPPETTO.ComponentFactory.addComponent('CANVAS', {}, document.getElementById("sim"), function () {
+            this.displayAllInstances();
+        });
 
         //Foreground initialization
         GEPPETTO.ComponentFactory.addComponent('FOREGROUND', { dropDown: false }, document.getElementById("foreground-toolbar"));
@@ -189,10 +192,10 @@ define(function (require) {
         GEPPETTO.SceneController.setLinesThreshold(20000);
 
         //Add geppetto jupyter connector
-        require('components/geppetto-jupyter/GeppettoJupyterModelSync');
-        require('components/geppetto-jupyter/GeppettoJupyterGUISync');
-        require('components/geppetto-jupyter/GeppettoJupyterWidgetSync');
-
+        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
+        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
+        
 
     };
 });
