@@ -47,8 +47,8 @@ export default class NetPyNETabs extends React.Component {
           <NetPyNEPopulations/>
           <Card style={styles.card}>
             <CardHeader
-              title="Cells"
-              subtitle="Define here the cells of your network"
+              title="Cell rules"
+              subtitle="Define here the rules to generate the cells in your network"
               actAsExpander={true}
               showExpandableButton={true}
             />
@@ -62,6 +62,7 @@ export default class NetPyNETabs extends React.Component {
           <Card style={styles.card}>
             <CardHeader
               title="Synapses"
+              subtitle="Define here the rules to generate the synapses in your network"
               actAsExpander={true}
               showExpandableButton={true}
             />
@@ -75,6 +76,7 @@ export default class NetPyNETabs extends React.Component {
           <Card style={styles.card}>
             <CardHeader
               title="Connections"
+              subtitle="Define here the connectivity rules in your network"
               actAsExpander={true}
               showExpandableButton={true}
             />
@@ -88,6 +90,7 @@ export default class NetPyNETabs extends React.Component {
           <Card style={styles.card}>
             <CardHeader
               title="Settings"
+              subtitle="General settings"
               actAsExpander={true}
               showExpandableButton={true}
             />

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+import NetPyNEPopulationThumbnail from './NetPyNEPopulationThumbnail';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNENewPopulation from './NetPyNENewPopulation';
 import FontIcon from 'material-ui/FontIcon';
@@ -19,11 +20,21 @@ const styles = {
 
   tabContainer: {
     padding: 10,
-    height: 460,
+    height: 450,
     overflow: 'auto'
   },
   card: {
     clear: 'both'
+  },
+  thumbnails:{
+    width:600,
+    height: 430,
+    overflow: 'auto',
+    float: 'left'
+  },
+  details:{
+    float:'left',
+    marginLeft: '50'
   }
 };
 
@@ -49,23 +60,25 @@ export default class NetPyNEPopulations extends React.Component {
           showExpandableButton={true}
         />
         <Paper style={styles.tabContainer} expandable={true}>
-          <IconMenu style={{float:'left'}}
-            iconButtonElement={
-              <IconButton tooltip="Show all" onTouchTap={this.handleToggle}>
-                <FontIcon className="fa fa-bars" />
-              </IconButton>
-            }
-            anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-          >
-            <MenuItem primaryText="L5_Pyr_1" />
-            <MenuItem primaryText="L5_Pyr_2" />
-          </IconMenu>
-          <div style={{clear:'both'}} />
-          <NetPyNENewPopulation />
-          <NetPyNEPopulation />
-          <NetPyNEPopulation />
-          <NetPyNEPopulation />
+          <div style={styles.thumbnails}>
+            <NetPyNENewPopulation />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+            <NetPyNEPopulationThumbnail />
+          </div>
+          <div style={styles.details}>
+            <NetPyNEPopulation />
+          </div>
         </Paper>
       </Card>
 
