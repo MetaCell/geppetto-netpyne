@@ -11,14 +11,14 @@ const styles = {
     fontWeight: 400,
   },
 
-  tabContainer:{
-      padding:10,
-      height:460,
-      overflow: 'auto'
+  tabContainer: {
+    padding: 10,
+    height: 460,
+    overflow: 'auto'
   },
-  
-  card:{
-      clear:'both'
+
+  card: {
+    clear: 'both'
   }
 };
 
@@ -28,7 +28,16 @@ export default class NetPyNETabs extends React.Component {
     super(props);
     this.state = {
       value: 'define',
+      model: null
     };
+
+    var _this = this;
+
+    
+    GEPPETTO.on('OriginalModelLoaded', function (model) {
+      _this.setState({ model: JSON.parse(model) })
+    });
+
   }
 
   handleChange = (value) => {
@@ -38,13 +47,17 @@ export default class NetPyNETabs extends React.Component {
   };
 
   render() {
+
+    if (this.state.model == null) {
+      return (<div>Loading</div>)
+    }
     return (
       <Tabs
         value={this.state.value}
         onChange={this.handleChange}
-      > 
+      >
         <Tab label="Define your network" value="define">
-          <NetPyNEPopulations/>
+          <NetPyNEPopulations model={this.state.model.netParams.popParams}/>
           <Card style={styles.card}>
             <CardHeader
               title="Cells"
@@ -109,7 +122,6 @@ export default class NetPyNETabs extends React.Component {
             <h2 style={styles.headline}>Geppetto simulation</h2>
           </div>
         </Tab>
-      </Tabs>
-    );
+      </Tabs>)
   }
 }

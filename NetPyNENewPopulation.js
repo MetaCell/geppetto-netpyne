@@ -28,8 +28,19 @@ export default class NetPyNENewPopulation extends React.Component {
     super(props);
     this.state = {
     };
+
+    this.handleClick = this.handleClick.bind(this);
+
   }
 
+  
+
+  handleClick(){
+    var newPop = {'PYR' : {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100}}
+    if (this.props.handleClick){
+      this.props.handleClick(newPop);
+    }
+  }
 
   render() {
     return (
@@ -38,7 +49,7 @@ export default class NetPyNENewPopulation extends React.Component {
           <CardHeader titleColor='#808080'
             title="Add a new population" 
           />
-          <CardText style={styles.plus}>
+          <CardText style={styles.plus} onClick={this.handleClick}>
           +
           </CardText>
         </Card>

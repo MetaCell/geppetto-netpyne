@@ -8,16 +8,77 @@ define(function (require) {
         var ReactDOM = require('react-dom');
         var React = require('react');
 
-        require('./css/neuron.less');
-
         function App() {
-        return (
-            <MuiThemeProvider>
-            <NetPyNETabs />
-            </MuiThemeProvider>
-        );
+            return (
+                <div>
+                    <MuiThemeProvider>
+                        <NetPyNETabs />
+                    </MuiThemeProvider>
+
+                    <div id="footer">
+                        <div id="footerHeader">
+                            <div id="consoleButtonContainer">
+                                <ul className="btn nav nav-tabs" role="tablist" id="tabButton">
+                                    <li role="presentation" className="active" id="consoleButton"><a href="#console" aria-controls="console" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Console</a></li>
+                                    <li role="presentation" id="experimentsButton" style={{ display: 'none' }}><a href="#experiments" aria-controls="experiments" role="tab" data-toggle="tab"><i className="fa fa-flask"></i>Experiments</a></li>
+                                    <li role="presentation" id="pythonConsoleButton" style={{ display: 'none' }}><a href="#pythonConsole" aria-controls="pythonConsole" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Python</a></li>
+                                </ul>
+
+                                <div className="tab-content">
+                                    <div role="tabpanel" className="tab-pane active" id="console">Console Loading...</div>
+                                    <div role="tabpanel" id="experiments" className="tab-pane panel panel-default"></div>
+                                    <div role="tabpanel" id="pythonConsole" className="tab-pane  panel panel-default"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            );
         }
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
+
+        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/neuron-ui-demo.ipynb";
+        GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
+
+        GEPPETTO.ComponentFactory.addComponent('EXPERIMENTSTABLE', {}, document.getElementById("experiments"));
+
+        GEPPETTO.G.setIdleTimeOut(-1);
+
+        require('./css/neuron.less');
+
+        window.customJupyterModelLoad = function (module, model) {
+
+            // Close any previous panel
+            // window.removeAllPanels();
+
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NEURON");
+
+
+
+            window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
+
+                GEPPETTO.trigger('kernel:ready', "Kernelako");
+                // IPython.notebook.execute_all_cells();
+
+                // Load Neuron Basic GUI
+                // FIXME This is NEURON specific and should move elsewhere
+                var kernel = IPython.notebook.kernel;
+                kernel.execute('from neuron_ui import netpyne_geppetto');
+                // kernel.execute('netpyne_geppetto.init()');
+
+                // kernel.execute('from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync');
+                kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
+                kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
+            });
+        }
+
+        // Add geppetto jupyter connector
+        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
+        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
+
+        
     };
 });
 
@@ -220,7 +281,7 @@ define(function (require) {
 //         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
 //         GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
 //         GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
-        
+
 
 //     };
 // });

@@ -33,13 +33,33 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
+      model: props.model
     };
+
+    this.handleNewPopulation = this.handleNewPopulation.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
+  handleNewPopulation(newPop) {
+    var key = Object.keys(newPop)[0];
+
+    var kernel = IPython.notebook.kernel;
+    kernel.execute('from neuron_ui.netpyne_init import netParams');
+    console.log('netParams.popParams["' + key + '"] = ' + JSON.stringify(newPop[key]))
+    kernel.execute('netParams.popParams["' + key + '"] = ' + JSON.stringify(newPop[key]));
+    this.setState({ model: Object.assign(this.state.model, newPop) });
+  }
 
   render() {
+
+    var populations = [];
+    var populationsShortcut = [];
+    for (var key in this.state.model) {
+      populations.push(<NetPyNEPopulation model={this.state.model[key]} path={key} />)
+      populationsShortcut.push(<MenuItem primaryText={key} />)
+    }
+
     return (
       <Card style={styles.card}>
         <CardHeader
@@ -49,23 +69,21 @@ export default class NetPyNEPopulations extends React.Component {
           showExpandableButton={true}
         />
         <Paper style={styles.tabContainer} expandable={true}>
-          <IconMenu style={{float:'left'}}
+          <IconMenu style={{ float: 'left' }}
             iconButtonElement={
               <IconButton tooltip="Show all" onTouchTap={this.handleToggle}>
                 <FontIcon className="fa fa-bars" />
               </IconButton>
             }
-            anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
-            <MenuItem primaryText="L5_Pyr_1" />
-            <MenuItem primaryText="L5_Pyr_2" />
+            {populationsShortcut}
           </IconMenu>
-          <div style={{clear:'both'}} />
-          <NetPyNENewPopulation />
-          <NetPyNEPopulation />
-          <NetPyNEPopulation />
-          <NetPyNEPopulation />
+          <div style={{ clear: 'both' }} />
+          <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
+
+          {populations}
         </Paper>
       </Card>
 
