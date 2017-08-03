@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+import NetPyNEPopulationThumbnail from './NetPyNEPopulationThumbnail';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNENewPopulation from './NetPyNENewPopulation';
 import FontIcon from 'material-ui/FontIcon';
@@ -19,11 +20,21 @@ const styles = {
 
   tabContainer: {
     padding: 10,
-    height: 460,
+    height: 500,
     overflow: 'auto'
   },
   card: {
     clear: 'both'
+  },
+  thumbnails: {
+    width: '60%',
+    height: 420,
+    overflow: 'auto',
+    float: 'left'
+  },
+  details: {
+    float: 'left',
+    marginLeft: 50
   }
 };
 
@@ -33,31 +44,57 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      model: props.model
+      model: props.model,
+      selectedPopulation: undefined
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
+    this.selectPopulation = this.selectPopulation.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
   handleNewPopulation(newPop) {
     var key = Object.keys(newPop)[0];
-
+    var populationId = key;
+    var i = 2;
+    while (this.state.model[populationId] != undefined) {
+      populationId = key + " " + i++;
+    }
+    var newPopulation = {};
+    newPopulation.name = populationId;
+    for (var prop in newPop[key]) {
+      newPopulation[prop] = newPop[key][prop];
+    }
     var kernel = IPython.notebook.kernel;
     kernel.execute('from neuron_ui.netpyne_init import netParams');
-    console.log('netParams.popParams["' + key + '"] = ' + JSON.stringify(newPop[key]))
-    kernel.execute('netParams.popParams["' + key + '"] = ' + JSON.stringify(newPop[key]));
-    this.setState({ model: Object.assign(this.state.model, newPop) });
+    console.log('netParams.popParams["' + populationId + '"] = ' + JSON.stringify(newPop[key]));
+    kernel.execute('netParams.popParams["' + populationId + '"] = ' + JSON.stringify(newPop[key]));
+    var model = this.state.model;
+    model[populationId] = newPopulation;
+    this.setState({
+      model: model,
+      selectedPopulation: newPopulation
+    });
+  }
+
+  selectPopulation(population) {
+    var that = this;
+    this.setState({
+      model: that.state.model,
+      selectedPopulation: population
+    });
   }
 
   render() {
 
     var populations = [];
-    var populationsShortcut = [];
     for (var key in this.state.model) {
-      populations.push(<NetPyNEPopulation model={this.state.model[key]} path={key} />)
-      populationsShortcut.push(<MenuItem primaryText={key} />)
+      populations.push(<NetPyNEPopulationThumbnail selected={this.state.selectedPopulation && key==this.state.selectedPopulation.name} model={this.state.model[key]} path={key} handleClick={this.selectPopulation} />);
+    }
+    var selectedPopulation = undefined;
+    if (this.state.selectedPopulation) {
+      selectedPopulation = <NetPyNEPopulation model={this.state.selectedPopulation} path={this.state.selectedPopulation.name} />;
     }
 
     return (
@@ -71,23 +108,21 @@ export default class NetPyNEPopulations extends React.Component {
         <Paper style={styles.tabContainer} expandable={true}>
           <IconMenu style={{ float: 'left' }}
             iconButtonElement={
-              <IconButton tooltip="Show all" onTouchTap={this.handleToggle}>
-                <FontIcon className="fa fa-bars" />
-              </IconButton>
+              <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
             }
             anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
-            {populationsShortcut}
           </IconMenu>
           <div style={{ clear: 'both' }} />
-          <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
-
-          {populations}
+          <div style={styles.thumbnails}>
+            {populations}
+          </div>
+          <div style={styles.details}>
+            {selectedPopulation}
+          </div>
         </Paper>
       </Card>
-
-
 
     );
   }

@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const styles = {
-  populationCard: {
-    fontSize: 24,
+  addButton: {
     margin: 10,
-    width:350,
-    height:400,
-    float:'left',
-    borderStyle: 'dashed',
-    borderColor: '#808080',
-    color: '#808080',
-    cursor: 'pointer'
-  },
-  plus: {
-    fontSize: 170,
-    textAlign: 'center',
-    color: '#808080'
+    float: 'left'
   }
 };
 
@@ -36,7 +23,7 @@ export default class NetPyNENewPopulation extends React.Component {
   
 
   handleClick(){
-    var newPop = {'PYR' : {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100}}
+    var newPop = {'Population' : {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100}}
     if (this.props.handleClick){
       this.props.handleClick(newPop);
     }
@@ -45,14 +32,10 @@ export default class NetPyNENewPopulation extends React.Component {
   render() {
     return (
 
-        <Card style={styles.populationCard}>zDepth={2}
-          <CardHeader titleColor='#808080'
-            title="Add a new population" 
-          />
-          <CardText style={styles.plus} onClick={this.handleClick}>
-          +
-          </CardText>
-        </Card>
+    <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+       <ContentAdd />
+    </FloatingActionButton>
+
         
     );
   }
