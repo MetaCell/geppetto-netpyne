@@ -57,7 +57,7 @@ export default class NetPyNETabs extends React.Component {
         onChange={this.handleChange}
       >
         <Tab label="Define your network" value="define">
-          <NetPyNEPopulations model={this.state.model.netParams.popParams}/>
+          <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'}/>
           <Card style={styles.card}>
             <CardHeader
               title="Cell rules"

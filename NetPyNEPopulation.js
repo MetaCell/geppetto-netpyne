@@ -80,10 +80,12 @@ export default class NetPyNEPopulation extends React.Component {
 
         <PythonControlledTextField                     
             floatingLabelText="Cell Model" 
+            requirement={this.props.requirement}
             model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
         <br />
         <PythonControlledTextField 
             floatingLabelText="Cell Type" 
+            requirement={this.props.requirement}
             model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
       </div>
 
