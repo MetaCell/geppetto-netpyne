@@ -102,8 +102,8 @@ export default class NetPyNETabs extends React.Component {
           </Card>
           <Card style={styles.card}>
             <CardHeader
-              title="Settings"
-              subtitle="General settings"
+              title="Configuration"
+              subtitle="General configuration"
               actAsExpander={true}
               showExpandableButton={true}
             />

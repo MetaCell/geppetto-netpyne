@@ -20,11 +20,9 @@ export default class NetPyNENewPopulation extends React.Component {
 
   }
 
-  
-
-  handleClick(){
-    var newPop = {'Population' : {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100}}
-    if (this.props.handleClick){
+  handleClick() {
+    var newPop = { 'Population': { 'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100 } }
+    if (this.props.handleClick) {
       this.props.handleClick(newPop);
     }
   }
@@ -32,11 +30,11 @@ export default class NetPyNENewPopulation extends React.Component {
   render() {
     return (
 
-    <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
-       <ContentAdd />
-    </FloatingActionButton>
+      <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+        <ContentAdd />
+      </FloatingActionButton>
 
-        
+
     );
   }
 }
