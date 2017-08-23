@@ -5,9 +5,10 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
+
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
-var PythonControlledDropdown = PythonControlledCapability.createPythonControlledComponent(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
 
 const styles = {
@@ -34,43 +35,41 @@ export default class NetPyNEPopulation extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleDimensionChange = this.handleDimensionChange.bind(this);
     this.handleRangeTypeChange = this.handleRangeTypeChange.bind(this);
+    this.setPopulationDimension = this.setPopulationDimension.bind(this);
 
   }
 
-  setPage(page){
-    this.setState({page:page});
+  setPage(page) {
+    this.setState({ page: page });
+  }
+
+  setPopulationDimension(event, value) {
+    console.log("setPopulationDimension");
+    GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'netParams.popParams.setParam', parameters:[this.state.model.name, 'gridSpacing', value]});
   }
 
   handleRangeTypeChange(event, index, value) {
-    var state = this.state;
     var rangeTypeSuffix;
-    if(value==1){
-      rangeTypeSuffix="Range";
+    if (value == 1) {
+      rangeTypeSuffix = "Range";
     }
-    else if(value==2){
-      rangeTypeSuffix="normRange";
+    else if (value == 2) {
+      rangeTypeSuffix = "normRange";
     }
-
-    state.rangeType = value;
-    state.rangeTypeSuffix = rangeTypeSuffix;
-    this.setState(state);
+    this.setState({ rangeType: value, rangeTypeSuffix: rangeTypeSuffix });
   }
 
   handleDimensionChange(event, index, value) {
-    var state = this.state;
-    var dimensionVariable;
-    if(value==1){
-      dimensionVariable="numCells";
+    if (value == 1) {
+      var dimensionVariable = "numCells";
     }
-    else if(value==2){
-      dimensionVariable="density";
+    else if (value == 2) {
+      var dimensionVariable = "density";
     }
-    else if(value==3){
-      dimensionVariable="gridSpacing";
+    else if (value == 3) {
+      var dimensionVariable = "gridSpacing";
     }
-    state.dimension = value;
-    state.dimensionVariable = dimensionVariable;
-    this.setState(state);
+    this.setState({ dimension: value, dimensionVariable: dimensionVariable });
   }
 
   handleChange(event) {
@@ -90,8 +89,8 @@ export default class NetPyNEPopulation extends React.Component {
   render() {
     var content;
 
-    if(this.state.page=='main'){
-      content=(<div>
+    if (this.state.page == 'main') {
+      content = (<div>
         <TextField
           value={this.state.model.name}
           floatingLabelText="The name of your population"
@@ -117,43 +116,44 @@ export default class NetPyNEPopulation extends React.Component {
           <MenuItem value={3} primaryText="Grid spacing" />
         </SelectField>
         <br />
-        <PythonControlledTextField
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimensionVariable + "']"} />
+        <TextField
+          onChange={this.setPopulationDimension}
+        />
         <br />
-        <FlatButton label="Spatial distribution" fullWidth={true} secondary={true} onClick={this.setPage.bind(this, 'distribution')}/>
+        <FlatButton label="Spatial distribution" fullWidth={true} secondary={true} onClick={this.setPage.bind(this, 'distribution')} />
       </div>);
     }
-    else if(this.state.page=='distribution'){
-      content=(<div>
-        <FlatButton label="Back" fullWidth={true} secondary={true} onClick={this.setPage.bind(this, 'main')}/>
-        <SelectField
-        floatingLabelText="Range type"
-        value={this.state.rangeType}
-        onChange={this.handleRangeTypeChange}
-      >
-        <MenuItem value={1} primaryText="Absolute" />
-        <MenuItem value={2} primaryText="Normalized" />
-      </SelectField>
-      <br />
-      <PythonControlledTextField
-        floatingLabelText="Neuron positions in x-axis"
-        requirement={this.props.requirement}
-        model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeSuffix + "']"} />
-      <br />
-      <PythonControlledTextField
-        floatingLabelText="Neuron positions in y-axis"
-        requirement={this.props.requirement}
-        model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeSuffix + "']"} />
-      <br />
-      <PythonControlledTextField
-        floatingLabelText="Neuron positions in z-axis" 
-        requirement={this.props.requirement}
-        model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeSuffix + "']"} />
-      <br />
+    else if (this.state.page == 'distribution') {
+      content = (<div>
+        <FlatButton label="Back" fullWidth={true} secondary={true} onClick={this.setPage.bind(this, 'main')} />
 
-        
-        
+        <SelectField
+          floatingLabelText="Range type"
+          value={this.state.rangeType}
+          onChange={this.handleRangeTypeChange}
+        >
+          <MenuItem value={1} primaryText="Absolute" />
+          <MenuItem value={2} primaryText="Normalized" />
+        </SelectField>
+        <br />
+        <PythonControlledTextField
+          floatingLabelText="Neuron positions in x-axis"
+          requirement={this.props.requirement}
+          model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeSuffix + "']"} />
+        <br />
+        <PythonControlledTextField
+          floatingLabelText="Neuron positions in y-axis"
+          requirement={this.props.requirement}
+          model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeSuffix + "']"} />
+        <br />
+        <PythonControlledTextField
+          floatingLabelText="Neuron positions in z-axis"
+          requirement={this.props.requirement}
+          model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeSuffix + "']"} />
+        <br />
+
+
+
       </div>);;
     }
     return content;
