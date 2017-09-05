@@ -10,7 +10,6 @@ var PythonControlledCapability = require('../../js/communication/geppettoJupyter
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
-
 const styles = {
   populationCard: {
     fontSize: 24,
@@ -77,14 +76,14 @@ export default class NetPyNESimConfig extends React.Component {
             actAsExpander={true}
             showExpandableButton={true}
           />
-          <CardText expandable={true}>
+          <Paper style={styles.tabContainer} expandable={true}>
             <div>
               <TextField
                 value={this.state.model.name}
                 floatingLabelText="Duration"
               /><br />
             </div>
-        </CardText>
+        </Paper>
       </Card>);
 
     }
