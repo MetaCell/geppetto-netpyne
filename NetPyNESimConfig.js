@@ -34,7 +34,7 @@ export default class NetPyNESimConfig extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleDurationChange = this.handleDurationChange.bind(this);
-    this.setDuration = this.setDuration.bind(this);
+    //this.setDuration = this.setDuration.bind(this);
 
   }
 
@@ -42,10 +42,10 @@ export default class NetPyNESimConfig extends React.Component {
     this.setState({ page: page });
   }
 
-  setDuration(event, value) {
-    console.log("setDuration");
-    GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
-  }
+  // setDuration(event, value) {
+  //   console.log("setDuration");
+  //   GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
+  // }
 
   handleDurationChange(event, index, value) {
     this.setState({ duration: value });
@@ -79,8 +79,9 @@ export default class NetPyNESimConfig extends React.Component {
           />
           <Paper style={styles.tabContainer} expandable={true}>
             <div>
-              <TextField
-                value={this.state.model.name}
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.duration"}
                 floatingLabelText="Duration"
               /><br />
             </div>
