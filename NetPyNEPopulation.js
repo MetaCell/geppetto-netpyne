@@ -10,6 +10,8 @@ var PythonControlledCapability = require('../../js/communication/geppettoJupyter
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
+var Utils = require('./Utils');
+
 
 const styles = {
   populationCard: {
@@ -27,6 +29,8 @@ export default class NetPyNEPopulation extends React.Component {
 
   constructor(props) {
     super(props);
+
+    var _this = this;
     this.state = {
       model: props.model,
       page: 'main'
@@ -37,6 +41,14 @@ export default class NetPyNEPopulation extends React.Component {
     this.handleRangeTypeChange = this.handleRangeTypeChange.bind(this);
     this.setPopulationDimension = this.setPopulationDimension.bind(this);
 
+    Utils
+      .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
+      .then(function (response) {
+        console.log("Getting Pop Dimensions Parameters");
+        console.log("Response", response)
+        _this.setState({ 'popDimensionsOptions': response });
+      });
+
   }
 
   setPage(page) {
@@ -45,7 +57,13 @@ export default class NetPyNEPopulation extends React.Component {
 
   setPopulationDimension(event, value) {
     console.log("setPopulationDimension");
-    GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'netParams.popParams.setParam', parameters:[this.state.model.name, 'gridSpacing', value]});
+
+    Utils
+      .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, value])
+      .then(function (response) {
+        console.log("Setting Pop Dimensions Parameters");
+        console.log("Response", response)
+      });
   }
 
   handleRangeTypeChange(event, index, value) {
@@ -60,37 +78,23 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   handleDimensionChange(event, index, value) {
-    if (value == 1) {
-      var dimensionVariable = "numCells";
-    }
-    else if (value == 2) {
-      var dimensionVariable = "density";
-    }
-    else if (value == 3) {
-      var dimensionVariable = "gridSpacing";
-    }
-    this.setState({ dimension: value, dimensionVariable: dimensionVariable });
+    this.setState({ dimension: value, dimensionVariable: value });
   }
 
   handleChange(event) {
     var model = this.state.model;
     model.name = event.target.value;
-    this.setState({
-      model: model,
-    });
+    this.setState({ model: model });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      model: nextProps.model
-    });
+    this.setState({ model: nextProps.model });
   }
 
   render() {
-    var content;
 
     if (this.state.page == 'main') {
-      content = (<div>
+      var content = (<div>
         <TextField
           value={this.state.model.name}
           floatingLabelText="The name of your population"
@@ -111,9 +115,11 @@ export default class NetPyNEPopulation extends React.Component {
           value={this.state.dimension}
           onChange={this.handleDimensionChange}
         >
-          <MenuItem value={1} primaryText="Number of Cells" />
-          <MenuItem value={2} primaryText="Density" />
-          <MenuItem value={3} primaryText="Grid spacing" />
+          {(this.state.popDimensionsOptions != undefined) ?
+            this.state.popDimensionsOptions.map(function (popDimensionsOption) {
+              return (<MenuItem value={popDimensionsOption} primaryText={popDimensionsOption} />)
+            }) : null}
+
         </SelectField>
         <br />
         <TextField
@@ -124,7 +130,7 @@ export default class NetPyNEPopulation extends React.Component {
       </div>);
     }
     else if (this.state.page == 'distribution') {
-      content = (<div>
+      var content = (<div>
         <FlatButton label="Back" fullWidth={true} secondary={true} onClick={this.setPage.bind(this, 'main')} />
 
         <SelectField
