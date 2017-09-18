@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
-export default class NetPyNEPopulation extends React.Component {
+export default class NetPyNESectionThumbnail extends React.Component {
 
   constructor(props) {
-    super(props); 
+    super(props);
     this.state = {
       model: props.model
     };
@@ -12,8 +12,8 @@ export default class NetPyNEPopulation extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(){
-    if (this.props.handleClick){
+  handleClick() {
+    if (this.props.handleClick) {
       this.props.handleClick(this.state.model);
     }
   }
@@ -21,9 +21,9 @@ export default class NetPyNEPopulation extends React.Component {
   render() {
     return (
 
-    <FloatingActionButton className={"populationButton " +(this.props.selected?"selectedPop":"")} onClick={this.handleClick}>
-       {this.state.model.name}
-    </FloatingActionButton>
+      <FloatingActionButton className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
+        {this.state.model.name}
+      </FloatingActionButton>
 
     );
   }

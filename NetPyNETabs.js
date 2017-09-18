@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import NetPyNEPopulations from './NetPyNEPopulations';
+import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
+import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
 
 const styles = {
   headline: {
@@ -58,20 +59,8 @@ export default class NetPyNETabs extends React.Component {
       >
         <Tab label="Define your network" value="define">
           <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'}/>
-          <Card style={styles.card}>
-            <CardHeader
-              title="Cell rules"
-              subtitle="Define here the rules to generate the cells in your network"
-              actAsExpander={true}
-              showExpandableButton={true}
-            />
-            <CardText expandable={true}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-          </Card>
+          <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'}/>
+
           <Card style={styles.card}>
             <CardHeader
               title="Synapses"

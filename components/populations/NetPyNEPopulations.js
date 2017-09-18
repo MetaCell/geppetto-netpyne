@@ -79,8 +79,7 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   selectPopulation(population) {
-    var that = this;
-    this.setState({ model: that.state.model, selectedPopulation: population });
+    this.setState({ model: this.state.model, selectedPopulation: population });
   }
 
   render() {
