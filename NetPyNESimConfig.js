@@ -34,6 +34,9 @@ export default class NetPyNESimConfig extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleDurationChange = this.handleDurationChange.bind(this);
+    this.handleDtChange = this.handleDtChange.bind(this);
+    this.handleSeedsChange = this.handleSeedsChange.bind(this);
+
     //this.setDuration = this.setDuration.bind(this);
 
   }
@@ -49,6 +52,14 @@ export default class NetPyNESimConfig extends React.Component {
 
   handleDurationChange(event, index, value) {
     this.setState({ duration: value });
+  }
+
+  handleDtChange(event, index, value) {
+    this.setState({ dt: value });
+  }
+
+  handleSeedsChange(event, index, value) {
+    this.setState({ seeds: value });
   }
 
   handleChange(event) {
@@ -85,6 +96,20 @@ export default class NetPyNESimConfig extends React.Component {
                 floatingLabelText="Duration"
               /><br />
             </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.dt"}
+                floatingLabelText="Dt"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.seeds"}
+                floatingLabelText="Seeds"
+              /><br />
+            </div>
         </Paper>
       </Card>);
 
@@ -92,3 +117,31 @@ export default class NetPyNESimConfig extends React.Component {
     return content;
   }
 }
+
+// # general
+// - cfg.seeds = Dict({'conn': 1, 'stim': 1, 'loc': 1}) # Seeds for randomizers (connectivity, input stimulation and cell locations)
+// - cfg.addSynMechs = True # whether to add synaptich mechanisms or not
+// - cfg.includeParamsLabel = True # include label of param rule that created that cell, conn or stim
+// - cfg.timing = True # show timing of each process
+// - cfg.verbose = False # show detailed messages
+//
+// # save options
+// - cfg.simLabel = '' # name of simulation (used as filename if none provided)
+// - cfg.saveFolder = '' # path where to save output data
+// - cfg.filename = 'model_output' # Name of file to save model output (if omitted then saveFolder+simLabel is used)
+// - cfg.saveDataInclude = ['netParams', 'netCells', 'netPops', 'simConfig', 'simData']
+// - cfg.timestampFilename = False # Add timestamp to filename to avoid overwriting
+// - cfg.savePickle = False # save to pickle file
+// - cfg.saveJson = False # save to json file
+// - cfg.saveMat = False # save to mat file
+// - cfg.saveHDF5 = False # save to HDF5 file
+// - cfg.self.saveDpk = False # save to .dpk pickled file (not sure if working)
+// - cfg.saveDat = False # save traces to .dat file(s) (not working)
+// - cfg.saveCSV = False # save to txt file (not working)
+// - cfg.backupCfgFile = [] # copy cfg file, list with [sourceFile,destFolder] (eg. ['cfg.py', 'backupcfg/'])
+// - cfg.saveCellSecs = True # save all the sections info for each cell (False reduces time+space; available in netParams; prevents re-simulation)
+// - cfg.saveCellConns = True # save all the conns info for each cell (False reduces time+space; prevents re-simulation)
+//
+// # error checking
+// - *cfg.checkErrors = False # whether to validate the input parameters
+// - cfg.checkErrorsVerbose = False # whether to print detailed errors duration
