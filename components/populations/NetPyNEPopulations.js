@@ -10,6 +10,8 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
+import Utils from '../../Utils';
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -54,28 +56,29 @@ export default class NetPyNEPopulations extends React.Component {
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
-  handleNewPopulation(newPop) {
-    var key = Object.keys(newPop)[0];
-    var populationId = key;
-    var i = 2;
-    while (this.state.model[populationId] != undefined) {
-      populationId = key + " " + i++;
-    }
-    var newPopulation = {};
-    newPopulation.name = populationId;
-    for (var prop in newPop[key]) {
-      newPopulation[prop] = newPop[key][prop];
-    }
-    var kernel = IPython.notebook.kernel;
-    kernel.execute('from neuron_ui.netpyne_init import netParams');
-    console.log('netParams.popParams["' + populationId + '"] = ' + JSON.stringify(newPop[key]));
-    kernel.execute('netParams.popParams["' + populationId + '"] = ' + JSON.stringify(newPop[key]));
+  handleNewPopulation(defaultPopulationValues) {
+    // Get Key and Value
+    var key = Object.keys(defaultPopulationValues)[0];
+    var value = defaultPopulationValues[key];
     var model = this.state.model;
+
+    // Get New Available ID
+    var populationId = Utils.getAvailableKey(model, key);
+
+    // Create Population Object
+    var newPopulation = value;
+    newPopulation.name = populationId;
+
+    // Create Population Client side
+    Utils.execPythonCommand('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
+
+    // Update state
     model[populationId] = newPopulation;
     this.setState({
       model: model,
       selectedPopulation: newPopulation
     });
+
   }
 
   selectPopulation(population) {

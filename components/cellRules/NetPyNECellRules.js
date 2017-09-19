@@ -10,6 +10,8 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
+import Utils from '../../Utils';
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -55,24 +57,24 @@ export default class NetPyNECellRules extends React.Component {
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
-  handleNewCellRule(newCR) {
-    var key = Object.keys(newCR)[0];
-    var crId = key;
-    var i = 2;
-    while (this.state.model[crId] != undefined) {
-      crId = key + " " + i++;
-    }
-    var newCellRule = {};
-    newCellRule.name = crId;
-    for (var prop in newCR[key]) {
-      newCellRule[prop] = newCR[key][prop];
-    }
-    var kernel = IPython.notebook.kernel;
-    kernel.execute('from neuron_ui.netpyne_init import netParams');
-    console.log('netParams.cellParams["' + crId + '"] = ' + JSON.stringify(newCR[key]));
-    kernel.execute('netParams.cellParams["' + crId + '"] = ' + JSON.stringify(newCR[key]));
+  handleNewCellRule(defaultCellRules) {
+    // Get Key and Value
+    var key = Object.keys(defaultCellRules)[0];
+    var value = defaultCellRules[key];
     var model = this.state.model;
-    model[crId] = newCellRule;
+
+    // Get New Available ID
+    var cellRuleId = Utils.getAvailableKey(model, key);
+
+    // Create Population Object
+    var newCellRule = value;
+    newCellRule.name = cellRuleId;
+
+    // Create Population Client side
+    Utils.execPythonCommand('netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
+
+    // Update state
+    model[cellRuleId] = newCellRule;
     this.setState({
       model: model,
       selectedCellRule: newCellRule

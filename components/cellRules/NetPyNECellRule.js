@@ -17,7 +17,7 @@ var PythonControlledCapability = require('../../../../js/communication/geppettoJ
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
-var Utils = require('../../Utils');
+import Utils from '../../Utils';
 
 const styles = {
   populationCard: {
@@ -45,45 +45,29 @@ export default class NetPyNECellRule extends React.Component {
     this.handleNewSection = this.handleNewSection.bind(this);
     this.setPage = this.setPage.bind(this);
     this.selectSection = this.selectSection.bind(this);
-
-
-    // Get available population parameters
-    // Utils
-    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-    //   .then(function (response) {
-    //     console.log("Getting Pop Dimensions Parameters");
-    //     console.log("Response", response)
-    //     _this.setState({ 'popDimensionsOptions': response });
-    //   });
-
   }
 
-  handleNewSection(newSec) {
-    var key = Object.keys(newSec)[0];
-    var sectionId = key;
-    var i = 2;
+  handleNewSection(defaultSectionValues) {
+    // Get Key and Value
+    var key = Object.keys(defaultSectionValues)[0];
+    var value = defaultSectionValues[key];
     var model = this.state.model;
-    var isSecsInit = true;
+
+    // Get New Available ID
+    var sectionId = Utils.getAvailableKey(model['secs'], key);
+
+    // Create Population Object
+    var newSection = value;
+    newSection.name = sectionId;
+
+    // Create Population Client side
     if (model['secs'] == undefined) {
       model['secs'] = {};
-      isSecsInit = false;
+      Utils.execPythonCommand('netParams.cellParams["' + this.props.path + '"]["secs"] = {}');
     }
-    while (this.state.model.secs[sectionId] != undefined) {
-      sectionId = key + " " + i++;
-    }
-    var newSection = {};
-    newSection.name = sectionId;
-    for (var prop in newSec[key]) {
-      newSection[prop] = newSec[key][prop];
-    }
-    var kernel = IPython.notebook.kernel;
-    kernel.execute('from neuron_ui.netpyne_init import netParams');
-    console.log('netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(newSec[key]));
-    if (!isSecsInit) {
-      kernel.execute('netParams.cellParams["' + this.props.path + '"]["secs"] = {}');
-    }
-    kernel.execute('netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(newSec[key]));
+    Utils.execPythonCommand('netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
 
+    // Update state
     model['secs'][sectionId] = newSection;
     this.setState({
       model: model,
@@ -98,7 +82,6 @@ export default class NetPyNECellRule extends React.Component {
   selectSection(section) {
     this.setState({ model: this.state.model, selectedSection: section });
   }
-
 
   componentWillReceiveProps(nextProps) {
     this.setState({ model: nextProps.model });
