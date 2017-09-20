@@ -6,10 +6,13 @@ import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
+import Slider from '../general/Slider';
+
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
+var PythonControlledSlider = PythonControlledCapability.createPythonControlledComponent(Slider);
 
 var Utils = require('../../Utils');
 
@@ -34,7 +37,8 @@ export default class NetPyNEPopulation extends React.Component {
     this.state = {
       model: props.model,
       page: 'main',
-      cellModel: ''
+      cellModel: '',
+      cellType: ["Pyr (for pyramidal neurons)", "FS (for fast-spiking interneurons)"]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -44,6 +48,7 @@ export default class NetPyNEPopulation extends React.Component {
     this.setPage = this.setPage.bind(this);
     this.handleCellTypeChange = this.handleCellTypeChange.bind(this);
     this.cellModelChange = this.cellModelChange.bind(this);
+    this.handleCellTypeDemoChange = this.handleCellTypeDemoChange.bind(this);
 
 
     // Get available population parameters
@@ -81,6 +86,10 @@ export default class NetPyNEPopulation extends React.Component {
     this.setState({ dimension: value, dimensionVariable: value });
   }
 
+  handleCellTypeDemoChange(event, index, value) {
+    this.setState({ cellTypeValue: value });
+  }
+
   handleChange(event) {
     var model = this.state.model;
     model.name = event.target.value;
@@ -113,11 +122,21 @@ export default class NetPyNEPopulation extends React.Component {
           requirement={this.props.requirement}
           model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
         <br />
-        <PythonControlledTextField
+
+        <PythonControlledSelectField
           floatingLabelText="Cell Type"
           requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
+          onChange={this.handleCellTypeDemoChange}
+          value={this.state.cellTypeValue}
+          model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}>
+          {(this.state.cellType != undefined) ?
+            this.state.cellType.map(function (ct) {
+              return (<MenuItem value={ct} primaryText={ct} />)
+            }) : null}
+
+        </PythonControlledSelectField>
         <br />
+
         <SelectField
           floatingLabelText="Population dimension"
           value={this.state.dimension}
@@ -208,8 +227,10 @@ export default class NetPyNEPopulation extends React.Component {
               requirement={this.props.requirement}
               model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
             <br />
-            <PythonControlledTextField
-              floatingLabelText="Noise"
+
+            <PythonControlledSlider
+              preText="Noise. Fraction of noise in NetStim."
+              proText=" from a range of 0 (deterministic) to 1 (completely random)"
               requirement={this.props.requirement}
               model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
             <br />

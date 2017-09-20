@@ -66,8 +66,7 @@ export default class NetPyNEPopulations extends React.Component {
     var populationId = Utils.getAvailableKey(model, key);
 
     // Create Population Object
-    var newPopulation = value;
-    newPopulation.name = populationId;
+    var newPopulation = Object.assign({name: populationId}, value);
 
     // Create Population Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))

@@ -56,16 +56,15 @@ export default class NetPyNECellRule extends React.Component {
     // Get New Available ID
     var sectionId = Utils.getAvailableKey(model['secs'], key);
 
-    // Create Population Object
-    var newSection = value;
-    newSection.name = sectionId;
+    // Create Section Object
+    var newSection = Object.assign({name: sectionId}, value);
 
     // Create Population Client side
     if (model['secs'] == undefined) {
       model['secs'] = {};
-      Utils.execPythonCommand('netParams.cellParams["' + this.props.path + '"]["secs"] = {}');
+      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + this.props.path + '"]["secs"] = {}');
     }
-    Utils.execPythonCommand('netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
 
     // Update state
     model['secs'][sectionId] = newSection;
