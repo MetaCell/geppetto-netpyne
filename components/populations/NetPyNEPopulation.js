@@ -7,7 +7,7 @@ import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import Slider from '../general/Slider';
-
+import Card, { CardHeader, CardText } from 'material-ui/Card';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
@@ -38,7 +38,7 @@ export default class NetPyNEPopulation extends React.Component {
       model: props.model,
       page: 'main',
       cellModel: '',
-      cellType: ["Pyr (for pyramidal neurons)", "FS (for fast-spiking interneurons)"]
+      cellType: ["Pyr (for pyramidal neurons)", "FS (for fast-spiking interneurons)"],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -52,13 +52,17 @@ export default class NetPyNEPopulation extends React.Component {
 
 
     // Get available population parameters
-    Utils
-      .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-      .then(function (response) {
-        console.log("Getting Pop Dimensions Parameters");
-        console.log("Response", response)
-        _this.setState({ 'popDimensionsOptions': response });
-      });
+    // Utils
+    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
+    //   .then(function (response) {
+    //     console.log("Getting Pop Dimensions Parameters");
+    //     console.log("Response", response)
+    //     _this.setState({ 'popDimensionsOptions': response });
+    //   });
+
+    this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
+
+
 
   }
 
@@ -83,7 +87,7 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   handleDimensionChange(event, index, value) {
-    this.setState({ dimension: value, dimensionVariable: value });
+    this.setState({ dimension: value });
   }
 
   handleCellTypeDemoChange(event, index, value) {
@@ -109,173 +113,202 @@ export default class NetPyNEPopulation extends React.Component {
     this.setState({ model: nextProps.model });
   }
 
+  getPopulationDimensionText() {
+    var _this = this;
+    return this.popDimensionsOptions.filter(function (p) { return p.value == _this.state.dimension })[0].label;
+  }
+
   render() {
-    if (this.state.page == 'main') {
-      var content = (<div>
-        <TextField
-          value={this.state.model.name}
-          floatingLabelText="The name of your population"
-        /><br />
-
-        <PythonControlledTextField
-          floatingLabelText="Cell Model"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
-        <br />
-
-        <PythonControlledSelectField
-          floatingLabelText="Cell Type"
-          requirement={this.props.requirement}
-          onChange={this.handleCellTypeDemoChange}
-          value={this.state.cellTypeValue}
-          model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}>
-          {(this.state.cellType != undefined) ?
-            this.state.cellType.map(function (ct) {
-              return (<MenuItem value={ct} primaryText={ct} />)
-            }) : null}
-
-        </PythonControlledSelectField>
-        <br />
-
-        <SelectField
-          floatingLabelText="Population dimension"
-          value={this.state.dimension}
-          onChange={this.handleDimensionChange}
-        >
-          {(this.state.popDimensionsOptions != undefined) ?
-            this.state.popDimensionsOptions.map(function (popDimensionsOption) {
-              return (<MenuItem value={popDimensionsOption} primaryText={popDimensionsOption} />)
-            }) : null}
-
-        </SelectField>
-        <br />
-        <TextField
-          onChange={this.setPopulationDimension}
-        />
-        <br />
-        <FlatButton label="See Spatial Distribution Parameters" fullWidth={true} secondary={true} onClick={() => this.setPage('distribution')} />
-      </div>);
-    }
-    else if (this.state.page == 'distribution') {
-      var content = (<div>
-        <FlatButton label="Back" fullWidth={true} secondary={true} onClick={() => this.setPage('main')} />
-
-        <SelectField
-          floatingLabelText="Range type"
-          value={this.state.rangeType}
-          onChange={this.handleRangeTypeChange}
-        >
-          <MenuItem value="Range" primaryText="Absolute" />
-          <MenuItem value="normRange" primaryText="Normalized" />
-        </SelectField>
-        <br />
-        <PythonControlledTextField
-          floatingLabelText="Neuron positions in x-axis"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeSuffix + "']"} />
-        <br />
-        <PythonControlledTextField
-          floatingLabelText="Neuron positions in y-axis"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeSuffix + "']"} />
-        <br />
-        <PythonControlledTextField
-          floatingLabelText="Neuron positions in z-axis"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeSuffix + "']"} />
-        <br />
-
-
-
-      </div>);;
-    }
-    else if (this.state.page == 'artificial') {
-      var content = (<div>
-        <TextField
-          value={this.state.model.name}
-          floatingLabelText="The name of your population"
-        /><br />
-
-        <PythonControlledTextField
-          floatingLabelText="Cell Model"
-          requirement={this.props.requirement}
-          onBlur={this.cellModelChange}
-          model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
-        <br />
-
-        <PythonControlledTextField
-          floatingLabelText="Number of Cells"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['numCells']"} />
-        <br />
-
-        <PythonControlledTextField
-          floatingLabelText="Parameters of artificial cells (To be expanded)"
-          requirement={this.props.requirement}
-          model={"netParams.popParams['" + this.state.model.name + "']['taum']"} />
-        <br />
-
-        {(this.state.cellModel == 'NetStim' || this.state.cellModel == 'VecStim') ?
-          <div>
-            <PythonControlledTextField
-              floatingLabelText="Spike Interval"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['interval']"} />
-            <br />
-            <PythonControlledTextField
-              floatingLabelText="Firing Rate"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
-            <br />
-
-            <PythonControlledSlider
-              preText="Noise. Fraction of noise in NetStim."
-              proText=" from a range of 0 (deterministic) to 1 (completely random)"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
-            <br />
-            <PythonControlledTextField
-              floatingLabelText="Start"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['start']"} />
-            <br />
-            <PythonControlledTextField
-              floatingLabelText="Number"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
-            <br />
-            <PythonControlledTextField
-              floatingLabelText="Seed"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['seed']"} />
-            <br />
-          </div>
-          : null}
-        {(this.state.cellModel == 'VecStim') ?
-          <div>
-            <PythonControlledTextField
-              floatingLabelText="Spike Time"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['spkTimes']"} />
-            <br />
-            <PythonControlledTextField
-              floatingLabelText="Pulses (to be expanded) start (ms), end (ms), rate (Hz), and noise (0 to 1) "
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['pulses']"} />
-
-            <br />
-          </div> :
-          null}
-      </div>)
-    }
     return (
       <div>
-        <Toggle
-          label="Artificial Cells (point processes)"
-          defaultToggled={false}
-          onToggle={this.handleCellTypeChange}
-        />
-        {content}
+        <Card initiallyExpanded={true}>
+          <CardHeader
+            title="General Parameters"
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <CardText expandable={true}>
+            <TextField
+              value={this.state.model.name}
+              floatingLabelText="The name of your population"
+            /><br />
+
+            <PythonControlledTextField
+              floatingLabelText="Cell Model"
+              requirement={this.props.requirement}
+              onBlur={this.cellModelChange}
+              model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
+            <br />
+
+            <PythonControlledSelectField
+              floatingLabelText="Cell Type"
+              requirement={this.props.requirement}
+              onChange={this.handleCellTypeDemoChange}
+              value={this.state.cellTypeValue}
+              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}>
+              {(this.state.cellType != undefined) ?
+                this.state.cellType.map(function (ct) {
+                  return (<MenuItem value={ct} primaryText={ct} />)
+                }) : null}
+
+            </PythonControlledSelectField>
+            <br />
+
+            <SelectField
+              floatingLabelText="Population dimension"
+              value={this.state.dimension}
+              onChange={this.handleDimensionChange}
+            >
+              {(this.popDimensionsOptions != undefined) ?
+                this.popDimensionsOptions.map(function (popDimensionsOption) {
+                  return (<MenuItem value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
+                }) : null}
+
+            </SelectField>
+
+
+            {this.state.dimension != undefined ?
+              <div style={{ float: 'right' }}><TextField
+                floatingLabelText={this.getPopulationDimensionText()}
+                onChange={this.setPopulationDimension}
+              />
+              </div> : null}
+          </CardText>
+        </Card>
+
+
+        <Card>
+          <CardHeader
+            title="Spatial Distribution Parameters"
+            subtitle="Spatial Distribution Parameters are incredible blabla"
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <CardText expandable={true}>
+            <SelectField
+              floatingLabelText="Range type"
+              value={this.state.rangeTypeX}
+              onChange={(event, index, value) => this.setState({ rangeTypeX: value })}
+            >
+              <MenuItem value="Range" primaryText="Absolute" />
+              <MenuItem value="normRange" primaryText="Normalized" />
+            </SelectField>
+            <PythonControlledTextField
+              style={{ float: 'right' }}
+              floatingLabelText="Neuron positions in x-axis"
+              requirement={this.props.requirement}
+              model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeX + "']"} />
+
+            <SelectField
+              floatingLabelText="Range type"
+              value={this.state.rangeTypeY}
+              onChange={(event, index, value) => this.setState({ rangeTypeY: value })}
+            >
+              <MenuItem value="Range" primaryText="Absolute" />
+              <MenuItem value="normRange" primaryText="Normalized" />
+            </SelectField>
+            <PythonControlledTextField
+              style={{ float: 'right' }}
+              floatingLabelText="Neuron positions in y-axis"
+              requirement={this.props.requirement}
+              model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeY + "']"} />
+
+            <SelectField
+              floatingLabelText="Range type"
+              value={this.state.rangeTypeZ}
+              onChange={(event, index, value) => this.setState({ rangeTypeZ: value })}
+            >
+              <MenuItem value="Range" primaryText="Absolute" />
+              <MenuItem value="normRange" primaryText="Normalized" />
+            </SelectField>
+            <PythonControlledTextField
+              style={{ float: 'right' }}
+              floatingLabelText="Neuron positions in z-axis"
+              requirement={this.props.requirement}
+              model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeZ + "']"} />
+          </CardText>
+        </Card>
+
+        {(this.state.cellModel == 'IntFire1') ?
+          <Card>
+            <CardHeader
+              title={this.state.cellModel + " Model Parameters"}
+              actAsExpander={true}
+              showExpandableButton={true}
+            />
+            <CardText expandable={true}>
+              We need to extract this information from Neuron
+            </CardText>
+          </Card> : null}
+
+        {(this.state.cellModel == 'NetStim' || this.state.cellModel == 'VecStim') ?
+          <Card>
+            <CardHeader
+              title={this.state.cellModel + " Model Parameters"}
+              actAsExpander={true}
+              showExpandableButton={true}
+            />
+            <CardText expandable={true}>
+              {(this.state.cellModel == 'NetStim' || this.state.cellModel == 'VecStim') ?
+                <div>
+                  <PythonControlledTextField
+                    floatingLabelText="Spike Interval"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['interval']"} />
+                  <br />
+                  <PythonControlledTextField
+                    floatingLabelText="Firing Rate"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
+                  <br />
+                  <PythonControlledSlider
+                    preText="Noise. Fraction of noise in NetStim."
+                    proText=" from a range of 0 (deterministic) to 1 (completely random)"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
+                  <br />
+                  <PythonControlledTextField
+                    floatingLabelText="Start"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['start']"} />
+                  <br />
+                  <PythonControlledTextField
+                    floatingLabelText="Number"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
+                  <br />
+                  <PythonControlledTextField
+                    floatingLabelText="Seed"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['seed']"} />
+                  <br />
+                </div> : null}
+              {(this.state.cellModel == 'VecStim') ?
+                <div>
+                  <PythonControlledTextField
+                    floatingLabelText="Spike Time"
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['spkTimes']"} />
+                  <br />
+                  <PythonControlledTextField
+                    floatingLabelText="Pulses (to be expanded) start (ms), end (ms), rate (Hz), and noise (0 to 1) "
+                    requirement={this.props.requirement}
+                    model={"netParams.popParams['" + this.state.model.name + "']['pulses']"} />
+                </div> : null}
+            </CardText>
+          </Card> : null}
+
+        <Card>
+          <CardHeader
+            title={"Cell List"}
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <CardText expandable={true}>
+            We should replicate population parameters
+            </CardText>
+        </Card>
+
       </div>
     );
   }

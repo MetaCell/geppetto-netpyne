@@ -29,13 +29,14 @@ const styles = {
     clear: 'both'
   },
   thumbnails: {
-    width: '60%',
+    width: '40%',
     height: 420,
     overflow: 'auto',
     float: 'left'
   },
   details: {
-    float: 'left',
+    width: '55%',
+    float: 'right',
     marginLeft: 50
   }
 };
@@ -112,12 +113,11 @@ export default class NetPyNEPopulations extends React.Component {
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
           </IconMenu>
-          <div style={{ clear: 'both' }} />
-          <div style={styles.thumbnails}>
-            {populations}
-          </div>
           <div style={styles.details}>
             {selectedPopulation}
+          </div>
+          <div style={styles.thumbnails}>
+            {populations}
           </div>
         </Paper>
       </Card>
