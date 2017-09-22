@@ -110,28 +110,145 @@ export default class NetPyNESimConfig extends React.Component {
                 floatingLabelText="Seeds"
               /><br />
             </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.addSynMechs"}
+                floatingLabelText="Add Syn Mechs"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.includeParamsLabel"}
+                floatingLabelText="Include Params Label"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.timing"}
+                floatingLabelText="Timing"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.verbose"}
+                floatingLabelText="Verbose"
+              /><br />
+            </div>
         </Paper>
-      </Card>);
+
+        <Paper style={styles.tabContainer} expandable={true}>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.simLabel"}
+              floatingLabelText="Sim Label"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveFolder"}
+              floatingLabelText="Save Folder"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.filename"}
+              floatingLabelText="File Name"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveDataInclude"}
+              floatingLabelText="Save Data Include"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.timestampFilename"}
+              floatingLabelText="Timestamp File Name"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.savePickle"}
+              floatingLabelText="Save Pickle"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveJson"}
+              floatingLabelText="Save Json"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveMat"}
+              floatingLabelText="Save Mat"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveHDF5"}
+              floatingLabelText="Save HDF5"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveDpk"}
+              floatingLabelText="Save Dpk"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveDat"}
+              floatingLabelText="Save Dat"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveCsv"}
+              floatingLabelText="Save Csv"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveCellSecs"}
+              floatingLabelText="Save Cell Secs"
+            /><br />
+          </div>
+          <div>
+            <PythonControlledTextField
+              requirement={this.props.requirement}
+              model={"simConfig.saveCellConns"}
+              floatingLabelText="Save Cell Conns"
+            /><br />
+          </div>
+      </Paper>
+       </Card>);
 
     }
     return content;
   }
 }
 
-// # general
-// - cfg.seeds = Dict({'conn': 1, 'stim': 1, 'loc': 1}) # Seeds for randomizers (connectivity, input stimulation and cell locations)
-// - cfg.addSynMechs = True # whether to add synaptich mechanisms or not
-// - cfg.includeParamsLabel = True # include label of param rule that created that cell, conn or stim
-// - cfg.timing = True # show timing of each process
-// - cfg.verbose = False # show detailed messages
-//
-// # save options
-// - cfg.simLabel = '' # name of simulation (used as filename if none provided)
-// - cfg.saveFolder = '' # path where to save output data
-// - cfg.filename = 'model_output' # Name of file to save model output (if omitted then saveFolder+simLabel is used)
-// - cfg.saveDataInclude = ['netParams', 'netCells', 'netPops', 'simConfig', 'simData']
-// - cfg.timestampFilename = False # Add timestamp to filename to avoid overwriting
-// - cfg.savePickle = False # save to pickle file
+
+
 // - cfg.saveJson = False # save to json file
 // - cfg.saveMat = False # save to mat file
 // - cfg.saveHDF5 = False # save to HDF5 file
