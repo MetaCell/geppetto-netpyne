@@ -33,24 +33,14 @@ export default class NetPyNEPopulation extends React.Component {
   constructor(props) {
     super(props);
 
-    var _this = this;
     this.state = {
       model: props.model,
-      page: 'main',
-      cellModel: '',
-      cellType: ["Pyr (for pyramidal neurons)", "FS (for fast-spiking interneurons)"],
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleDimensionChange = this.handleDimensionChange.bind(this);
-    this.handleRangeTypeChange = this.handleRangeTypeChange.bind(this);
     this.setPopulationDimension = this.setPopulationDimension.bind(this);
-    this.setPage = this.setPage.bind(this);
-    this.handleCellTypeChange = this.handleCellTypeChange.bind(this);
-    this.cellModelChange = this.cellModelChange.bind(this);
-    this.handleCellTypeDemoChange = this.handleCellTypeDemoChange.bind(this);
 
-
+    // var _this = this;
     // Get available population parameters
     // Utils
     //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
@@ -62,51 +52,25 @@ export default class NetPyNEPopulation extends React.Component {
 
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
 
-
-
-  }
-
-  setPage(page) {
-    this.setState({ page: page });
   }
 
   setPopulationDimension(event, value) {
-    console.log("setPopulationDimension");
-
-    // Set Population Dimension
+    // Set Population Dimension Python Side
     Utils
       .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, value])
       .then(function (response) {
         console.log("Setting Pop Dimensions Parameters");
-        console.log("Response", response)
+        console.log("Response", response);
       });
-  }
 
-  handleRangeTypeChange(event, index, value) {
-    this.setState({ rangeType: value, rangeTypeSuffix: value });
-  }
-
-  handleDimensionChange(event, index, value) {
-    this.setState({ dimension: value });
-  }
-
-  handleCellTypeDemoChange(event, index, value) {
-    this.setState({ cellTypeValue: value });
+    // Update State
+    this.setState({ dimensionValue: value });
   }
 
   handleChange(event) {
     var model = this.state.model;
     model.name = event.target.value;
     this.setState({ model: model });
-  }
-
-  handleCellTypeChange(event, isInputChecked) {
-    this.setPage((isInputChecked) ? 'artificial' : 'main');
-  }
-
-  cellModelChange(event) {
-    var value = event.currentTarget.value;
-    this.setState({ cellModel: value })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -130,34 +94,30 @@ export default class NetPyNEPopulation extends React.Component {
           <CardText expandable={true}>
             <TextField
               value={this.state.model.name}
+              onChange={this.handleChange}
               floatingLabelText="The name of your population"
             /><br />
 
             <PythonControlledTextField
               floatingLabelText="Cell Model"
               requirement={this.props.requirement}
-              onBlur={this.cellModelChange}
+              value={this.state.cellModel}
+              onChange={(event) => this.setState({ cellModel: event.target.value })}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"} />
             <br />
 
-            <PythonControlledSelectField
+            <PythonControlledTextField
               floatingLabelText="Cell Type"
               requirement={this.props.requirement}
-              onChange={this.handleCellTypeDemoChange}
+              onChange={(event) => this.setState({ cellTypeValue: event.target.value })}
               value={this.state.cellTypeValue}
-              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}>
-              {(this.state.cellType != undefined) ?
-                this.state.cellType.map(function (ct) {
-                  return (<MenuItem value={ct} primaryText={ct} />)
-                }) : null}
-
-            </PythonControlledSelectField>
+              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
             <br />
 
             <SelectField
               floatingLabelText="Population dimension"
               value={this.state.dimension}
-              onChange={this.handleDimensionChange}
+              onChange={(event, index, value) => this.setState({ dimension: value })}
             >
               {(this.popDimensionsOptions != undefined) ?
                 this.popDimensionsOptions.map(function (popDimensionsOption) {
@@ -165,17 +125,15 @@ export default class NetPyNEPopulation extends React.Component {
                 }) : null}
 
             </SelectField>
-
-
             {this.state.dimension != undefined ?
               <div style={{ float: 'right' }}><TextField
                 floatingLabelText={this.getPopulationDimensionText()}
+                value={this.state.dimensionValue}
                 onChange={this.setPopulationDimension}
               />
               </div> : null}
           </CardText>
         </Card>
-
 
         <Card>
           <CardHeader
@@ -193,11 +151,17 @@ export default class NetPyNEPopulation extends React.Component {
               <MenuItem value="Range" primaryText="Absolute" />
               <MenuItem value="normRange" primaryText="Normalized" />
             </SelectField>
-            <PythonControlledTextField
-              style={{ float: 'right' }}
-              floatingLabelText="Neuron positions in x-axis"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeX + "']"} />
+            {(this.state.rangeTypeX != undefined) ?
+              <PythonControlledTextField
+                id="xaxis"
+                style={{ float: 'right' }}
+                floatingLabelText="Neuron positions in x-axis"
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ rangeTypeXValue: event.target.value })}
+                value={this.state.rangeTypeXValue}
+                model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeX + "']"} />
+              : null}
+            <br />
 
             <SelectField
               floatingLabelText="Range type"
@@ -207,11 +171,16 @@ export default class NetPyNEPopulation extends React.Component {
               <MenuItem value="Range" primaryText="Absolute" />
               <MenuItem value="normRange" primaryText="Normalized" />
             </SelectField>
-            <PythonControlledTextField
-              style={{ float: 'right' }}
-              floatingLabelText="Neuron positions in y-axis"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeY + "']"} />
+            {(this.state.rangeTypeY != undefined) ?
+              <PythonControlledTextField
+                style={{ float: 'right' }}
+                floatingLabelText="Neuron positions in y-axis"
+                onChange={(event) => this.setState({ rangeTypeYValue: event.target.value })}
+                value={this.state.rangeTypeYValue}
+                requirement={this.props.requirement}
+                model={"netParams.popParams['" + this.state.model.name + "']['y" + this.state.rangeTypeY + "']"} />
+              : null}
+            <br />
 
             <SelectField
               floatingLabelText="Range type"
@@ -221,11 +190,15 @@ export default class NetPyNEPopulation extends React.Component {
               <MenuItem value="Range" primaryText="Absolute" />
               <MenuItem value="normRange" primaryText="Normalized" />
             </SelectField>
-            <PythonControlledTextField
-              style={{ float: 'right' }}
-              floatingLabelText="Neuron positions in z-axis"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeZ + "']"} />
+            {(this.state.rangeTypeZ != undefined) ?
+              <PythonControlledTextField
+                style={{ float: 'right' }}
+                floatingLabelText="Neuron positions in z-axis"
+                onChange={(event) => this.setState({ rangeTypezValue: event.target.value })}
+                value={this.state.rangeTypeZValue}
+                requirement={this.props.requirement}
+                model={"netParams.popParams['" + this.state.model.name + "']['z" + this.state.rangeTypeZ + "']"} />
+              : null}
           </CardText>
         </Card>
 
