@@ -36,19 +36,63 @@ export default class NetPyNESimConfig extends React.Component {
     this.handleDurationChange = this.handleDurationChange.bind(this);
     this.handleDtChange = this.handleDtChange.bind(this);
     this.handleSeedsChange = this.handleSeedsChange.bind(this);
+    this.handleAddSynMechsChange = this.handleAddSynMechsChange.bind(this);
+    this.handleIncludeParamsLabelChange = this.handleIncludeParamsLabelChange.bind(this);
+    this.handleTimingChange = this.handleTimingChange.bind(this);
+    this.handleVerboseChange = this.handleVerboseChange.bind(this);
+    this.handleSimLabelChange = this.handleSimLabelChange.bind(this);
+    this.handleSaveFolderChange = this.handleSaveFolderChange.bind(this);
+    this.handleFileNameChange = this.handleFileNameChange.bind(this);
 
-    // this.setDuration = this.setDuration.bind(this);
+    this.handleSaveDataIncludeChange = this.handleSaveDataIncludeChange.bind(this);
+    this.handleTimestampFilenameChange = this.handleTimestampFilenameChange.bind(this);
+    this.handleSavePickleChange = this.handleSavePickleChange.bind(this);
+    this.handleSaveJsonChange = this.handleSaveJsonChange.bind(this);
+
+    this.handleSaveMatChange = this.handleSaveMatChange.bind(this);
+    this.handleSaveHDF5Change = this.handleSaveHDF5Change.bind(this);
+    this.handleSaveDpkChange = this.handleSaveDpkChange.bind(this);
+    this.handleSaveCSVChange = this.handleSaveCSVChange.bind(this);
+
+    this.handleBackupCfgFileChange = this.handleBackupCfgFileChange.bind(this);
+    this.handleSaveCellSecsChange = this.handleSaveCellSecsChange.bind(this);
+    this.handleSaveCellConnsChange = this.handleSaveCellConnsChange.bind(this);
+    this.handleCheckErrorsChange = this.handleCheckErrorsChange.bind(this);
+    this.handleCheckErrorsVerboseChange = this.handleCheckErrorsVerboseChange.bind(this);
 
   }
 
   setPage(page) {
     this.setState({ page: page });
   }
+  
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.dt', parameters:[this.state.model.name, 'dt', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.seeds', parameters:[this.state.model.name, 'seeds', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.addSynMechs', parameters:[this.state.model.name, 'addSynMechs', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.includeParamsLabel', parameters:[this.state.model.name, 'includeParamsLabel', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.timing', parameters:[this.state.model.name, 'timing', value]});
 
-  // setDuration(event, value) {
-  //   console.log("setDuration");
-    GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
-  // }
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.verbose', parameters:[this.state.model.name, 'verbose', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.simLabel', parameters:[this.state.model.name, 'simLabel', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveFolder', parameters:[this.state.model.name, 'saveFolder', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.fileName', parameters:[this.state.model.name, 'fileName', value]});
+
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveDataInclude', parameters:[this.state.model.name, 'saveDataInclude', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.timestampFilename', parameters:[this.state.model.name, 'timestampFilename', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.savePickle', parameters:[this.state.model.name, 'savePickle', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveJson', parameters:[this.state.model.name, 'saveJson', value]});
+
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveMat', parameters:[this.state.model.name, 'saveMat', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveHDF5', parameters:[this.state.model.name, 'saveHDF5', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveDpk', parameters:[this.state.model.name, 'saveDpk', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveCSV', parameters:[this.state.model.name, 'saveCSV', value]});
+
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.backupCfgFile', parameters:[this.state.model.name, 'backupCfgFile', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveCellSecs', parameters:[this.state.model.name, 'saveCellSecs', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.saveCellConns', parameters:[this.state.model.name, 'saveCellConns', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.checkErrors', parameters:[this.state.model.name, 'checkErrors', value]});
+  GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.checkErrorsVerbose', parameters:[this.state.model.name, 'checkErrorsVerbose', value]});
 
   handleDurationChange(event, index, value) {
     this.setState({ duration: value });
@@ -90,25 +134,61 @@ export default class NetPyNESimConfig extends React.Component {
     this.setState({ fileName: value });
   }
 
-  // - cfg.simLabel = '' # name of simulation (used as filename if none provided)
-  // - cfg.saveFolder = '' # path where to save output data
-  // - cfg.filename = 'model_output' # Name of file to save model output (if omitted then saveFolder+simLabel is used)
-  // - cfg.saveDataInclude = ['netParams', 'netCells', 'netPops', 'simConfig', 'simData']
-  // - cfg.timestampFilename = False # Add timestamp to filename to avoid overwriting
-  // - cfg.savePickle = False # save to pickle file
-  // - cfg.saveJson = False # save to json file
-  // - cfg.saveMat = False # save to mat file
-  // - cfg.saveHDF5 = False # save to HDF5 file
-  // - cfg.self.saveDpk = False # save to .dpk pickled file (not sure if working)
-  // - cfg.saveDat = False # save traces to .dat file(s) (not working)
-  // - cfg.saveCSV = False # save to txt file (not working)
-  // - cfg.backupCfgFile = [] # copy cfg file, list with [sourceFile,destFolder] (eg. ['cfg.py', 'backupcfg/'])
-  // - cfg.saveCellSecs = True # save all the sections info for each cell (False reduces time+space; available in netParams; prevents re-simulation)
-  // - cfg.saveCellConns = True # save all the conns info for each cell (False reduces time+space; prevents re-simulation)
-  //
-  // # error checking
-  // - *cfg.checkErrors = False # whether to validate the input parameters
-  // - cfg.checkErrorsVerbose = False # whether to print detailed errors dur
+  handleSaveDataIncludeChange(event, index, value) {
+    this.setState({ saveDataInclude: value });
+  }
+
+  handleTimestampFilename(event, index, value) {
+    this.setState({ timestampFilename: value });
+  }
+
+  handleSavePickleChange(event, index, value) {
+    this.setState({ savePickle: value });
+  }
+
+  handleSaveJsonFilenameChange(event, index, value) {
+    this.setState({ saveJson: value });
+  }
+
+  handleSaveMatChange(event, index, value) {
+    this.setState({ saveMat: value });
+  }
+
+  handleSaveJsonChange(event, index, value) {
+    this.setState({ saveJson: value });
+  }
+
+  handleSaveDpkChange(event, index, value) {
+    this.setState({ saveDpk: value });
+  }
+
+  handleSaveDatChange(event, index, value) {
+    this.setState({ saveDat: value });
+  }
+
+  handleSaveCsvChange(event, index, value) {
+    this.setState({ saveCsv: value });
+  }
+
+  handleBackupCfgFileChange(event, index, value) {
+    this.setState({ backupCfgFile: value });
+  }
+
+  handleSaveCellSecsChange(event, index, value) {
+    this.setState({ saveCellSecs: value });
+  }
+
+  handleSaveCellConnsChange(event, index, value) {
+    this.setState({ saveCellConns: value });
+  }
+
+  handleCheckErrorsChange(event, index, value) {
+    this.setState({ checkErrors: value });
+  }
+
+  handleCheckErrorsVerboseChange(event, index, value) {
+    this.setState({ checkErrorsVerbose: value });
+  }
 
   handleChange(event) {
     var model = this.state.model;
@@ -136,7 +216,7 @@ export default class NetPyNESimConfig extends React.Component {
             actAsExpander={true}
             showExpandableButton={true}
           />
-          <div>
+
             <Paper style={styles.tabContainer} expandable={true}>
               <div>
                 <PythonControlledTextField
@@ -187,10 +267,7 @@ export default class NetPyNESimConfig extends React.Component {
                   floatingLabelText="Verbose"
                 /><br />
               </div>
-          </Paper>
-        </div>
-        <div>
-          <Paper style={styles.tabContainer} expandable={true}>
+
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
@@ -289,11 +366,7 @@ export default class NetPyNESimConfig extends React.Component {
                 floatingLabelText="Save Cell Conns"
               /><br />
             </div>
-          </Paper>
-        </div>
 
-        <div>
-          <Paper style={styles.tabContainer} expandable={true}>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
@@ -309,7 +382,6 @@ export default class NetPyNESimConfig extends React.Component {
               /><br />
             </div>
           </Paper>
-        </div>
 
        </Card>);
 
@@ -317,19 +389,3 @@ export default class NetPyNESimConfig extends React.Component {
     return content;
   }
 }
-
-
-
-// - cfg.saveJson = False # save to json file
-// - cfg.saveMat = False # save to mat file
-// - cfg.saveHDF5 = False # save to HDF5 file
-// - cfg.self.saveDpk = False # save to .dpk pickled file (not sure if working)
-// - cfg.saveDat = False # save traces to .dat file(s) (not working)
-// - cfg.saveCSV = False # save to txt file (not working)
-// - cfg.backupCfgFile = [] # copy cfg file, list with [sourceFile,destFolder] (eg. ['cfg.py', 'backupcfg/'])
-// - cfg.saveCellSecs = True # save all the sections info for each cell (False reduces time+space; available in netParams; prevents re-simulation)
-// - cfg.saveCellConns = True # save all the conns info for each cell (False reduces time+space; prevents re-simulation)
-//
-// # error checking
-// - *cfg.checkErrors = False # whether to validate the input parameters
-// - cfg.checkErrorsVerbose = False # whether to print detailed errors duration
