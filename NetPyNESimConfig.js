@@ -37,7 +37,7 @@ export default class NetPyNESimConfig extends React.Component {
     this.handleDtChange = this.handleDtChange.bind(this);
     this.handleSeedsChange = this.handleSeedsChange.bind(this);
 
-    //this.setDuration = this.setDuration.bind(this);
+    // this.setDuration = this.setDuration.bind(this);
 
   }
 
@@ -47,7 +47,7 @@ export default class NetPyNESimConfig extends React.Component {
 
   // setDuration(event, value) {
   //   console.log("setDuration");
-  //   GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
+    GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, {command:'simConfig.duration', parameters:[this.state.model.name, 'duration', value]});
   // }
 
   handleDurationChange(event, index, value) {
@@ -61,6 +61,54 @@ export default class NetPyNESimConfig extends React.Component {
   handleSeedsChange(event, index, value) {
     this.setState({ seeds: value });
   }
+
+  handleAddSynMechsChange(event, index, value) {
+    this.setState({ addSynMechs: value });
+  }
+
+  handleIncludeParamsLabelChange(event, index, value) {
+    this.setState({ includeParamsLabel: value });
+  }
+
+  handleTimingChange(event, index, value) {
+    this.setState({ timing: value });
+  }
+
+  handleVerboseChange(event, index, value) {
+    this.setState({ verbose: value });
+  }
+
+  handleSimLabelChange(event, index, value) {
+    this.setState({ simLabel: value });
+  }
+
+  handleSaveFolderChange(event, index, value) {
+    this.setState({ saveFolder: value });
+  }
+
+  handleFileNameChange(event, index, value) {
+    this.setState({ fileName: value });
+  }
+
+  // - cfg.simLabel = '' # name of simulation (used as filename if none provided)
+  // - cfg.saveFolder = '' # path where to save output data
+  // - cfg.filename = 'model_output' # Name of file to save model output (if omitted then saveFolder+simLabel is used)
+  // - cfg.saveDataInclude = ['netParams', 'netCells', 'netPops', 'simConfig', 'simData']
+  // - cfg.timestampFilename = False # Add timestamp to filename to avoid overwriting
+  // - cfg.savePickle = False # save to pickle file
+  // - cfg.saveJson = False # save to json file
+  // - cfg.saveMat = False # save to mat file
+  // - cfg.saveHDF5 = False # save to HDF5 file
+  // - cfg.self.saveDpk = False # save to .dpk pickled file (not sure if working)
+  // - cfg.saveDat = False # save traces to .dat file(s) (not working)
+  // - cfg.saveCSV = False # save to txt file (not working)
+  // - cfg.backupCfgFile = [] # copy cfg file, list with [sourceFile,destFolder] (eg. ['cfg.py', 'backupcfg/'])
+  // - cfg.saveCellSecs = True # save all the sections info for each cell (False reduces time+space; available in netParams; prevents re-simulation)
+  // - cfg.saveCellConns = True # save all the conns info for each cell (False reduces time+space; prevents re-simulation)
+  //
+  // # error checking
+  // - *cfg.checkErrors = False # whether to validate the input parameters
+  // - cfg.checkErrorsVerbose = False # whether to print detailed errors dur
 
   handleChange(event) {
     var model = this.state.model;
@@ -88,158 +136,181 @@ export default class NetPyNESimConfig extends React.Component {
             actAsExpander={true}
             showExpandableButton={true}
           />
+          <div>
+            <Paper style={styles.tabContainer} expandable={true}>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.duration"}
+                  floatingLabelText="Duration"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.dt"}
+                  floatingLabelText="Dt"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.seeds"}
+                  floatingLabelText="Seeds"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.addSynMechs"}
+                  floatingLabelText="Add Syn Mechs"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.includeParamsLabel"}
+                  floatingLabelText="Include Params Label"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.timing"}
+                  floatingLabelText="Timing"
+                /><br />
+              </div>
+              <div>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"simConfig.verbose"}
+                  floatingLabelText="Verbose"
+                /><br />
+              </div>
+          </Paper>
+        </div>
+        <div>
           <Paper style={styles.tabContainer} expandable={true}>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.duration"}
-                floatingLabelText="Duration"
+                model={"simConfig.simLabel"}
+                floatingLabelText="Sim Label"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.dt"}
-                floatingLabelText="Dt"
+                model={"simConfig.saveFolder"}
+                floatingLabelText="Save Folder"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.seeds"}
-                floatingLabelText="Seeds"
+                model={"simConfig.filename"}
+                floatingLabelText="File Name"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.addSynMechs"}
-                floatingLabelText="Add Syn Mechs"
+                model={"simConfig.saveDataInclude"}
+                floatingLabelText="Save Data Include"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.includeParamsLabel"}
-                floatingLabelText="Include Params Label"
+                model={"simConfig.timestampFilename"}
+                floatingLabelText="Timestamp File Name"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.timing"}
-                floatingLabelText="Timing"
+                model={"simConfig.savePickle"}
+                floatingLabelText="Save Pickle"
               /><br />
             </div>
             <div>
               <PythonControlledTextField
                 requirement={this.props.requirement}
-                model={"simConfig.verbose"}
-                floatingLabelText="Verbose"
+                model={"simConfig.saveJson"}
+                floatingLabelText="Save Json"
               /><br />
             </div>
-        </Paper>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveMat"}
+                floatingLabelText="Save Mat"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveHDF5"}
+                floatingLabelText="Save HDF5"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveDpk"}
+                floatingLabelText="Save Dpk"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveDat"}
+                floatingLabelText="Save Dat"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveCsv"}
+                floatingLabelText="Save Csv"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveCellSecs"}
+                floatingLabelText="Save Cell Secs"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.saveCellConns"}
+                floatingLabelText="Save Cell Conns"
+              /><br />
+            </div>
+          </Paper>
+        </div>
 
-        <Paper style={styles.tabContainer} expandable={true}>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.simLabel"}
-              floatingLabelText="Sim Label"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveFolder"}
-              floatingLabelText="Save Folder"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.filename"}
-              floatingLabelText="File Name"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveDataInclude"}
-              floatingLabelText="Save Data Include"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.timestampFilename"}
-              floatingLabelText="Timestamp File Name"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.savePickle"}
-              floatingLabelText="Save Pickle"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveJson"}
-              floatingLabelText="Save Json"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveMat"}
-              floatingLabelText="Save Mat"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveHDF5"}
-              floatingLabelText="Save HDF5"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveDpk"}
-              floatingLabelText="Save Dpk"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveDat"}
-              floatingLabelText="Save Dat"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveCsv"}
-              floatingLabelText="Save Csv"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveCellSecs"}
-              floatingLabelText="Save Cell Secs"
-            /><br />
-          </div>
-          <div>
-            <PythonControlledTextField
-              requirement={this.props.requirement}
-              model={"simConfig.saveCellConns"}
-              floatingLabelText="Save Cell Conns"
-            /><br />
-          </div>
-      </Paper>
+        <div>
+          <Paper style={styles.tabContainer} expandable={true}>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.checkError"}
+                floatingLabelText="Check Errors"
+              /><br />
+            </div>
+            <div>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.checkError"}
+                floatingLabelText="Check Errors"
+              /><br />
+            </div>
+          </Paper>
+        </div>
+
        </Card>);
 
     }
