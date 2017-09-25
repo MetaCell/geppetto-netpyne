@@ -126,10 +126,12 @@ export default class NetPyNEPopulation extends React.Component {
 
             </SelectField>
             {this.state.dimension != undefined ?
-              <div style={{ float: 'right' }}><TextField
+              <div style={{ float: 'right' }}>
+                <TextField
                 floatingLabelText={this.getPopulationDimensionText()}
                 value={this.state.dimensionValue}
                 onChange={this.setPopulationDimension}
+                type="Number"
               />
               </div> : null}
           </CardText>
@@ -159,7 +161,9 @@ export default class NetPyNEPopulation extends React.Component {
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ rangeTypeXValue: event.target.value })}
                 value={this.state.rangeTypeXValue}
-                model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeX + "']"} />
+                model={"netParams.popParams['" + this.state.model.name + "']['x" + this.state.rangeTypeX + "']"}
+                type="number"
+                />
               : null}
             <br />
 
