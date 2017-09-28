@@ -52,7 +52,7 @@ export default class NetPyNESimConfig extends React.Component {
             showExpandableButton={true}
           />
 
-            <Paper style={styles.tabContainer} expandable={true}>
+            <Paper style={styles.tabContainer} expandable={true} >
               <div>
                 <PythonControlledTextField
                   requirement={this.props.requirement}
