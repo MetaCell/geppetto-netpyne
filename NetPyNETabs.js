@@ -3,7 +3,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
-import NetPyNESimConfig from './NetPyNESimConfig';
+import NetPyNESimConfig from './components/configuration/NetPyNESimConfig';
 
 const styles = {
   headline: {
