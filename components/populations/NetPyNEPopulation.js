@@ -129,7 +129,7 @@ export default class NetPyNEPopulation extends React.Component {
               floatingLabelText={Utils.getMetadataField("netParams.popParams.cellModel", "label")}
               dataSource={Utils.getMetadataField("netParams.popParams.cellModel", "suggestions")}
               requirement={this.props.requirement}
-              value={this.state.cellModel}
+              searchText={this.state.cellModel}
               onChange={(value) => this.setState({ cellModel: value })}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               openOnFocus={true} />
