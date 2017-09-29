@@ -27,7 +27,7 @@ module.exports = {
     },
 
     getAvailableKey: function (model, prefix) {
-        if (model == undefined){
+        if (model == undefined) {
             return prefix;
         }
         // Get New Available ID
@@ -37,5 +37,29 @@ module.exports = {
             id = prefix + " " + i++;
         }
         return id;
+    },
+
+    getMetadataField: function (key, field) {
+        if (key == undefined) {
+            return;
+        }
+        var currentObject;
+        var nextObject = window.metadata;
+        key.split('.').forEach((item) => {
+            if (item in nextObject) {
+                currentObject = nextObject[item];
+                if ("children" in currentObject) {
+                    nextObject = currentObject["children"];
+                }
+            }
+            else {
+                currentObject = undefined;
+                return;
+            }
+        });
+
+
+        return (currentObject == undefined) ? currentObject : currentObject[field];
     }
+
 }
