@@ -3,6 +3,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
+import NetPyNESimConfig from './NetPyNESimConfig';
 
 const styles = {
   headline: {
@@ -91,20 +92,7 @@ export default class NetPyNETabs extends React.Component {
                 Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
               </CardText>
           </Card>
-          <Card style={styles.card}>
-            <CardHeader
-              title="Configuration"
-              subtitle="General configuration"
-              actAsExpander={true}
-              showExpandableButton={true}
-            />
-            <CardText expandable={true}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-          </Card>
+          <NetPyNESimConfig model={this.state.model.simConfig} requirement={'from neuron_ui.netpyne_init import simConfig'}/>
         </Tab>
         <Tab label="Explore your network" value="explore">
           <div>
