@@ -109,34 +109,6 @@ export default class NetPyNESection extends React.Component {
 
       </div>);
     }
-   
-    // topol: Dictionary with topology properties.
-    // Includes parentSec (label of parent section), parentX (parent location where to make connection) and childX (current section –child– location where to make connection).
-
-    // mechs: Dictionary of density/distributed mechanisms.
-    // The key contains the name of the mechanism (e.g. hh or pas) The value contains a dictionary with the properties of the mechanism (e.g. {'g': 0.003, 'e': -70}).
-
-    // ions: Dictionary of ions.
-    // The key contains the name of the ion (e.g. na or k) The value contains a dictionary with the properties of the ion (e.g. {'e': -70}).
-
-    // pointps: Dictionary of point processes (excluding synaptic mechanisms).
-    // The key contains an arbitrary label (e.g. ‘Izhi’) The value contains a dictionary with the point process properties (e.g. {'mod':'Izhi2007a', 'a':0.03, 'b':-2, 'c':-50, 'd':100, 'celltype':1}).
-
-    // Apart from internal point process variables, the following properties can be specified for each point process:
-
-    // mod,the name of the NEURON mechanism, e.g. 'Izhi2007a'
-    // loc, section location where to place synaptic mechanism, e.g. 1.0, default=0.5.
-    // vref (optional), internal mechanism variable containing the cell membrane voltage, e.g. 'V'.
-    // synList (optional), list of internal mechanism synaptic mechanism labels, e.g. [‘AMPA’, ‘NMDA’, ‘GABAB’]
-    // vinit - (optional) Initial membrane voltage (in mV) of the section (default: -65)
-
-    // e.g. cellRule['secs']['soma']['vinit'] = -72
-
-    // spikeGenLoc - (optional) Indicates that this section is responsible for spike generation (instead of the default ‘soma’), and provides the location (segment) where spikes are generated.
-    // e.g. cellRule['secs']['axon']['spikeGenLoc'] = 1.0
-
-    // threshold - (optional) Threshold voltage (in mV) used to detect a spike originating in this section of the cell. If omitted, defaults to netParams.defaultThreshold = 10.0
-    // e.g. cellRule['secs']['soma']['threshold'] = 5.0
 
     return (
       <div>

@@ -10,7 +10,7 @@ module.exports = {
         GEPPETTO.trigger(GEPPETTO.Events.Send_Python_Message, { id: messageID, command: command, parameters: parameters });
 
         return new Promise((resolve, reject) =>
-            GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, function (data, taka, raka) {
+            GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, function (data) {
                 if (data.id == messageID) {
                     resolve(data.response);
                 }
@@ -23,7 +23,6 @@ module.exports = {
         console.log('Executing command', command);
         var kernel = IPython.notebook.kernel;
         kernel.execute(command);
-        //kernel.execute('from neuron_ui.netpyne_init import netParams');
     },
 
     getAvailableKey: function (model, prefix) {
