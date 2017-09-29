@@ -31,12 +31,14 @@ export default class NetPyNETabs extends React.Component {
       value: 'define',
       model: null
     };
-       
+
     var _this = this;
 
-    
+
     GEPPETTO.on('OriginalModelLoaded', function (model) {
-      _this.setState({ model: JSON.parse(model) })
+      var modelObject = JSON.parse(model);
+      window.metadata = modelObject.metadata;
+      _this.setState({ model: modelObject })
     });
 
   }
@@ -58,8 +60,8 @@ export default class NetPyNETabs extends React.Component {
         onChange={this.handleChange}
       >
         <Tab label="Define your network" value="define">
-          <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'}/>
-          <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'}/>
+          <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
+          <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
 
           <Card style={styles.card}>
             <CardHeader
