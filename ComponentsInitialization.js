@@ -58,16 +58,14 @@ define(function (require) {
 
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
 
-                GEPPETTO.trigger('kernel:ready', "Kernelako");
+                GEPPETTO.trigger('kernel:ready', "Kernel started");
                 // IPython.notebook.execute_all_cells();
 
                 // Load Neuron Basic GUI
                 // FIXME This is NEURON specific and should move elsewhere
                 var kernel = IPython.notebook.kernel;
                 kernel.execute('from neuron_ui import netpyne_geppetto');
-                // kernel.execute('netpyne_geppetto.init()');
 
-                // kernel.execute('from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync');
                 kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
                 kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
             });
