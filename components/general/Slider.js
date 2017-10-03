@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Slider from 'material-ui/Slider';
+import TextField from 'material-ui/TextField';
 
 /**
  * The slider bar can have a set minimum and maximum, and the value can be
@@ -14,28 +15,37 @@ export default class NetPyNESlider extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.value != undefined && prevProps.value != this.props.value) {
+            this.setState({ value: this.props.value });
+        }
+    }
+
     handleSlider = (event, value) => {
         this.setState({ value: value });
 
         this.props.onChange(event, null, value);
     };
 
-
-
     render() {
         return (
             <div>
                 <p>
-                    <span>{this.props.preText}</span>
-                    <span>{this.state.value}</span>
-                    <span>{this.props.proText}</span>
+                    <span>{this.props.label}</span>
                 </p>
                 <Slider
                     {...this.props}
+                    style={{ float: 'left', width: '220px' }}
                     value={this.state.value}
                     onChange={this.handleSlider}
                 />
-                
+
+                <TextField
+                    style={{ float: 'left', width: '40px', margin: '0 5px' }}
+                    value={this.state.value}
+                    onChange={(event) => this.handleSlider(event, event.target.value)}
+                />
+
             </div>
         );
     }

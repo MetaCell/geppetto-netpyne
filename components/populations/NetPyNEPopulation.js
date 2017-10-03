@@ -300,58 +300,78 @@ export default class NetPyNEPopulation extends React.Component {
       var content =
         <div>
           <div>
-            <PythonControlledTextField
-              style={styles.netpyneField}
-              floatingLabelText="Spike Interval"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['interval']"} />
+            <NetPyNEField id="netParams.popParams.interval" style={styles.netpyneField}>
+              <PythonControlledTextField
+                floatingLabelText={Utils.getMetadataField("netParams.popParams.interval", "label")}
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ interval: event.target.value })}
+                value={this.state.interval}
+                model={"netParams.popParams['" + this.state.model.name + "']['interval']"} />
+            </NetPyNEField>
             <br />
-            <PythonControlledTextField
-              style={styles.netpyneField}
-              floatingLabelText="Firing Rate"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
+            <NetPyNEField id="netParams.popParams.rate" style={styles.netpyneField}>
+              <PythonControlledTextField
+                floatingLabelText={Utils.getMetadataField("netParams.popParams.rate", "label")}
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ rate: event.target.value })}
+                value={this.state.rate}
+                model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
+            </NetPyNEField>
             <br />
-            <PythonControlledSlider
-              style={styles.netpyneField}
-              preText="Noise. Fraction of noise in NetStim."
-              proText=" from a range of 0 (deterministic) to 1 (completely random)"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
+            <NetPyNEField id="netParams.popParams.noise" style={styles.netpyneField}>
+              <PythonControlledSlider
+                label={Utils.getMetadataField("netParams.popParams.noise", "label")}
+                requirement={this.props.requirement}
+                model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
+            </NetPyNEField>
             <br />
-            <PythonControlledTextField
-              style={styles.netpyneField}
-              floatingLabelText="Start"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['start']"} />
+            <NetPyNEField id="netParams.popParams.start" style={styles.netpyneField}>
+              <PythonControlledTextField
+                floatingLabelText={Utils.getMetadataField("netParams.popParams.start", "label")}
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ start: event.target.value })}
+                value={this.state.start}
+                model={"netParams.popParams['" + this.state.model.name + "']['start']"} />
+            </NetPyNEField>
+            < br />
+            <NetPyNEField id="netParams.popParams.number" style={styles.netpyneField}>
+              <PythonControlledTextField
+                floatingLabelText={Utils.getMetadataField("netParams.popParams.number", "label")}
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ number: event.target.value })}
+                value={this.state.number}
+                model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
+            </NetPyNEField>
             <br />
-            <PythonControlledTextField
-              style={styles.netpyneField}
-              floatingLabelText="Number"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
-            <br />
-            <PythonControlledTextField
-              style={styles.netpyneField}
-              floatingLabelText="Seed"
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['seed']"} />
-            <br />
+            <NetPyNEField id="netParams.popParams.seed" style={styles.netpyneField}>
+              <PythonControlledTextField
+                floatingLabelText={Utils.getMetadataField("netParams.popParams.seed", "label")}
+                requirement={this.props.requirement}
+                onChange={(event) => this.setState({ seed: event.target.value })}
+                value={this.state.seed}
+                model={"netParams.popParams['" + this.state.model.name + "']['seed']"} />
+            </NetPyNEField>
           </div>
 
           {(this.state.cellModel == 'VecStim') ?
             <div>
-              <PythonControlledTextField
-                style={styles.netpyneField}
-                floatingLabelText="Spike Time"
-                requirement={this.props.requirement}
-                model={"netParams.popParams['" + this.state.model.name + "']['spkTimes']"} />
+              <NetPyNEField id="netParams.popParams.spkTimes" style={styles.netpyneField}>
+                <PythonControlledTextField
+                  floatingLabelText={Utils.getMetadataField("netParams.popParams.spkTimes", "label")}
+                  requirement={this.props.requirement}
+                  onChange={(event) => this.setState({ spkTimes: event.target.value })}
+                  value={this.state.spkTimes}
+                  model={"netParams.popParams['" + this.state.model.name + "']['spkTimes']"} />
+              </NetPyNEField>
               <br />
-              <PythonControlledTextField
-                style={styles.netpyneField}
-                floatingLabelText="Pulses (to be expanded) start (ms), end (ms), rate (Hz), and noise (0 to 1) "
-                requirement={this.props.requirement}
-                model={"netParams.popParams['" + this.state.model.name + "']['pulses']"} />
+              <NetPyNEField id="netParams.popParams.pulses" style={styles.netpyneField}>
+                <PythonControlledTextField
+                  floatingLabelText={Utils.getMetadataField("netParams.popParams.pulses", "label")}
+                  requirement={this.props.requirement}
+                  onChange={(event) => this.setState({ pulses: event.target.value })}
+                  value={this.state.pulses}
+                  model={"netParams.popParams['" + this.state.model.name + "']['pulses']"} />
+              </NetPyNEField>
             </div> : null
           }
         </div>
