@@ -1,18 +1,17 @@
-import { MuiThemeProvider } from 'material-ui/styles';
-import NetPyNETabs from './NetPyNETabs';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
 define(function (require) {
     return function (GEPPETTO) {
         var ReactDOM = require('react-dom');
         var React = require('react');
-
+        var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
+        var NetPyNETabs = require('./NetPyNETabs').default;
+        var injectTapEventPlugin = require('react-tap-event-plugin');
+        injectTapEventPlugin();
+        
         function App() {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNETabs />
+                        <NetPyNETabs></NetPyNETabs>
                     </MuiThemeProvider>
 
                     <div id="footer">
@@ -46,6 +45,13 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
 
         require('./css/neuron.less');
+
+        document.title="NetPyNE";
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = 'https://d30y9cdsu7xlg0.cloudfront.net/png/38902-200.png';
+        document.getElementsByTagName('head')[0].appendChild(link);
 
         window.customJupyterModelLoad = function (module, model) {
 

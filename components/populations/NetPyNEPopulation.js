@@ -383,27 +383,30 @@ export default class NetPyNEPopulation extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'General', 'General', 'fa-question'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'General', 'General', 'fa-bars'));
     index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'SpatialDistribution', 'Spatial Distribution', 'fa-question'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
     if (this.state.cellModel == 'NetStim' || this.state.cellModel == 'VecStim') {
       // We should do something like this -> this.getSpecificModelParameter() so we consider also IntFire1, etc.
       index++;
-      bottomNavigationItems.push(this.getBottomNavigationItem(index, this.state.cellModel, this.state.cellModel + " Model", 'fa-question'));
+      bottomNavigationItems.push(this.getBottomNavigationItem(index, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
     }
     index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'CellList', 'Cell List', 'fa-question'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'CellList', 'Cell List', 'fa-list'));
 
 
     return (
       <div>
-        <Paper zDepth={1}>
+
+        <Paper zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
         </Paper>
-
+        <br/>
         {content}
+
+
       </div>
 
 
