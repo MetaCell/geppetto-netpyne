@@ -1,18 +1,17 @@
-import { MuiThemeProvider } from 'material-ui/styles';
-import NetPyNETabs from './NetPyNETabs';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
 define(function (require) {
     return function (GEPPETTO) {
         var ReactDOM = require('react-dom');
         var React = require('react');
-
+        var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
+        var NetPyNETabs = require('./NetPyNETabs').default;
+        var injectTapEventPlugin = require('react-tap-event-plugin');
+        injectTapEventPlugin();
+        
         function App() {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNETabs />
+                        <NetPyNETabs></NetPyNETabs>
                     </MuiThemeProvider>
 
                     <div id="footer">
