@@ -28,7 +28,7 @@ export default class NetPyNEField extends Component {
             // var helpComponent = <div>{help}</div>
             var helpComponent = <div className="helpIcon" onClick={() => this.handleOpenHelp(help)}><i className="fa fa-question" aria-hidden="true"></i>
                 <Dialog
-                    title="NetPyNE help"
+                    title="NetPyNE Help"
                     actions={<FlatButton
                         label="Got it"
                         primary={true}

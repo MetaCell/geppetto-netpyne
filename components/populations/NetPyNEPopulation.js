@@ -377,13 +377,16 @@ export default class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <Paper zDepth={1}>
+
+        <Paper zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
         </Paper>
-
+        <br/>
         {content}
+
+
       </div>
 
 

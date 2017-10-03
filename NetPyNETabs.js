@@ -53,7 +53,7 @@ export default class NetPyNETabs extends React.Component {
   render() {
 
     if (this.state.model == null) {
-      return (<div>Loading</div>)
+      return (<div></div>)
     }
     return (
       <Tabs
