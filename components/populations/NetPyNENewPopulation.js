@@ -21,9 +21,8 @@ export default class NetPyNENewPopulation extends React.Component {
   }
 
   handleClick() {
-    var newPop = { 'Population': { 'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 100 } }
     if (this.props.handleClick) {
-      this.props.handleClick(newPop);
+      this.props.handleClick({ 'Population': { 'cellModel': '', 'cellType': '' } });
     }
   }
 
