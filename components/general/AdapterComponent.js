@@ -14,39 +14,40 @@ export default class AdapterComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.handleChildChange = this.handleChildChange.bind(this);
     }
     componentDidUpdate(prevProps, prevState) {
-        // var value = JSON.parse(this.state.value)[(limit == 'min')?0:1]
-        if (this.props.value != undefined && prevProps.value != this.props.value){
-            var arrayValue = JSON.parse(this.props.value);
-            this.setState({minRangeTypeXValue: arrayValue[0], maxRangeTypeXValue: arrayValue[1]});
+        var newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
+        if (newValue != undefined){
+            this.setState(newValue);
         }
-
-        if (this.state.minRangeTypeXValue != undefined && this.state.maxRangeTypeXValue != undefined &&
-        (prevState.minRangeTypeXValue != this.state.minRangeTypeXValue || prevState.maxRangeTypeXValue != this.state.maxRangeTypeXValue)){
-            this.props.onUpdateInput("[" + this.state.minRangeTypeXValue + "," + this.state.maxRangeTypeXValue + "]");
-        }
-
-        
     }
 
+    handleChildChange(event, value) {
+        // Update State
+        this.state[event.target.id]= value;
 
-
+        // Call to conversion function
+        var newValue = this.props.convertToPython(this.state);
+        if (newValue != undefined && this.state.value != newValue){
+            this.props.onUpdateInput(newValue);
+        }
+    }
 
     render() {
+
+        const childrenWithExtraProp = React.Children.map(this.props.children, child => {
+            return React.cloneElement(child, {
+                onChange: this.handleChildChange,
+                value: this.state[child.props.id]
+            });
+          });
+
         return (
             <div>
-                <TextField
-                    floatingLabelText="Min x-axis"
-                    value={this.state.minRangeTypeXValue}
-                    onChange={(event) => this.setState({ minRangeTypeXValue: event.target.value })}
-                />
-                <TextField
-                    floatingLabelText="Max x-axis"
-                    onChange={(event) => this.setState({ maxRangeTypeXValue: event.target.value })}
-                    value={this.state.maxRangeTypeXValue}
-                />
+                {childrenWithExtraProp}
             </div>
-        );
+        )
     }
 }

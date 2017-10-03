@@ -190,7 +190,28 @@ export default class NetPyNEPopulation extends React.Component {
             <div style={styles.netpyneRightField}>
               <PythonControlledAdapterComponent
                 requirement={this.props.requirement}
-                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"} />
+                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"}
+                convertToPython={(state) => {
+                  if (state.minXAxis != undefined && state.maxXAxis != undefined) {
+                    return "[" + state.minXAxis + "," + state.maxXAxis + "]";
+                  }
+                }}
+                convertFromPython={(prevProps, prevState, value) => {
+                  if (value != undefined && prevProps.value != value) {
+                    var arrayValue = JSON.parse(value);
+                    return { minXAxis: arrayValue[0], maxXAxis: arrayValue[1] };
+                  }
+                }}
+              >
+                <TextField
+                  floatingLabelText="Min x-axis"
+                  id="minXAxis"
+                />
+                <TextField
+                  floatingLabelText="Max x-axis"
+                  id="maxXAxis"
+                />
+              </PythonControlledAdapterComponent>
             </div>
             : null}
           <br />
@@ -205,13 +226,32 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeY != undefined) ?
-            <PythonControlledTextField
-              style={styles.netpyneRightField}
-              floatingLabelText="Neuron positions in y-axis"
-              onChange={(event) => this.setState({ rangeTypeYValue: event.target.value })}
-              value={this.state.rangeTypeYValue}
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"} />
+            <div style={styles.netpyneRightField}>
+              <PythonControlledAdapterComponent
+                requirement={this.props.requirement}
+                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"}
+                convertToPython={(state) => {
+                  if (state.minYAxis != undefined && state.maxYAxis != undefined) {
+                    return "[" + state.minYAxis + "," + state.maxYAxis + "]";
+                  }
+                }}
+                convertFromPython={(prevProps, prevState, value) => {
+                  if (value != undefined && prevProps.value != value) {
+                    var arrayValue = JSON.parse(value);
+                    return { minYAxis: arrayValue[0], maxYAxis: arrayValue[1] };
+                  }
+                }}
+              >
+                <TextField
+                  floatingLabelText="Min y-axis"
+                  id="minYAxis"
+                />
+                <TextField
+                  floatingLabelText="Max y-axis"
+                  id="maxYAxis"
+                />
+              </PythonControlledAdapterComponent>
+            </div>
             : null}
           <br />
 
@@ -227,13 +267,32 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeZ != undefined) ?
-            <PythonControlledTextField
-              style={styles.netpyneRightField}
-              floatingLabelText="Neuron positions in z-axis"
-              onChange={(event) => this.setState({ rangeTypezValue: event.target.value })}
-              value={this.state.rangeTypeZValue}
-              requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"} />
+            <div style={styles.netpyneRightField}>
+              <PythonControlledAdapterComponent
+                requirement={this.props.requirement}
+                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"}
+                convertToPython={(state) => {
+                  if (state.minZAxis != undefined && state.maxZAxis != undefined) {
+                    return "[" + state.minZAxis + "," + state.maxZAxis + "]";
+                  }
+                }}
+                convertFromPython={(prevProps, prevState, value) => {
+                  if (value != undefined && prevProps.value != value) {
+                    var arrayValue = JSON.parse(value);
+                    return { minZAxis: arrayValue[0], maxZAxis: arrayValue[1] };
+                  }
+                }}
+              >
+                <TextField
+                  floatingLabelText="Min z-axis"
+                  id="minZAxis"
+                />
+                <TextField
+                  floatingLabelText="Max z-axis"
+                  id="maxZAxis"
+                />
+              </PythonControlledAdapterComponent>
+            </div>
             : null}
         </div>
     }
