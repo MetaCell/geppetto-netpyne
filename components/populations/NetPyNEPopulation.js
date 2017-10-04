@@ -4,7 +4,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import Slider from '../general/Slider';
 import Card, { CardHeader, CardText } from 'material-ui/Card';

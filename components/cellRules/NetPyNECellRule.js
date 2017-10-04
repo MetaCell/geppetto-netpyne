@@ -7,17 +7,17 @@ import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import NetPyNESection from './sections/NetPyNESection';
-import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
-import NetPyNENewSection from './sections/NetPyNENewSection';
 
+import Utils from '../../Utils';
+import NetPyNEField from '../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
-import Utils from '../../Utils';
+
 
 const styles = {
   populationCard: {
@@ -39,103 +39,41 @@ export default class NetPyNECellRule extends React.Component {
     var _this = this;
     this.state = {
       model: props.model,
-      page: 'main',
+      page: 'main'
     };
 
-    this.handleNewSection = this.handleNewSection.bind(this);
-    this.setPage = this.setPage.bind(this);
-    this.selectSection = this.selectSection.bind(this);
+
   }
 
-  handleNewSection(defaultSectionValues) {
-    // Get Key and Value
-    var key = Object.keys(defaultSectionValues)[0];
-    var value = defaultSectionValues[key];
-    var model = this.state.model;
-
-    // Get New Available ID
-    var sectionId = Utils.getAvailableKey(model['secs'], key);
-
-    // Create Section Object
-    var newSection = Object.assign({name: sectionId}, value);
-
-    // Create Population Client side
-    if (model['secs'] == undefined) {
-      model['secs'] = {};
-      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + this.props.path + '"]["secs"] = {}');
-    }
-    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + this.props.path + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
-
-    // Update state
-    model['secs'][sectionId] = newSection;
-    this.setState({
-      model: model,
-      selectedSection: newSection
-    });
-  }
-
-  setPage(page) {
-    this.setState({ page: page });
-  }
-
-  selectSection(section) {
-    this.setState({ model: this.state.model, selectedSection: section });
-  }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ model: nextProps.model });
   }
 
   render() {
-    var sections = [];
-    for (var key in this.state.model.secs) {
-      sections.push(<NetPyNESectionThumbnail selected={this.state.selectedSection && key == this.state.selectedSection.name} model={this.state.model.secs[key]} path={key} handleClick={this.selectSection} />);
-    }
-    var selectedSection = undefined;
-    if (this.state.selectedSection) {
-      selectedSection = <NetPyNESection requirement={this.props.requirement} model={this.state.selectedSection} path={this.props.path} />;
-    }
+    var that = this;
+    var content = (<div>
+      <TextField
+        value={this.state.model.name}
+        floatingLabelText="The name of the cell rule"
+      /><br />
+      <PythonControlledTextField
+        floatingLabelText="Conditions Cell Type"
+        model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
+      />
+      <br />
+      <PythonControlledTextField
+        floatingLabelText="Conditions Cell Model"
+        model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
+      /><br /><br />
+      <RaisedButton
+        label="Manage Sections"
+        labelPosition="before"
+        primary={true}
+        onClick={() => that.props.selectPage("sections")}
+      />
+    </div>);
 
-
-    if (this.state.page == 'main') {
-      var content = (<div>
-        <TextField
-          value={this.state.model.name}
-          floatingLabelText="The name of the cell rule"
-        /><br />
-        Conditions:<br />
-        <TextField
-          floatingLabelText="Conditions Cell Type"
-          model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
-        /><br />
-        <TextField
-          floatingLabelText="Conditions Cell Model"
-          model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
-        /><br />
-
-        Sections:
-
-        <Paper style={styles.tabContainer} expandable={true}>
-          <IconMenu style={{ float: 'left' }}
-            iconButtonElement={
-              <NetPyNENewSection handleClick={this.handleNewSection} />
-            }
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-          </IconMenu>
-          <div style={{ clear: 'both' }} />
-          <div style={styles.thumbnails}>
-            {sections}
-          </div>
-          <div style={styles.details}>
-            {selectedSection}
-          </div>
-        </Paper>
-
-
-      </div>);
-    }
 
     return (
       <div>
