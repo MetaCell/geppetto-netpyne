@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
+
 export default class NetPyNESectionThumbnail extends React.Component {
 
   constructor(props) {
@@ -21,7 +22,8 @@ export default class NetPyNESectionThumbnail extends React.Component {
   render() {
     return (
 
-      <RaisedButton className={"rectangularActionButton " + (this.props.selected ? "selectedrectangularActionButton" : "")} onClick={this.handleClick}>
+    
+      <RaisedButton primary={true} className={"rectangularActionButton " + (this.props.selected ? "selectedRectangularActionButton" : "")} onClick={this.handleClick}>
         {this.state.model.name}
       </RaisedButton>
 

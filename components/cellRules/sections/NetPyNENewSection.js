@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-const styles = {
-  addButton: {
-    margin: 10,
-    float: 'left'
-  }
-};
 
 export default class NetPyNENewSection extends React.Component {
 
@@ -29,7 +23,7 @@ export default class NetPyNENewSection extends React.Component {
   render() {
     return (
 
-      <RaisedButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+      <RaisedButton primary={true} className={"addRectangularButton"} onClick={this.handleClick}>
         <ContentAdd />
       </RaisedButton>
 
