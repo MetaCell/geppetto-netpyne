@@ -11,6 +11,7 @@ import NetPyNESection from './sections/NetPyNESection';
 import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNENewSection from './sections/NetPyNENewSection';
 import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
@@ -180,14 +181,15 @@ export default class NetPyNECellRules extends React.Component {
       content = (
         <Paper style={styles.tabContainer} expandable={true}>
           <div style={styles.thumbnails}>
-            <FlatButton
-              label={"Back to " + this.state.selectedCellRule.name}
-              labelPosition="before"
+            <FloatingActionButton
+              className={"actionButton"}
               primary={true}
-              style={{ marginTop: "10px", float: "right" }}
-              onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}
-            />
-            <IconMenu style={{ float: 'left' }}
+              style={{ marginTop: "10px", float: "left" }}
+              onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
+              {this.state.selectedCellRule.name}
+            </FloatingActionButton>
+            <div style={{ float: 'left', marginTop:"55px", color:'grey', fontSize:"20px"}}>&gt;</div>
+            <IconMenu style={{ float: 'left', marginTop:"45px"}}
               iconButtonElement={
                 <NetPyNENewSection handleClick={this.handleNewSection} />
               }
