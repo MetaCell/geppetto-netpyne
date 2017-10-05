@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class NetPyNESectionThumbnail extends React.Component {
 
@@ -21,9 +21,9 @@ export default class NetPyNESectionThumbnail extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
+      <RaisedButton className={"rectangularActionButton " + (this.props.selected ? "selectedrectangularActionButton" : "")} onClick={this.handleClick}>
         {this.state.model.name}
-      </FloatingActionButton>
+      </RaisedButton>
 
     );
   }

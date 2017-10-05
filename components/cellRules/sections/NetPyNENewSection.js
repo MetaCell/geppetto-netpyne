@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const styles = {
@@ -29,9 +29,9 @@ export default class NetPyNENewSection extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+      <RaisedButton mini={true} style={styles.addButton} onClick={this.handleClick}>
         <ContentAdd />
-      </FloatingActionButton>
+      </RaisedButton>
 
 
     );
