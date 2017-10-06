@@ -3,8 +3,10 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
@@ -24,6 +26,9 @@ const styles = {
   cardContent: {
   }
 };
+
+const hoverColor = '#66d2e2';
+const changeColor = 'rgb(0, 188, 212)';
 
 export default class NetPyNESection extends React.Component {
 
@@ -73,12 +78,24 @@ export default class NetPyNESection extends React.Component {
   render() {
 
     var content;
+    var that = this;
     if (this.state.sectionId == "General") {
       content = (
-        <TextField
-          value={this.state.model.name}
-          floatingLabelText="The name of the section"
-        />)
+        <div>
+          <TextField
+            value={this.state.model.name}
+            floatingLabelText="The name of the section"
+          />
+          <br /><br />
+          <IconButton
+            className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
+            onClick={() => that.props.selectPage("mechanisms")}
+          >
+            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
+            <span className={"gearThumbLabel"}>Mechanisms</span>
+          </IconButton>
+        </div>
+      )
     }
     else if (this.state.sectionId == "Geometries") {
       content = (<div>
@@ -123,10 +140,6 @@ export default class NetPyNESection extends React.Component {
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['childX']"} />
       </div>)
     }
-    else if (this.state.sectionId == "Mechanisms") {
-      content = (<div>TBD</div>
-      )
-    }
     else if (this.state.sectionId == "Ions") {
       content = (<div>TBD</div>
       )
@@ -139,9 +152,8 @@ export default class NetPyNESection extends React.Component {
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometries', 'Geometries', 'fa-cube'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Mechanisms', 'Mechanisms', 'fa-gear'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Ions', 'Ions', 'fa-dot-circle-o'));
-    
+
     return (
       <div>
 
@@ -150,7 +162,7 @@ export default class NetPyNESection extends React.Component {
             {bottomNavigationItems}
           </BottomNavigation>
         </Paper>
-        <br/>
+        <br />
         {content}
 
 

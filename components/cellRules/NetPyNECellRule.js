@@ -67,7 +67,7 @@ export default class NetPyNECellRule extends React.Component {
         model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
       /><br /><br />
       <RaisedButton
-        label="Manage Sections"
+        label="Sections"
         labelPosition="before"
         primary={true}
         onClick={() => that.props.selectPage("sections")}
