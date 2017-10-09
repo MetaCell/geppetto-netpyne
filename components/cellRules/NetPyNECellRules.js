@@ -197,14 +197,16 @@ export default class NetPyNECellRules extends React.Component {
             {selectedCellRule}
           </div>
           <div style={styles.thumbnails}>
-            <IconMenu style={{ float: 'left' }}
-              iconButtonElement={
-                <NetPyNENewCellRule handleClick={this.handleNewCellRule} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+            <div className="breadcrumb">
+              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft:"18px" }}
+                iconButtonElement={
+                  <NetPyNENewCellRule handleClick={this.handleNewCellRule} />
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+              </IconMenu>
+            </div>
             <div style={{ clear: "both" }}></div>
             {cellRules}
           </div>
@@ -225,22 +227,24 @@ export default class NetPyNECellRules extends React.Component {
       content = (
         <Paper style={styles.tabContainer} expandable={true}>
           <div style={styles.thumbnails}>
-            <FloatingActionButton
-              className={"actionButton"}
-              primary={true}
-              style={{ marginTop: "10px", float: "left" }}
-              onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
-              {this.state.selectedCellRule.name}
-            </FloatingActionButton>
-            <div style={{ float: 'left', marginTop: "55px", color: 'grey', fontSize: "20px" }}>&gt;</div>
-            <IconMenu style={{ float: 'left', marginTop: "45px" }}
-              iconButtonElement={
-                <NetPyNENewSection handleClick={this.handleNewSection} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+            <div className="breadcrumb">
+              <FloatingActionButton
+                className={"actionButton smallActionButton breadcrumbButton"}
+                primary={true}
+                style={{ marginTop: "10px", float: "left" }}
+                onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
+                {this.state.selectedCellRule.name}
+              </FloatingActionButton>
+              <div style={{ float: 'left', marginTop: "30px", color: 'grey', fontSize: "20px" }}>&gt;</div>
+              <IconMenu style={{ float: 'left', marginTop: "18px" }}
+                iconButtonElement={
+                  <NetPyNENewSection handleClick={this.handleNewSection} />
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+              </IconMenu>
+            </div>
             <div style={{ clear: "both" }}></div>
             {sections}
           </div>
@@ -265,29 +269,31 @@ export default class NetPyNECellRules extends React.Component {
       content = (
         <Paper style={styles.tabContainer} expandable={true}>
           <div style={styles.thumbnails}>
-            <FloatingActionButton
-              className={"actionButton"}
-              primary={true}
-              style={{ marginTop: "10px", float: "left" }}
-              onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
-              {this.state.selectedCellRule.name}
-            </FloatingActionButton>
-            <div style={{ float: 'left', marginTop: "55px", color: 'grey', fontSize: "20px" }}>&gt;</div>
-            <RaisedButton primary={true} className={"addRectangularButton"}
-              onClick={() => { that.selectPage("sections"); that.setState({ selectedMechanism: undefined }); }}
-              style={{ float: 'left', marginTop: "55px", color:'white'}}
+            <div className="breadcrumb">
+              <FloatingActionButton
+                className={"actionButton smallActionButton breadcrumbButton"}
+                primary={true}
+                style={{ marginTop: "10px", float: "left" }}
+                onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
+                {this.state.selectedCellRule.name}
+              </FloatingActionButton>
+              <div style={{ float: 'left', marginTop: "30px", color: 'grey', fontSize: "20px" }}>&gt;</div>
+              <RaisedButton primary={true} className={"addRectangularButton breadcrumbButton"}
+                onClick={() => { that.selectPage("sections"); that.setState({ selectedMechanism: undefined }); }}
+                style={{ float: 'left', marginTop: "28px", color: 'white' }}
               >
-              {this.state.selectedSection.name}
-            </RaisedButton>
-            <div style={{ float: 'left', marginTop: "55px", color: 'grey', fontSize: "20px" }}>&gt;</div>
-            <IconMenu style={{ float: 'left', marginTop: "45px" }}
-              iconButtonElement={
-                <NetPyNENewMechanism handleClick={this.handleNewMechanism} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+                {this.state.selectedSection.name}
+              </RaisedButton>
+              <div style={{ float: 'left', marginTop: "30px", color: 'grey', fontSize: "20px" }}>&gt;</div>
+              <IconMenu style={{ float: 'left', marginTop: "18px" }}
+                iconButtonElement={
+                  <NetPyNENewMechanism handleClick={this.handleNewMechanism} />
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+              </IconMenu>
+            </div>
             <div style={{ clear: "both" }}></div>
             {mechanisms}
           </div>
