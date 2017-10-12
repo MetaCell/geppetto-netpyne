@@ -112,6 +112,18 @@ export default class NetPyNEPopulation extends React.Component {
     />
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.model.name != prevState.model.name) {
+      var newState = Object.keys(this.state)
+        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId'))
+        .reduce((result, current) => {
+          result[current] = '';
+          return result;
+        }, {});
+      this.setState(newState);
+    }
+  }
+
   render() {
     if (this.state.sectionId == "General") {
       var content =
@@ -159,7 +171,7 @@ export default class NetPyNEPopulation extends React.Component {
 
             </SelectField>
           </NetPyNEField>
-          {this.state.dimension != undefined ?
+          {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} style={styles.netpyneRightField}>
               <TextField
                 floatingLabelText={this.getPopulationDimensionText()}
@@ -402,7 +414,7 @@ export default class NetPyNEPopulation extends React.Component {
             {bottomNavigationItems}
           </BottomNavigation>
         </Paper>
-        <br/>
+        <br />
         {content}
 
 
