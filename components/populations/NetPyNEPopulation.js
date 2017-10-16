@@ -59,15 +59,6 @@ export default class NetPyNEPopulation extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.setPopulationDimension = this.setPopulationDimension.bind(this);
 
-    // var _this = this;
-    // Get available population parameters
-    // Utils
-    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-    //   .then(function (response) {
-    //     console.log("Getting Pop Dimensions Parameters");
-    //     console.log("Response", response)
-    //     _this.setState({ 'popDimensionsOptions': response });
-    //   });
 
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
 
@@ -352,7 +343,7 @@ export default class NetPyNEPopulation extends React.Component {
                 onChange={(event) => this.setState({ number: event.target.value })}
                 value={this.state.number}
                 model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
-            </NetPyNEField>
+            </NetPyNEField> 
             <br />
             <NetPyNEField id="netParams.popParams.seed" style={styles.netpyneField}>
               <PythonControlledTextField

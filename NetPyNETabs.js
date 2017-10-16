@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
 import NetPyNESimConfig from './components/configuration/NetPyNESimConfig';
+import NetPyNEInstantiated from './components/instantiated/NetPyNEInstantiated';
+var Utils = require('./Utils');
+
 
 const styles = {
   headline: {
@@ -30,7 +35,8 @@ export default class NetPyNETabs extends React.Component {
     super(props);
     this.state = {
       value: 'define',
-      model: null
+      model: null,
+      openDialog: false
     };
 
     var _this = this;
@@ -44,9 +50,58 @@ export default class NetPyNETabs extends React.Component {
 
   }
 
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false });
+  };
+
+  instantiate = (model) => {
+    var that = this;
+    Utils.sendPythonMessage('sim.createSimulateAnalyze', [this.state.model.netParams, this.state.model.simConfig, true])
+      .then(response => {
+        console.log("Create and simulate was executed");
+        console.log("Response", response);
+        that.handleCloseDialog();
+      });
+
+
+    // var _this = this;
+    // //Get available population parameters
+    // Utils
+    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
+    //   .then(function (response) {
+    //     console.log("Getting Pop Dimensions Parameters");
+    //     console.log("Response", response)
+    //     _this.setState({ 'popDimensionsOptions': response });
+    //     _this.handleCloseDialog();
+    //   });
+  };
+
   handleChange = (value) => {
+    var currentTab = this.state.value;
+    var dialogMessage = null;
+    var openDialog = false;
+    var confirmActionDialog = this.handleCloseDialog;
+    switch (value) {
+      case "define":
+        openDialog = true;
+        dialogMessage = "You are back to network definition, any changes will require to reinstantiate your network."
+        break;
+      case "explore":
+        if (currentTab == "define") {
+          openDialog = true;
+          dialogMessage = "We are about to instantiate your network, this could take some time.",
+            confirmActionDialog = this.instantiate;
+        }
+        break;
+      case "simulate":
+        break;
+    }
+
     this.setState({
       value: value,
+      dialogMessage: dialogMessage,
+      openDialog: openDialog,
+      confirmActionDialog: confirmActionDialog
     });
   };
 
@@ -55,55 +110,72 @@ export default class NetPyNETabs extends React.Component {
     if (this.state.model == null) {
       return (<div></div>)
     }
-    return (
-      <Tabs
-        value={this.state.value}
-        onChange={this.handleChange}
-      >
-        <Tab label="Define your network" value="define">
-          <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
-          <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
 
-          <Card style={styles.card}>
-            <CardHeader
-              title="Synapses"
-              subtitle="Define here the rules to generate the synapses in your network"
-              actAsExpander={true}
-              showExpandableButton={true}
-            />
-            <CardText expandable={true}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    return (
+      <div>
+        <Tabs
+          value={this.state.value}
+          style={{ height: '100%' }}
+          tabTemplateStyle={{ height: '100%' }}
+          contentContainerStyle={{ bottom: 0, position: 'absolute', top: 48, left: 0, right: 0 }}
+          onChange={this.handleChange}
+        >
+          <Tab label="Define your network" value="define">
+            <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
+            <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
+
+            <Card style={styles.card}>
+              <CardHeader
+                title="Synapses"
+                subtitle="Define here the rules to generate the synapses in your network"
+                actAsExpander={true}
+                showExpandableButton={true}
+              />
+              <CardText expandable={true}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
                 Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                 Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
               </CardText>
-          </Card>
-          <Card style={styles.card}>
-            <CardHeader
-              title="Connections"
-              subtitle="Define here the connectivity rules in your network"
-              actAsExpander={true}
-              showExpandableButton={true}
-            />
-            <CardText expandable={true}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </Card>
+            <Card style={styles.card}>
+              <CardHeader
+                title="Connections"
+                subtitle="Define here the connectivity rules in your network"
+                actAsExpander={true}
+                showExpandableButton={true}
+              />
+              <CardText expandable={true}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
                 Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                 Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
               </CardText>
-          </Card>
-          <NetPyNESimConfig model={this.state.model.simConfig} requirement={'from neuron_ui.netpyne_init import simConfig'}/>
-        </Tab>
-        <Tab label="Explore your network" value="explore">
-          <div>
-            <h2 style={styles.headline}>Geppetto exploration</h2>
-          </div>
-        </Tab>
-        <Tab label="Simulate and analyse" value="simulate">
-          <div>
-            <h2 style={styles.headline}>Geppetto simulation</h2>
-          </div>
-        </Tab>
-      </Tabs>)
+            </Card>
+            <NetPyNESimConfig model={this.state.model.simConfig} requirement={'from neuron_ui.netpyne_init import simConfig'} />
+          </Tab>
+          <Tab label="Explore your network" value="explore" >
+            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />
+          </Tab>
+          <Tab label="Simulate and analyse" value="simulate">
+            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />
+          </Tab>
+        </Tabs>
+        <Dialog
+          title="NetPyNE"
+          actions={<FlatButton
+            label="Ok"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.state.confirmActionDialog}
+          />}
+          modal={true}
+          open={this.state.openDialog}
+          onRequestClose={this.handleCloseDialog}
+        >
+          {this.state.dialogMessage}
+        </Dialog>
+      </div>
+    )
   }
 }

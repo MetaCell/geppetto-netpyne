@@ -1,7 +1,14 @@
+html,body {
+  height:100%;
+}
 
 #mainContainer{
   background-size: 100% 100%;
   overflow: auto;
+  height:100%;
+}
+#mainContainer>div{
+  height:100%!important;
 }
 .actionButton{
   font-size: 15px;
@@ -151,4 +158,13 @@ input[type="text"]{
 .breadcrumb{
   background-color:#eeeeee;
   height: 100px;
+}
+
+.hiddenModal{
+  position: absolute !important;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 999;
+  height: 100%;
+  width: 100%;
 }
