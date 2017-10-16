@@ -9,15 +9,10 @@ import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 
-
-import Utils from '../../Utils';
 import NetPyNEField from '../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
-
-
 
 const styles = {
   populationCard: {
@@ -41,10 +36,7 @@ export default class NetPyNECellRule extends React.Component {
       model: props.model,
       page: 'main'
     };
-
-
   }
-
 
   componentWillReceiveProps(nextProps) {
     this.setState({ model: nextProps.model });
@@ -59,11 +51,13 @@ export default class NetPyNECellRule extends React.Component {
       /><br />
       <PythonControlledTextField
         floatingLabelText="Conditions Cell Type"
+        requirement={this.props.requirement}
         model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
       />
       <br />
       <PythonControlledTextField
         floatingLabelText="Conditions Cell Model"
+        requirement={this.props.requirement}
         model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
       /><br /><br />
       <RaisedButton
@@ -73,7 +67,6 @@ export default class NetPyNECellRule extends React.Component {
         onClick={() => that.props.selectPage("sections")}
       />
     </div>);
-
 
     return (
       <div>

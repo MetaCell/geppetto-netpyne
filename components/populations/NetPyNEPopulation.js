@@ -59,7 +59,6 @@ export default class NetPyNEPopulation extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.setPopulationDimension = this.setPopulationDimension.bind(this);
 
-
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
 
   }
@@ -84,7 +83,7 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ model: nextProps.model });
+    this.setState({ model: nextProps.model, selectedIndex: 0, sectionId: "General" });
   }
 
   getPopulationDimensionText() {
@@ -131,11 +130,8 @@ export default class NetPyNEPopulation extends React.Component {
               floatingLabelText={Utils.getMetadataField("netParams.popParams.cellModel", "label")}
               dataSource={Utils.getMetadataField("netParams.popParams.cellModel", "suggestions")}
               requirement={this.props.requirement}
-              searchText={this.state.cellModel}
-              onChange={(value) => this.setState({ cellModel: value })}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               openOnFocus={true} />
-
           </NetPyNEField>
           <br />
 
@@ -143,8 +139,6 @@ export default class NetPyNEPopulation extends React.Component {
             <PythonControlledTextField
               floatingLabelText={Utils.getMetadataField("netParams.popParams.cellType", "label")}
               requirement={this.props.requirement}
-              onChange={(event) => this.setState({ cellTypeValue: event.target.value })}
-              value={this.state.cellTypeValue}
               model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
           </NetPyNEField>
           <br />
@@ -343,7 +337,7 @@ export default class NetPyNEPopulation extends React.Component {
                 onChange={(event) => this.setState({ number: event.target.value })}
                 value={this.state.number}
                 model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
-            </NetPyNEField> 
+            </NetPyNEField>
             <br />
             <NetPyNEField id="netParams.popParams.seed" style={styles.netpyneField}>
               <PythonControlledTextField
