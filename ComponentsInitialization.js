@@ -45,6 +45,7 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
 
         require('./css/neuron.less');
+        require('./css/material.less');
 
         document.title="NetPyNE";
         var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
