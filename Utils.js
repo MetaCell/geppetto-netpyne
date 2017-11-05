@@ -56,9 +56,22 @@ module.exports = {
                 return;
             }
         });
-
-
         return (currentObject == undefined) ? currentObject : currentObject[field];
+    },
+
+    getHTMLType: function (key) {
+        var type = this.getMetadataField(key, "type")
+        
+        switch (type) {
+            case "int":
+                var htmlType = "number" 
+                break;
+            default:
+                var htmlType = "text"    
+                break;
+        }
+        return htmlType;
+
     }
 
 }

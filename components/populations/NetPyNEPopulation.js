@@ -57,23 +57,7 @@ export default class NetPyNEPopulation extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.setPopulationDimension = this.setPopulationDimension.bind(this);
-
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
-
-  }
-
-  setPopulationDimension(event, value) {
-    // Set Population Dimension Python Side
-    Utils
-      .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, value])
-      .then(function (response) {
-        console.log("Setting Pop Dimensions Parameters");
-        console.log("Response", response);
-      });
-
-    // Update State
-    this.setState({ dimensionValue: value });
   }
 
   handleChange(event) {
@@ -127,8 +111,6 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellModel" style={styles.netpyneField}>
             <PythonControlledAutoComplete
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.cellModel", "label")}
-              dataSource={Utils.getMetadataField("netParams.popParams.cellModel", "suggestions")}
               requirement={this.props.requirement}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               openOnFocus={true} />
@@ -137,15 +119,14 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" style={styles.netpyneField}>
             <PythonControlledTextField
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.cellType", "label")}
               requirement={this.props.requirement}
-              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
+              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
+            />
           </NetPyNEField>
           <br />
 
           <NetPyNEField id="netParams.popParams.numCells" style={styles.netpyneField}>
             <SelectField
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.numCells", "label")}
               value={this.state.dimension}
               onChange={(event, index, value) => this.setState({ dimension: value })}
             >
@@ -158,11 +139,24 @@ export default class NetPyNEPopulation extends React.Component {
           </NetPyNEField>
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} style={styles.netpyneRightField}>
-              <TextField
-                floatingLabelText={this.getPopulationDimensionText()}
-                hintText={Utils.getMetadataField("netParams.popParams." + this.state.dimension, "hintText")}
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                handleChange={(event, value) => {
+                  var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
+
+                  // Set Population Dimension Python Side
+                  Utils
+                    .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, newValue])
+                    .then(function (response) {
+                      console.log("Setting Pop Dimensions Parameters");
+                      console.log("Response", response);
+                    });
+
+                  // Update State
+                  this.setState({ dimensionValue: newValue });
+                }}
+                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimension + "']"}
                 value={this.state.dimensionValue}
-                onChange={this.setPopulationDimension}
               />
             </NetPyNEField>
             : null
@@ -298,7 +292,6 @@ export default class NetPyNEPopulation extends React.Component {
           <div>
             <NetPyNEField id="netParams.popParams.interval" style={styles.netpyneField}>
               <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.interval", "label")}
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ interval: event.target.value })}
                 value={this.state.interval}
@@ -307,7 +300,6 @@ export default class NetPyNEPopulation extends React.Component {
             <br />
             <NetPyNEField id="netParams.popParams.rate" style={styles.netpyneField}>
               <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.rate", "label")}
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ rate: event.target.value })}
                 value={this.state.rate}
@@ -316,14 +308,12 @@ export default class NetPyNEPopulation extends React.Component {
             <br />
             <NetPyNEField id="netParams.popParams.noise" style={styles.netpyneField}>
               <PythonControlledSlider
-                label={Utils.getMetadataField("netParams.popParams.noise", "label")}
                 requirement={this.props.requirement}
                 model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
             </NetPyNEField>
             <br />
             <NetPyNEField id="netParams.popParams.start" style={styles.netpyneField}>
               <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.start", "label")}
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ start: event.target.value })}
                 value={this.state.start}
@@ -332,7 +322,6 @@ export default class NetPyNEPopulation extends React.Component {
             < br />
             <NetPyNEField id="netParams.popParams.number" style={styles.netpyneField}>
               <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.number", "label")}
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ number: event.target.value })}
                 value={this.state.number}
@@ -341,7 +330,6 @@ export default class NetPyNEPopulation extends React.Component {
             <br />
             <NetPyNEField id="netParams.popParams.seed" style={styles.netpyneField}>
               <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.seed", "label")}
                 requirement={this.props.requirement}
                 onChange={(event) => this.setState({ seed: event.target.value })}
                 value={this.state.seed}
@@ -353,7 +341,6 @@ export default class NetPyNEPopulation extends React.Component {
             <div>
               <NetPyNEField id="netParams.popParams.spkTimes" style={styles.netpyneField}>
                 <PythonControlledTextField
-                  floatingLabelText={Utils.getMetadataField("netParams.popParams.spkTimes", "label")}
                   requirement={this.props.requirement}
                   onChange={(event) => this.setState({ spkTimes: event.target.value })}
                   value={this.state.spkTimes}
@@ -362,7 +349,6 @@ export default class NetPyNEPopulation extends React.Component {
               <br />
               <NetPyNEField id="netParams.popParams.pulses" style={styles.netpyneField}>
                 <PythonControlledTextField
-                  floatingLabelText={Utils.getMetadataField("netParams.popParams.pulses", "label")}
                   requirement={this.props.requirement}
                   onChange={(event) => this.setState({ pulses: event.target.value })}
                   value={this.state.pulses}
@@ -393,7 +379,6 @@ export default class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-
         <Paper zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {bottomNavigationItems}
@@ -401,11 +386,7 @@ export default class NetPyNEPopulation extends React.Component {
         </Paper>
         <br />
         {content}
-
-
       </div>
-
-
     );
   }
 }
