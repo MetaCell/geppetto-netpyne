@@ -62,18 +62,6 @@ export default class NetPyNETabs extends React.Component {
         console.log("Response", response);
         that.handleCloseDialog();
       });
-
-
-    // var _this = this;
-    // //Get available population parameters
-    // Utils
-    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-    //   .then(function (response) {
-    //     console.log("Getting Pop Dimensions Parameters");
-    //     console.log("Response", response)
-    //     _this.setState({ 'popDimensionsOptions': response });
-    //     _this.handleCloseDialog();
-    //   });
   };
 
   handleChange = (value) => {
