@@ -41,7 +41,6 @@ export default class NetPyNETabs extends React.Component {
 
     var _this = this;
 
-
     GEPPETTO.on('OriginalModelLoaded', function (model) {
       var modelObject = JSON.parse(model);
       window.metadata = modelObject.metadata;
@@ -56,24 +55,18 @@ export default class NetPyNETabs extends React.Component {
 
   instantiate = (model) => {
     var that = this;
-    Utils.sendPythonMessage('sim.createSimulateAnalyze', [this.state.model.netParams, this.state.model.simConfig, true])
+    //TODO Call a Python method to read HOC objects created by NetPyNE which will convert them to a geppetto model
+    //using PyGeppetto and send back the JSON serialization
+    //TODO Maybe create a top level Model or Project sync
+
+    Utils.sendPythonMessage('instantiateNetPyNEModelInGeppetto', [])
       .then(response => {
-        console.log("Create and simulate was executed");
-        console.log("Response", response);
         that.handleCloseDialog();
+        console.log("Instantiate NetPyNE Model in Geppetto was called, here's the geppetto model: ");
+        GEPPETTO.SimulationHandler.loadModel(JSON.parse(response));
+       
       });
 
-
-    // var _this = this;
-    // //Get available population parameters
-    // Utils
-    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-    //   .then(function (response) {
-    //     console.log("Getting Pop Dimensions Parameters");
-    //     console.log("Response", response)
-    //     _this.setState({ 'popDimensionsOptions': response });
-    //     _this.handleCloseDialog();
-    //   });
   };
 
   handleChange = (value) => {
@@ -110,6 +103,9 @@ export default class NetPyNETabs extends React.Component {
     if (this.state.model == null) {
       return (<div></div>)
     }
+
+    var exploreContent=this.state.value=="explore"?(<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />):(<div></div>);
+    var simulateContent=this.state.value=="simulate"?(<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />):(<div></div>);
 
     return (
       <div>
@@ -155,10 +151,10 @@ export default class NetPyNETabs extends React.Component {
             <NetPyNESimConfig model={this.state.model.simConfig} requirement={'from neuron_ui.netpyne_init import simConfig'} />
           </Tab>
           <Tab label="Explore your network" value="explore" >
-            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />
+            {exploreContent}
           </Tab>
           <Tab label="Simulate and analyse" value="simulate">
-            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />
+            {simulateContent}
           </Tab>
         </Tabs>
         <Dialog
