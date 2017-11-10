@@ -67,6 +67,20 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     render() {
+
+        var controls;
+        if(this.props.page=='explore'){
+            controls = (
+                <IconButton style={{position:'absolute',left:85,top:10}} onClick={()=>{that.plotFigure('netpyne_geppetto.getNetPyNE2DNetPlot','2D Net Plot')}} icon={"fa-bar-chart"} />
+            );
+
+        } 
+        else if(this.props.page=='simulate'){
+            controls = (
+                <IconButton style={{position:'absolute',left:85,top:10}} onClick={()=>{that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot','Raster Plot')}} icon={"fa-bar-chart"} />
+            );
+        }
+
         var that=this;
         return (
             <div id="instantiatedContainer" style={{height:'100%', width:'100%'}}>
@@ -78,12 +92,14 @@ export default class NetPyNEInstantiated extends React.Component {
                     style={{height:'100%', width:'100%'}}
                 />
                 <div id="controlpanel" style={{top:0}}>
-                    <ControlPanel icon={"styles.Modal"} > 
+                    <ControlPanel 
+                        icon={"styles.Modal"} 
+                        useBuiltInFilters={true}
+                    > 
                     </ControlPanel>
                 </div>
                 <IconButton style={{position:'absolute',left:35,top:10}} onClick={()=>{$('#controlpanel').show();}} icon={"fa-list"} />
-                <IconButton style={{position:'absolute',left:85,top:10}} onClick={()=>{that.plotFigure('getNetPyNE2DNetPlot','2D Net Plot')}} icon={"fa-bar-chart"} />
-                <IconButton style={{position:'absolute',left:125,top:10}} onClick={()=>{that.plotFigure('getNetPyNERasterPlot','Raster Plot')}} icon={"fa-bar-chart"} />
+                {controls}
             </div>
 
         );

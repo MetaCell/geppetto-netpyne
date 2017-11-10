@@ -55,16 +55,24 @@ export default class NetPyNETabs extends React.Component {
 
   instantiate = (model) => {
     var that = this;
-    //TODO Call a Python method to read HOC objects created by NetPyNE which will convert them to a geppetto model
-    //using PyGeppetto and send back the JSON serialization
-    //TODO Maybe create a top level Model or Project sync
 
-    Utils.sendPythonMessage('instantiateNetPyNEModelInGeppetto', [])
+    Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
       .then(response => {
         that.handleCloseDialog();
-        console.log("Instantiate NetPyNE Model in Geppetto was called, here's the geppetto model: ");
-        GEPPETTO.SimulationHandler.loadModel(JSON.parse(response));
-       
+        console.log("Instantiate NetPyNE Model in Geppetto was called");
+        GEPPETTO.Manager.loadModel(JSON.parse(response));
+      });
+
+  };
+
+  simulate = (model) => {
+    var that = this;
+
+    Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [])
+      .then(response => {
+        that.handleCloseDialog();
+        console.log("Simulate NetPyNE Model in Geppetto was called");
+        GEPPETTO.Manager.loadModel(JSON.parse(response));
       });
 
   };
@@ -87,6 +95,11 @@ export default class NetPyNETabs extends React.Component {
         }
         break;
       case "simulate":
+        if (currentTab == "explore") {
+          openDialog = true;
+          dialogMessage = "We are about to simulate your network, this could take some time.",
+            confirmActionDialog = this.simulate;
+        }
         break;
     }
 
@@ -104,8 +117,8 @@ export default class NetPyNETabs extends React.Component {
       return (<div></div>)
     }
 
-    var exploreContent=this.state.value=="explore"?(<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />):(<div></div>);
-    var simulateContent=this.state.value=="simulate"?(<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />):(<div></div>);
+    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />) : (<div></div>);
+    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />) : (<div></div>);
 
     return (
       <div>
