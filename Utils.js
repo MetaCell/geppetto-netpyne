@@ -106,9 +106,6 @@ module.exports = {
             if (object !== null && typeof object === 'object') {
                 Object.keys(object).forEach(function (k) {
                     // Don't add the leaf to path
-                    // if (typeof object[k] === 'object'){
-                    //     path = path.concat(k);
-                    // }
                     iterate(object[k], (typeof object[k] === 'object') ? path.concat(k) : path);
 
                 });
@@ -116,9 +113,7 @@ module.exports = {
             }
 
             // Push to array of field id. Remove children and create id string
-            modelFieldsIds.push(path
-                .filter(path => path != 'children')
-                .join('.'));
+            modelFieldsIds.push(path.filter(path => path != 'children').join('.'));
         }
 
         // Iterate the array extracting the fields Ids

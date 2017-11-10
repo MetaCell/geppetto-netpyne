@@ -61,9 +61,16 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   handleChange(event) {
-    var model = this.state.model;
-    model.name = event.target.value;
-    this.setState({ model: model });
+    var newValue = event.target.value;
+    Utils
+      .sendPythonMessage('netParams.popParams.rename', [this.state.model.name, newValue])
+      .then((response) => {
+        console.log(response)
+        var model = this.state.model;
+        model.name = newValue;
+        this.setState({ model: model });
+      })
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,15 +82,6 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
-
-  getBottomNavigationItem(index, sectionId, label, icon) {
-
-    return <BottomNavigationItem
-      label={label}
-      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
-      onClick={() => this.select(index, sectionId)}
-    />
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.model.name != prevState.model.name) {
@@ -100,14 +98,16 @@ export default class NetPyNEPopulation extends React.Component {
       Utils
         .sendPythonMessage('api.getParametersForCellModel', [this.state.cellModel])
         .then((response) => {
-          console.log("Getting Parameters For Cell Model");
-          console.log("Response", response);
+          // console.log("Getting Parameters For Cell Model");
+          // console.log("Response", response);
 
           var cellModelFields = [];
           if (Object.keys(response).length != 0) {
+            // Merge the new metadata with the current one
             window.metadata = Utils.mergeDeep(window.metadata, response);
-            console.log("New Metadata", window.metadata);
+            // console.log("New Metadata", window.metadata);
 
+            // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
               return (<NetPyNEField id={key} style={styles.netpyneField}>
                 <PythonControlledTextField
@@ -115,14 +115,30 @@ export default class NetPyNEPopulation extends React.Component {
                   model={"netParams.popParams['" + this.state.model.name + "']['" + key.split(".").pop() + "']"}
                 />
               </NetPyNEField>);
-
             });
           }
-
           this.setState({ cellModelFields: cellModelFields });
-
         });
     }
+  }
+
+  getBottomNavigationItem(index, sectionId, label, icon) {
+    return <BottomNavigationItem
+      label={label}
+      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
+      onClick={() => this.select(index, sectionId)}
+    />
+  }
+
+  generateMenu() {
+    var bottomNavigationItems = [];
+    bottomNavigationItems.push(this.getBottomNavigationItem(0, 'General', 'General', 'fa-bars'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(1, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
+    if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
+      bottomNavigationItems.push(this.getBottomNavigationItem(2, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
+    }
+    bottomNavigationItems.push(this.getBottomNavigationItem(3, 'CellList', 'Cell List', 'fa-list'));
+    return bottomNavigationItems;
   }
 
   render() {
@@ -318,29 +334,15 @@ export default class NetPyNEPopulation extends React.Component {
     else if (this.state.sectionId == "CellList") {
       var content = <div>We should replicate population parameters</div>
     }
-    else{
+    else {
       var content = <div>{this.state.cellModelFields}</div>;
     }
-
-    // Generate Menu
-    var index = 0;
-    var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'General', 'General', 'fa-bars'));
-    index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
-    if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
-      index++;
-      bottomNavigationItems.push(this.getBottomNavigationItem(index, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
-    }
-    index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'CellList', 'Cell List', 'fa-list'));
-
 
     return (
       <div>
         <Paper zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
-            {bottomNavigationItems}
+            {this.generateMenu()}
           </BottomNavigation>
         </Paper>
         <br />
