@@ -9,10 +9,10 @@ import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import Utils from '../../Utils';
-import NetPyNEField from '../general/NetPyNEField';
+import Utils from '../../../Utils';
+import NetPyNEField from '../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 
 const styles = {

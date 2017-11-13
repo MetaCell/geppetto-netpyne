@@ -7,8 +7,8 @@ import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 
-import NetPyNEField from '../general/NetPyNEField';
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+import NetPyNEField from '../../general/NetPyNEField';
+var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 
 

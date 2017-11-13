@@ -22,7 +22,7 @@ import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 
-import Utils from '../../Utils';
+import Utils from '../../../Utils';
 
 const styles = {
   headline: {

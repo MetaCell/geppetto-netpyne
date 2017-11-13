@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import Toggle from 'material-ui/Toggle';
-import Slider from '../general/Slider';
+import Slider from '../../general/Slider';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
@@ -13,11 +13,11 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import AutoComplete from 'material-ui/AutoComplete';
 
 
-import Utils from '../../Utils';
-import NetPyNEField from '../general/NetPyNEField';
-import AdapterComponent from '../general/AdapterComponent';
+import Utils from '../../../Utils';
+import NetPyNEField from '../../general/NetPyNEField';
+import AdapterComponent from '../../general/AdapterComponent';
 
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 var PythonControlledSlider = PythonControlledCapability.createPythonControlledComponent(Slider);

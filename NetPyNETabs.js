@@ -3,12 +3,12 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
-import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
-import NetPyNESynapses from './components/synapses/NetPyNESynapses';
-import NetPyNESimConfig from './components/configuration/NetPyNESimConfig';
-import NetPyNEInstantiated from './components/instantiated/NetPyNEInstantiated';
-var Utils = require('./Utils');
+import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
+import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
+import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
+import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
+import Utils from './Utils';
 
 
 const styles = {
