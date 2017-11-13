@@ -106,7 +106,7 @@ export default class NetPyNETabs extends React.Component {
           value={this.state.value}
           style={{ height: '100%' }}
           tabTemplateStyle={{ height: '100%' }}
-          contentContainerStyle={{ bottom: 0, position: 'absolute', top: 48, left: 0, right: 0 }}
+          contentContainerStyle={{ bottom: 0, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
         >
           <Tab label="Define your network" value="define">
