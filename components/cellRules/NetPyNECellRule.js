@@ -9,6 +9,7 @@ import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import Utils from '../../Utils';
 import NetPyNEField from '../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -47,19 +48,30 @@ export default class NetPyNECellRule extends React.Component {
     var content = (<div>
       <TextField
         value={this.state.model.name}
+        style={styles.netpyneField}
+        onChange={(event) => Utils.renameKey('netParams.cellParams', this.state.model.name, event.target.value, function (response, newValue) {
+          var model = this.state.model;
+          model.name = newValue;
+          this.setState({ model: model });
+        })}
         floatingLabelText="The name of the cell rule"
       /><br />
-      <PythonControlledTextField
-        floatingLabelText="Conditions Cell Type"
-        requirement={this.props.requirement}
-        model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
-      />
-      <br />
-      <PythonControlledTextField
-        floatingLabelText="Conditions Cell Model"
-        requirement={this.props.requirement}
-        model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
-      /><br /><br />
+
+      <NetPyNEField id="netParams.cellParams.conds.cellType" style={styles.netpyneField}>
+        <PythonControlledTextField
+          requirement={this.props.requirement}
+          model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
+        />
+      </NetPyNEField>
+
+      <NetPyNEField id="netParams.cellParams.conds.cellModel" style={styles.netpyneField}>
+        <PythonControlledTextField
+          requirement={this.props.requirement}
+          model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
+        />
+      </NetPyNEField>
+      <br /><br />
+
       <RaisedButton
         label="Sections"
         labelPosition="before"

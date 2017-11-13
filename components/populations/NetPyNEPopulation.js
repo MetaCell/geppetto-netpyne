@@ -13,7 +13,7 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import AutoComplete from 'material-ui/AutoComplete';
 
 
-var Utils = require('../../Utils');
+import Utils from '../../Utils';
 import NetPyNEField from '../general/NetPyNEField';
 import AdapterComponent from '../general/AdapterComponent';
 
@@ -56,21 +56,7 @@ export default class NetPyNEPopulation extends React.Component {
       sectionId: "General"
     };
 
-    this.handleChange = this.handleChange.bind(this);
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
-  }
-
-  handleChange(event) {
-    var newValue = event.target.value;
-    Utils
-      .sendPythonMessage('netParams.popParams.rename', [this.state.model.name, newValue])
-      .then((response) => {
-        console.log(response)
-        var model = this.state.model;
-        model.name = newValue;
-        this.setState({ model: model });
-      })
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -148,9 +134,13 @@ export default class NetPyNEPopulation extends React.Component {
           <TextField
             value={this.state.model.name}
             style={styles.netpyneField}
-            onChange={this.handleChange}
+            onChange={(event) => Utils.renameKey('netParams.popParams', this.state.model.name, event.target.value, (response, newValue) => {
+              var model = this.state.model;
+              model.name = newValue;
+              this.setState({ model: model });
+            })}
             floatingLabelText="The name of your population"
-          /> <br />
+          /><br />
 
           <NetPyNEField id="netParams.popParams.cellModel" style={styles.netpyneField}>
             <PythonControlledAutoComplete

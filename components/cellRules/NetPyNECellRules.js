@@ -103,6 +103,9 @@ export default class NetPyNECellRules extends React.Component {
     // Create Population Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
 
+    // Create cond in population
+    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"]["conds"] = {}');
+
     // Update state
     model[cellRuleId] = newCellRule;
     this.setState({

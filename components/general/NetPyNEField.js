@@ -24,8 +24,7 @@ export default class NetPyNEField extends Component {
 
     render() {
         var help = Utils.getMetadataField(this.props.id, "help");
-        if (help != undefined) {
-            // var helpComponent = <div>{help}</div>
+        if (help != undefined && help != '') {
             var helpComponent = <div className="helpIcon" onClick={() => this.handleOpenHelp(help)}><i className="fa fa-question" aria-hidden="true"></i>
                 <Dialog
                     title="NetPyNE Help"

@@ -5,6 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import NetPyNEPopulations from './components/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/cellRules/NetPyNECellRules';
+import NetPyNESynapses from './components/synapses/NetPyNESynapses';
 import NetPyNESimConfig from './components/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiated/NetPyNEInstantiated';
 var Utils = require('./Utils');
@@ -111,21 +112,8 @@ export default class NetPyNETabs extends React.Component {
           <Tab label="Define your network" value="define">
             <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
             <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
+            <NetPyNESynapses model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
 
-            <Card style={styles.card}>
-              <CardHeader
-                title="Synapses"
-                subtitle="Define here the rules to generate the synapses in your network"
-                actAsExpander={true}
-                showExpandableButton={true}
-              />
-              <CardText expandable={true}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-            </Card>
             <Card style={styles.card}>
               <CardHeader
                 title="Connections"

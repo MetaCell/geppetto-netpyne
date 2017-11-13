@@ -7,6 +7,7 @@ import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 
+import NetPyNEField from '../general/NetPyNEField';
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 
@@ -52,174 +53,164 @@ export default class NetPyNESimConfig extends React.Component {
             showExpandableButton={true}
           />
 
-            <Paper style={styles.tabContainer} expandable={true} >
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.duration"}
-                  floatingLabelText="Duration"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.dt"}
-                  floatingLabelText="Dt"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.seeds"}
-                  floatingLabelText="Seeds"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.addSynMechs"}
-                  floatingLabelText="Add Syn Mechs"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.includeParamsLabel"}
-                  floatingLabelText="Include Params Label"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.timing"}
-                  floatingLabelText="Timing"
-                /><br />
-              </div>
-              <div>
-                <PythonControlledTextField
-                  requirement={this.props.requirement}
-                  model={"simConfig.verbose"}
-                  floatingLabelText="Verbose"
-                /><br />
-              </div>
-
+          <Paper style={styles.tabContainer} expandable={true} >
             <div>
+            <NetPyNEField id="simConfig.duration" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.duration"}
+              />
+            </NetPyNEField><br />
+            
+            <NetPyNEField id="simConfig.dt" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.dt"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.seeds" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.seeds"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.addSynMechs" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.addSynMechs"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.includeParamsLabel" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.includeParamsLabel"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.timing" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.timing"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.verbose" style={styles.netpyneField}>
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                model={"simConfig.verbose"}
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.simLabel" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.simLabel"}
-                floatingLabelText="Sim Label"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveFolder" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveFolder"}
-                floatingLabelText="Save Folder"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.filename" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.filename"}
-                floatingLabelText="File Name"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveDataInclude" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveDataInclude"}
-                floatingLabelText="Save Data Include"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.timestampFilename" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.timestampFilename"}
-                floatingLabelText="Timestamp File Name"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.savePickle" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.savePickle"}
-                floatingLabelText="Save Pickle"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveJson" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveJson"}
-                floatingLabelText="Save Json"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveMat" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveMat"}
-                floatingLabelText="Save Mat"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveHDF5" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveHDF5"}
-                floatingLabelText="Save HDF5"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveDpk" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveDpk"}
-                floatingLabelText="Save Dpk"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveDat" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveDat"}
-                floatingLabelText="Save Dat"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveCsv" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveCsv"}
-                floatingLabelText="Save Csv"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveCellSecs" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveCellSecs"}
-                floatingLabelText="Save Cell Secs"
-              /><br />
-            </div>
-            <div>
+              />
+            </NetPyNEField><br />
+
+            <NetPyNEField id="simConfig.saveCellConns" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.saveCellConns"}
-                floatingLabelText="Save Cell Conns"
-              /><br />
-            </div>
+              />
+            </NetPyNEField><br />
 
-            <div>
+            <NetPyNEField id="simConfig.checkError" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
                 model={"simConfig.checkError"}
-                floatingLabelText="Check Errors"
-              /><br />
-            </div>
-            <div>
-              <PythonControlledTextField
-                requirement={this.props.requirement}
-                model={"simConfig.checkError"}
-                floatingLabelText="Check Errors"
-              /><br />
-            </div>
-          </Paper>
-
+              />
+            </NetPyNEField><br />
+          </div>
+        </Paper>
        </Card>);
-
     }
     return content;
   }

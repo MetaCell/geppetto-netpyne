@@ -124,6 +124,13 @@ module.exports = {
         var modelFields = [];
         modelFieldsIds.filter((v, i, a) => a.indexOf(v) === i).map((id) => modelFields.push(callback(id, 0)))
         return modelFields;
+    },
+
+    renameKey(path, oldValue, newValue, callback) {
+        this.sendPythonMessage(path + '.rename', [oldValue, newValue])
+            .then((response) => {
+                callback(response, newValue);
+            })
     }
 
 }
