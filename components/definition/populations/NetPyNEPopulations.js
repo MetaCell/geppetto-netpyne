@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import Paper from 'material-ui/Paper';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import NetPyNEPopulationThumbnail from './NetPyNEPopulationThumbnail';
 import NetPyNEPopulation from './NetPyNEPopulation';
@@ -104,7 +103,7 @@ export default class NetPyNEPopulations extends React.Component {
           actAsExpander={true}
           showExpandableButton={true}
         />
-        <Paper style={styles.tabContainer} expandable={true}>
+        <CardText style={styles.tabContainer} expandable={true}>
           <IconMenu style={{ float: 'left' }}
             iconButtonElement={
               <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
@@ -119,7 +118,7 @@ export default class NetPyNEPopulations extends React.Component {
           <div style={styles.thumbnails}>
             {populations}
           </div>
-        </Paper>
+        </CardText>
       </Card>
 
     );

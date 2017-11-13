@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
@@ -53,8 +52,8 @@ export default class NetPyNESimConfig extends React.Component {
             showExpandableButton={true}
           />
 
-          <Paper style={styles.tabContainer} expandable={true} >
-            <div>
+          <CardText style={styles.tabContainer} expandable={true} >
+
             <NetPyNEField id="simConfig.duration" style={styles.netpyneField}>
               <PythonControlledTextField
                 requirement={this.props.requirement}
@@ -208,8 +207,8 @@ export default class NetPyNESimConfig extends React.Component {
                 model={"simConfig.checkError"}
               />
             </NetPyNEField><br />
-          </div>
-        </Paper>
+
+        </CardText>
        </Card>);
     }
     return content;

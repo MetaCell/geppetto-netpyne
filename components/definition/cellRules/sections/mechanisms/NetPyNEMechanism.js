@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
+import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
 var PythonControlledCapability = require('../../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -93,11 +93,11 @@ export default class NetPyNEMechanism extends React.Component {
     return (
       <div>
 
-        <Paper zDepth={0}>
+        <CardText zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
-        </Paper>
+        </CardText>
         <br />
         {content}
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import Toggle from 'material-ui/Toggle';
@@ -330,11 +329,11 @@ export default class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <Paper zDepth={0}>
+        <CardText zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {this.generateMenu()}
           </BottomNavigation>
-        </Paper>
+        </CardText>
         <br />
         {content}
       </div>

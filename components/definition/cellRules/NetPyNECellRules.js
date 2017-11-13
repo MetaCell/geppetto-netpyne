@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import Paper from 'material-ui/Paper';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -195,7 +194,7 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <Paper style={styles.tabContainer} expandable={true}>
+        <CardText style={styles.tabContainer} expandable={true}>
           <div style={styles.details}>
             {selectedCellRule}
           </div>
@@ -213,7 +212,7 @@ export default class NetPyNECellRules extends React.Component {
             <div style={{ clear: "both" }}></div>
             {cellRules}
           </div>
-        </Paper>);
+        </CardText>);
     }
 
     else if (this.state.page == "sections") {
@@ -228,7 +227,7 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <Paper style={styles.tabContainer} expandable={true}>
+        <CardText style={styles.tabContainer} expandable={true}>
           <div style={styles.thumbnails}>
             <div className="breadcrumb">
               <FloatingActionButton
@@ -254,7 +253,7 @@ export default class NetPyNECellRules extends React.Component {
           <div style={styles.details}>
             {selectedSection}
           </div>
-        </Paper>
+        </CardText>
       );
 
     }
@@ -270,7 +269,7 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <Paper style={styles.tabContainer} expandable={true}>
+        <CardText style={styles.tabContainer} expandable={true}>
           <div style={styles.thumbnails}>
             <div className="breadcrumb">
               <FloatingActionButton
@@ -303,7 +302,7 @@ export default class NetPyNECellRules extends React.Component {
           <div style={styles.details}>
             {selectedMechanism}
           </div>
-        </Paper>
+        </CardText>
       );
 
     }
