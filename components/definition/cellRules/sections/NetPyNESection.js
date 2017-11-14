@@ -11,7 +11,7 @@ import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 

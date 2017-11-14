@@ -7,7 +7,7 @@ export default class NetPyNEField extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            openHelp:false
+            openHelp: false
         };
 
     }
@@ -24,8 +24,7 @@ export default class NetPyNEField extends Component {
 
     render() {
         var help = Utils.getMetadataField(this.props.id, "help");
-        if (help != undefined) {
-            // var helpComponent = <div>{help}</div>
+        if (help != undefined && help != '') {
             var helpComponent = <div className="helpIcon" onClick={() => this.handleOpenHelp(help)}><i className="fa fa-question" aria-hidden="true"></i>
                 <Dialog
                     title="NetPyNE Help"
@@ -44,10 +43,19 @@ export default class NetPyNEField extends Component {
             </div>
         }
 
+
+        const childWithProp = React.Children.map(this.props.children, (child) => {
+            var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
+            var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
+            var type = Utils.getHTMLType(this.props.id);
+            var hintText=Utils.getMetadataField(this.props.id, "hintText");
+            return React.cloneElement(child, { floatingLabelText: floatingLabelText, dataSource: dataSource, type: type, hintText:hintText });
+        });
+
         return (
             <div style={this.props.style}>
                 <div style={{ float: 'left' }}>
-                    {this.props.children}
+                    {childWithProp}
                 </div>
                 {helpComponent}
                 <div style={{ clear: "both" }}></div>

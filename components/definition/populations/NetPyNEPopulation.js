@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import Toggle from 'material-ui/Toggle';
-import Slider from '../general/Slider';
+import Slider from '../../general/Slider';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
@@ -13,11 +13,11 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import AutoComplete from 'material-ui/AutoComplete';
 
 
-var Utils = require('../../Utils');
-import NetPyNEField from '../general/NetPyNEField';
-import AdapterComponent from '../general/AdapterComponent';
+import Utils from '../../../Utils';
+import NetPyNEField from '../../general/NetPyNEField';
+import AdapterComponent from '../../general/AdapterComponent';
 
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 var PythonControlledSlider = PythonControlledCapability.createPythonControlledComponent(Slider);
@@ -56,52 +56,18 @@ export default class NetPyNEPopulation extends React.Component {
       sectionId: "General"
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.setPopulationDimension = this.setPopulationDimension.bind(this);
-
-
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
-
-  }
-
-  setPopulationDimension(event, value) {
-    // Set Population Dimension Python Side
-    Utils
-      .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, value])
-      .then(function (response) {
-        console.log("Setting Pop Dimensions Parameters");
-        console.log("Response", response);
-      });
-
-    // Update State
-    this.setState({ dimensionValue: value });
-  }
-
-  handleChange(event) {
-    var model = this.state.model;
-    model.name = event.target.value;
-    this.setState({ model: model });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ model: nextProps.model });
+    this.setState({ model: nextProps.model, selectedIndex: 0, sectionId: "General" });
   }
 
   getPopulationDimensionText() {
-    var _this = this;
-    return this.popDimensionsOptions.filter(function (p) { return p.value == _this.state.dimension })[0].label;
+    return this.popDimensionsOptions.filter((p) => { return p.value == this.state.dimension })[0].label;
   }
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
-
-  getBottomNavigationItem(index, sectionId, label, icon) {
-
-    return <BottomNavigationItem
-      label={label}
-      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
-      onClick={() => this.select(index, sectionId)}
-    />
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.model.name != prevState.model.name) {
@@ -113,6 +79,52 @@ export default class NetPyNEPopulation extends React.Component {
         }, {});
       this.setState(newState);
     }
+    else if (this.state.cellModel != prevState.cellModel) {
+      // Set Population Dimension Python Side
+      Utils
+        .sendPythonMessage('api.getParametersForCellModel', [this.state.cellModel])
+        .then((response) => {
+          // console.log("Getting Parameters For Cell Model");
+          // console.log("Response", response);
+
+          var cellModelFields = [];
+          if (Object.keys(response).length != 0) {
+            // Merge the new metadata with the current one
+            window.metadata = Utils.mergeDeep(window.metadata, response);
+            // console.log("New Metadata", window.metadata);
+
+            // Get Fields for new metadata
+            cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
+              return (<NetPyNEField id={key} style={styles.netpyneField}>
+                <PythonControlledTextField
+                  requirement={this.props.requirement}
+                  model={"netParams.popParams['" + this.state.model.name + "']['" + key.split(".").pop() + "']"}
+                />
+              </NetPyNEField>);
+            });
+          }
+          this.setState({ cellModelFields: cellModelFields });
+        });
+    }
+  }
+
+  getBottomNavigationItem(index, sectionId, label, icon) {
+    return <BottomNavigationItem
+      label={label}
+      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
+      onClick={() => this.select(index, sectionId)}
+    />
+  }
+
+  generateMenu() {
+    var bottomNavigationItems = [];
+    bottomNavigationItems.push(this.getBottomNavigationItem(0, 'General', 'General', 'fa-bars'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(1, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
+    if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
+      bottomNavigationItems.push(this.getBottomNavigationItem(2, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
+    }
+    bottomNavigationItems.push(this.getBottomNavigationItem(3, 'CellList', 'Cell List', 'fa-list'));
+    return bottomNavigationItems;
   }
 
   render() {
@@ -122,36 +134,34 @@ export default class NetPyNEPopulation extends React.Component {
           <TextField
             value={this.state.model.name}
             style={styles.netpyneField}
-            onChange={this.handleChange}
+            onChange={(event) => Utils.renameKey('netParams.popParams', this.state.model.name, event.target.value, (response, newValue) => {
+              var model = this.state.model;
+              model.name = newValue;
+              this.setState({ model: model });
+            })}
             floatingLabelText="The name of your population"
-          /> <br />
+          /><br />
 
           <NetPyNEField id="netParams.popParams.cellModel" style={styles.netpyneField}>
             <PythonControlledAutoComplete
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.cellModel", "label")}
-              dataSource={Utils.getMetadataField("netParams.popParams.cellModel", "suggestions")}
               requirement={this.props.requirement}
+              model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               searchText={this.state.cellModel}
               onChange={(value) => this.setState({ cellModel: value })}
-              model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               openOnFocus={true} />
-
           </NetPyNEField>
           <br />
 
           <NetPyNEField id="netParams.popParams.cellType" style={styles.netpyneField}>
             <PythonControlledTextField
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.cellType", "label")}
               requirement={this.props.requirement}
-              onChange={(event) => this.setState({ cellTypeValue: event.target.value })}
-              value={this.state.cellTypeValue}
-              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
+              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
+            />
           </NetPyNEField>
           <br />
 
           <NetPyNEField id="netParams.popParams.numCells" style={styles.netpyneField}>
             <SelectField
-              floatingLabelText={Utils.getMetadataField("netParams.popParams.numCells", "label")}
               value={this.state.dimension}
               onChange={(event, index, value) => this.setState({ dimension: value })}
             >
@@ -164,11 +174,24 @@ export default class NetPyNEPopulation extends React.Component {
           </NetPyNEField>
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} style={styles.netpyneRightField}>
-              <TextField
-                floatingLabelText={this.getPopulationDimensionText()}
-                hintText={Utils.getMetadataField("netParams.popParams." + this.state.dimension, "hintText")}
+              <PythonControlledTextField
+                requirement={this.props.requirement}
+                handleChange={(event, value) => {
+                  var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
+
+                  // Set Population Dimension Python Side
+                  Utils
+                    .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, newValue])
+                    .then(function (response) {
+                      console.log("Setting Pop Dimensions Parameters");
+                      console.log("Response", response);
+                    });
+
+                  // Update State
+                  this.setState({ dimensionValue: newValue });
+                }}
+                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimension + "']"}
                 value={this.state.dimensionValue}
-                onChange={this.setPopulationDimension}
               />
             </NetPyNEField>
             : null
@@ -298,120 +321,23 @@ export default class NetPyNEPopulation extends React.Component {
             : null}
         </div>
     }
-    else if (this.state.sectionId == "NetStim" || this.state.sectionId == "VecStim") {
-      var content =
-        <div>
-          <div>
-            <NetPyNEField id="netParams.popParams.interval" style={styles.netpyneField}>
-              <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.interval", "label")}
-                requirement={this.props.requirement}
-                onChange={(event) => this.setState({ interval: event.target.value })}
-                value={this.state.interval}
-                model={"netParams.popParams['" + this.state.model.name + "']['interval']"} />
-            </NetPyNEField>
-            <br />
-            <NetPyNEField id="netParams.popParams.rate" style={styles.netpyneField}>
-              <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.rate", "label")}
-                requirement={this.props.requirement}
-                onChange={(event) => this.setState({ rate: event.target.value })}
-                value={this.state.rate}
-                model={"netParams.popParams['" + this.state.model.name + "']['rate']"} />
-            </NetPyNEField>
-            <br />
-            <NetPyNEField id="netParams.popParams.noise" style={styles.netpyneField}>
-              <PythonControlledSlider
-                label={Utils.getMetadataField("netParams.popParams.noise", "label")}
-                requirement={this.props.requirement}
-                model={"netParams.popParams['" + this.state.model.name + "']['noise']"} />
-            </NetPyNEField>
-            <br />
-            <NetPyNEField id="netParams.popParams.start" style={styles.netpyneField}>
-              <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.start", "label")}
-                requirement={this.props.requirement}
-                onChange={(event) => this.setState({ start: event.target.value })}
-                value={this.state.start}
-                model={"netParams.popParams['" + this.state.model.name + "']['start']"} />
-            </NetPyNEField>
-            < br />
-            <NetPyNEField id="netParams.popParams.number" style={styles.netpyneField}>
-              <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.number", "label")}
-                requirement={this.props.requirement}
-                onChange={(event) => this.setState({ number: event.target.value })}
-                value={this.state.number}
-                model={"netParams.popParams['" + this.state.model.name + "']['number']"} />
-            </NetPyNEField> 
-            <br />
-            <NetPyNEField id="netParams.popParams.seed" style={styles.netpyneField}>
-              <PythonControlledTextField
-                floatingLabelText={Utils.getMetadataField("netParams.popParams.seed", "label")}
-                requirement={this.props.requirement}
-                onChange={(event) => this.setState({ seed: event.target.value })}
-                value={this.state.seed}
-                model={"netParams.popParams['" + this.state.model.name + "']['seed']"} />
-            </NetPyNEField>
-          </div>
-
-          {(this.state.cellModel == 'VecStim') ?
-            <div>
-              <NetPyNEField id="netParams.popParams.spkTimes" style={styles.netpyneField}>
-                <PythonControlledTextField
-                  floatingLabelText={Utils.getMetadataField("netParams.popParams.spkTimes", "label")}
-                  requirement={this.props.requirement}
-                  onChange={(event) => this.setState({ spkTimes: event.target.value })}
-                  value={this.state.spkTimes}
-                  model={"netParams.popParams['" + this.state.model.name + "']['spkTimes']"} />
-              </NetPyNEField>
-              <br />
-              <NetPyNEField id="netParams.popParams.pulses" style={styles.netpyneField}>
-                <PythonControlledTextField
-                  floatingLabelText={Utils.getMetadataField("netParams.popParams.pulses", "label")}
-                  requirement={this.props.requirement}
-                  onChange={(event) => this.setState({ pulses: event.target.value })}
-                  value={this.state.pulses}
-                  model={"netParams.popParams['" + this.state.model.name + "']['pulses']"} />
-              </NetPyNEField>
-            </div> : null
-          }
-        </div>
-    }
     else if (this.state.sectionId == "CellList") {
       var content = <div>We should replicate population parameters</div>
     }
-
-    // Generate Menu
-    var index = 0;
-    var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'General', 'General', 'fa-bars'));
-    index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
-    if (this.state.cellModel == 'NetStim' || this.state.cellModel == 'VecStim') {
-      // We should do something like this -> this.getSpecificModelParameter() so we consider also IntFire1, etc.
-      index++;
-      bottomNavigationItems.push(this.getBottomNavigationItem(index, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
+    else {
+      var content = <div>{this.state.cellModelFields}</div>;
     }
-    index++;
-    bottomNavigationItems.push(this.getBottomNavigationItem(index, 'CellList', 'Cell List', 'fa-list'));
-
 
     return (
       <div>
-
         <Paper zDepth={0}>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
-            {bottomNavigationItems}
+            {this.generateMenu()}
           </BottomNavigation>
         </Paper>
         <br />
         {content}
-
-
       </div>
-
-
     );
   }
 }

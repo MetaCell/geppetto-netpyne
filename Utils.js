@@ -56,9 +56,81 @@ module.exports = {
                 return;
             }
         });
-
-
         return (currentObject == undefined) ? currentObject : currentObject[field];
+    },
+
+    getHTMLType: function (key) {
+        var type = this.getMetadataField(key, "type")
+
+        switch (type) {
+            case "int":
+                var htmlType = "number"
+                break;
+            default:
+                var htmlType = "text"
+                break;
+        }
+        return htmlType;
+
+    },
+
+    isObject: function (item) {
+        return (item && typeof item === 'object' && !Array.isArray(item));
+    },
+
+    mergeDeep: function (target, source) {
+        let output = Object.assign({}, target);
+        if (this.isObject(target) && this.isObject(source)) {
+            Object.keys(source).forEach(key => {
+                if (this.isObject(source[key])) {
+                    if (!(key in target))
+                        Object.assign(output, { [key]: source[key] });
+                    else
+                        output[key] = this.mergeDeep(target[key], source[key]);
+                } else {
+                    Object.assign(output, { [key]: source[key] });
+                }
+            });
+        }
+        return output;
+    },
+
+    getFieldsFromMetadataTree: function (tree, callback) {
+        function iterate(object, path) {
+            if (Array.isArray(object)) {
+                object.forEach(function (a, i) {
+                    iterate(a, path.concat(i));
+                });
+                return;
+            }
+            if (object !== null && typeof object === 'object') {
+                Object.keys(object).forEach(function (k) {
+                    // Don't add the leaf to path
+                    iterate(object[k], (typeof object[k] === 'object') ? path.concat(k) : path);
+
+                });
+                return;
+            }
+
+            // Push to array of field id. Remove children and create id string
+            modelFieldsIds.push(path.filter(path => path != 'children').join('.'));
+        }
+
+        // Iterate the array extracting the fields Ids
+        var modelFieldsIds = [];
+        iterate(tree, []);
+
+        // Generate model fields based on ids
+        var modelFields = [];
+        modelFieldsIds.filter((v, i, a) => a.indexOf(v) === i).map((id) => modelFields.push(callback(id, 0)))
+        return modelFields;
+    },
+
+    renameKey(path, oldValue, newValue, callback) {
+        this.sendPythonMessage(path + '.rename', [oldValue, newValue])
+            .then((response) => {
+                callback(response, newValue);
+            })
     }
 
 }

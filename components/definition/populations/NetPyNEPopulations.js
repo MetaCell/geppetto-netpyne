@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import Utils from '../../Utils';
+import Utils from '../../../Utils';
 
 const styles = {
   headline: {
