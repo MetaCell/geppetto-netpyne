@@ -55,12 +55,26 @@ export default class NetPyNETabs extends React.Component {
 
   instantiate = (model) => {
     var that = this;
-    Utils.sendPythonMessage('sim.createSimulateAnalyze', [this.state.model.netParams, this.state.model.simConfig, true])
+
+    Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
       .then(response => {
-        console.log("Create and simulate was executed");
-        console.log("Response", response);
         that.handleCloseDialog();
+        console.log("Instantiate NetPyNE Model in Geppetto was called");
+        GEPPETTO.Manager.loadModel(JSON.parse(response));
       });
+
+  };
+
+  simulate = (model) => {
+    var that = this;
+
+    Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [])
+      .then(response => {
+        that.handleCloseDialog();
+        console.log("Simulate NetPyNE Model in Geppetto was called");
+        GEPPETTO.Manager.loadModel(JSON.parse(response));
+      });
+
   };
 
   handleChange = (value) => {
@@ -81,6 +95,11 @@ export default class NetPyNETabs extends React.Component {
         }
         break;
       case "simulate":
+        if (currentTab == "explore") {
+          openDialog = true;
+          dialogMessage = "We are about to simulate your network, this could take some time.",
+            confirmActionDialog = this.simulate;
+        }
         break;
     }
 
@@ -97,6 +116,9 @@ export default class NetPyNETabs extends React.Component {
     if (this.state.model == null) {
       return (<div></div>)
     }
+
+    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />) : (<div></div>);
+    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />) : (<div></div>);
 
     return (
       <div>
@@ -129,10 +151,10 @@ export default class NetPyNETabs extends React.Component {
             <NetPyNESimConfig model={this.state.model.simConfig} />
           </Tab>
           <Tab label="Explore your network" value="explore" >
-            <NetPyNEInstantiated model={this.state.model} page={"explore"} />
+            {exploreContent}
           </Tab>
           <Tab label="Simulate and analyse" value="simulate">
-            <NetPyNEInstantiated model={this.state.model} page={"simulate"} />
+            {simulateContent}
           </Tab>
         </Tabs>
         <Dialog
