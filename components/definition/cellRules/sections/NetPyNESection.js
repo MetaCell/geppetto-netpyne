@@ -101,22 +101,22 @@ export default class NetPyNESection extends React.Component {
       content = (<div>
         <PythonControlledTextField
           floatingLabelText="Diameter"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['diam']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="L"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['L']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Ra"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['Ra']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Pt3d"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['pt3d']"} />
         <br />
 
@@ -126,17 +126,17 @@ export default class NetPyNESection extends React.Component {
       content = (<div>
         <PythonControlledTextField
           floatingLabelText="Parent Section"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentSec']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Parent x"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentX']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Child x"
-          requirement={this.props.requirement}
+          
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['childX']"} />
       </div>)
     }

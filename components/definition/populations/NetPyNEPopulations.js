@@ -88,11 +88,11 @@ export default class NetPyNEPopulations extends React.Component {
 
     var populations = [];
     for (var key in this.state.model) {
-      populations.push(<NetPyNEPopulationThumbnail selected={this.state.selectedPopulation && key == this.state.selectedPopulation.name} model={this.state.model[key]} path={key} handleClick={this.selectPopulation} />);
+      populations.push(<NetPyNEPopulationThumbnail key={key} selected={this.state.selectedPopulation && key == this.state.selectedPopulation.name} model={this.state.model[key]} path={key} handleClick={this.selectPopulation} />);
     }
     var selectedPopulation = undefined;
     if (this.state.selectedPopulation) {
-      selectedPopulation = <NetPyNEPopulation requirement={this.props.requirement} model={this.state.selectedPopulation} path={this.state.selectedPopulation.name} />;
+      selectedPopulation = <NetPyNEPopulation  model={this.state.selectedPopulation} path={this.state.selectedPopulation.name} />;
     }
 
     return (

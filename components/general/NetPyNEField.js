@@ -43,7 +43,6 @@ export default class NetPyNEField extends Component {
             </div>
         }
 
-
         const childWithProp = React.Children.map(this.props.children, (child) => {
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
             var dataSource = Utils.getMetadataField(this.props.id, "suggestions");

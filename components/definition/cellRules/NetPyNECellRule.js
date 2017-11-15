@@ -58,14 +58,12 @@ export default class NetPyNECellRule extends React.Component {
 
       <NetPyNEField id="netParams.cellParams.conds.cellType" style={styles.netpyneField}>
         <PythonControlledTextField
-          requirement={this.props.requirement}
           model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
         />
       </NetPyNEField>
 
       <NetPyNEField id="netParams.cellParams.conds.cellModel" style={styles.netpyneField}>
         <PythonControlledTextField
-          requirement={this.props.requirement}
           model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
         />
       </NetPyNEField>

@@ -40,13 +40,11 @@ export default class NetPyNETabs extends React.Component {
       openDialog: false
     };
 
-    var _this = this;
-
-
-    GEPPETTO.on('OriginalModelLoaded', function (model) {
+    GEPPETTO.on('OriginalModelLoaded', (model) => {
       var modelObject = JSON.parse(model);
       window.metadata = modelObject.metadata;
-      _this.setState({ model: modelObject })
+      window.requirement = modelObject.requirement;
+      this.setState({ model: modelObject })
     });
 
   }
@@ -110,9 +108,9 @@ export default class NetPyNETabs extends React.Component {
           onChange={this.handleChange}
         >
           <Tab label="Define your network" value="define">
-            <NetPyNEPopulations model={this.state.model.netParams.popParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
-            <NetPyNECellRules model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
-            <NetPyNESynapses model={this.state.model.netParams.cellParams} requirement={'from neuron_ui.netpyne_init import netParams'} />
+            <NetPyNEPopulations model={this.state.model.netParams.popParams} />
+            <NetPyNECellRules model={this.state.model.netParams.cellParams} />
+            <NetPyNESynapses model={this.state.model.netParams.cellParams} />
 
             <Card style={styles.card}>
               <CardHeader
@@ -128,13 +126,13 @@ export default class NetPyNETabs extends React.Component {
                 Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
               </CardText>
             </Card>
-            <NetPyNESimConfig model={this.state.model.simConfig} requirement={'from neuron_ui.netpyne_init import simConfig'} />
+            <NetPyNESimConfig model={this.state.model.simConfig} />
           </Tab>
           <Tab label="Explore your network" value="explore" >
-            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />
+            <NetPyNEInstantiated model={this.state.model} page={"explore"} />
           </Tab>
           <Tab label="Simulate and analyse" value="simulate">
-            <NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />
+            <NetPyNEInstantiated model={this.state.model} page={"simulate"} />
           </Tab>
         </Tabs>
         <Dialog

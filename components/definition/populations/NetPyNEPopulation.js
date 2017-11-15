@@ -96,7 +96,6 @@ export default class NetPyNEPopulation extends React.Component {
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
               return (<NetPyNEField id={key} style={styles.netpyneField}>
                 <PythonControlledTextField
-                  requirement={this.props.requirement}
                   model={"netParams.popParams['" + this.state.model.name + "']['" + key.split(".").pop() + "']"}
                 />
               </NetPyNEField>);
@@ -109,6 +108,7 @@ export default class NetPyNEPopulation extends React.Component {
 
   getBottomNavigationItem(index, sectionId, label, icon) {
     return <BottomNavigationItem
+      key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
       onClick={() => this.select(index, sectionId)}
@@ -143,7 +143,7 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellModel" style={styles.netpyneField}>
             <PythonControlledAutoComplete
-              requirement={this.props.requirement}
+              dataSource={[]}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               searchText={this.state.cellModel}
               onChange={(value) => this.setState({ cellModel: value })}
@@ -153,7 +153,6 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" style={styles.netpyneField}>
             <PythonControlledTextField
-              requirement={this.props.requirement}
               model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
             />
           </NetPyNEField>
@@ -166,7 +165,7 @@ export default class NetPyNEPopulation extends React.Component {
             >
               {(this.popDimensionsOptions != undefined) ?
                 this.popDimensionsOptions.map(function (popDimensionsOption) {
-                  return (<MenuItem value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
+                  return (<MenuItem key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
                 }) : null}
 
             </SelectField>
@@ -174,7 +173,7 @@ export default class NetPyNEPopulation extends React.Component {
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} style={styles.netpyneRightField}>
               <PythonControlledTextField
-                requirement={this.props.requirement}
+                
                 handleChange={(event, value) => {
                   var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
 
@@ -206,14 +205,14 @@ export default class NetPyNEPopulation extends React.Component {
               value={this.state.rangeTypeX}
               onChange={(event, index, value) => this.setState({ rangeTypeX: value })}
             >
-              <MenuItem value="xRange" primaryText="Absolute" />
-              <MenuItem value="xnormRange" primaryText="Normalized" />
+              <MenuItem key="xRange" value="xRange" primaryText="Absolute" />
+              <MenuItem key="xnormRange" value="xnormRange" primaryText="Normalized" />
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeX != undefined) ?
             <div style={styles.netpyneRightField}>
               <PythonControlledAdapterComponent
-                requirement={this.props.requirement}
+                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"}
                 convertToPython={(state) => {
                   if (state.minXAxis != undefined && state.maxXAxis != undefined) {
@@ -245,14 +244,14 @@ export default class NetPyNEPopulation extends React.Component {
               value={this.state.rangeTypeY}
               onChange={(event, index, value) => this.setState({ rangeTypeY: value })}
             >
-              <MenuItem value="yRange" primaryText="Absolute" />
-              <MenuItem value="ynormRange" primaryText="Normalized" />
+              <MenuItem key="yRange" value="yRange" primaryText="Absolute" />
+              <MenuItem key="ynormRange" value="ynormRange" primaryText="Normalized" />
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeY != undefined) ?
             <div style={styles.netpyneRightField}>
               <PythonControlledAdapterComponent
-                requirement={this.props.requirement}
+                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"}
                 convertToPython={(state) => {
                   if (state.minYAxis != undefined && state.maxYAxis != undefined) {
@@ -286,14 +285,14 @@ export default class NetPyNEPopulation extends React.Component {
               value={this.state.rangeTypeZ}
               onChange={(event, index, value) => this.setState({ rangeTypeZ: value })}
             >
-              <MenuItem value="zRange" primaryText="Absolute" />
-              <MenuItem value="znormRange" primaryText="Normalized" />
+              <MenuItem key="zRange" value="zRange" primaryText="Absolute" />
+              <MenuItem key="znormRange" value="znormRange" primaryText="Normalized" />
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeZ != undefined) ?
             <div style={styles.netpyneRightField}>
               <PythonControlledAdapterComponent
-                requirement={this.props.requirement}
+                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"}
                 convertToPython={(state) => {
                   if (state.minZAxis != undefined && state.maxZAxis != undefined) {
@@ -329,7 +328,7 @@ export default class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <CardText zDepth={0}>
+        <CardText>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {this.generateMenu()}
           </BottomNavigation>

@@ -190,7 +190,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule) {
-        selectedCellRule = <NetPyNECellRule requirement={this.props.requirement} model={this.state.selectedCellRule} selectPage={this.selectPage} />;
+        selectedCellRule = <NetPyNECellRule  model={this.state.selectedCellRule} selectPage={this.selectPage} />;
       }
 
       content = (
@@ -223,7 +223,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedSection = undefined;
       if (this.state.selectedSection) {
-        selectedSection = <NetPyNESection requirement={this.props.requirement} model={this.state.selectedSection} selectPage={this.selectPage} />;
+        selectedSection = <NetPyNESection  model={this.state.selectedSection} selectPage={this.selectPage} />;
       }
 
       content = (
@@ -265,7 +265,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedMechanism = undefined;
       if (this.state.selectedMechanism) {
-        selectedMechanism = <NetPyNEMechanism requirement={this.props.requirement} model={this.state.selectedMechanism} />;
+        selectedMechanism = <NetPyNEMechanism  model={this.state.selectedMechanism} />;
       }
 
       content = (
