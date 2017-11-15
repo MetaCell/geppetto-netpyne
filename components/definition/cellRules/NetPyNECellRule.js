@@ -48,7 +48,7 @@ export default class NetPyNECellRule extends React.Component {
       <TextField
         value={this.state.model.name}
         style={styles.netpyneField}
-        onChange={(event) => Utils.renameKey('netParams.cellParams', this.state.model.name, event.target.value, function (response, newValue) {
+        onChange={(event) => Utils.renameKey('netParams.cellParams', this.state.model.name, event.target.value, (response, newValue) => {
           var model = this.state.model;
           model.name = newValue;
           this.setState({ model: model });
