@@ -10,26 +10,6 @@ import NetPyNESimConfig from './components/definition/configuration/NetPyNESimCo
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
 
-
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-
-  tabContainer: {
-    padding: 10,
-    height: 460,
-    overflow: 'auto'
-  },
-
-  card: {
-    clear: 'both'
-  }
-};
-
 export default class NetPyNETabs extends React.Component {
 
   constructor(props) {
@@ -134,7 +114,7 @@ export default class NetPyNETabs extends React.Component {
             <NetPyNECellRules model={this.state.model.netParams.cellParams} />
             <NetPyNESynapses model={this.state.model.netParams.cellParams} />
 
-            <Card style={styles.card}>
+            <Card style={{clear: 'both'}}>
               <CardHeader
                 title="Connections"
                 subtitle="Define here the connectivity rules in your network"

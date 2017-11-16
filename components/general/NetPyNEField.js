@@ -48,11 +48,11 @@ export default class NetPyNEField extends Component {
             var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
             var type = Utils.getHTMLType(this.props.id);
             var hintText=Utils.getMetadataField(this.props.id, "hintText");
-            return React.cloneElement(child, { floatingLabelText: floatingLabelText, dataSource: dataSource, type: type, hintText:hintText });
+            return React.cloneElement(child, { label: floatingLabelText, floatingLabelText: floatingLabelText, dataSource: dataSource, type: type, hintText:hintText });
         });
 
         return (
-            <div style={this.props.style}>
+            <div style={this.props.style} className={"netpyneField " + this.props.className}>
                 <div style={{ float: 'left' }}>
                     {childWithProp}
                 </div>

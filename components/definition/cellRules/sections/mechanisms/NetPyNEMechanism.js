@@ -14,18 +14,6 @@ var PythonControlledCapability = require('../../../../../../../js/communication/
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
-const styles = {
-  populationCard: {
-    fontSize: 24,
-    margin: 10,
-    width: 350,
-    height: 350,
-    float: 'left'
-  },
-  cardContent: {
-  }
-};
-
 export default class NetPyNEMechanism extends React.Component {
 
   constructor(props) {

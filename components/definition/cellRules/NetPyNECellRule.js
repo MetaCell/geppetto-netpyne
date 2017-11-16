@@ -14,18 +14,6 @@ import NetPyNEField from '../../general/NetPyNEField';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 
-const styles = {
-  populationCard: {
-    fontSize: 24,
-    margin: 10,
-    width: 350,
-    height: 350,
-    float: 'left'
-  },
-  cardContent: {
-  }
-};
-
 export default class NetPyNECellRule extends React.Component {
 
   constructor(props) {
@@ -47,7 +35,7 @@ export default class NetPyNECellRule extends React.Component {
     var content = (<div>
       <TextField
         value={this.state.model.name}
-        style={styles.netpyneField}
+        
         onChange={(event) => Utils.renameKey('netParams.cellParams', this.state.model.name, event.target.value, (response, newValue) => {
           var model = this.state.model;
           model.name = newValue;
@@ -56,13 +44,13 @@ export default class NetPyNECellRule extends React.Component {
         floatingLabelText="The name of the cell rule"
       /><br />
 
-      <NetPyNEField id="netParams.cellParams.conds.cellType" style={styles.netpyneField}>
+      <NetPyNEField id="netParams.cellParams.conds.cellType" >
         <PythonControlledTextField
           model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"}
         />
       </NetPyNEField>
 
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" style={styles.netpyneField}>
+      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
         <PythonControlledTextField
           model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"}
         />

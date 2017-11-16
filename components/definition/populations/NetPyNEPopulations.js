@@ -11,35 +11,6 @@ import MenuItem from 'material-ui/MenuItem';
 
 import Utils from '../../../Utils';
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-
-  tabContainer: {
-    padding: 10,
-    height: 500,
-    overflow: 'auto'
-  },
-  card: {
-    clear: 'both'
-  },
-  thumbnails: {
-    width: '40%',
-    height: 420,
-    overflow: 'auto',
-    float: 'left'
-  },
-  details: {
-    width: '55%',
-    float: 'right',
-    marginLeft: 50
-  }
-};
-
 export default class NetPyNEPopulations extends React.Component {
 
   constructor(props) {
@@ -96,14 +67,14 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <Card style={styles.card}>
+      <Card style={{clear: 'both'}}>
         <CardHeader
           title="Populations"
           subtitle="Define here the populations of your network"
           actAsExpander={true}
           showExpandableButton={true}
         />
-        <CardText style={styles.tabContainer} expandable={true}>
+        <CardText className={"tabContainer"} expandable={true}>
           <IconMenu style={{ float: 'left' }}
             iconButtonElement={
               <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
@@ -112,10 +83,10 @@ export default class NetPyNEPopulations extends React.Component {
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
           </IconMenu>
-          <div style={styles.details}>
+          <div className={"details"}>
             {selectedPopulation}
           </div>
-          <div style={styles.thumbnails}>
+          <div className={"thumbnails"}>
             {populations}
           </div>
         </CardText>

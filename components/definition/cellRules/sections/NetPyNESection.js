@@ -15,18 +15,6 @@ var PythonControlledCapability = require('../../../../../../js/communication/gep
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
 
-const styles = {
-  populationCard: {
-    fontSize: 24,
-    margin: 10,
-    width: 350,
-    height: 350,
-    float: 'left'
-  },
-  cardContent: {
-  }
-};
-
 const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
 

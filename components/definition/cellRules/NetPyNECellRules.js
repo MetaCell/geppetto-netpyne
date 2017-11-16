@@ -23,35 +23,6 @@ import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 
 import Utils from '../../../Utils';
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-
-  tabContainer: {
-    padding: 10,
-    height: 500,
-    overflow: 'auto'
-  },
-  card: {
-    clear: 'both'
-  },
-  thumbnails: {
-    width: '40%',
-    height: 420,
-    overflow: 'auto',
-    float: 'left'
-  },
-  details: {
-    width: '55%',
-    float: 'right',
-    marginLeft: 50
-  }
-};
-
 export default class NetPyNECellRules extends React.Component {
 
   constructor(props) {
@@ -194,11 +165,11 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <CardText style={styles.tabContainer} expandable={true}>
-          <div style={styles.details}>
+        <CardText className={"tabContainer"} expandable={true}>
+          <div className={"details"}>
             {selectedCellRule}
           </div>
-          <div style={styles.thumbnails}>
+          <div className={"thumbnails"}>
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft:"18px" }}
                 iconButtonElement={
@@ -227,8 +198,8 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <CardText style={styles.tabContainer} expandable={true}>
-          <div style={styles.thumbnails}>
+        <CardText className={"tabContainer"} expandable={true}>
+          <div className={"thumbnails"}>
             <div className="breadcrumb">
               <FloatingActionButton
                 className={"actionButton smallActionButton breadcrumbButton"}
@@ -250,7 +221,7 @@ export default class NetPyNECellRules extends React.Component {
             <div style={{ clear: "both" }}></div>
             {sections}
           </div>
-          <div style={styles.details}>
+          <div className={"details"}>
             {selectedSection}
           </div>
         </CardText>
@@ -269,8 +240,8 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       content = (
-        <CardText style={styles.tabContainer} expandable={true}>
-          <div style={styles.thumbnails}>
+        <CardText className={"tabContainer"} expandable={true}>
+          <div className={"thumbnails"}>
             <div className="breadcrumb">
               <FloatingActionButton
                 className={"actionButton smallActionButton breadcrumbButton"}
@@ -299,7 +270,7 @@ export default class NetPyNECellRules extends React.Component {
             <div style={{ clear: "both" }}></div>
             {mechanisms}
           </div>
-          <div style={styles.details}>
+          <div className={"details"}>
             {selectedMechanism}
           </div>
         </CardText>
@@ -308,7 +279,7 @@ export default class NetPyNECellRules extends React.Component {
     }
 
     return (
-      <Card style={styles.card}>
+      <Card style={{clear: 'both'}}>
         <CardHeader
           title="Cell rules"
           subtitle="Define here the rules to generate the cells in your network"

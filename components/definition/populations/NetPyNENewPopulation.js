@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-const styles = {
-  addButton: {
-    margin: 10,
-    float: 'left'
-  }
-};
-
 export default class NetPyNENewPopulation extends React.Component {
 
   constructor(props) {
@@ -29,7 +22,7 @@ export default class NetPyNENewPopulation extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+      <FloatingActionButton mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
 

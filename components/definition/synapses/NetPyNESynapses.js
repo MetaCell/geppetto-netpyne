@@ -9,19 +9,6 @@ import Card, { CardHeader, CardText } from 'material-ui/Card';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 
-
-const styles = {
-  populationCard: {
-    fontSize: 24,
-    margin: 10,
-    width: 350,
-    height: 350,
-    float: 'left'
-  },
-  cardContent: {
-  }
-};
-
 export default class NetPyNESynapses extends React.Component {
 
   constructor(props) {
@@ -39,7 +26,7 @@ export default class NetPyNESynapses extends React.Component {
 
   render() {
     var content = (
-      <Card style={styles.card}>
+      <Card style={{clear: 'both'}}>
         <CardHeader
           title="Synapses"
           subtitle="Define here the rules to generate the synapses in your network"

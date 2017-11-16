@@ -24,26 +24,6 @@ var PythonControlledAutoComplete = PythonControlledCapability.createPythonContro
 var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledComponent(AdapterComponent);
 
 
-const styles = {
-  populationCard: {
-    fontSize: 24,
-    margin: 10,
-    width: 350,
-    height: 350,
-    float: 'left'
-  },
-  netpyneField: {
-    float: 'left',
-    clear: 'left',
-    marginRight: '20px'
-  },
-  netpyneRightField: {
-    float: 'left'
-  }
-
-};
-
-
 export default class NetPyNEPopulation extends React.Component {
 
   constructor(props) {
@@ -94,7 +74,7 @@ export default class NetPyNEPopulation extends React.Component {
 
             // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
-              return (<NetPyNEField id={key} style={styles.netpyneField}>
+              return (<NetPyNEField id={key} >
                 <PythonControlledTextField
                   model={"netParams.popParams['" + this.state.model.name + "']['" + key.split(".").pop() + "']"}
                 />
@@ -132,7 +112,7 @@ export default class NetPyNEPopulation extends React.Component {
         <div>
           <TextField
             value={this.state.model.name}
-            style={styles.netpyneField}
+            
             onChange={(event) => Utils.renameKey('netParams.popParams', this.state.model.name, event.target.value, (response, newValue) => {
               var model = this.state.model;
               model.name = newValue;
@@ -141,7 +121,7 @@ export default class NetPyNEPopulation extends React.Component {
             floatingLabelText="The name of your population"
           /><br />
 
-          <NetPyNEField id="netParams.popParams.cellModel" style={styles.netpyneField}>
+          <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
               dataSource={[]}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
@@ -151,14 +131,14 @@ export default class NetPyNEPopulation extends React.Component {
           </NetPyNEField>
           <br />
 
-          <NetPyNEField id="netParams.popParams.cellType" style={styles.netpyneField}>
+          <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
               model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
             />
           </NetPyNEField>
           <br />
 
-          <NetPyNEField id="netParams.popParams.numCells" style={styles.netpyneField}>
+          <NetPyNEField id="netParams.popParams.numCells" >
             <SelectField
               value={this.state.dimension}
               onChange={(event, index, value) => this.setState({ dimension: value })}
@@ -171,7 +151,7 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {this.state.dimension != undefined && this.state.dimension != "" ?
-            <NetPyNEField id={"netParams.popParams." + this.state.dimension} style={styles.netpyneRightField}>
+            <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
               <PythonControlledTextField
                 
                 handleChange={(event, value) => {
@@ -199,7 +179,7 @@ export default class NetPyNEPopulation extends React.Component {
     else if (this.state.sectionId == "SpatialDistribution") {
       var content =
         <div>
-          <NetPyNEField id={"netParams.popParams.xRange"} style={styles.netpyneField}>
+          <NetPyNEField id={"netParams.popParams.xRange"} >
             <SelectField
               floatingLabelText="Range type"
               value={this.state.rangeTypeX}
@@ -210,7 +190,7 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeX != undefined) ?
-            <div style={styles.netpyneRightField}>
+            <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
                 
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"}
@@ -238,7 +218,7 @@ export default class NetPyNEPopulation extends React.Component {
             </div>
             : null}
           <br />
-          <NetPyNEField id={"netParams.popParams.yRange"} style={styles.netpyneField}>
+          <NetPyNEField id={"netParams.popParams.yRange"} >
             <SelectField
               floatingLabelText="Range type"
               value={this.state.rangeTypeY}
@@ -249,7 +229,7 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeY != undefined) ?
-            <div style={styles.netpyneRightField}>
+            <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
                 
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"}
@@ -278,7 +258,7 @@ export default class NetPyNEPopulation extends React.Component {
             : null}
           <br />
 
-          <NetPyNEField id={"netParams.popParams.zRange"} style={styles.netpyneField}>
+          <NetPyNEField id={"netParams.popParams.zRange"} >
             <SelectField
               floatingLabelText="Range type"
               id={"netParams.popParams." + this.state.rangeTypeZ}
@@ -290,7 +270,7 @@ export default class NetPyNEPopulation extends React.Component {
             </SelectField>
           </NetPyNEField>
           {(this.state.rangeTypeZ != undefined) ?
-            <div style={styles.netpyneRightField}>
+            <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
                 
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"}
