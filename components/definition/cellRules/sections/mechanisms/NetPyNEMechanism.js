@@ -28,17 +28,6 @@ export default class NetPyNEMechanism extends React.Component {
 
 
     this.setPage = this.setPage.bind(this);
-
-
-    // Get available population parameters
-    // Utils
-    //   .sendPythonMessage('tests.POP_NUMCELLS_PARAMS', [])
-    //   .then(function (response) {
-    //     console.log("Getting Pop Dimensions Parameters");
-    //     console.log("Response", response)
-    //     _this.setState({ 'popDimensionsOptions': response });
-    //   });
-
   }
 
   setPage(page) {

@@ -7,10 +7,9 @@ import Toggle from 'material-ui/Toggle';
 import Slider from '../../general/Slider';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import AutoComplete from 'material-ui/AutoComplete';
-
+import FontIcon from 'material-ui/FontIcon';
 
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
@@ -19,7 +18,6 @@ import AdapterComponent from '../../general/AdapterComponent';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
-var PythonControlledSlider = PythonControlledCapability.createPythonControlledComponent(Slider);
 var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledComponent(AutoComplete);
 var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledComponent(AdapterComponent);
 
@@ -41,12 +39,6 @@ export default class NetPyNEPopulation extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ model: nextProps.model, selectedIndex: 0, sectionId: "General" });
   }
-
-  getPopulationDimensionText() {
-    return this.popDimensionsOptions.filter((p) => { return p.value == this.state.dimension })[0].label;
-  }
-
-  select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.model.name != prevState.model.name) {
@@ -86,25 +78,20 @@ export default class NetPyNEPopulation extends React.Component {
     }
   }
 
-  getBottomNavigationItem(index, sectionId, label, icon) {
-    return <BottomNavigationItem
-      key={sectionId}
-      label={label}
-      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
-      onClick={() => this.select(index, sectionId)}
-    />
+  getModelParameters = () => {
+    var select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId })
+    
+    var modelParameters = [];
+    modelParameters.push(<BottomNavigationItem key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
+    modelParameters.push(<BottomNavigationItem key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);
+    if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
+      modelParameters.push(<BottomNavigationItem key={this.state.cellModel} label={this.state.cellModel + " Model"} icon={<FontIcon className={"fa fa-balance-scale"} />} onClick={() => select(2, this.state.cellModel)} />);
+    }
+    modelParameters.push(<BottomNavigationItem key={'CellList'} label={'Cell List'} icon={<FontIcon className={"fa fa-list"} />} onClick={() => select(3, 'CellList')} />);
+
+    return modelParameters;
   }
 
-  generateMenu() {
-    var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(0, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(1, 'SpatialDistribution', 'Spatial Distribution', 'fa-cube'));
-    if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
-      bottomNavigationItems.push(this.getBottomNavigationItem(2, this.state.cellModel, this.state.cellModel + " Model", 'fa-balance-scale'));
-    }
-    bottomNavigationItems.push(this.getBottomNavigationItem(3, 'CellList', 'Cell List', 'fa-list'));
-    return bottomNavigationItems;
-  }
 
   render() {
     if (this.state.sectionId == "General") {
@@ -112,14 +99,14 @@ export default class NetPyNEPopulation extends React.Component {
         <div>
           <TextField
             value={this.state.model.name}
-            
             onChange={(event) => Utils.renameKey('netParams.popParams', this.state.model.name, event.target.value, (response, newValue) => {
               var model = this.state.model;
               model.name = newValue;
               this.setState({ model: model });
             })}
             floatingLabelText="The name of your population"
-          /><br />
+            className={"netpyneField"}
+          />
 
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
@@ -129,14 +116,10 @@ export default class NetPyNEPopulation extends React.Component {
               onChange={(value) => this.setState({ cellModel: value })}
               openOnFocus={true} />
           </NetPyNEField>
-          <br />
 
           <NetPyNEField id="netParams.popParams.cellType" >
-            <PythonControlledTextField
-              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
-            />
+            <PythonControlledTextField model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
           </NetPyNEField>
-          <br />
 
           <NetPyNEField id="netParams.popParams.numCells" >
             <SelectField
@@ -147,13 +130,11 @@ export default class NetPyNEPopulation extends React.Component {
                 this.popDimensionsOptions.map(function (popDimensionsOption) {
                   return (<MenuItem key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
                 }) : null}
-
             </SelectField>
           </NetPyNEField>
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
               <PythonControlledTextField
-                
                 handleChange={(event, value) => {
                   var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
 
@@ -192,7 +173,6 @@ export default class NetPyNEPopulation extends React.Component {
           {(this.state.rangeTypeX != undefined) ?
             <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
-                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"}
                 convertToPython={(state) => {
                   if (state.minXAxis != undefined && state.maxXAxis != undefined) {
@@ -206,14 +186,8 @@ export default class NetPyNEPopulation extends React.Component {
                   }
                 }}
               >
-                <TextField
-                  floatingLabelText="Min x-axis"
-                  id="minXAxis"
-                />
-                <TextField
-                  floatingLabelText="Max x-axis"
-                  id="maxXAxis"
-                />
+                <TextField floatingLabelText="Min x-axis" id="minXAxis" />
+                <TextField floatingLabelText="Max x-axis" id="maxXAxis" />
               </PythonControlledAdapterComponent>
             </div>
             : null}
@@ -231,7 +205,6 @@ export default class NetPyNEPopulation extends React.Component {
           {(this.state.rangeTypeY != undefined) ?
             <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
-                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"}
                 convertToPython={(state) => {
                   if (state.minYAxis != undefined && state.maxYAxis != undefined) {
@@ -245,14 +218,8 @@ export default class NetPyNEPopulation extends React.Component {
                   }
                 }}
               >
-                <TextField
-                  floatingLabelText="Min y-axis"
-                  id="minYAxis"
-                />
-                <TextField
-                  floatingLabelText="Max y-axis"
-                  id="maxYAxis"
-                />
+                <TextField floatingLabelText="Min y-axis" id="minYAxis" />
+                <TextField floatingLabelText="Max y-axis" id="maxYAxis" />
               </PythonControlledAdapterComponent>
             </div>
             : null}
@@ -272,7 +239,6 @@ export default class NetPyNEPopulation extends React.Component {
           {(this.state.rangeTypeZ != undefined) ?
             <div className={"netpyneRightField"}>
               <PythonControlledAdapterComponent
-                
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"}
                 convertToPython={(state) => {
                   if (state.minZAxis != undefined && state.maxZAxis != undefined) {
@@ -286,14 +252,8 @@ export default class NetPyNEPopulation extends React.Component {
                   }
                 }}
               >
-                <TextField
-                  floatingLabelText="Min z-axis"
-                  id="minZAxis"
-                />
-                <TextField
-                  floatingLabelText="Max z-axis"
-                  id="maxZAxis"
-                />
+                <TextField floatingLabelText="Min z-axis" id="minZAxis" />
+                <TextField floatingLabelText="Max z-axis" id="maxZAxis" />
               </PythonControlledAdapterComponent>
             </div>
             : null}
@@ -310,7 +270,7 @@ export default class NetPyNEPopulation extends React.Component {
       <div>
         <CardText>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
-            {this.generateMenu()}
+            {this.getModelParameters()}
           </BottomNavigation>
         </CardText>
         <br />
