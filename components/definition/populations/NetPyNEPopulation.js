@@ -49,14 +49,13 @@ export default class NetPyNEPopulation extends React.Component {
           return result;
         }, {});
       this.setState(newState);
+      this.updateLayout();
     }
     else if (this.state.cellModel != prevState.cellModel) {
       // Set Population Dimension Python Side
       Utils
         .sendPythonMessage('api.getParametersForCellModel', [this.state.cellModel])
         .then((response) => {
-          // console.log("Getting Parameters For Cell Model");
-          // console.log("Response", response);
 
           var cellModelFields = [];
           if (Object.keys(response).length != 0) {
@@ -78,9 +77,40 @@ export default class NetPyNEPopulation extends React.Component {
     }
   }
 
+  updateLayout() {
+    // Pop Dimensions
+    const getCurrentPopDimension = (popDimensionValue) => {
+      Utils
+        .sendPythonMessage("'" + popDimensionValue + "' in netParams.popParams['" + this.state.model.name + "']")
+        .then((response) => {
+          if (response) {
+            this.setState({ dimension: popDimensionValue })
+          }
+        });
+    }
+
+    for (var popDimensionsOption in this.popDimensionsOptions) {
+      getCurrentPopDimension(this.popDimensionsOptions[popDimensionsOption].value);
+    }
+
+    //Range Type X
+    // Utils
+    // .sendPythonMessage("'" + popDimensionValue + "' in netParams.popParams['" + this.state.model.name + "']")
+    // .then((response) => {
+    //   if (response) {
+    //     this.setState({ dimension: popDimensionValue })
+    //   }
+    // });
+    // this.state.rangeTypeX
+  }
+
+  componentDidMount() {
+    this.updateLayout();
+  }
+
   getModelParameters = () => {
     var select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId })
-    
+
     var modelParameters = [];
     modelParameters.push(<BottomNavigationItem key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
     modelParameters.push(<BottomNavigationItem key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);

@@ -31,7 +31,7 @@ export default class AdapterComponent extends Component {
         // Call to conversion function
         var newValue = this.props.convertToPython(this.state);
         if (newValue != undefined && this.state.value != newValue){
-            this.props.onUpdateInput(newValue);
+            this.props.onChange(null, null, newValue);
         }
     }
 
