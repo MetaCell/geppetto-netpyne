@@ -97,8 +97,8 @@ export default class NetPyNETabs extends React.Component {
       return (<div></div>)
     }
 
-    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"explore"} />) : (<div></div>);
-    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated model={this.state.model} requirement={'from neuron_ui.netpyne_init import *'} page={"simulate"} />) : (<div></div>);
+    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated model={this.state.model} page={"explore"} />) : (<div></div>);
+    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated model={this.state.model} page={"simulate"} />) : (<div></div>);
 
     return (
       <div>
