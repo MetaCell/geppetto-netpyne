@@ -34,6 +34,11 @@ export default class NetPyNEPopulation extends React.Component {
     };
 
     this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
+    this.ranges = [
+      { value: 'xRange', stateVariable: 'rangeTypeX' }, { value: 'xnormRange', stateVariable: 'rangeTypeX' },
+      { value: 'yRange', stateVariable: 'rangeTypeY' }, { value: 'ynormRange', stateVariable: 'rangeTypeY' },
+      { value: 'zRange', stateVariable: 'rangeTypeZ' }, { value: 'znormRange', stateVariable: 'rangeTypeZ' }
+    ]
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,19 +94,25 @@ export default class NetPyNEPopulation extends React.Component {
         });
     }
 
-    for (var popDimensionsOption in this.popDimensionsOptions) {
-      getCurrentPopDimension(this.popDimensionsOptions[popDimensionsOption].value);
-    }
+    this.popDimensionsOptions.forEach((popDimensionsOption) => { getCurrentPopDimension(popDimensionsOption.value) })
+
 
     //Range Type X
-    // Utils
-    // .sendPythonMessage("'" + popDimensionValue + "' in netParams.popParams['" + this.state.model.name + "']")
-    // .then((response) => {
-    //   if (response) {
-    //     this.setState({ dimension: popDimensionValue })
-    //   }
-    // });
-    // this.state.rangeTypeX
+    const getRange = (value, stateVariable) => {
+      Utils
+        .sendPythonMessage("'" + value + "' in netParams.popParams['" + this.state.model.name + "']")
+        .then((response) => {
+          if (response) {
+            var newState = {};
+            newState[stateVariable] = value;
+            this.setState(newState)
+          }
+        });
+    }
+
+    this.ranges.forEach((range) => { getRange(range.value, range.stateVariable) })
+
+
   }
 
   componentDidMount() {

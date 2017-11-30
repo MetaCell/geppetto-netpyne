@@ -157,7 +157,7 @@ export default class NetPyNECellRules extends React.Component {
 
       var cellRules = [];
       for (var key in this.state.model) {
-        cellRules.push(<NetPyNECellRuleThumbnail selected={this.state.selectedCellRule && key == this.state.selectedCellRule.name} model={this.state.model[key]} handleClick={this.selectCellRule} />);
+        cellRules.push(<NetPyNECellRuleThumbnail key={key} selected={this.state.selectedCellRule && key == this.state.selectedCellRule.name} model={this.state.model[key]} handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule) {
@@ -190,11 +190,11 @@ export default class NetPyNECellRules extends React.Component {
 
       var sections = [];
       for (var key in this.state.model[this.state.selectedCellRule.name].secs) {
-        sections.push(<NetPyNESectionThumbnail selected={this.state.selectedSection && key == this.state.selectedSection.name} model={this.state.model[this.state.selectedCellRule.name].secs[key]} handleClick={this.selectSection} />);
+        sections.push(<NetPyNESectionThumbnail key={key} selected={this.state.selectedSection && key == this.state.selectedSection.name} model={this.state.model[this.state.selectedCellRule.name].secs[key]} handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
       if (this.state.selectedSection) {
-        selectedSection = <NetPyNESection  model={this.state.selectedSection} selectPage={this.selectPage} />;
+        selectedSection = <NetPyNESection model={this.state.selectedSection} selectPage={this.selectPage} />;
       }
 
       content = (
@@ -203,7 +203,6 @@ export default class NetPyNECellRules extends React.Component {
             <div className="breadcrumb">
               <FloatingActionButton
                 className={"actionButton smallActionButton breadcrumbButton"}
-                primary={true}
                 style={{ marginTop: "10px", float: "left" }}
                 onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
                 {this.state.selectedCellRule.name}
@@ -232,11 +231,11 @@ export default class NetPyNECellRules extends React.Component {
 
       var mechanisms = [];
       for (var key in this.state.model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs) {
-        mechanisms.push(<NetPyNEMechanismThumbnail selected={this.state.selectedMechanism && key == this.state.selectedMechanism.name} model={this.state.model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs[key]} handleClick={this.selectMechanism} />);
+        mechanisms.push(<NetPyNEMechanismThumbnail key={key} selected={this.state.selectedMechanism && key == this.state.selectedMechanism.name} model={this.state.model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs[key]} handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
       if (this.state.selectedMechanism) {
-        selectedMechanism = <NetPyNEMechanism  model={this.state.selectedMechanism} />;
+        selectedMechanism = <NetPyNEMechanism model={this.state.selectedMechanism} />;
       }
 
       content = (
@@ -245,7 +244,6 @@ export default class NetPyNECellRules extends React.Component {
             <div className="breadcrumb">
               <FloatingActionButton
                 className={"actionButton smallActionButton breadcrumbButton"}
-                primary={true}
                 style={{ marginTop: "10px", float: "left" }}
                 onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
                 {this.state.selectedCellRule.name}

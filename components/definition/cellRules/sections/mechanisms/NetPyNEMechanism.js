@@ -39,6 +39,7 @@ export default class NetPyNEMechanism extends React.Component {
   getBottomNavigationItem(index, sectionId, label, icon) {
 
     return <BottomNavigationItem
+      key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
       onClick={() => this.select(index, sectionId)}

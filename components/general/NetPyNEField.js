@@ -44,11 +44,27 @@ export default class NetPyNEField extends Component {
         }
 
         const childWithProp = React.Children.map(this.props.children, (child) => {
+            var extraProps = {}
+            
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
+            extraProps['label'] = floatingLabelText;
+            extraProps['floatingLabelText'] = floatingLabelText;
+            
             var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
+            if (dataSource != ''){
+                extraProps['dataSource'] = dataSource;
+            }
+            
             var type = Utils.getHTMLType(this.props.id);
+            if (type != ''){
+                extraProps['type'] = type;
+            }
+
             var hintText=Utils.getMetadataField(this.props.id, "hintText");
-            return React.cloneElement(child, { label: floatingLabelText, floatingLabelText: floatingLabelText, dataSource: dataSource, type: type, hintText:hintText });
+            if (hintText != ''){
+                extraProps['hintText'] = hintText;
+            }
+            return React.cloneElement(child, extraProps);
         });
 
         return (

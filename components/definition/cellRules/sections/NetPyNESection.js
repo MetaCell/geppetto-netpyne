@@ -43,6 +43,7 @@ export default class NetPyNESection extends React.Component {
   getBottomNavigationItem(index, sectionId, label, icon) {
 
     return <BottomNavigationItem
+      key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
       onClick={() => this.select(index, sectionId)}
@@ -78,22 +79,22 @@ export default class NetPyNESection extends React.Component {
       content = (<div>
         <PythonControlledTextField
           floatingLabelText="Diameter"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['diam']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="L"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['L']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Ra"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['Ra']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Pt3d"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['pt3d']"} />
         <br />
 
@@ -103,17 +104,17 @@ export default class NetPyNESection extends React.Component {
       content = (<div>
         <PythonControlledTextField
           floatingLabelText="Parent Section"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentSec']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Parent x"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentX']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Child x"
-          
+
           model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['childX']"} />
       </div>)
     }
