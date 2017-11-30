@@ -24,8 +24,9 @@ export default class NetPyNEInstantiated extends React.Component {
             model: props.model,
             controlPanelHidden: true
         };
-
+        this.widgets=[];
         this.plotFigure = this.plotFigure.bind(this);
+        this.getOpenedWidgets = this.getOpenedWidgets.bind(this);
     }
 
     plotFigure(pythonFigureMethod, plotName) {
@@ -44,10 +45,14 @@ export default class NetPyNEInstantiated extends React.Component {
                     svg.removeAttribute('height');
                     svg.setAttribute('width', '100%');
                     svg.setAttribute('height', '98%');
-
+                    that.widgets.push(w);
                 });
             });
 
+    }
+
+    getOpenedWidgets(){
+        return this.widgets;
     }
 
     componentDidMount() {
