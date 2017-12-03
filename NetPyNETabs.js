@@ -14,6 +14,8 @@ export default class NetPyNETabs extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.widgets = {};
     this.state = {
       value: 'define',
       model: null,
@@ -57,6 +59,34 @@ export default class NetPyNETabs extends React.Component {
 
   };
 
+
+  hideWidgetsFor = (value) => {
+    if (value != "define") {
+      var page = this.refs[value];
+      if (page) {
+        var widgets = page.getOpenedWidgets();
+        if (this.widgets[value]) {
+          widgets = widgets.concat(this.widgets[value]);
+        }
+        for (var w in widgets) {
+          widgets[w].hide();
+        }
+        this.widgets[value] = widgets;
+      }
+    }
+  }
+
+  restoreWidgetsFor = (value) => {
+    if (value != "define") {
+      var widgets = this.widgets[value];
+      if (widgets) {
+        for (var w in widgets) {
+          widgets[w].show();
+        }
+      }
+    }
+  }
+
   handleChange = (value) => {
     var currentTab = this.state.value;
     var dialogMessage = null;
@@ -83,6 +113,9 @@ export default class NetPyNETabs extends React.Component {
         break;
     }
 
+    this.hideWidgetsFor(currentTab);
+    this.restoreWidgetsFor(value);
+
     this.setState({
       value: value,
       dialogMessage: dialogMessage,
@@ -97,8 +130,8 @@ export default class NetPyNETabs extends React.Component {
       return (<div></div>)
     }
 
-    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated model={this.state.model} page={"explore"} />) : (<div></div>);
-    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated model={this.state.model} page={"simulate"} />) : (<div></div>);
+    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
+    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />) : (<div></div>);
 
     return (
       <div>
@@ -114,7 +147,7 @@ export default class NetPyNETabs extends React.Component {
             <NetPyNECellRules model={this.state.model.netParams.cellParams} />
             <NetPyNESynapses model={this.state.model.netParams.cellParams} />
 
-            <Card style={{clear: 'both'}}>
+            <Card style={{ clear: 'both' }}>
               <CardHeader
                 title="Connections"
                 subtitle="Define here the connectivity rules in your network"

@@ -19,13 +19,11 @@ define(function (require) {
                             <div id="consoleButtonContainer">
                                 <ul className="btn nav nav-tabs" role="tablist" id="tabButton">
                                     <li role="presentation" className="active" id="consoleButton"><a href="#console" aria-controls="console" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Console</a></li>
-                                    <li role="presentation" id="experimentsButton" style={{ display: 'none' }}><a href="#experiments" aria-controls="experiments" role="tab" data-toggle="tab"><i className="fa fa-flask"></i>Experiments</a></li>
                                     <li role="presentation" id="pythonConsoleButton" style={{ display: 'none' }}><a href="#pythonConsole" aria-controls="pythonConsole" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Python</a></li>
                                 </ul>
 
                                 <div className="tab-content">
                                     <div role="tabpanel" className="tab-pane active" id="console">Console Loading...</div>
-                                    <div role="tabpanel" id="experiments" className="tab-pane panel panel-default"></div>
                                     <div role="tabpanel" id="pythonConsole" className="tab-pane  panel panel-default"></div>
                                 </div>
                             </div>
@@ -40,9 +38,38 @@ define(function (require) {
         var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/neuron-ui-demo.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
-        GEPPETTO.ComponentFactory.addComponent('EXPERIMENTSTABLE', {}, document.getElementById("experiments"));
-
         GEPPETTO.G.setIdleTimeOut(-1);
+
+
+        var visiblePython = false;
+        $('#pythonConsoleButton').click(function (e) {
+            if (!visiblePython) {
+                $('#console').hide();
+                $("#pythonConsole").show();
+                $(this).tab('show');
+                visiblePython = true;
+                embeddedConsoleVisible = false;
+            } else {
+                $("#pythonConsole").hide();
+                visiblePython = false;
+            }
+        });
+
+        var embeddedConsoleVisible = false;
+        $('#consoleButton').click(function (e) {
+            if(!embeddedConsoleVisible) {
+                $('#console').show();
+                $("#pythonConsole").hide();
+                $(this).tab('show');
+                embeddedConsoleVisible = true;
+                visiblePython = false;
+            } else {
+                $('#console').hide();
+                embeddedConsoleVisible = false;
+            }
+        });
+
+        $('.nav-tabs li.active').removeClass('active');
 
         require('./css/neuron.less');
         require('./css/material.less');
