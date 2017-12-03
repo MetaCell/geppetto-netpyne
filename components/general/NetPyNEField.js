@@ -60,6 +60,10 @@ export default class NetPyNEField extends Component {
                 extraProps['type'] = type;
             }
 
+            var realType =Utils.getMetadataField(this.props.id, "type");
+            extraProps['realType'] = realType;
+
+
             var hintText=Utils.getMetadataField(this.props.id, "hintText");
             if (hintText != ''){
                 extraProps['hintText'] = hintText;
