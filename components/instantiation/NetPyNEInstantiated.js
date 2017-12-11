@@ -143,6 +143,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Stats Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
                     <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
                     <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Traces Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
+                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
                 </Menu>
 
 
