@@ -143,7 +143,7 @@ export default class NetPyNETabs extends React.Component {
           onChange={this.handleChange}
         >
           <Tab label="Define your network" value="define">
-            <NetPyNEPopulations model={this.state.model.netParams.popParams} />
+            <NetPyNEPopulations model={"netParams.popParams"} componentType="Populations"/>
             <NetPyNECellRules model={this.state.model.netParams.cellParams} />
             <NetPyNESynapses model={this.state.model.netParams.cellParams} />
 

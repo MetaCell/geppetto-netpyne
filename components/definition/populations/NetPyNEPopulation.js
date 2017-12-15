@@ -133,6 +133,17 @@ export default class NetPyNEPopulation extends React.Component {
     return modelParameters;
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.model == undefined || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
+  }
+
+  triggerUpdate(updateMethod) {
+    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+    if (this.updateTimer != undefined) {
+      clearTimeout(this.updateTimer);
+    }
+    this.updateTimer = setTimeout(updateMethod, 500);
+  }
 
   render() {
     if (this.state.sectionId == "General") {
@@ -159,7 +170,9 @@ export default class NetPyNEPopulation extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.popParams.cellType" >
-            <PythonControlledTextField model={"netParams.popParams['" + this.state.model.name + "']['cellType']"} />
+            <PythonControlledTextField
+              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.popParams.numCells" >
@@ -176,22 +189,24 @@ export default class NetPyNEPopulation extends React.Component {
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
               <PythonControlledTextField
-                handleChange={(event, value) => {
+                handleChange={function(event, value){
                   var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
-
-                  // Set Population Dimension Python Side
-                  Utils
-                    .sendPythonMessage('netParams.popParams.setParam', [this.state.model.name, this.state.dimension, newValue])
-                    .then(function (response) {
-                      console.log("Setting Pop Dimensions Parameters");
-                      console.log("Response", response);
-                    });
-
                   // Update State
-                  this.setState({ dimensionValue: newValue });
+                  this.setState({ value: newValue});
+                  var that = this;
+                  this.triggerUpdate(function () {
+                    // Set Population Dimension Python Side
+                    Utils
+                      .sendPythonMessage('netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
+                      .then(function (response) {
+                        console.log("Setting Pop Dimensions Parameters");
+                        console.log("Response", response);
+                      });
+                  });
                 }}
                 model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimension + "']"}
-                value={this.state.dimensionValue}
+                modelName={this.state.model.name}
+                dimensionType={this.state.dimension}
               />
             </NetPyNEField>
             : null
