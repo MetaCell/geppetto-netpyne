@@ -12,8 +12,8 @@ import FontIcon from 'material-ui/FontIcon';
 import NetPyNEField from '../../general/NetPyNEField';
 import Utils from '../../../Utils';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledComponent(Checkbox);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 
 export default class NetPyNESimConfig extends React.Component {
 

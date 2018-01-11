@@ -29,7 +29,6 @@ export default class NetPyNECellRules extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      model: props.model,
       selectedCellRule: undefined,
       page: "main"
     };
@@ -55,14 +54,14 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   selectCellRule(cellRule) {
-    this.setState({ model: this.state.model, selectedCellRule: cellRule });
+    this.setState({ selectedCellRule: cellRule });
   }
 
   handleNewCellRule(defaultCellRules) {
     // Get Key and Value
     var key = Object.keys(defaultCellRules)[0];
     var value = defaultCellRules[key];
-    var model = this.state.model;
+    var model = this.state.value;
 
     // Get New Available ID
     var cellRuleId = Utils.getAvailableKey(model, key);
@@ -79,20 +78,20 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     model[cellRuleId] = newCellRule;
     this.setState({
-      model: model,
+      value: model,
       selectedCellRule: newCellRule
     });
   }
 
   selectSection(section) {
-    this.setState({ model: this.state.model, selectedSection: section });
+    this.setState({ selectedSection: section });
   }
 
   handleNewSection(defaultSectionValues) {
     // Get Key and Value
     var key = Object.keys(defaultSectionValues)[0];
     var value = defaultSectionValues[key];
-    var model = this.state.model;
+    var model = this.state.value;
     var selectedCellRule = this.state.selectedCellRule.name;
 
     // Get New Available ID
@@ -111,20 +110,20 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     model[selectedCellRule]['secs'][sectionId] = newSection;
     this.setState({
-      model: model,
+      value: model,
       selectedSection: newSection
     });
   }
 
   selectMechanism(mechanism) {
-    this.setState({ model: this.state.model, selectedMechanism: mechanism });
+    this.setState({ selectedMechanism: mechanism });
   }
 
   handleNewMechanism(defaultMechanismValues) {
     // Get Key and Value
     var key = Object.keys(defaultMechanismValues)[0];
     var value = defaultMechanismValues[key];
-    var model = this.state.model;
+    var model = this.state.value;
     var selectedCellRule = this.state.selectedCellRule.name;
     var selectedSection = this.state.selectedSection.name;
 
@@ -144,24 +143,82 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     model[selectedCellRule].secs[selectedSection]['mechs'][mechanismId] = newMechanism;
     this.setState({
-      model: model,
+      value: model,
       selectedMechanism: newMechanism
     });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    var currentModel = this.state.value;
+    var model = nextState.value;
+    //deal with rename
+    if (currentModel != undefined && model != undefined) {
+      var oldP = Object.keys(currentModel);
+      var newP = Object.keys(model);
+      if (oldP.length == newP.length) {
+        //if it's the same lenght there could be a rename
+        for (var i = 0; i < oldP.length; i++) {
+          if (oldP[i] != newP[i]) {
+            if (this.state.selectedCellRule != undefined) {
+              if (oldP[i] == this.state.selectedCellRule.name) {
+                this.state.selectedCellRule.name = newP[i];
+                this.forceUpdate();
+              }
+              //loop sections
+              var oldS = Object.keys(this.state.selectedCellRule.secs);
+              var newS = Object.keys(nextState.selectedCellRule.secs);
+              if (oldS.length == newS.length) {
+                for (var i = 0; i < oldS.length; i++) {
+                  if (oldS[i] != newS[i]) {
+                    if (this.state.selectedSection != undefined) {
+                      if (oldS[i] == this.state.selectedSection.name) {
+                        this.state.selectedSection.name = newS[i];
+                        this.forceUpdate();
+                      }
+                      //loop mechanisms
+                      var oldM = Object.keys(this.state.selectedSection.mechs);
+                      var newM = Object.keys(nextState.selectedSection.mechs);
+                      if (oldM.length == newM.length) {
+                        for (var i = 0; i < oldM.length; i++) {
+                          if (oldM[i] != newM[i]) {
+                            if (this.state.selectedMechanism != undefined) {
+                              if (oldM[i] == this.state.selectedMechanism.name) {
+                                this.state.selectedMechanism.name = newM[i];
+                                this.forceUpdate();
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return currentModel == undefined || this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism || newP.toString() != oldP.toString() || this.state.page != nextState.page;
   }
 
   render() {
 
     var that = this;
+    var model = this.state.value;
+    for (var m in model) {
+      model[m].name = m;
+    }
     var content;
     if (this.state.page == 'main') {
 
       var cellRules = [];
-      for (var key in this.state.model) {
-        cellRules.push(<NetPyNECellRuleThumbnail key={key} selected={this.state.selectedCellRule && key == this.state.selectedCellRule.name} model={this.state.model[key]} handleClick={this.selectCellRule} />);
+      for (var key in model) {
+        cellRules.push(<NetPyNECellRuleThumbnail key={key} selected={this.state.selectedCellRule && key == this.state.selectedCellRule.name} model={model[key]} handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule) {
-        selectedCellRule = <NetPyNECellRule  model={this.state.selectedCellRule} selectPage={this.selectPage} />;
+        selectedCellRule = <NetPyNECellRule model={this.state.selectedCellRule} selectPage={this.selectPage} />;
       }
 
       content = (
@@ -171,7 +228,7 @@ export default class NetPyNECellRules extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft:"18px" }}
+              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
                   <NetPyNENewCellRule handleClick={this.handleNewCellRule} />
                 }
@@ -187,10 +244,14 @@ export default class NetPyNECellRules extends React.Component {
     }
 
     else if (this.state.page == "sections") {
-
+      var sectionsModel = model[this.state.selectedCellRule.name].secs;
+      for (var m in sectionsModel) {
+        sectionsModel[m].name = m;
+        sectionsModel[m].parent = this.state.selectedCellRule
+      }
       var sections = [];
-      for (var key in this.state.model[this.state.selectedCellRule.name].secs) {
-        sections.push(<NetPyNESectionThumbnail key={key} selected={this.state.selectedSection && key == this.state.selectedSection.name} model={this.state.model[this.state.selectedCellRule.name].secs[key]} handleClick={this.selectSection} />);
+      for (var key in sectionsModel) {
+        sections.push(<NetPyNESectionThumbnail key={key} selected={this.state.selectedSection && key == this.state.selectedSection.name} model={sectionsModel[key]} handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
       if (this.state.selectedSection) {
@@ -228,10 +289,14 @@ export default class NetPyNECellRules extends React.Component {
 
     }
     else if (this.state.page == "mechanisms") {
-
+      var mechanismsModel = model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs;
+      for (var m in mechanismsModel) {
+        mechanismsModel[m].name = m;
+        mechanismsModel[m].parent = this.state.selectedSection;
+      }
       var mechanisms = [];
-      for (var key in this.state.model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs) {
-        mechanisms.push(<NetPyNEMechanismThumbnail key={key} selected={this.state.selectedMechanism && key == this.state.selectedMechanism.name} model={this.state.model[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs[key]} handleClick={this.selectMechanism} />);
+      for (var key in mechanismsModel) {
+        mechanisms.push(<NetPyNEMechanismThumbnail key={key} selected={this.state.selectedMechanism && key == this.state.selectedMechanism.name} model={mechanismsModel[key]} handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
       if (this.state.selectedMechanism) {
@@ -277,7 +342,7 @@ export default class NetPyNECellRules extends React.Component {
     }
 
     return (
-      <Card style={{clear: 'both'}}>
+      <Card style={{ clear: 'both' }}>
         <CardHeader
           title="Cell rules"
           subtitle="Define here the rules to generate the cells in your network"

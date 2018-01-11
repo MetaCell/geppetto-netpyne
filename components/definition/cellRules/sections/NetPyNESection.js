@@ -11,10 +11,11 @@ import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../../general/NetPyNEField';
-
+import clone from 'lodash.clone';
+import Utils from '../../../../Utils';
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 
 const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
@@ -23,10 +24,11 @@ export default class NetPyNESection extends React.Component {
 
   constructor(props) {
     super(props);
-
+    var model = clone(props.model);
     var _this = this;
     this.state = {
-      model: props.model,
+      model: model,
+      currentName: model.name,
       selectedIndex: 0,
       sectionId: "General"
     };
@@ -41,6 +43,26 @@ export default class NetPyNESection extends React.Component {
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
+  handleRenameChange = (event) => {
+    var that = this;
+    var storedValue = this.state.model.name;
+    var newValue = event.target.value;
+    this.setState({ currentName: newValue });
+    this.triggerUpdate(function () {
+      // Rename the population in Python
+      Utils.renameKey("netParams.cellParams['" + that.state.model.parent.name + "']['secs']", storedValue, newValue, (response, newValue) => { });
+    });
+
+  }
+
+  triggerUpdate(updateMethod) {
+    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+    if (this.updateTimer != undefined) {
+      clearTimeout(this.updateTimer);
+    }
+    this.updateTimer = setTimeout(updateMethod, 500);
+  }
+
   getBottomNavigationItem(index, sectionId, label, icon) {
 
     return <BottomNavigationItem
@@ -51,7 +73,7 @@ export default class NetPyNESection extends React.Component {
     />
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ model: nextProps.model });
+    this.setState({ currentName: nextProps.model.name, model: nextProps.model });
   }
 
   render() {
@@ -61,10 +83,13 @@ export default class NetPyNESection extends React.Component {
     if (this.state.sectionId == "General") {
       content = (
         <div>
-          <TextField
-            value={this.state.model.name}
-            floatingLabelText="The name of the section"
-          />
+
+        <TextField
+          onChange={this.handleRenameChange}
+          value = {this.state.currentName}
+          floatingLabelText="The name of the section"
+          className={"netpyneField"}
+        />
           <br /><br />
           <IconButton
             className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}

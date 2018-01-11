@@ -7,42 +7,62 @@ import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
-
+import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 export default class NetPyNECellRule extends React.Component {
 
   constructor(props) {
     super(props);
-
+    var model = clone(props.model);
     var _this = this;
     this.state = {
-      model: props.model,
+      currentName: model.name,
+      model: model,
       page: 'main'
     };
   }
 
+  handleRenameChange = (event) => {
+    var that = this;
+    var storedValue = this.state.model.name;
+    var newValue = event.target.value;
+    this.setState({ currentName: newValue });
+    this.triggerUpdate(function () {
+      // Rename the population in Python
+      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { });
+    });
+
+  }
+
+  triggerUpdate(updateMethod) {
+    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+    if (this.updateTimer != undefined) {
+      clearTimeout(this.updateTimer);
+    }
+    this.updateTimer = setTimeout(updateMethod, 500);
+  }
+
   componentWillReceiveProps(nextProps) {
-    this.setState({ model: nextProps.model });
+    this.setState({ currentName: nextProps.model.name, model: nextProps.model });
   }
 
   render() {
     var that = this;
     var content = (<div>
-      <TextField
-        value={this.state.model.name}
 
-        onChange={(event) => Utils.renameKey('netParams.cellParams', this.state.model.name, event.target.value, (response, newValue) => {
-          var model = this.state.model;
-          model.name = newValue;
-          this.setState({ model: model });
-        })}
+      <TextField
+        onChange={this.handleRenameChange}
+        value = {this.state.currentName}
         floatingLabelText="The name of the cell rule"
-      /><br />
+        className={"netpyneField"}
+      />
+
+      <br/>
 
       <NetPyNEField id="netParams.cellParams.conds.cellModel" >
         <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"} />

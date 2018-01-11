@@ -127,11 +127,19 @@ const Utils = {
     },
 
     renameKey(path, oldValue, newValue, callback) {
-        this.sendPythonMessage(path + '.rename', [oldValue, newValue])
+        this.sendPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
             .then((response) => {
                 callback(response, newValue);
             })
     },
+
+    pauseSync(callback){
+        this.sendPythonMessage('timer.pause',[]).then(callback());
+    },
+
+    resumeSync(callback){
+        this.sendPythonMessage('timer.resume',[]).then(callback());
+    }
 
 }
 

@@ -10,25 +10,26 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import AutoComplete from 'material-ui/AutoComplete';
 import FontIcon from 'material-ui/FontIcon';
-
+import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import AdapterComponent from '../../general/AdapterComponent';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledComponent(SelectField);
-var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledComponent(AutoComplete);
-var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledComponent(AdapterComponent);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledControl(AutoComplete);
+var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
 
 
 export default class NetPyNEPopulation extends React.Component {
 
   constructor(props) {
     super(props);
-
+    var model = clone(props.model);
     this.state = {
-      model: props.model,
+      model: model,
+      currentName: model.name,
       selectedIndex: 0,
       sectionId: "General"
     };
@@ -42,13 +43,13 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ model: nextProps.model, selectedIndex: 0, sectionId: "General" });
+    this.setState({ currentName: nextProps.model.name, model: nextProps.model, selectedIndex: 0, sectionId: "General" });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.model.name != prevState.model.name) {
       var newState = Object.keys(this.state)
-        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId'))
+        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key!=='currentName'))
         .reduce((result, current) => {
           result[current] = '';
           return result;
@@ -134,7 +135,19 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.model == undefined || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
+    return this.state.model == undefined || this.state.currentName != nextState.currentName || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
+  }
+
+  handleRenameChange = (event) => {
+      var that = this;
+      var storedValue = this.state.model.name;
+      var newValue = event.target.value;
+      this.setState({ currentName: newValue});
+      this.triggerUpdate(function () {
+        // Rename the population in Python
+        Utils.renameKey('netParams.popParams',storedValue, newValue, (response, newValue)=>{});
+      });
+    
   }
 
   triggerUpdate(updateMethod) {
@@ -149,16 +162,15 @@ export default class NetPyNEPopulation extends React.Component {
     if (this.state.sectionId == "General") {
       var content =
         <div>
-          <TextField
-            value={this.state.model.name}
-            onChange={(event) => Utils.renameKey('netParams.popParams', this.state.model.name, event.target.value, (response, newValue) => {
-              var model = this.state.model;
-              model.name = newValue;
-              this.setState({ model: model });
-            })}
-            floatingLabelText="The name of your population"
-            className={"netpyneField"}
-          />
+
+        <TextField
+              onChange={this.handleRenameChange}
+              value = {this.state.currentName}
+              floatingLabelText="The name of your population"
+              className={"netpyneField"}
+            />
+
+
 
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete

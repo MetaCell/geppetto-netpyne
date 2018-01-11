@@ -3,7 +3,7 @@ import Slider from 'material-ui/Slider';
 import TextField from 'material-ui/TextField';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledComponent(TextField);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 /**
  * The slider bar can have a set minimum and maximum, and the value can be

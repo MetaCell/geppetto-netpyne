@@ -10,6 +10,10 @@ import NetPyNESimConfig from './components/definition/configuration/NetPyNESimCo
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
 
+var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
+var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
+
 export default class NetPyNETabs extends React.Component {
 
   constructor(props) {
@@ -143,9 +147,9 @@ export default class NetPyNETabs extends React.Component {
           onChange={this.handleChange}
         >
           <Tab label="Define your network" value="define">
-            <NetPyNEPopulations model={"netParams.popParams"} componentType="Populations"/>
-            <NetPyNECellRules model={this.state.model.netParams.cellParams} />
-            <NetPyNESynapses model={this.state.model.netParams.cellParams} />
+            <PythonControlledNetPyNEPopulations model={"netParams.popParams"}/>
+            <PythonControlledNetPyNECellRules model={"netParams.cellParams"}/>
+            <NetPyNESynapses model={""} />
 
             <Card style={{ clear: 'both' }}>
               <CardHeader
