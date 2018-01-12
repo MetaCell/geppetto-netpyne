@@ -134,38 +134,43 @@ export default class NetPyNETabs extends React.Component {
       return (<div></div>)
     }
 
+    var defineContent = this.state.value == "define" ? (
+      <div>
+        <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
+        <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
+        <NetPyNESynapses model={""} />
+
+        <Card style={{ clear: 'both' }}>
+          <CardHeader
+            title="Connections"
+            subtitle="Define here the connectivity rules in your network"
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <CardText expandable={true}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+            Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+            Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+          </CardText>
+        </Card>
+        <NetPyNESimConfig model={this.state.model.simConfig} />
+      </div>
+    ) : (<div></div>);
     var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
     var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />) : (<div></div>);
-
+    var bottomValue = this.state.value == "define" ? 35 : 0;
     return (
       <div>
         <Tabs
           value={this.state.value}
           style={{ height: '100%' }}
           tabTemplateStyle={{ height: '100%' }}
-          contentContainerStyle={{ bottom: 0, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
+          contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
         >
           <Tab label="Define your network" value="define">
-            <PythonControlledNetPyNEPopulations model={"netParams.popParams"}/>
-            <PythonControlledNetPyNECellRules model={"netParams.cellParams"}/>
-            <NetPyNESynapses model={""} />
-
-            <Card style={{ clear: 'both' }}>
-              <CardHeader
-                title="Connections"
-                subtitle="Define here the connectivity rules in your network"
-                actAsExpander={true}
-                showExpandableButton={true}
-              />
-              <CardText expandable={true}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-            </Card>
-            <NetPyNESimConfig model={this.state.model.simConfig} />
+            {defineContent}
           </Tab>
           <Tab label="Explore your network" value="explore" >
             {exploreContent}
