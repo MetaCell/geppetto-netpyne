@@ -68,12 +68,12 @@ export default class NetPyNEPopulation extends React.Component {
         .sendPythonMessage('api.getParametersForCellModel', [value])
         .then((response) => {
 
-          var cellModelFields = [];
+          var cellModelFields = "";
           if (Object.keys(response).length != 0) {
             // Merge the new metadata with the current one
             window.metadata = Utils.mergeDeep(window.metadata, response);
             // console.log("New Metadata", window.metadata);
-
+            cellModelFields = [];
             // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
               return (<NetPyNEField id={key} >
@@ -141,7 +141,7 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.model == undefined || this.state.currentName != nextState.currentName || this.state.cellModel != nextState.cellModel || this.state.cellModelFields != nextState.cellModelFields || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
+    return this.state.model == undefined || this.state.currentName != nextState.currentName || this.state.cellModelFields != nextState.cellModelFields || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
   }
 
   handleRenameChange = (event) => {
