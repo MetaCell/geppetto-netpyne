@@ -206,8 +206,10 @@ export default class NetPyNECellRules extends React.Component {
 
     var that = this;
     var model = this.state.value;
-    for (var m in model) {
-      model[m].name = m;
+    if (model != undefined && model.length > 0){
+      for (var m in model) {
+        model[m].name = m;
+      }
     }
     var content;
     if (this.state.page == 'main') {

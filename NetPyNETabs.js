@@ -9,6 +9,9 @@ import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
+import IconButton from 'material-ui/IconButton';
+import SettingsDialog from './components/settings/Settings';
+import FontIcon from 'material-ui/FontIcon';
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -23,7 +26,8 @@ export default class NetPyNETabs extends React.Component {
     this.state = {
       value: 'define',
       model: null,
-      openDialog: false
+      openDialog: false,
+      settingsOpen: false
     };
 
     GEPPETTO.on('OriginalModelLoaded', (model) => {
@@ -40,11 +44,9 @@ export default class NetPyNETabs extends React.Component {
   };
 
   instantiate = (model) => {
-    var that = this;
-
     Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
       .then(response => {
-        that.handleCloseDialog();
+        this.handleCloseDialog();
         console.log("Instantiate NetPyNE Model in Geppetto was called");
         GEPPETTO.Manager.loadModel(JSON.parse(response));
       });
@@ -52,11 +54,9 @@ export default class NetPyNETabs extends React.Component {
   };
 
   simulate = (model) => {
-    var that = this;
-
     Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [])
       .then(response => {
-        that.handleCloseDialog();
+        this.handleCloseDialog();
         console.log("Simulate NetPyNE Model in Geppetto was called");
         GEPPETTO.Manager.loadModel(JSON.parse(response));
       });
@@ -128,6 +128,14 @@ export default class NetPyNETabs extends React.Component {
     });
   };
 
+  openSettings = () => {
+    this.setState({ settingsOpen: true });
+  }
+
+  closeSettings = () => {
+    this.setState({ settingsOpen: false });
+  }
+
   render() {
 
     if (this.state.model == null) {
@@ -164,7 +172,7 @@ export default class NetPyNETabs extends React.Component {
       <div>
         <Tabs
           value={this.state.value}
-          style={{ height: '100%' }}
+          style={{ height: '100%', width: '98%', float: 'left' }}
           tabTemplateStyle={{ height: '100%' }}
           contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
@@ -179,6 +187,12 @@ export default class NetPyNETabs extends React.Component {
             {simulateContent}
           </Tab>
         </Tabs>
+        <div id="settingsIcon" style={{ float: 'right', width: '2%', backgroundColor: 'rgb(0, 188, 212)' }}>
+          <IconButton onClick={this.openSettings}>
+            <FontIcon className={"fa fa-cog"}/>
+          </IconButton>
+        </div>
+        <SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
         <Dialog
           title="NetPyNE"
           actions={<FlatButton
