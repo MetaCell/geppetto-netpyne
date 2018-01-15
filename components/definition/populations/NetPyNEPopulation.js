@@ -49,7 +49,7 @@ export default class NetPyNEPopulation extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.model.name != prevState.model.name) {
       var newState = Object.keys(this.state)
-        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key!=='currentName'))
+        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key !== 'currentName'))
         .reduce((result, current) => {
           result[current] = '';
           return result;
@@ -57,10 +57,15 @@ export default class NetPyNEPopulation extends React.Component {
       this.setState(newState);
       this.updateLayout();
     }
-    else if (this.state.cellModel != prevState.cellModel) {
+  }
+
+  setPopulationDimension = (value) => {
+    //this.setState({ cellModel: value });
+    var that = this;
+    this.triggerUpdate(function () {
       // Set Population Dimension Python Side
       Utils
-        .sendPythonMessage('api.getParametersForCellModel', [this.state.cellModel])
+        .sendPythonMessage('api.getParametersForCellModel', [value])
         .then((response) => {
 
           var cellModelFields = [];
@@ -73,14 +78,15 @@ export default class NetPyNEPopulation extends React.Component {
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
               return (<NetPyNEField id={key} >
                 <PythonControlledTextField
-                  model={"netParams.popParams['" + this.state.model.name + "']['" + key.split(".").pop() + "']"}
+                  model={"netParams.popParams['" + that.state.model.name + "']['" + key.split(".").pop() + "']"}
                 />
               </NetPyNEField>);
             });
           }
-          this.setState({ cellModelFields: cellModelFields });
+          that.setState({ cellModelFields: cellModelFields, cellModel: value });
         });
-    }
+    });
+
   }
 
   updateLayout() {
@@ -135,19 +141,19 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.model == undefined || this.state.currentName != nextState.currentName || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
+    return this.state.model == undefined || this.state.currentName != nextState.currentName || this.state.cellModel != nextState.cellModel || this.state.cellModelFields != nextState.cellModelFields || this.state.model != nextState.model || this.state.dimension != nextState.dimension || this.state.sectionId != nextState.sectionId || this.state.selectedIndex != nextState.selectedIndex || this.state.rangeTypeX != nextState.rangeTypeX || this.state.rangeTypeY != nextState.rangeTypeY || this.state.rangeTypeZ != nextState.rangeTypeZ;
   }
 
   handleRenameChange = (event) => {
-      var that = this;
-      var storedValue = this.state.model.name;
-      var newValue = event.target.value;
-      this.setState({ currentName: newValue});
-      this.triggerUpdate(function () {
-        // Rename the population in Python
-        Utils.renameKey('netParams.popParams',storedValue, newValue, (response, newValue)=>{});
-      });
-    
+    var that = this;
+    var storedValue = this.state.model.name;
+    var newValue = event.target.value;
+    this.setState({ currentName: newValue });
+    this.triggerUpdate(function () {
+      // Rename the population in Python
+      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { });
+    });
+
   }
 
   triggerUpdate(updateMethod) {
@@ -163,12 +169,12 @@ export default class NetPyNEPopulation extends React.Component {
       var content =
         <div>
 
-        <TextField
-              onChange={this.handleRenameChange}
-              value = {this.state.currentName}
-              floatingLabelText="The name of your population"
-              className={"netpyneField"}
-            />
+          <TextField
+            onChange={this.handleRenameChange}
+            value={this.state.currentName}
+            floatingLabelText="The name of your population"
+            className={"netpyneField"}
+          />
 
 
 
@@ -177,7 +183,7 @@ export default class NetPyNEPopulation extends React.Component {
               dataSource={[]}
               model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
               searchText={this.state.cellModel}
-              onChange={(value) => this.setState({ cellModel: value })}
+              onChange={(value) => this.setPopulationDimension(value)}
               openOnFocus={true} />
           </NetPyNEField>
 
@@ -201,10 +207,10 @@ export default class NetPyNEPopulation extends React.Component {
           {this.state.dimension != undefined && this.state.dimension != "" ?
             <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
               <PythonControlledTextField
-                handleChange={function(event, value){
+                handleChange={function (event, value) {
                   var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
                   // Update State
-                  this.setState({ value: newValue});
+                  this.setState({ value: newValue });
                   var that = this;
                   this.triggerUpdate(function () {
                     // Set Population Dimension Python Side
