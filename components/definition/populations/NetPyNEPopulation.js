@@ -14,6 +14,7 @@ import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import AdapterComponent from '../../general/AdapterComponent';
+import DimensionsComponent from './Dimensions';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -34,7 +35,7 @@ export default class NetPyNEPopulation extends React.Component {
       sectionId: "General"
     };
 
-    this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
+    
     this.ranges = [
       { value: 'xRange', stateVariable: 'rangeTypeX' }, { value: 'xnormRange', stateVariable: 'rangeTypeX' },
       { value: 'yRange', stateVariable: 'rangeTypeY' }, { value: 'ynormRange', stateVariable: 'rangeTypeY' },
@@ -90,19 +91,6 @@ export default class NetPyNEPopulation extends React.Component {
   }
 
   updateLayout() {
-    // Pop Dimensions
-    const getCurrentPopDimension = (popDimensionValue) => {
-      Utils
-        .sendPythonMessage("'" + popDimensionValue + "' in netParams.popParams['" + this.state.model.name + "']")
-        .then((response) => {
-          if (response) {
-            this.setState({ dimension: popDimensionValue })
-          }
-        });
-    }
-
-    this.popDimensionsOptions.forEach((popDimensionsOption) => { getCurrentPopDimension(popDimensionsOption.value) })
-
 
     //Range Type X
     const getRange = (value, stateVariable) => {
@@ -193,42 +181,8 @@ export default class NetPyNEPopulation extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.popParams.numCells" >
-            <SelectField
-              value={this.state.dimension}
-              onChange={(event, index, value) => this.setState({ dimension: value })}
-            >
-              {(this.popDimensionsOptions != undefined) ?
-                this.popDimensionsOptions.map(function (popDimensionsOption) {
-                  return (<MenuItem key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
-                }) : null}
-            </SelectField>
-          </NetPyNEField>
-          {this.state.dimension != undefined && this.state.dimension != "" ?
-            <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
-              <PythonControlledTextField
-                handleChange={function (event, value) {
-                  var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
-                  // Update State
-                  this.setState({ value: newValue });
-                  var that = this;
-                  this.triggerUpdate(function () {
-                    // Set Population Dimension Python Side
-                    Utils
-                      .sendPythonMessage('netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
-                      .then(function (response) {
-                        console.log("Setting Pop Dimensions Parameters");
-                        console.log("Response", response);
-                      });
-                  });
-                }}
-                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimension + "']"}
-                modelName={this.state.model.name}
-                dimensionType={this.state.dimension}
-              />
-            </NetPyNEField>
-            : null
-          }
+          <DimensionsComponent model={this.state.model} />
+          
         </div>
     }
     else if (this.state.sectionId == "SpatialDistribution") {

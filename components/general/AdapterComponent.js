@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Slider from 'material-ui/Slider';
 import TextField from 'material-ui/TextField';
 
 var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
