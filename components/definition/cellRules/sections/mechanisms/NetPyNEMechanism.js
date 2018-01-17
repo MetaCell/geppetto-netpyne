@@ -46,7 +46,7 @@ export default class NetPyNEMechanism extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.state.model.parent.parent.name + "']['secs']['" + that.state.model.parent.name + "']", storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey("netParams.cellParams['" + that.state.model.parent.parent.name + "']['secs']['" + that.state.model.parent.name + "']['mechs']", storedValue, newValue, (response, newValue) => { });
     });
 
   }

@@ -149,6 +149,7 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    var render = false;
     var currentModel = this.state.value;
     var model = nextState.value;
     //deal with rename
@@ -162,36 +163,40 @@ export default class NetPyNECellRules extends React.Component {
             if (this.state.selectedCellRule != undefined) {
               if (oldP[i] == this.state.selectedCellRule.name) {
                 this.state.selectedCellRule.name = newP[i];
-                this.forceUpdate();
+                render = true;
               }
-              //loop sections
-              var oldS = Object.keys(this.state.selectedCellRule.secs);
-              var newS = Object.keys(nextState.selectedCellRule.secs);
-              if (oldS.length == newS.length) {
-                for (var i = 0; i < oldS.length; i++) {
-                  if (oldS[i] != newS[i]) {
-                    if (this.state.selectedSection != undefined) {
-                      if (oldS[i] == this.state.selectedSection.name) {
-                        this.state.selectedSection.name = newS[i];
-                        this.forceUpdate();
-                      }
-                      //loop mechanisms
-                      var oldM = Object.keys(this.state.selectedSection.mechs);
-                      var newM = Object.keys(nextState.selectedSection.mechs);
-                      if (oldM.length == newM.length) {
-                        for (var i = 0; i < oldM.length; i++) {
-                          if (oldM[i] != newM[i]) {
-                            if (this.state.selectedMechanism != undefined) {
-                              if (oldM[i] == this.state.selectedMechanism.name) {
-                                this.state.selectedMechanism.name = newM[i];
-                                this.forceUpdate();
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+            }
+          }
+        }
+      }
+      if (this.state.selectedCellRule != undefined) {
+        //loop sections
+        var oldS = Object.keys(this.state.selectedCellRule.secs);
+        var newS = Object.keys(nextState.value[this.state.selectedCellRule.name].secs);
+        if (oldS.length == newS.length) {
+          for (var i = 0; i < oldS.length; i++) {
+            if (oldS[i] != newS[i]) {
+              if (this.state.selectedSection != undefined) {
+                if (oldS[i] == this.state.selectedSection.name) {
+                  this.state.selectedSection.name = newS[i];
+                  render = true;
+                }
+              }
+            }
+          }
+        }
+      }
+      if (this.state.selectedSection != undefined) {
+        //loop mechanisms
+        var oldM = Object.keys(this.state.selectedSection.mechs);
+        var newM = Object.keys(nextState.value[this.state.selectedCellRule.name].secs[this.state.selectedSection.name].mechs);
+        if (oldM.length == newM.length) {
+          for (var i = 0; i < oldM.length; i++) {
+            if (oldM[i] != newM[i]) {
+              if (this.state.selectedMechanism != undefined) {
+                if (oldM[i] == this.state.selectedMechanism.name) {
+                  this.state.selectedMechanism.name = newM[i];
+                  render = true;
                 }
               }
             }
@@ -199,14 +204,14 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-    return currentModel == undefined || this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism || newP.toString() != oldP.toString() || this.state.page != nextState.page;
+    return render || currentModel == undefined || this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism || newP.toString() != oldP.toString() || this.state.page != nextState.page;
   }
 
   render() {
 
     var that = this;
     var model = this.state.value;
-    if (model != undefined && model.length > 0){
+    if (model != undefined) {
       for (var m in model) {
         model[m].name = m;
       }
