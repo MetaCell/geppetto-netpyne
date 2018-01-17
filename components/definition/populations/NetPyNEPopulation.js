@@ -164,8 +164,6 @@ export default class NetPyNEPopulation extends React.Component {
             className={"netpyneField"}
           />
 
-
-
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
               dataSource={[]}

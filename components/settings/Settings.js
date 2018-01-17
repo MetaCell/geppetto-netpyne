@@ -34,7 +34,7 @@ const SettingsDialog = React.createClass({
         // Set Population Dimension Python Side
         Utils
             .sendPythonMessage('netpyne_geppetto.importModel', [this.state])
-            .then(()=>{
+            .then(() => {
                 this.props.onRequestClose();
             });
     },
@@ -58,21 +58,27 @@ const SettingsDialog = React.createClass({
             <Dialog
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
+                bodyStyle={{overflow: 'auto'}}
                 actions={actions}
             >
-
-                <Tabs style={{ paddingTop: 10 }} value={this.state.currentTab} onChange={this.onChangeTab}>
+                <Tabs
+                    style={{ paddingTop: 10}}
+                    value={this.state.currentTab}
+                    onChange={this.onChangeTab}
+                    tabTemplateStyle={{ float: 'left', height: '100%' }}
+                >
                     <Tab value="import" label={'Import'}>
-                        <Card style={{ padding: 10, margin: 10 }}>
+                        <Card style={{ padding: 10, float: 'left', width: '100%'}}>
                             <CardText>
 
-                                <TextField floatingLabelText="Model Path" value={this.state.modelPath} onChange={(event)=>this.setState({modelPath: event.target.value})}/><br/>
-                                <TextField floatingLabelText="Module name" value={this.state.moduleName}  onChange={(event)=>this.setState({moduleName: event.target.value})}/><br/>
-                                <TextField floatingLabelText="NetParams variable" value={this.state.netParamsVariable}  onChange={(event)=>this.setState({netParamsVariable: event.target.value})}/><br/>
-                                <TextField floatingLabelText="SimConfig variable" value={this.state.simConfigVariable}  onChange={(event)=>this.setState({simConfigVariable: event.target.value})}/>
+                                <TextField style={{float: 'left', clear:'both'}} floatingLabelText="Model Path" value={this.state.modelPath} onChange={(event) => this.setState({ modelPath: event.target.value })} />
+                                <TextField style={{float: 'left', clear:'both'}} floatingLabelText="Module name" value={this.state.moduleName} onChange={(event) => this.setState({ moduleName: event.target.value })} />
+                                <TextField style={{float: 'left', clear:'both'}} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                                <TextField style={{float: 'left', clear:'both'}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
 
-                                <div style={{marginTop: 30}}>
+                                <div style={{ marginTop: 30, float: 'left', clear:'both'}}>
                                     <Checkbox
+                                        style={{float: 'left', clear:'both'}}
                                         label="Compile mod files"
                                         checked={this.state.compileMod}
                                         onCheck={() => this.setState((oldState) => {
@@ -81,7 +87,7 @@ const SettingsDialog = React.createClass({
                                             };
                                         })}
                                     />
-                                    <TextField floatingLabelText="Mod Path Folder" value={this.state.modFolder}  onChange={(event)=>this.setState({modFolder: event.target.value})}/><br/>
+                                    <TextField style={{float: 'left', clear:'both'}} floatingLabelText="Mod Path Folder" value={this.state.modFolder} onChange={(event) => this.setState({ modFolder: event.target.value })} />
                                 </div>
 
                             </CardText>
