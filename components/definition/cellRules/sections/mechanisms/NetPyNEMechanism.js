@@ -9,7 +9,6 @@ import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import Utils from '../../../../../Utils';
-import clone from 'lodash.clone';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
 var PythonControlledCapability = require('../../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -20,11 +19,9 @@ export default class NetPyNEMechanism extends React.Component {
 
   constructor(props) {
     super(props);
-    var model = clone(props.model);
     var _this = this;
     this.state = {
-      model: model,
-      currentName: model.name,
+      currentName: props.name,
       selectedIndex: 0,
       sectionId: "General"
     };
@@ -41,12 +38,12 @@ export default class NetPyNEMechanism extends React.Component {
 
   handleRenameChange = (event) => {
     var that = this;
-    var storedValue = this.state.model.name;
+    var storedValue = this.props.name;
     var newValue = event.target.value;
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.state.model.parent.parent.name + "']['secs']['" + that.state.model.parent.name + "']['mechs']", storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']['" + that.props.section + "']['mechs']", storedValue, newValue, (response, newValue) => { });
     });
 
   }
@@ -69,7 +66,7 @@ export default class NetPyNEMechanism extends React.Component {
     />
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.model.name, model: nextProps.model });
+    this.setState({ currentName: nextProps.name});
   }
 
   render() {

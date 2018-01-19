@@ -18,18 +18,15 @@ export default class NetPyNECellRule extends React.Component {
 
   constructor(props) {
     super(props);
-    var model = clone(props.model);
     var _this = this;
     this.state = {
-      currentName: model.name,
-      model: model,
-      page: 'main'
+      currentName: props.name
     };
   }
 
   handleRenameChange = (event) => {
     var that = this;
-    var storedValue = this.state.model.name;
+    var storedValue = this.props.name;
     var newValue = event.target.value;
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
@@ -48,7 +45,7 @@ export default class NetPyNECellRule extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.model.name, model: nextProps.model });
+    this.setState({ currentName: nextProps.name});
   }
 
   render() {
@@ -65,11 +62,11 @@ export default class NetPyNECellRule extends React.Component {
       <br/>
 
       <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellModel']"} />
+        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
       </NetPyNEField>
 
       <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.name + "']['conds']['cellType']"} />
+        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
       </NetPyNEField>
       <br /><br />
 

@@ -8,16 +8,12 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      model: props.model
-    };
-
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
     if (this.props.handleClick) {
-      this.props.handleClick(this.state.model);
+      this.props.handleClick(this.props.name);
     }
   }
 
@@ -29,7 +25,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
         onClick={this.handleClick}
       >
         <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
-        <span className={"gearThumbLabel"}>{this.state.model.name}</span>
+        <span className={"gearThumbLabel"}>{this.props.name}</span>
       </IconButton>
 
     );

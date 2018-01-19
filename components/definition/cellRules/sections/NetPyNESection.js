@@ -11,7 +11,6 @@ import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../../general/NetPyNEField';
-import clone from 'lodash.clone';
 import Utils from '../../../../Utils';
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -24,11 +23,10 @@ export default class NetPyNESection extends React.Component {
 
   constructor(props) {
     super(props);
-    var model = clone(props.model);
+
     var _this = this;
     this.state = {
-      model: model,
-      currentName: model.name,
+      currentName: props.name,
       selectedIndex: 0,
       sectionId: "General"
     };
@@ -45,12 +43,12 @@ export default class NetPyNESection extends React.Component {
 
   handleRenameChange = (event) => {
     var that = this;
-    var storedValue = this.state.model.name;
+    var storedValue = this.props.name;
     var newValue = event.target.value;
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.state.model.parent.name + "']['secs']", storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
     });
 
   }
@@ -73,7 +71,7 @@ export default class NetPyNESection extends React.Component {
     />
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.model.name, model: nextProps.model });
+    this.setState({ currentName: nextProps.name});
   }
 
   render() {
@@ -104,35 +102,35 @@ export default class NetPyNESection extends React.Component {
     else if (this.state.sectionId == "Geometries") {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['diam']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.L" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['L']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['Ra']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
         </NetPyNEField>
 
         <PythonControlledTextField
           floatingLabelText="Pt3d"
-          model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['geom']['pt3d']"} />
+          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['pt3d']"} />
       </div>)
     }
     else if (this.state.sectionId == "Topology") {
       content = (<div>
         <PythonControlledTextField
           floatingLabelText="Parent Section"
-          model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentSec']"} />
+          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Parent x"
-          model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['parentX']"} />
+          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"} />
         <br />
         <PythonControlledTextField
           floatingLabelText="Child x"
-          model={"netParams.cellParams['" + this.state.model.parent.name + "']['secs']['" + this.state.model.name + "']['topol']['childX']"} />
+          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} />
       </div>)
     }
     else if (this.state.sectionId == "Ions") {
