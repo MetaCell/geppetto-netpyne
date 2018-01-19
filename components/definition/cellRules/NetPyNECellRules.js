@@ -121,9 +121,9 @@ export default class NetPyNECellRules extends React.Component {
     // Create Mechanism Client side
     if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
-      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"].secs["' + selectedSection + '"]["mechs"] = {}');
+      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
     }
-    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"].secs["' + selectedSection + '"]["mechs"]["' + mechanismId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanismId + '"] = ' + JSON.stringify(value));
 
     // Update state
     this.setState({
@@ -242,7 +242,15 @@ export default class NetPyNECellRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).toString() != Object.keys(nextState.value).toString();
+      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      if (this.state.selectedCellRule != undefined) {
+        var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
+        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
+      }
+      if (this.state.selectedSection != undefined) {
+        var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+      }
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
@@ -251,11 +259,6 @@ export default class NetPyNECellRules extends React.Component {
 
     var that = this;
     var model = this.state.value;
-    // if (model != undefined) {
-    //   for (var m in model) {
-    //     model[m].name = m;
-    //   }
-    // }
     var content;
     if (this.state.page == 'main') {
 
@@ -292,10 +295,6 @@ export default class NetPyNECellRules extends React.Component {
 
     else if (this.state.page == "sections") {
       var sectionsModel = model[this.state.selectedCellRule].secs;
-      // for (var m in sectionsModel) {
-      //   sectionsModel[m].name = m;
-      //   sectionsModel[m].
-      // }
       var sections = [];
       for (var s in sectionsModel) {
         sections.push(<NetPyNESectionThumbnail key={s} name={s} selected={s == this.state.selectedSection} handleClick={this.selectSection} />);
@@ -337,10 +336,6 @@ export default class NetPyNECellRules extends React.Component {
     }
     else if (this.state.page == "mechanisms") {
       var mechanismsModel = model[this.state.selectedCellRule].secs[this.state.selectedSection].mechs;
-      // for (var m in mechanismsModel) {
-      //   mechanismsModel[m].name = m;
-      //   mechanismsModel[m].parent = this.state.selectedSection;
-      // }
       var mechanisms = [];
       for (var m in mechanismsModel) {
         mechanisms.push(<NetPyNEMechanismThumbnail name={m} key={m} selected={m == this.state.selectedMechanism} model={mechanismsModel[m]} handleClick={this.selectMechanism} />);
