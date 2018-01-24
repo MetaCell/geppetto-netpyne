@@ -243,11 +243,11 @@ export default class NetPyNECellRules extends React.Component {
     var newModel = this.state.value == undefined;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-      if (this.state.selectedCellRule != undefined) {
+      if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule]!=undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
         newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
       }
-      if (this.state.selectedSection != undefined) {
+      if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection]!=undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
         newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
       }
