@@ -44,21 +44,23 @@ export default class NetPyNETabs extends React.Component {
   };
 
   instantiate = (model) => {
+    GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
     Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
       .then(response => {
         this.handleCloseDialog();
-        console.log("Instantiate NetPyNE Model in Geppetto was called");
         GEPPETTO.Manager.loadModel(JSON.parse(response));
+        GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
       });
 
   };
 
   simulate = (model) => {
+    GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
     Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [])
       .then(response => {
         this.handleCloseDialog();
-        console.log("Simulate NetPyNE Model in Geppetto was called");
         GEPPETTO.Manager.loadModel(JSON.parse(response));
+        GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
       });
 
   };

@@ -35,6 +35,7 @@ define(function (require) {
         }
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
+        GEPPETTO.ComponentFactory.addComponent('CONSOLE', {}, document.getElementById("console"));
         var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/neuron-ui-demo.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
