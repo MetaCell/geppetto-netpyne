@@ -16,7 +16,7 @@ export default class NetPyNENewSection extends React.Component {
 
   handleClick() {
     if (this.props.handleClick) {
-      this.props.handleClick({ 'soma': {'geom': {}, 'topol': {}, 'mechs': {}} });
+      this.props.handleClick({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
     }
   }
 
