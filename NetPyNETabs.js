@@ -11,7 +11,9 @@ import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated'
 import Utils from './Utils';
 import IconButton from 'material-ui/IconButton';
 import SettingsDialog from './components/settings/Settings';
+import TransitionDialog from './components/transition/Transition';
 import FontIcon from 'material-ui/FontIcon';
+
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -26,7 +28,6 @@ export default class NetPyNETabs extends React.Component {
     this.state = {
       value: 'define',
       model: null,
-      openDialog: false,
       settingsOpen: false
     };
 
@@ -38,33 +39,6 @@ export default class NetPyNETabs extends React.Component {
     });
 
   }
-
-  handleCloseDialog = () => {
-    this.setState({ openDialog: false });
-  };
-
-  instantiate = (model) => {
-    GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
-    Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
-      .then(response => {
-        this.handleCloseDialog();
-        GEPPETTO.Manager.loadModel(JSON.parse(response));
-        GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
-      });
-
-  };
-
-  simulate = (model) => {
-    GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
-    Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [])
-      .then(response => {
-        this.handleCloseDialog();
-        GEPPETTO.Manager.loadModel(JSON.parse(response));
-        GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
-      });
-
-  };
-
 
   hideWidgetsFor = (value) => {
     if (value != "define") {
@@ -94,39 +68,11 @@ export default class NetPyNETabs extends React.Component {
   }
 
   handleChange = (value) => {
-    var currentTab = this.state.value;
-    var dialogMessage = null;
-    var openDialog = false;
-    var confirmActionDialog = this.handleCloseDialog;
-    switch (value) {
-      case "define":
-        openDialog = true;
-        dialogMessage = "You are back to network definition, any changes will require to reinstantiate your network."
-        break;
-      case "explore":
-        if (currentTab == "define") {
-          openDialog = true;
-          dialogMessage = "We are about to instantiate your network, this could take some time.",
-            confirmActionDialog = this.instantiate;
-        }
-        break;
-      case "simulate":
-        if (currentTab == "explore") {
-          openDialog = true;
-          dialogMessage = "We are about to simulate your network, this could take some time.",
-            confirmActionDialog = this.simulate;
-        }
-        break;
-    }
-
-    this.hideWidgetsFor(currentTab);
+    this.hideWidgetsFor(this.state.value);
     this.restoreWidgetsFor(value);
 
     this.setState({
       value: value,
-      dialogMessage: dialogMessage,
-      openDialog: openDialog,
-      confirmActionDialog: confirmActionDialog
     });
   };
 
@@ -195,20 +141,7 @@ export default class NetPyNETabs extends React.Component {
           </IconButton>
         </div>
         <SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
-        <Dialog
-          title="NetPyNE"
-          actions={<FlatButton
-            label="Ok"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.state.confirmActionDialog}
-          />}
-          modal={true}
-          open={this.state.openDialog}
-          onRequestClose={this.handleCloseDialog}
-        >
-          {this.state.dialogMessage}
-        </Dialog>
+        <TransitionDialog tab={this.state.value} />
       </div>
     )
   }
