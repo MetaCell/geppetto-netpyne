@@ -18,7 +18,7 @@ export default class RangeComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            model: props.model,
+            modelName: props.modelName,
             rangeTypeX: null,
             rangeTypeY: null,
             rangeTypeZ: null
@@ -31,7 +31,7 @@ export default class RangeComponent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.model.name != prevState.model.name) {
+        if (this.state.modelName != prevState.modelName) {
             this.updateLayout();
         }
     }
@@ -41,7 +41,7 @@ export default class RangeComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.model.name != nextProps.model.name) {
+        if (this.state.modelName != nextProps.modelName) {
             this.setState({ model: nextProps.model, rangeTypeX: null, rangeTypeY: null, rangeTypeZ: null });
         }
     }
@@ -49,7 +49,7 @@ export default class RangeComponent extends Component {
     updateLayout() {
         const getRange = (value, stateVariable) => {
             Utils
-                .sendPythonMessage("'" + value + "' in netParams.popParams['" + this.state.model.name + "']")
+                .sendPythonMessage("'" + value + "' in netParams.popParams['" + this.state.modelName + "']")
                 .then((response) => {
                     if (response) {
                         var newState = {};
@@ -79,7 +79,7 @@ export default class RangeComponent extends Component {
                 {(this.state.rangeTypeX != undefined) ?
                     <div className={"netpyneRightField"}>
                         <PythonControlledAdapterComponent
-                            model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeX + "']"}
+                            model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.rangeTypeX + "']"}
                             convertToPython={(state) => {
                                 if (state.minXAxis != undefined && state.maxXAxis != undefined) {
                                     return [parseFloat(state.minXAxis), parseFloat(state.maxXAxis)];
@@ -111,7 +111,7 @@ export default class RangeComponent extends Component {
                 {(this.state.rangeTypeY != undefined) ?
                     <div className={"netpyneRightField"}>
                         <PythonControlledAdapterComponent
-                            model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeY + "']"}
+                            model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.rangeTypeY + "']"}
                             convertToPython={(state) => {
                                 if (state.minYAxis != undefined && state.maxYAxis != undefined) {
                                     return [parseFloat(state.minYAxis), parseFloat(state.maxYAxis)];
@@ -145,7 +145,7 @@ export default class RangeComponent extends Component {
                 {(this.state.rangeTypeZ != undefined) ?
                     <div className={"netpyneRightField"}>
                         <PythonControlledAdapterComponent
-                            model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.rangeTypeZ + "']"}
+                            model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.rangeTypeZ + "']"}
                             convertToPython={(state) => {
                                 if (state.minZAxis != undefined && state.maxZAxis != undefined) {
                                     return [parseFloat(state.minZAxis), parseFloat(state.maxZAxis)];

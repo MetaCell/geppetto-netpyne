@@ -15,7 +15,7 @@ export default class DimensionsComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            model: props.model,
+            modelName: props.modelName,
             dimension: null
         };
         this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
@@ -23,7 +23,7 @@ export default class DimensionsComponent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.model.name != prevState.model.name) {
+        if (this.state.modelName != prevState.modelName) {
             this.updateLayout();
         }
     }
@@ -34,7 +34,7 @@ export default class DimensionsComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.model.name != nextProps.model.name) {
+        if (this.state.modelName != nextProps.modelName) {
             this.setState({ model: nextProps.model, dimension: null });
         }
     }
@@ -42,7 +42,7 @@ export default class DimensionsComponent extends Component {
     updateLayout() {
         let requests = this.popDimensionsOptions.map((popDimensionsOption) => {
             return Utils
-                .sendPythonMessage("'" + popDimensionsOption.value + "' in netParams.popParams['" + this.state.model.name + "']");
+                .sendPythonMessage("'" + popDimensionsOption.value + "' in netParams.popParams['" + this.state.modelName + "']");
 
         });
 
@@ -92,8 +92,8 @@ export default class DimensionsComponent extends Component {
                                             });
                                     });
                                 }}
-                                model={"netParams.popParams['" + this.state.model.name + "']['" + this.state.dimension + "']"}
-                                modelName={this.state.model.name}
+                                model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
+                                modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
                             />
                         </NetPyNEField>

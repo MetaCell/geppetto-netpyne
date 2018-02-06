@@ -150,11 +150,11 @@ export default class NetPyNEPopulation extends React.Component {
             />
           </NetPyNEField>
 
-          <DimensionsComponent model={this.state.model} />
+          <DimensionsComponent model={this.state.model.name} />
         </div>
     }
     else if (this.state.sectionId == "SpatialDistribution") {
-      var content = <RangeComponent model={this.state.model} />
+      var content = <RangeComponent modelName={this.state.model.name} />
     }
     else if (this.state.sectionId == "CellList") {
       var content = <div>We should replicate population parameters</div>
