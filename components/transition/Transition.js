@@ -16,9 +16,11 @@ const TransitionDialog = React.createClass({
     componentWillReceiveProps: function (nextProps) {
         // switch (nextProps.tab) {
         //TODO: we need to define the rules here
-        this.setState({
-            transitionOpen: true,
-        });
+        if (this.props.tab != nextProps.tab){
+            this.setState({
+                transitionOpen: true,
+            });
+        }
     },
 
     closeTransition() {
