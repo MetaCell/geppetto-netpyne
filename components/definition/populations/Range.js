@@ -42,7 +42,7 @@ export default class RangeComponent extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.state.modelName != nextProps.modelName) {
-            this.setState({ model: nextProps.model, rangeTypeX: null, rangeTypeY: null, rangeTypeZ: null });
+            this.setState({ model: nextProps.modelName, rangeTypeX: null, rangeTypeY: null, rangeTypeZ: null });
         }
     }
 

@@ -150,7 +150,7 @@ export default class NetPyNEPopulation extends React.Component {
             />
           </NetPyNEField>
 
-          <DimensionsComponent model={this.state.model.name} />
+          <DimensionsComponent modelName={this.state.model.name} />
         </div>
     }
     else if (this.state.sectionId == "SpatialDistribution") {

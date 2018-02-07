@@ -35,7 +35,7 @@ export default class DimensionsComponent extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.state.modelName != nextProps.modelName) {
-            this.setState({ model: nextProps.model, dimension: null });
+            this.setState({ modelName: nextProps.modelName, dimension: null });
         }
     }
 
