@@ -9,7 +9,8 @@ const TransitionDialog = React.createClass({
     getInitialState() {
         return {
             transitionOpen: false,
-            parallelSimulation: false
+            parallelSimulation: false,
+            previousTab: "define"
         };
     },
 
@@ -19,6 +20,7 @@ const TransitionDialog = React.createClass({
         if (this.props.tab != nextProps.tab){
             this.setState({
                 transitionOpen: true,
+                previousTav: this.props.tab
             });
         }
     },
@@ -60,20 +62,27 @@ const TransitionDialog = React.createClass({
             case "simulate":
                 var children = (
                         <div>
-                            We are about to simulate your network, this could take some time.
-                            <Checkbox
-                                label="Run parallel simulation"
-                                checked={this.state.parallelSimulation}
-                                onCheck={() => this.setState((oldState) => {
-                                    return {
-                                        parallelSimulation: !oldState.parallelSimulation,
-                                    };
-                                })}
-                            />
-                            <TextField
-                                floatingLabelText="Number of cores"
-                                onChange={(event) => this.setState({ cores: event.target.value })}
-                            />
+                            <div className="netpyneField">
+                                We are about to simulate your network, this could take some time.
+                            </div>
+                            <div className="netpyneField" style={{marginTop:'35px'}}>
+                                <Checkbox
+                                    label="Run parallel simulation"
+                                    checked={this.state.parallelSimulation}
+                                    onCheck={() => this.setState((oldState) => {
+                                        return {
+                                            parallelSimulation: !oldState.parallelSimulation,
+                                        };
+                                    })}
+                                />
+                            </div>
+                            <div className="netpyneField netpyneRightField">
+                                <TextField
+                                    floatingLabelText="Number of cores"
+                                    type="number"
+                                    onChange={(event) => this.setState({ cores: event.target.value })}
+                                />
+                            </div>
                         </div>
                     )
                     confirmActionDialog = this.simulate
