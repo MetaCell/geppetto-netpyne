@@ -5,16 +5,12 @@ export default class NetPyNEPopulationThumbnail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      model: props.model
-    };
-
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
     if (this.props.handleClick) {
-      this.props.handleClick(this.state.model);
+      this.props.handleClick(this.props.name);
     }
   }
 
@@ -22,7 +18,7 @@ export default class NetPyNEPopulationThumbnail extends React.Component {
     return (
 
       <FloatingActionButton className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
-        {this.state.model.name}
+        {this.props.name}
       </FloatingActionButton>
 
     );

@@ -26,30 +26,28 @@ export default class NetPyNEPopulation extends React.Component {
 
   constructor(props) {
     super(props);
-    var model = clone(props.model);
     this.state = {
-      model: model,
-      currentName: model.name,
+      currentName: props.name,
       selectedIndex: 0,
       sectionId: "General"
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.model.name, model: nextProps.model, selectedIndex: 0, sectionId: "General" });
+    this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.model.name != prevState.model.name) {
-      var newState = Object.keys(this.state)
-        .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key !== 'currentName'))
-        .reduce((result, current) => {
-          result[current] = '';
-          return result;
-        }, {});
-      this.setState(newState);
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.currentName != prevState.currentName) {
+  //     var newState = Object.keys(this.state)
+  //       .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key !== 'currentName'))
+  //       .reduce((result, current) => {
+  //         result[current] = '';
+  //         return result;
+  //       }, {});
+  //     this.setState(newState);
+  //   }
+  // }
 
   setPopulationDimension = (value) => {
     //this.setState({ cellModel: value });
@@ -70,7 +68,7 @@ export default class NetPyNEPopulation extends React.Component {
             cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
               return (<NetPyNEField id={key} >
                 <PythonControlledTextField
-                  model={"netParams.popParams['" + that.state.model.name + "']['" + key.split(".").pop() + "']"}
+                  model={"netParams.popParams['" + that.state.currentName + "']['" + key.split(".").pop() + "']"}
                 />
               </NetPyNEField>);
             });
@@ -99,19 +97,19 @@ export default class NetPyNEPopulation extends React.Component {
     return this.state.model == undefined ||
       this.state.currentName != nextState.currentName ||
       this.state.cellModelFields != nextState.cellModelFields ||
-      this.state.model != nextState.model ||
       this.state.sectionId != nextState.sectionId ||
       this.state.selectedIndex != nextState.selectedIndex;
   }
 
   handleRenameChange = (event) => {
     var that = this;
-    var storedValue = this.state.model.name;
+    var storedValue = this.props.name;
     var newValue = event.target.value;
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => {that.renaming=false});
+      that.renaming=true;
     });
 
   }
@@ -121,7 +119,7 @@ export default class NetPyNEPopulation extends React.Component {
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
-    this.updateTimer = setTimeout(updateMethod, 500);
+    this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
   render() {
@@ -131,6 +129,7 @@ export default class NetPyNEPopulation extends React.Component {
           <TextField
             onChange={this.handleRenameChange}
             value={this.state.currentName}
+            disabled={this.renaming}
             floatingLabelText="The name of your population"
             className={"netpyneField"}
           />
@@ -138,7 +137,7 @@ export default class NetPyNEPopulation extends React.Component {
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
               dataSource={[]}
-              model={"netParams.popParams['" + this.state.model.name + "']['cellModel']"}
+              model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
               searchText={this.state.cellModel}
               onChange={(value) => this.setPopulationDimension(value)}
               openOnFocus={true} />
@@ -146,15 +145,15 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
-              model={"netParams.popParams['" + this.state.model.name + "']['cellType']"}
+              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
             />
           </NetPyNEField>
 
-          <DimensionsComponent modelName={this.state.model.name} />
+          <DimensionsComponent modelName={this.props.name} />
         </div>
     }
     else if (this.state.sectionId == "SpatialDistribution") {
-      var content = <RangeComponent modelName={this.state.model.name} />
+      var content = <RangeComponent modelName={this.props.name} />
     }
     else if (this.state.sectionId == "CellList") {
       var content = <div>We should replicate population parameters</div>

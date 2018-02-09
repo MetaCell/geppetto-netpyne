@@ -31,7 +31,8 @@ export default class NetPyNECellRule extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
+      that.renaming=true;
     });
 
   }
@@ -41,7 +42,7 @@ export default class NetPyNECellRule extends React.Component {
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
-    this.updateTimer = setTimeout(updateMethod, 500);
+    this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,6 +56,7 @@ export default class NetPyNECellRule extends React.Component {
       <TextField
         onChange={this.handleRenameChange}
         value = {this.state.currentName}
+        disabled={this.renaming}
         floatingLabelText="The name of the cell rule"
         className={"netpyneField"}
       />
