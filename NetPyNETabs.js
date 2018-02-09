@@ -120,7 +120,7 @@ export default class NetPyNETabs extends React.Component {
       <div>
         <Tabs
           value={this.state.value}
-          style={{ height: '100%', width: 'calc(100% - 40px)', float: 'left' }}
+          style={{ height: '100%', width: 'calc(100% - 48px)', float: 'left' }}
           tabTemplateStyle={{ height: '100%' }}
           contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
@@ -135,7 +135,7 @@ export default class NetPyNETabs extends React.Component {
             {simulateContent}
           </Tab>
         </Tabs>
-        <div id="settingsIcon" style={{ float: 'right', width: '40px', backgroundColor: 'rgb(0, 188, 212)' }}>
+        <div id="settingsIcon" style={{ float: 'left', width: '48px', backgroundColor: 'rgb(0, 188, 212)' }}>
           <IconButton onClick={this.openSettings}>
             <FontIcon className={"fa fa-cog"} />
           </IconButton>
