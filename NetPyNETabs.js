@@ -6,6 +6,9 @@ import FlatButton from 'material-ui/FlatButton';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
+import NetPyNEStimulationSources from './components/definition/stimulation/NetPyNEStimulationSources';
+import NetPyNEStimulationTargets from './components/definition/stimulation/NetPyNEStimulationTargets';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
@@ -18,6 +21,10 @@ import FontIcon from 'material-ui/FontIcon';
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
+var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
+var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
+var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
+var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 
 export default class NetPyNETabs extends React.Component {
 
@@ -94,22 +101,10 @@ export default class NetPyNETabs extends React.Component {
       <div>
         <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
         <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
-        <NetPyNESynapses model={""} />
-
-        <Card style={{ clear: 'both' }}>
-          <CardHeader
-            title="Connections"
-            subtitle="Define here the connectivity rules in your network"
-            actAsExpander={true}
-            showExpandableButton={true}
-          />
-          <CardText expandable={true}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-            Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-            Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-          </CardText>
-        </Card>
+        <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+        <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+        <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+        <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
         <NetPyNESimConfig model={this.state.model.simConfig} />
       </div>
     ) : (<div></div>);

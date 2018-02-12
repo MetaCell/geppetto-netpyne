@@ -123,18 +123,21 @@ export default class NetPyNEPopulations extends React.Component {
           showExpandableButton={true}
         />
         <CardText className={"tabContainer"} expandable={true}>
-          <IconMenu style={{ float: 'left' }}
-            iconButtonElement={
-              <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
-            }
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-          </IconMenu>
           <div className={"details"}>
             {selectedPopulation}
           </div>
           <div className={"thumbnails"}>
+            <div className="breadcrumb">
+              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
+                iconButtonElement={
+                  <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+              </IconMenu>
+            </div>
+            <div style={{ clear: "both" }}></div>
             {populations}
           </div>
         </CardText>

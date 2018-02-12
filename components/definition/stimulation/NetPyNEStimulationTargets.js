@@ -8,26 +8,26 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import NetPyNESynapseThumbnail from './NetPyNESynapseThumbnail';
-import NetPyNESynapse from './NetPyNESynapse';
-import NetPyNENewSynapse from './NetPyNENewSynapse';
+import NetPyNEStimulationThumbnail from './NetPyNEStimulationThumbnail';
+import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
+import NetPyNENewStimulationTarget from './NetPyNENewStimulationTarget';
 
 import Utils from '../../../Utils';
 
-export default class NetPyNESynapses extends React.Component {
+export default class NetPyNEStimulationTargets extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       drawerOpen: false,
-      selectedSynapse: undefined,
+      selectedStimulationTarget: undefined,
       page: "main"
     };
 
     this.selectPage = this.selectPage.bind(this);
 
-    this.selectSynapse = this.selectSynapse.bind(this);
-    this.handleNewSynapse = this.handleNewSynapse.bind(this);
+    this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
+    this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
     
   }
 
@@ -38,31 +38,31 @@ export default class NetPyNESynapses extends React.Component {
     this.setState({ page: page });
   }
 
-  selectSynapse(Synapse) {
-    this.setState({ selectedSynapse: Synapse });
+  selectStimulationTarget(StimulationTarget) {
+    this.setState({ selectedStimulationTarget: StimulationTarget });
   }
 
-  handleNewSynapse(defaultSynapses) {
+  handleNewStimulationTarget(defaultStimulationTargets) {
     // Get Key and Value
-    var key = Object.keys(defaultSynapses)[0];
-    var value = defaultSynapses[key];
+    var key = Object.keys(defaultStimulationTargets)[0];
+    var value = defaultStimulationTargets[key];
     var model = this.state.value;
 
     // Get New Available ID
-    var SynapseId = Utils.getAvailableKey(model, key);
+    var StimulationTargetId = Utils.getAvailableKey(model, key);
 
     // Create Cell Rule Client side
-    Utils.execPythonCommand('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonCommand('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
 
     // Update state
     this.setState({
       value: model,
-      selectedSynapse: SynapseId
+      selectedStimulationTarget: StimulationTargetId
     });
   }
 
 
-  hasSelectedSynapseBeenRenamed(prevState, currentState) {
+  hasSelectedStimulationTargetBeenRenamed(prevState, currentState) {
     var currentModel = prevState.value;
     var model = currentState.value;
     //deal with rename
@@ -73,8 +73,8 @@ export default class NetPyNESynapses extends React.Component {
         //if it's the same lenght there could be a rename
         for (var i = 0; i < oldP.length; i++) {
           if (oldP[i] != newP[i]) {
-            if (prevState.selectedSynapse != undefined) {
-              if (oldP[i] == prevState.selectedSynapse) {
+            if (prevState.selectedStimulationTarget != undefined) {
+              if (oldP[i] == prevState.selectedStimulationTarget) {
                 return newP[i];
               }
             }
@@ -88,16 +88,16 @@ export default class NetPyNESynapses extends React.Component {
  
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
-    var newSynapseName = this.hasSelectedSynapseBeenRenamed(prevState, this.state);
-    if (newSynapseName) {
-      this.setState({ selectedSynapse: newSynapseName });
+    var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(prevState, this.state);
+    if (newStimulationTargetName) {
+      this.setState({ selectedStimulationTarget: newStimulationTargetName });
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedSynapseBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) != false;
     var newItemCreated = false;
-    var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
+    var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
@@ -113,25 +113,25 @@ export default class NetPyNESynapses extends React.Component {
     var content;
     if (this.state.page == 'main') {
 
-      var Synapses = [];
+      var StimulationTargets = [];
       for (var c in model) {
-        Synapses.push(<NetPyNESynapseThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
+        StimulationTargets.push(<NetPyNEStimulationThumbnail name={c} key={c} selected={c == this.state.selectedStimulationTarget} handleClick={this.selectStimulationTarget} />);
       }
-      var selectedSynapse = undefined;
-      if (this.state.selectedSynapse) {
-        selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} model={this.state.value[this.state.selectedSynapse]} selectPage={this.selectPage} />;
+      var selectedStimulationTarget = undefined;
+      if (this.state.selectedStimulationTarget) {
+        selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} model={this.state.value[this.state.selectedStimulationTarget]} selectPage={this.selectPage} />;
       }
 
       content = (
         <CardText className={"tabContainer"} expandable={true}>
           <div className={"details"}>
-            {selectedSynapse}
+            {selectedStimulationTarget}
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewSynapse handleClick={this.handleNewSynapse} />
+                  <NetPyNENewStimulationTarget handleClick={this.handleNewStimulationTarget} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
@@ -139,7 +139,7 @@ export default class NetPyNESynapses extends React.Component {
               </IconMenu>
             </div>
             <div style={{ clear: "both" }}></div>
-            {Synapses}
+            {StimulationTargets}
           </div>
         </CardText>);
     }
@@ -147,8 +147,8 @@ export default class NetPyNESynapses extends React.Component {
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
-          title="Synapses"
-          subtitle="Define here the rules to generate the synapses in your network"
+          title="Stimulation targets"
+          subtitle="Define here the rules to generate the stimulation targets in your network"
           actAsExpander={true}
           showExpandableButton={true}
         />
