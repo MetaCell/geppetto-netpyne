@@ -9,6 +9,9 @@ import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import clone from 'lodash.clone';
 import Utils from '../../../Utils';
+import FontIcon from 'material-ui/FontIcon';
+import CardText from 'material-ui/Card';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -20,7 +23,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
     super(props);
     var _this = this;
     this.state = {
-      currentName: props.name
+      currentName: props.name,
+      selectedIndex: 0,
+      sectionId: "General"
     };
   }
 
@@ -31,8 +36,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-      that.renaming=true;
+      Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
+      that.renaming = true;
     });
 
   }
@@ -45,45 +50,107 @@ export default class NetPyNEConnectivityRule extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
+  select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
+
+  getBottomNavigationItem(index, sectionId, label, icon) {
+    return <BottomNavigationItem
+      key={sectionId}
+      label={label}
+      icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
+      onClick={() => this.select(index, sectionId)}
+    />
+  }
+
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.name});
+    this.setState({ currentName: nextProps.name });
   }
 
   render() {
     var that = this;
-    var content = (<div>
 
-      <TextField
-        onChange={this.handleRenameChange}
-        value = {this.state.currentName}
-        disabled={this.renaming}
-        floatingLabelText="The name of the connectivity rule"
-        className={"netpyneField"}
-      />
 
-      <br/>
-{/* 
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
-      </NetPyNEField>
+    if (this.state.sectionId == "General") {
+      var content =
+        <div>
+          <TextField
+            onChange={this.handleRenameChange}
+            value={this.state.currentName}
+            disabled={this.renaming}
+            floatingLabelText="The name of the connectivity rule"
+            className={"netpyneField"}
+          />
 
-      <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
-      </NetPyNEField>
-      <br /><br />
+          <NetPyNEField id="netParams.connParams.sec">
+            <PythonControlledTextField 
+               model={"netParams.connParams['" + this.props.name + "']['sec']"}
+            />
+          </NetPyNEField>
 
-      <RaisedButton
-        label="Sections"
-        labelPosition="before"
-        primary={true}
-        onClick={() => that.props.selectPage("sections")}
-      /> */}
-    </div>);
+          <NetPyNEField id="netParams.connParams.loc" >
+            <PythonControlledTextField 
+              model={"netParams.connParams['" + this.props.name + "']['loc']"}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id="netParams.connParams.synMech" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['synMech']"}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id="netParams.connParams.synsPerConn" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id="netParams.connParams.weight" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['weight']"}
+            />
+          </NetPyNEField>
+
+
+          <NetPyNEField id="netParams.connParams.delay" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['delay']"}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id="netParams.connParams.plasticity" >
+            <PythonControlledTextField
+              fullWidth={true} model={"netParams.connParams['" + this.props.name + "']['plasticity']"}
+            />
+          </NetPyNEField>
+
+        </div>
+    }
+    else if (this.state.sectionId == "Pre Conditions") {
+      var content = <div>Add pre conditions</div>
+    }
+    else if (this.state.sectionId == "Post Conditions") {
+      var content = <div>Add post conditions</div>
+    }
+
+
+    // Generate Menu
+    var index = 0;
+    var bottomNavigationItems = [];
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre Conditions', 'fa-caret-square-o-left'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post Conditions', 'fa-caret-square-o-right'));
 
     return (
       <div>
+        <CardText>
+          <BottomNavigation selectedIndex={this.state.selectedIndex}>
+            {bottomNavigationItems}
+          </BottomNavigation>
+        </CardText>
+        <br />
         {content}
       </div>
     );
+
   }
 }

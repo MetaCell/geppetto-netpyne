@@ -28,7 +28,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
-    
+
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -85,7 +85,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     return false;
   }
 
- 
+
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(prevState, this.state);
@@ -123,10 +123,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
       }
 
       content = (
+
         <CardText className={"tabContainer"} expandable={true}>
-          <div className={"details"}>
-            {selectedConnectivityRule}
-          </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
@@ -140,6 +138,9 @@ export default class NetPyNEConnectivityRules extends React.Component {
             </div>
             <div style={{ clear: "both" }}></div>
             {ConnectivityRules}
+          </div>
+          <div className={"details"}>
+            {selectedConnectivityRule}
           </div>
         </CardText>);
     }

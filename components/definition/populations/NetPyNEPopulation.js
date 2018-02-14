@@ -37,18 +37,6 @@ export default class NetPyNEPopulation extends React.Component {
     this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.currentName != prevState.currentName) {
-  //     var newState = Object.keys(this.state)
-  //       .filter(key => (key !== 'model' && key !== 'selectedIndex' && key !== 'sectionId' && key !== 'currentName'))
-  //       .reduce((result, current) => {
-  //         result[current] = '';
-  //         return result;
-  //       }, {});
-  //     this.setState(newState);
-  //   }
-  // }
-
   setPopulationDimension = (value) => {
     //this.setState({ cellModel: value });
     var that = this;
