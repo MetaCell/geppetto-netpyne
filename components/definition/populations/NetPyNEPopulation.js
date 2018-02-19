@@ -96,8 +96,8 @@ export default class NetPyNEPopulation extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => {that.renaming=false});
-      that.renaming=true;
+      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
+      that.renaming = true;
     });
 
   }

@@ -6,7 +6,7 @@ define(function (require) {
         var NetPyNETabs = require('./NetPyNETabs').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
         injectTapEventPlugin();
-        
+
         function App() {
             return (
                 <div>
@@ -57,7 +57,7 @@ define(function (require) {
 
         var embeddedConsoleVisible = false;
         $('#consoleButton').click(function (e) {
-            if(!embeddedConsoleVisible) {
+            if (!embeddedConsoleVisible) {
                 $('#console').show();
                 $("#pythonConsole").hide();
                 $(this).tab('show');
@@ -74,7 +74,7 @@ define(function (require) {
         require('./css/neuron.less');
         require('./css/material.less');
 
-        document.title="NetPyNE";
+        document.title = "NetPyNE";
         var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
         link.type = 'image/x-icon';
         link.rel = 'shortcut icon';
@@ -112,4 +112,6 @@ define(function (require) {
 
         
     };
+
+
 });
