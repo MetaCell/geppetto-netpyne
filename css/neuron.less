@@ -186,12 +186,26 @@ html,body {
   margin-right: 20px;
   white-space: nowrap;
   width: 100%!important;
+    > div:first-of-type {
+      width: 95%;
+      > div{
+        width: 100%!important;
+        > div{
+          width: 100%!important;
+        }
+      }
+    }
+  
+}
+
+.listStyle{
+  width: 100%!important;
   > div:first-of-type {
     width: 95%;
     > div{
       width: 100%!important;
-      > div{
-        width: 100%!important;
+      > div:first-of-type{
+        width: 95%!important;
       }
     }
   }

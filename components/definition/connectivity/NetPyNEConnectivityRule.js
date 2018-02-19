@@ -13,10 +13,12 @@ import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../general/NetPyNEField';
+import ListComponent from '../../general/List';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNEConnectivityRule extends React.Component {
 
@@ -100,8 +102,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.loc" >
-            <PythonControlledTextField
+          <NetPyNEField id="netParams.connParams.loc" className="listStyle" noStyle>
+            <PythonControlledListComponent
               model={"netParams.connParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>
@@ -124,9 +126,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-
-          <NetPyNEField id="netParams.connParams.delay" >
-            <PythonControlledTextField
+          <NetPyNEField id="netParams.connParams.delay" className="listStyle" noStyle>
+            <PythonControlledListComponent
               model={"netParams.connParams['" + this.props.name + "']['delay']"}
             />
           </NetPyNEField>
