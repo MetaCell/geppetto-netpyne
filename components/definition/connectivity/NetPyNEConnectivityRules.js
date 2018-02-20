@@ -118,7 +118,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
         ConnectivityRules.push(<NetPyNEConnectivityRuleThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
-      if (this.state.selectedConnectivityRule) {
+      if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} />;
       }
 
