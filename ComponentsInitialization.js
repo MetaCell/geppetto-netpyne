@@ -35,7 +35,7 @@ define(function (require) {
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
         GEPPETTO.ComponentFactory.addComponent('CONSOLE', {}, document.getElementById("console"));
-        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/neuron-ui-demo.ipynb";
+        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/netpyneNotebook.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         GEPPETTO.G.setIdleTimeOut(-1);
@@ -71,29 +71,19 @@ define(function (require) {
 
         $('.nav-tabs li.active').removeClass('active');
 
-        require('./css/neuron.less');
+        require('./css/netpyne.less');
         require('./css/material.less');
-
 
         window.customJupyterModelLoad = function (module, model) {
 
-            // Close any previous panel
-            // window.removeAllPanels();
-
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
-
-
 
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
 
                 GEPPETTO.trigger('kernel:ready', "Kernel started");
-                // IPython.notebook.execute_all_cells();
 
-                // Load Neuron Basic GUI
-                // FIXME This is NEURON specific and should move elsewhere
                 var kernel = IPython.notebook.kernel;
                 kernel.execute('from netpyne_ui import netpyne_geppetto');
-
                 kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
                 kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
             });
