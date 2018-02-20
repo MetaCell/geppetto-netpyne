@@ -25,10 +25,10 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 		this.echo("Load : " + urlBase);
 		 this.waitWhileVisible('div[id="loading-spinner"]', function () {
 		        this.echo("I've waited for netpyne to load.");
-		        test.assertTitle("NetPyNE", "NetPyNE title is ok");
-		        test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
-		        test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
-		        test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
+		        test.assertTitle("geppetto", "geppetto title is ok");
+		        test.assertExists('div[id="sim-toolbar"]', "geppetto loads the initial simulation controls");
+		        test.assertExists('div[id="controls"]', "geppetto loads the initial camera controls");
+		        test.assertExists('div[id="foreground-toolbar"]', "geppetto loads the initial foreground controls");
 		    },null,10000);
 	});
 
