@@ -4,10 +4,10 @@ Test () {
 	    request_cmd="$(curl -i -o - --silent -X GET --header 'Accept: application/json' --header 'Authorization: _your_auth_code==' 'http://localhost:8888/geppetto')"
 		http_status=$(echo "$request_cmd" | grep HTTP |  awk '{print $2}')
 		echo $http_status
-		if [ "$http_status" == "302" ]; then
+		if [ "$http_status" == "200" ]; then
 			echo "$(date) - connected successfully!"
 		else
-			if [ "$iterations" == "100" ]; then
+			if [ "$iterations" == "200" ]; then
 				exit 0
 			else
 				echo "Waiting for docker to finish building.";
