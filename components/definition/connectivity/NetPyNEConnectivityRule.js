@@ -102,7 +102,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.loc" className="listStyle" noStyle>
+          <NetPyNEField id="netParams.connParams.loc" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.connParams['" + this.props.name + "']['loc']"}
             />
