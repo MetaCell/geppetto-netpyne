@@ -74,19 +74,13 @@ define(function (require) {
         require('./css/neuron.less');
         require('./css/material.less');
 
-        document.title = "NetPyNE";
-        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        link.href = 'https://d30y9cdsu7xlg0.cloudfront.net/png/38902-200.png';
-        document.getElementsByTagName('head')[0].appendChild(link);
 
         window.customJupyterModelLoad = function (module, model) {
 
             // Close any previous panel
             // window.removeAllPanels();
 
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NEURON");
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
 
 
@@ -98,7 +92,7 @@ define(function (require) {
                 // Load Neuron Basic GUI
                 // FIXME This is NEURON specific and should move elsewhere
                 var kernel = IPython.notebook.kernel;
-                kernel.execute('from neuron_ui import netpyne_geppetto');
+                kernel.execute('from netpyne_ui import netpyne_geppetto');
 
                 kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
                 kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
