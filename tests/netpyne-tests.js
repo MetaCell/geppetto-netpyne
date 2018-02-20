@@ -29,7 +29,7 @@ casper.test.begin('Geppetto default projects tests', function suite(test) {
 		        test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
 		        test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
 		        test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
-		    },null,timeAllowed);
+		    },null,10000);
 	});
 
 	casper.then(function () {
