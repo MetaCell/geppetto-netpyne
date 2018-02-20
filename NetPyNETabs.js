@@ -56,7 +56,12 @@ export default class NetPyNETabs extends React.Component {
           widgets = widgets.concat(this.widgets[value]);
         }
         for (var w in widgets) {
-          widgets[w].hide();
+          if(!widgets[w].destroyed){
+            widgets[w].hide();
+          }
+          else{
+            delete widgets[w];
+          }
         }
         this.widgets[value] = widgets;
       }
@@ -68,7 +73,7 @@ export default class NetPyNETabs extends React.Component {
       var widgets = this.widgets[value];
       if (widgets) {
         for (var w in widgets) {
-          widgets[w].show();
+            widgets[w].show();
         }
       }
     }
