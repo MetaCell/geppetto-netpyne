@@ -158,6 +158,7 @@ export default class NetPyNESimConfig extends React.Component {
           subtitle="General configuration"
           actAsExpander={true}
           showExpandableButton={true}
+          id={"Configuration"}
         />
 
         <CardText className={"tabContainer"} expandable={true} >

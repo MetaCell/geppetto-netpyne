@@ -1,6 +1,6 @@
 var urlBase = casper.cli.get('host');
 if(urlBase==null || urlBase==undefined){
-    urlBase = "http://localhost:8888/";
+	urlBase = "http://localhost:8888/";
 }
 
 casper.test.begin('NetPyNE projects tests', function suite(test) {
@@ -23,20 +23,20 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 
 	casper.start(urlBase+"geppetto", function () {
 		this.echo("Load : " + urlBase);
-		 this.waitWhileVisible('div[id="loading-spinner"]', function () {
-		        this.echo("I've waited for netpyne to load.");
-		        test.assertTitle("geppetto", "geppetto title is ok");
-		        test.assertExists('div[id="sim-toolbar"]', "geppetto loads the initial simulation controls");
-		        test.assertExists('div[id="controls"]', "geppetto loads the initial camera controls");
-		        test.assertExists('div[id="foreground-toolbar"]', "geppetto loads the initial foreground controls");
-		    },null,10000);
+		this.waitWhileVisible('div[id="loading-spinner"]', function () {
+			this.echo("I've waited for netpyne to load.");
+			test.assertTitle("NetPyNE", "NetPyNE title is ok");
+			test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
+			test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
+			test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
+		},null,10000);
 	});
 
 	casper.then(function () {
 		casper.echo("Testing landping page contents and layout");
 		testLandingPage(test);
 	});
-	
+
 	casper.run(function() {
 		test.done();
 	});
@@ -44,6 +44,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 
 function testLandingPage(test){
 	casper.then(function () {
+		this.click('#populations');
+		casper.evaluate(function() {
+			
+			$("#consoleButton").click();
+		},5000);
+		
 		casper.waitForText("Populations", function() {
 			this.echo('Populations button exists.');
 		},5000);
@@ -51,27 +57,27 @@ function testLandingPage(test){
 		casper.waitForText("Cell rules", function() {
 			this.echo('Cell rules button exists.');
 		},5000);
-		
+
 		casper.waitForText("Synapses", function() {
 			this.echo('Synapses button exists.');
 		},5000);
-		
+
 		casper.waitForText("Connectivity rules", function() {
 			this.echo('Connectivity rules button exists.');
 		},5000);
-		
+
 		casper.waitForText("Stimulation sources", function() {
 			this.echo('Stimulation sources button exists.');
 		},5000);
-		
+
 		casper.waitForText("Synapses", function() {
 			this.echo('Synapses button exists.');
 		},5000);
-		
+
 		casper.waitForText("Stimulation targets", function() {
 			this.echo('Stimulation targets button exists.');
 		},5000);
-		
+
 		casper.waitForText("Configuration", function() {
 			this.echo('Configuration button exists.');
 		},5000);

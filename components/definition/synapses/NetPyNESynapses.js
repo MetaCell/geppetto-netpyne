@@ -32,6 +32,7 @@ export default class NetPyNESynapses extends React.Component {
           subtitle="Define here the rules to generate the synapses in your network"
           actAsExpander={true}
           showExpandableButton={true}
+          id={"Synapses"}
         />
 
         <CardText expandable={true}>

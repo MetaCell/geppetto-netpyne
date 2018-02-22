@@ -102,6 +102,7 @@ export default class NetPyNEPopulations extends React.Component {
           subtitle="Define here the populations of your network"
           actAsExpander={true}
           showExpandableButton={true}
+          id={"Populations"}
         />
         <CardText className={"tabContainer"} expandable={true}>
           <IconMenu style={{ float: 'left' }}
