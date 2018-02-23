@@ -43,6 +43,7 @@ export default class NetPyNETabs extends React.Component {
       var modelObject = JSON.parse(model);
       window.metadata = modelObject.metadata;
       window.requirement = modelObject.requirement;
+      window.isDocker = modelObject.isDocker
       this.setState({ model: modelObject })
     });
 
