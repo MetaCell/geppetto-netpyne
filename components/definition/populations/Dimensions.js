@@ -62,7 +62,7 @@ export default class DimensionsComponent extends Component {
 
         return (
             <div>
-                <NetPyNEField id="netParams.popParams.numCells" >
+                <NetPyNEField id="netParams.popParams.numCells" className={"netpyneFieldNoWidth"} noStyle>
                     <SelectField
                         value={this.state.dimension}
                         onChange={(event, index, value) => this.setState({ dimension: value })}
@@ -75,7 +75,7 @@ export default class DimensionsComponent extends Component {
                 </NetPyNEField>
                 {
                     this.state.dimension != undefined && this.state.dimension != "" ?
-                        <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"}>
+                        <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
                             <PythonControlledTextField
                                 handleChange={function (event, value) {
                                     var newValue = (event.target.type == 'number') ? parseFloat(value) : value;

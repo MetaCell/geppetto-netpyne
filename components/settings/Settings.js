@@ -34,11 +34,11 @@ const SettingsDialog = React.createClass({
 
     performAction() {
         // Show spinner
-        if (this.state.currentTab == "import"){
+        if (this.state.currentTab == "import") {
             var action = 'netpyne_geppetto.importModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
         }
-        else{
+        else {
             var action = 'netpyne_geppetto.exportModel';
             var message = GEPPETTO.Resources.EXPORTING_MODEL;
         }
@@ -49,7 +49,7 @@ const SettingsDialog = React.createClass({
         Utils
             .sendPythonMessage(action, [this.state])
             .then(() => {
-                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner); 
+                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             });
     },
 
@@ -72,31 +72,31 @@ const SettingsDialog = React.createClass({
             <Dialog
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
-                bodyStyle={{overflow: 'auto'}}
+                bodyStyle={{ overflow: 'auto' }}
                 actions={actions}
             >
                 <Tabs
-                    style={{ paddingTop: 10}}
+                    style={{ paddingTop: 10 }}
                     value={this.state.currentTab}
                     onChange={this.onChangeTab}
                     tabTemplateStyle={{ float: 'left', height: '100%' }}
                 >
                     <Tab value="import" label={'Import'}>
-                        <Card style={{ padding: 10, float: 'left', width: '100%'}}>
+                        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
                             <CardText>
 
-                                <TextField className="netpyneField" floatingLabelText="NetParams path" value={this.state.netParamsPath} onChange={(event) => this.setState({ netParamsPath: event.target.value })} />
-                                <TextField className="netpyneField netpyneRightField" floatingLabelText="SimConfig path" value={this.state.simConfigPath} onChange={(event) => this.setState({ simConfigPath: event.target.value })} />
-                                
-                                <TextField className="netpyneField" floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onChange={(event) => this.setState({ netParamsModuleName: event.target.value })} />
-                                <TextField className="netpyneField netpyneRightField" floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onChange={(event) => this.setState({ simConfigModuleName: event.target.value })} />
-                                
-                                <TextField className="netpyneField" floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
-                                <TextField className="netpyneField netpyneRightField" floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
+                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams path" value={this.state.netParamsPath} onChange={(event) => this.setState({ netParamsPath: event.target.value })} />
+                                <TextField className="netpyneRightField" floatingLabelText="SimConfig path" value={this.state.simConfigPath} onChange={(event) => this.setState({ simConfigPath: event.target.value })} />
 
-                                <div style={{ marginTop: 30, float: 'left', clear:'both'}}>
+                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onChange={(event) => this.setState({ netParamsModuleName: event.target.value })} />
+                                <TextField className="netpyneRightField" floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onChange={(event) => this.setState({ simConfigModuleName: event.target.value })} />
+
+                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                                <TextField className="netpyneRightField" floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
+
+                                <div style={{ marginTop: 30, float: 'left', clear: 'both' }}>
                                     <Checkbox
-                                        style={{float: 'left', clear:'both'}}
+                                        style={{ float: 'left', clear: 'both' }}
                                         label="Compile mod files"
                                         checked={this.state.compileMod}
                                         onCheck={() => this.setState((oldState) => {
@@ -105,7 +105,7 @@ const SettingsDialog = React.createClass({
                                             };
                                         })}
                                     />
-                                    <TextField style={{float: 'left', clear:'both'}} floatingLabelText="Mod path folder" value={this.state.modFolder} onChange={(event) => this.setState({ modFolder: event.target.value })} />
+                                    <TextField style={{ float: 'left', clear: 'both' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onChange={(event) => this.setState({ modFolder: event.target.value })} />
                                 </div>
 
                             </CardText>
@@ -113,7 +113,7 @@ const SettingsDialog = React.createClass({
                     </Tab>
 
                     <Tab value="export" label={'Export'}>
-                        <div>
+                        <div style={{ padding: 20 }}>
                             Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
                         </div>
                     </Tab>
