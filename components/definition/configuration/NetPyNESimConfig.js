@@ -8,12 +8,13 @@ import Checkbox from 'material-ui/Checkbox';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import FontIcon from 'material-ui/FontIcon';
-
+import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import Utils from '../../../Utils';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
+var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNESimConfig extends React.Component {
 
@@ -63,7 +64,7 @@ export default class NetPyNESimConfig extends React.Component {
     else if (this.state.sectionId == 'SaveConfiguration') {
       content =
         <div style={{ float: 'left', width: '100%' }}>
-          <div style={{  float: 'left', width: '50%' }}>
+          <div style={{ float: 'left', width: '50%' }}>
             <NetPyNEField id="simConfig.simLabel" >
               <PythonControlledTextField model={"simConfig.simLabel"} />
             </NetPyNEField>
@@ -76,8 +77,8 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledTextField model={"simConfig.filename"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.saveDataInclude" >
-              <PythonControlledTextField model={"simConfig.saveDataInclude"} />
+            <NetPyNEField id="simConfig.saveDataInclude" className="listStyle">
+              <PythonControlledListComponent model={"simConfig.saveDataInclude"} />
             </NetPyNEField>
 
             <NetPyNEField id="simConfig.timestampFilename" className={"netpyneCheckbox"} >
