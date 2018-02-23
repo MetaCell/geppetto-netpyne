@@ -72,7 +72,15 @@ export default class ListComponent extends Component {
     addChild() {
         if (this.state.newItemValue != '' && this.isValid(this.state.newItemValue)) {
             var children = this.state.children;
-            children.push("[" + this.state.newItemValue + "]");
+            switch (this.props.realType) {
+                case 'list(list(float))':
+                    var newValue = "[" + this.state.newItemValue + "]";
+                    break;
+                default:
+                    var newValue = this.state.newItemValue;
+                    break;
+            }
+            children.push(newValue);
             // Call to conversion function
             this.convertToPython(children);
         }
