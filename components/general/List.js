@@ -18,7 +18,6 @@ export default class ListComponent extends Component {
 
         this.addChild = this.addChild.bind(this);
         this.handleNewItemChange = this.handleNewItemChange.bind(this);
-        // this.handleChildChange = this.handleChildChange.bind(this);
     }
 
     isValid(value) {
@@ -44,10 +43,10 @@ export default class ListComponent extends Component {
     getErrorMessage() {
         switch (this.props.realType) {
             case 'list(float)':
-                var message = 'Only numbers are allowed';
+                var message = 'Only float numbers are allowed.';
                 break;
             case 'list(list(float))':
-                var message = 'Only array of numbers are allowed (commas, dots and numbers)';
+                var message = 'Only comma separated float numbers are allowed.';
                 break;
             default:
                 var message = 'No valid value';
@@ -59,15 +58,6 @@ export default class ListComponent extends Component {
     handleNewItemChange(event) {
         this.setState({ newItemValue: event.target.value, newItemErrorText: '' })
     }
-
-    // handleChildChange(event, value) {
-    //     if (value != '' && this.isValid(value)) {
-    //         var children = this.state.children
-    //         children[event.target.id] = value;
-    //         // Call to conversion function
-    //         this.convertToPython(children);
-    //     }
-    // }
 
     addChild() {
         if (this.state.newItemValue != '' && this.isValid(this.state.newItemValue)) {
@@ -145,13 +135,15 @@ export default class ListComponent extends Component {
                     value={this.state.children[i]}
                     id={i.toString()}
                     // onChange={this.handleChildChange}
-                    style={{ width: 60 }}
+                    style={{ width: 60}}
+                    inputStyle={{color:"rgb(2, 188, 212)"}}
                     disabled
                 />
                 <IconButton
                     iconStyle={{ width: 7, height: 7 }}
                     className={"listButtonSmall"}
                     onClick={() => this.removeChild(i.toString())}
+                    tooltip="Remove item from the list"
                 >
                     <FontIcon className={"fa fa-minus-circle listIcon"} />
                 </IconButton>
@@ -172,12 +164,13 @@ export default class ListComponent extends Component {
                         iconStyle={{ width: 10, height: 10 }}
                         className={"listButtonLarge"}
                         onClick={this.addChild}
+                        tooltip="Add item to the list"
                     >
                         <FontIcon className={"fa fa-plus-circle listIcon"} />
                     </IconButton>
                 }
 
-                {childrenWithExtraProp.length > 0 && <div style={{ border: '1px solid rgba(0, 0, 0, 0.3)', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}
+                {childrenWithExtraProp.length > 0 && <div style={{marginTop:'15px', marginLeft: '50px', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}
             </div>
         )
     }

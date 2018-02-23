@@ -34,6 +34,7 @@ export default class NetPyNETabs extends React.Component {
     this.widgets = {};
     this.state = {
       value: 'define',
+      prevValue: 'define',
       model: null,
       settingsOpen: false
     };
@@ -84,13 +85,32 @@ export default class NetPyNETabs extends React.Component {
     this.restoreWidgetsFor(value);
 
     this.setState({
+      prevValue: this.state.value,
       value: value,
+      transitionDialog: true
     });
   };
 
   openSettings = () => {
     this.setState({ settingsOpen: true });
   }
+
+  cancelTransition=()=>{
+    this.hideWidgetsFor(this.state.value);
+    this.restoreWidgetsFor(this.state.prevValue);
+
+    this.setState({
+      prevValue: this.state.value,
+      value: this.state.prevValue,
+      transitionDialog: false
+    });
+  }
+  
+  // componentDidUpdate(prevProps, prevState) {
+  //   if(!this.state.transitionDialog){
+  //     this.set
+  //   }
+  // }
 
   closeSettings = () => {
     this.setState({ settingsOpen: false });
@@ -116,6 +136,7 @@ export default class NetPyNETabs extends React.Component {
     var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
     var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />) : (<div></div>);
     var bottomValue = this.state.value == "define" ? 35 : 0;
+    var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
     return (
       <div>
         <Tabs
@@ -141,7 +162,8 @@ export default class NetPyNETabs extends React.Component {
           </IconButton>
         </div>
         <SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
-        <TransitionDialog tab={this.state.value} />
+        {transitionDialog}
+        
       </div>
     )
   }
