@@ -35,7 +35,7 @@ define(function (require) {
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
         GEPPETTO.ComponentFactory.addComponent('CONSOLE', {}, document.getElementById("console"));
-        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/netpyneNotebook.ipynb";
+        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb";
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         GEPPETTO.G.setIdleTimeOut(-1);
