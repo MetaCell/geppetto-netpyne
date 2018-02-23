@@ -69,16 +69,12 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledTextField model={"simConfig.simLabel"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.saveFolder" >
-              <PythonControlledTextField model={"simConfig.saveFolder"} />
-            </NetPyNEField>
-            <NetPyNEField id="simConfig.saveFolder" >
-              {
-                window.isDocker ?
-                <TextField value="/home/jovyan/netpyne_workspace" disabled /> :
+            {
+              !window.isDocker &&
+              <NetPyNEField id="simConfig.saveFolder" >
                 <PythonControlledTextField model={"simConfig.saveFolder"} />
-              }
-            </NetPyNEField>
+              </NetPyNEField>
+            }
 
             <NetPyNEField id="simConfig.filename" >
               <PythonControlledTextField model={"simConfig.filename"} />
