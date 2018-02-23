@@ -125,7 +125,7 @@ export default class ListComponent extends Component {
     convertFromPython(prevProps, prevState, value) {
         if (value != undefined && prevProps.value != value && value != '') {
             return value.map((child, i) => {
-                return JSON.stringify(child);
+                return (typeof child == 'string') ? child : JSON.stringify(child);
             });
         }
     }
