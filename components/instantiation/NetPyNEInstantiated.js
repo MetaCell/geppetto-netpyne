@@ -167,14 +167,17 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 10 }} onClick={() => { $('#controlpanel').show(); }} icon={"fa-list"} />
+                <IconButton style={{ position: 'absolute', left: 35, top: 10 }} 
+                			onClick={() => { $('#controlpanel').show(); }} 
+                			icon={"fa-list"}
+                			id={"ControlPanelButton"}/>
                 <div>
                     <IconButton
                         onClick={this.handleClick}
                         style={{ position: 'absolute', left: 35, top: 318 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
-
+                    	id="PlotButton"
                     />
                     <Popover
                         open={this.state.plotButtonOpen}

@@ -63,6 +63,7 @@ const TransitionDialog = React.createClass({
                             We are about to simulate your network, this could take some time.
                             <Checkbox
                                 label="Run parallel simulation"
+                                id="runParallel"
                                 checked={this.state.parallelSimulation}
                                 onCheck={() => this.setState((oldState) => {
                                     return {
@@ -88,6 +89,7 @@ const TransitionDialog = React.createClass({
                     primary={true}
                     keyboardFocused={true}
                     onClick={confirmActionDialog}
+                    id={"confirmModal"}
                 />}
                 modal={true}
                 open={this.state.transitionOpen}

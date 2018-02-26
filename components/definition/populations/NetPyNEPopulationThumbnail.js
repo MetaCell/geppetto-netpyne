@@ -21,7 +21,7 @@ export default class NetPyNEPopulationThumbnail extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
+      <FloatingActionButton id={this.state.model.name} className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
         {this.state.model.name}
       </FloatingActionButton>
 
