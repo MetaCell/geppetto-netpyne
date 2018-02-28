@@ -62,11 +62,11 @@ export default class NetPyNESynapse extends React.Component {
       />
 
       <br/>
-{/* 
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
+{ 
+      <NetPyNEField id="netParams.synMechParams.mod" >
+        <PythonControlledTextField model={"netParams.synMechParams['" + this.props.name + "']['mod']"} />
       </NetPyNEField>
-
+/*
       <NetPyNEField id="netParams.cellParams.conds.cellType" >
         <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
       </NetPyNEField>

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import React, { Component } from 'react'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 export default class NetPyNESynapseThumbnail extends React.Component {
 
