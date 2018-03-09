@@ -18,10 +18,10 @@ const SettingsDialog = React.createClass({
         return {
             currentTab: "import",
             netParamsPath: "",
-            netParamsModuleName: "",
+            netParamsModuleName: "netParams",
             netParamsVariable: "netParams",
             simConfigPath: "",
-            simConfigModuleName: "",
+            simConfigModuleName: "simConfig ",
             simConfigVariable: "simConfig",
             modFolder: "",
             compileMod: false
