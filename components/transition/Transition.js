@@ -8,18 +8,27 @@ import Utils from '../../Utils';
 const TransitionDialog = React.createClass({
     getInitialState() {
         return {
-            transitionOpen: false,
-            parallelSimulation: false
+            transitionOpen: true,
+            parallelSimulation: false,
+            previousTab: "define"
         };
     },
 
     componentWillReceiveProps: function (nextProps) {
         // switch (nextProps.tab) {
         //TODO: we need to define the rules here
-        if (this.props.tab != nextProps.tab){
+        if (this.props.tab != nextProps.tab) {
             this.setState({
                 transitionOpen: true,
+                previousTab: this.props.tab
             });
+        }
+    },
+
+    cancelTransition() {
+        this.closeTransition();
+        if (this.props.cancelTransition) {
+            this.props.cancelTransition();
         }
     },
 
@@ -29,38 +38,71 @@ const TransitionDialog = React.createClass({
 
     instantiate(model) {
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
+        this.closeTransition();
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
             .then(response => {
-                this.closeTransition();
+                GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                 GEPPETTO.Manager.loadModel(JSON.parse(response));
                 GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
+                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             });
     },
 
     simulate(model) {
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
+        this.closeTransition();
         Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [this.state])
             .then(response => {
-                this.closeTransition();
+                GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                 GEPPETTO.Manager.loadModel(JSON.parse(response));
                 GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
+                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             });
     },
 
     render() {
-        var confirmActionDialog = this.closeTransition;
+        var cancelAction=(<FlatButton
+            label="Cancel"
+            primary={true}
+            onClick={this.cancelTransition}
+        />)
+
+        var actions=[];
         switch (this.props.tab) {
             case "define":
-                var children  =  "You are back to network definition, any changes will require to reinstantiate your network."
+                var children = "You are back to network definition, any changes will require to reinstantiate your network."
+                var confirmAction=(<FlatButton
+                    label="Ok"
+                    primary={true}
+                    keyboardFocused={true}
+                    onClick={this.closeTransition}
+                />);
+                actions=[confirmAction];
                 break;
             case "explore":
                 var children = "We are about to instantiate your network, this could take some time.";
-                confirmActionDialog = this.instantiate
+                var confirmAction=(<FlatButton
+                    label="Ok"
+                    primary={true}
+                    keyboardFocused={true}
+                    onClick={this.instantiate}
+                />);
+                if(this.state.previousTab=='define'){
+                    actions=[cancelAction, confirmAction];
+                }
+                else{
+                    actions=[confirmAction];
+                }
                 break;
             case "simulate":
                 var children = (
-                        <div>
+                    <div>
+                        <div >
                             We are about to simulate your network, this could take some time.
+                            </div>
+                        <div style={{ marginTop: '35px' }}>
                             <Checkbox
                                 label="Run parallel simulation"
                                 id="runParallel"
@@ -71,26 +113,37 @@ const TransitionDialog = React.createClass({
                                     };
                                 })}
                             />
+                        </div>
+                        <div className="netpyneRightField">
                             <TextField
                                 floatingLabelText="Number of cores"
+                                type="number"
                                 onChange={(event) => this.setState({ cores: event.target.value })}
                             />
                         </div>
-                    )
-                    confirmActionDialog = this.simulate
-                break;
-        }
-
-        return (
-            <Dialog
-                title="NetPyNE"
-                actions={<FlatButton
+                    </div>
+                )
+                var confirmAction=(<FlatButton
                     label="Ok"
                     primary={true}
                     keyboardFocused={true}
-                    onClick={confirmActionDialog}
-                    id={"confirmModal"}
-                />}
+                    onClick={this.simulate}
+                	id={"confirmModal"}
+                />);
+                if(this.state.previousTab=='define'){
+                    actions=[cancelAction, confirmAction];
+                }
+                else{
+                    actions=[confirmAction];
+                }
+                
+                break;
+        }
+        
+        return (
+            <Dialog
+                title="NetPyNE"
+                actions={actions}
                 modal={true}
                 open={this.state.transitionOpen}
                 onRequestClose={this.closeTransition}

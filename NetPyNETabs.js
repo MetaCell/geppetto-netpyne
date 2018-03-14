@@ -6,6 +6,9 @@ import FlatButton from 'material-ui/FlatButton';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
+import NetPyNEStimulationSources from './components/definition/stimulation/NetPyNEStimulationSources';
+import NetPyNEStimulationTargets from './components/definition/stimulation/NetPyNEStimulationTargets';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
@@ -18,6 +21,10 @@ import FontIcon from 'material-ui/FontIcon';
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
+var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
+var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
+var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
+var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 
 export default class NetPyNETabs extends React.Component {
 
@@ -27,6 +34,7 @@ export default class NetPyNETabs extends React.Component {
     this.widgets = {};
     this.state = {
       value: 'define',
+      prevValue: 'define',
       model: null,
       settingsOpen: false
     };
@@ -35,6 +43,7 @@ export default class NetPyNETabs extends React.Component {
       var modelObject = JSON.parse(model);
       window.metadata = modelObject.metadata;
       window.requirement = modelObject.requirement;
+      window.isDocker = modelObject.isDocker
       this.setState({ model: modelObject })
     });
 
@@ -49,7 +58,12 @@ export default class NetPyNETabs extends React.Component {
           widgets = widgets.concat(this.widgets[value]);
         }
         for (var w in widgets) {
-          widgets[w].hide();
+          if(!widgets[w].destroyed){
+            widgets[w].hide();
+          }
+          else{
+            delete widgets[w];
+          }
         }
         this.widgets[value] = widgets;
       }
@@ -61,7 +75,7 @@ export default class NetPyNETabs extends React.Component {
       var widgets = this.widgets[value];
       if (widgets) {
         for (var w in widgets) {
-          widgets[w].show();
+            widgets[w].show();
         }
       }
     }
@@ -72,13 +86,32 @@ export default class NetPyNETabs extends React.Component {
     this.restoreWidgetsFor(value);
 
     this.setState({
+      prevValue: this.state.value,
       value: value,
+      transitionDialog: true
     });
   };
 
   openSettings = () => {
     this.setState({ settingsOpen: true });
   }
+
+  cancelTransition=()=>{
+    this.hideWidgetsFor(this.state.value);
+    this.restoreWidgetsFor(this.state.prevValue);
+
+    this.setState({
+      prevValue: this.state.value,
+      value: this.state.prevValue,
+      transitionDialog: false
+    });
+  }
+  
+  // componentDidUpdate(prevProps, prevState) {
+  //   if(!this.state.transitionDialog){
+  //     this.set
+  //   }
+  // }
 
   closeSettings = () => {
     this.setState({ settingsOpen: false });
@@ -94,33 +127,22 @@ export default class NetPyNETabs extends React.Component {
       <div>
         <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
         <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
-        <NetPyNESynapses model={""} />
-
-        <Card style={{ clear: 'both' }}>
-          <CardHeader
-            title="Connections"
-            subtitle="Define here the connectivity rules in your network"
-            actAsExpander={true}
-            showExpandableButton={true}
-          />
-          <CardText expandable={true}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-            Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-            Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-          </CardText>
-        </Card>
+        <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+        <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+        <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+        <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
         <NetPyNESimConfig model={this.state.model.simConfig} />
       </div>
     ) : (<div></div>);
     var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
     var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />) : (<div></div>);
     var bottomValue = this.state.value == "define" ? 35 : 0;
+    var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
     return (
       <div>
         <Tabs
           value={this.state.value}
-          style={{ height: '100%', width: 'calc(100% - 40px)', float: 'left' }}
+          style={{ height: '100%', width: 'calc(100% - 48px)', float: 'left' }}
           tabTemplateStyle={{ height: '100%' }}
           contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
@@ -135,13 +157,14 @@ export default class NetPyNETabs extends React.Component {
             {simulateContent}
           </Tab>
         </Tabs>
-        <div id="settingsIcon" style={{ float: 'right', width: '40px', backgroundColor: 'rgb(0, 188, 212)' }}>
+        <div id="settingsIcon" style={{ float: 'left', width: '48px', backgroundColor: 'rgb(0, 188, 212)' }}>
           <IconButton onClick={this.openSettings}>
             <FontIcon className={"fa fa-cog"} />
           </IconButton>
         </div>
         <SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
-        <TransitionDialog tab={this.state.value} />
+        {transitionDialog}
+        
       </div>
     )
   }

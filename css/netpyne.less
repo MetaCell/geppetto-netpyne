@@ -55,7 +55,7 @@ html,body {
   height:70px!important;
 }
 .selectedActionButton button{
-  background-color:@secondary_color!important;
+  background-color:@primary_color!important;
 }
 
 .rectangularActionButton{
@@ -81,7 +81,7 @@ html,body {
   text-align: center; 
 }
 .selectedRectangularActionButton button{
-  background-color:@secondary_color!important;
+  background-color:@primary_color!important;
 }
 
 .addRectangularButton {
@@ -94,7 +94,6 @@ html,body {
   color:white!important;
   margin-top:5px;
 }
-
 .gearAddButton{
   padding:0!important;
   margin-top: 4px!important;
@@ -126,7 +125,7 @@ html,body {
   text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
 }
 .selectedGearButton .gpt-fullgear{
-  color:@secondary_color!important
+  color:@primary_color!important
 }
 .gearThumbLabel{
   font-size: 15px;
@@ -155,7 +154,7 @@ html,body {
 }
 
 .helpIcon:hover{
-  color:rgb(242, 61, 122);
+  color:@primary_color;
 }
 
 .breadcrumb{
@@ -173,18 +172,43 @@ html,body {
 }
 
 #CanvasContainer_component{
-  background: #0193a3;
-  background: -moz-linear-gradient(top, #0193a3 0%, #cbebff 53%, #f0f9ff 100%);
-  background: -webkit-linear-gradient(top, #0193a3 0%,#cbebff 53%,#f0f9ff 100%);
-  background: linear-gradient(to bottom, #0193a3 0%,#cbebff 53%,#f0f9ff 100%);
+  background: @canvastop_color;
+  background: -moz-linear-gradient(top, @canvastop_color 0%, #cbebff 53%, #f0f9ff 100%);
+  background: -webkit-linear-gradient(top, @canvastop_color 0%,#cbebff 53%,#f0f9ff 100%);
+  background: linear-gradient(to bottom, @canvastop_color 0%,#cbebff 53%,#f0f9ff 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0193a3', endColorstr='#f0f9ff',GradientType=0 );
 }
 
 .netpyneField{
+  width: 100%!important;
+    > div:first-of-type {
+      width: 95%;
+      > div{
+        width: 100%!important;
+        > div{
+          width: 100%!important;
+        }
+      }
+    }
+}
+.netpyneField, .netpyneFieldNoWidth{
   float: left;
   clear: left;
   margin-right: 20px;
   white-space: nowrap;
+}
+
+.listStyle {
+  width: 100%!important;
+  > div:first-of-type {
+    width: 95%;
+    > div{
+      width: 100%!important;
+      > div:first-of-type{
+        width: 95%!important;
+      }
+    }
+  }
 }
 
 .tabContainer{
@@ -216,6 +240,9 @@ html,body {
   width: 55%;
   float: right;
   margin-left: 50px;
+  > div > div{
+    box-shadow: none!important;
+  }
 }
 
 .ui-dialog{
@@ -224,4 +251,36 @@ html,body {
 
 #settingsIcon span{
   color: white !important;
+}
+
+.netpyneversion{
+  float: right;
+  margin-top: 43px;
+  margin-right: 5px;
+  font-size: 11px;
+  color:@complementary_color;
+}
+
+.spinner-container {
+  color: rgb(167, 206, 211)!important;
+  p{
+    color: rgb(167, 206, 211)!important;
+  }
+}
+.listIcon{
+  color: @complementary_color!important;
+}
+
+.listButtonLarge{
+  padding: 0px!important;
+  font-size:10px!important;
+  height: 10px!important;
+  width: 10px!important;
+}
+
+.listButtonSmall{
+  padding: 0px!important;
+  font-size:7px!important;
+  height: 7px!important;
+  width: 7px!important;
 }

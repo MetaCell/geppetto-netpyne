@@ -14,7 +14,7 @@ import NetPyNEField from '../../general/NetPyNEField';
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
-export default class NetPyNECellRule extends React.Component {
+export default class NetPyNESynapse extends React.Component {
 
   constructor(props) {
     super(props);
@@ -31,7 +31,7 @@ export default class NetPyNECellRule extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
+      Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
       that.renaming=true;
     });
 
@@ -57,12 +57,12 @@ export default class NetPyNECellRule extends React.Component {
         onChange={this.handleRenameChange}
         value = {this.state.currentName}
         disabled={this.renaming}
-        floatingLabelText="The name of the cell rule"
+        floatingLabelText="The name of the synapse"
         className={"netpyneField"}
       />
 
       <br/>
-
+{/* 
       <NetPyNEField id="netParams.cellParams.conds.cellModel" >
         <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
       </NetPyNEField>
@@ -77,7 +77,7 @@ export default class NetPyNECellRule extends React.Component {
         labelPosition="before"
         primary={true}
         onClick={() => that.props.selectPage("sections")}
-      />
+      /> */}
     </div>);
 
     return (

@@ -45,35 +45,47 @@ export default class NetPyNEField extends Component {
 
         const childWithProp = React.Children.map(this.props.children, (child) => {
             var extraProps = {}
-            
+
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
             extraProps['label'] = floatingLabelText;
             extraProps['floatingLabelText'] = floatingLabelText;
-            
+
             var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
-            if (dataSource != ''){
+            if (dataSource != '') {
                 extraProps['dataSource'] = dataSource;
             }
-            
+
             var type = Utils.getHTMLType(this.props.id);
-            if (type != ''){
+            if (type != '') {
                 extraProps['type'] = type;
             }
 
-            if (child.type.name == "PythonControlledControl"){
-                var realType =Utils.getMetadataField(this.props.id, "type");
+            if (child.type.name == "PythonControlledControl") {
+                var realType = Utils.getMetadataField(this.props.id, "type");
                 extraProps['realType'] = realType;
             }
 
-            var hintText=Utils.getMetadataField(this.props.id, "hintText");
-            if (hintText != ''){
+            var hintText = Utils.getMetadataField(this.props.id, "hintText");
+            if (hintText != '') {
                 extraProps['hintText'] = hintText;
             }
+
             return React.cloneElement(child, extraProps);
         });
 
+        var classes = [];
+        if (!this.props.noStyle) {
+            classes.push("netpyneField");
+        }
+        if (this.props.className) {
+            classes.push(this.props.className);
+        }
+        if (classes.length > 0) {
+            var className = { className: classes.join(" ") }
+        }
+
         return (
-            <div style={this.props.style} className={"netpyneField " + this.props.className}>
+            <div style={this.props.style} {...className}>
                 <div style={{ float: 'left' }}>
                     {childWithProp}
                 </div>
