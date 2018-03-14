@@ -76,7 +76,8 @@ function testLandingPage(test){
 		test.assertExists('div[id="Populations"]', 'Populations button exists.');
 		test.assertExists('div[id="CellRules"]', "Cell rules button exists.");
 		test.assertExists('div[id="Synapses"]', "Synapses button exists.");
-		casper.waitForText('Connections', function(){this.echo("Connections button exists.")});
+		test.assertExists('div[id="Connections"]', "Connections button exists.");
+		test.assertExists('div[id="SimulationSources"]', "Connections button exists.");
 		test.assertExists('div[id="Configuration"]', "Configuration button exists.");
 		test.assertExists('button[id="defineNetwork"]', 'Define network button exists.');
 		test.assertExists('button[id="exploreNetwork"]', 'Explore network button exists.');
@@ -213,13 +214,13 @@ function exploreNetwork(test){
 	casper.then(function(){
 		test.assertExists('button[id="exploreNetwork"]', "Explore network button exists");
 		casper.click('#exploreNetwork');
-		casper.waitUntilVisible('button[id="confirmModal"]', function() {
+		casper.waitUntilVisible('button[id="okInstantiateNetwork"]', function() {
 			casper.then(function(){
 				canvasComponentsTests(test);
 			});
 			casper.then(function(){
-				casper.click('#confirmModal');
-				casper.waitWhileVisible('button[id="confirmModal"]', function() {
+				casper.click('#okInstantiateNetwork');
+				casper.waitWhileVisible('button[id="okInstantiateNetwork"]', function() {
 					casper.echo("Dialog disappeared");
 					casper.waitWhileVisible('div[id="loading-spinner"]', function() {
 						casper.echo("Loading spinner disappeared");
@@ -288,10 +289,10 @@ function simulateNetwork(test){
 	casper.then(function(){
 		test.assertExists('button[id="simulateNetwork"]', "Simulate network button exists");
 		casper.click('#simulateNetwork');
-		casper.waitUntilVisible('button[id="confirmModal"]', function() {
+		casper.waitUntilVisible('button[id="runSimulation"]', function() {
 			casper.then(function(){
-				casper.click('#confirmModal');
-				casper.waitWhileVisible('button[id="confirmModal"]', function() {
+				casper.click('#runSimulation');
+				casper.waitWhileVisible('button[id="runSimulation"]', function() {
 					casper.echo("Dialog disappeared");
 					casper.waitWhileVisible('div[id="loading-spinner"]', function() {
 						casper.echo("Loading spinner disappeared");

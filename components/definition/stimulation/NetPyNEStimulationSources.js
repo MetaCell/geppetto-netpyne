@@ -151,6 +151,7 @@ export default class NetPyNEStimulationSources extends React.Component {
           subtitle="Define here the rules to generate the stimulation sources in your network"
           actAsExpander={true}
           showExpandableButton={true}
+          id={"SimulationSources"}
         />
         {content}
       </Card>);
