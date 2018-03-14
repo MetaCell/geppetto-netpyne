@@ -29,7 +29,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 				test.assertTitle("NetPyNE", "NetPyNE title is ok");
 				test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
 				test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
-				test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
+				//test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
 			});
 		},null,40000);
 	});
