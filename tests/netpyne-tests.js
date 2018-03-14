@@ -147,6 +147,10 @@ function loadModelUsingPython(test,demo){
 		},demo);
 	});
 
+	casper.then(function () {
+		casper.click('#Populations');
+	});
+
 	casper.then(function(){
 		testPopulation(test, "button#S", "S", "HH", "PYR", "20");
 	});
@@ -229,16 +233,62 @@ function exploreNetwork(test){
 
 		},5000);
 	});
+
+	casper.then(function(){
+		//test.assertExists('div[id="PlotButton"]', "Plot Button Exists");
+		casper.click('#PlotButton');
+	});
+
+	casper.then(function(){
+		casper.waitUntilVisible('div[role="menu"]', function() {
+			test.assertExists('div[role="menu"]', "Drop down Plot Menu Exists");
+
+			casper.then(function(){
+				testPlotButton(test, "2dNetPlot", "Popup1");
+			});	
+
+			casper.then(function(){
+				testPlotButton(test, "shapePlot", "Popup1");
+			});	
+
+			casper.then(function(){
+				testPlotButton(test, "connectionPlot", "Popup1");
+			});	
+			
+			casper.then(function(){		
+				casper.evaluate(function() {
+					$("#PlotButton").click();
+				});
+				
+				casper.waitWhileVisible('div[role="menu"]', function() {
+					test.assertDoesntExist('div[role="menu"]', "Drop down Plot Menu is gone");
+
+				},5000);
+			});
+
+		},5000);
+	});
+	
+
+
+	casper.then(function(){
+		casper.click('#ControlPanelButton');
+	});
+
+	casper.then(function(){
+		testControlPanelValues(test,43);
+	});
+	
+	casper.then(function(){
+		casper.click('#ControlPanelButton');
+	});
 }
 
 function simulateNetwork(test){
 	casper.then(function(){
 		test.assertExists('button[id="simulateNetwork"]', "Simulate network button exists");
-		casper.click('#exploreNetwork');
+		casper.click('#simulateNetwork');
 		casper.waitUntilVisible('button[id="confirmModal"]', function() {
-			casper.then(function(){
-				canvasComponentsTests(test);
-			});
 			casper.then(function(){
 				casper.click('#confirmModal');
 				casper.waitWhileVisible('button[id="confirmModal"]', function() {
@@ -249,7 +299,7 @@ function simulateNetwork(test){
 				},150000);
 			});
 
-		},5000);
+		},15000);
 	});
 }
 
@@ -260,4 +310,60 @@ function testMeshVisibility(test,visible,variableName){
 	},variableName);
 
 	test.assertEquals(visibility,visible, variableName +" visibility correct");
+}
+
+function testPlotButton(test, plotButton, expectedPlot){
+	casper.then(function(){
+		test.assertExists('span[id="'+plotButton+'"]', "Menu option "+plotButton+"Exists");
+		casper.evaluate(function(plotButton, expectedPlot){
+			document.getElementById(plotButton).click();
+		}, plotButton, expectedPlot);
+		casper.then(function(){
+			casper.waitUntilVisible('div[id="'+expectedPlot+'"]', function() {
+				test.assertExists('div[id="'+expectedPlot+'"]', expectedPlot + " (" + plotButton + ") exists");
+				casper.evaluate(function(expectedPlot){
+					window[expectedPlot].destroy();
+				},expectedPlot);
+				casper.waitWhileVisible('div[id="'+expectedPlot+'"]', function() {
+					test.assertDoesntExist('div[id="'+expectedPlot+'"]', expectedPlot + " (" + plotButton + ") no longer exists");
+				},5000);
+			},5000);
+		});
+	});
+
+	casper.then(function(){
+		var plotError = test.assertEvalEquals(function(){
+			var error = document.getElementById("netPyneDialog")==undefined;
+			if(!error){
+				document.getElementById("netPyneDialog").click();
+			}
+			return error;
+		}, true, "Failed to open plot for action: " + plotButton);		
+	});
+}
+
+function testControlPanelValues(test, values){
+	casper.then(function(){
+		casper.waitUntilVisible('div#controlpanel', function () {
+			test.assertVisible('div#controlpanel', "The control panel is correctly open.");
+			var rows = casper.evaluate(function() {
+				var rows = $(".standard-row").length;
+				return rows;
+			});
+			test.assertEquals(rows, values, "The control panel opened with right amount of rows");
+
+
+		});
+	});	
+
+
+	casper.then(function(){
+		casper.evaluate(function() {
+			$("#controlpanel").remove();
+		});
+
+		casper.waitWhileVisible('div#controlpanel', function() {
+			test.assertDoesntExist('div#controlpanel', "Control Panel went away");
+		},5000);
+	});	
 }
