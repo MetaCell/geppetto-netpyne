@@ -1,5 +1,4 @@
 var urlBase = casper.cli.get('host');
-var expectedNetworkMeshCount = 15;
 if(urlBase==null || urlBase==undefined){
 	urlBase = "http://localhost:8888/";
 }
@@ -280,10 +279,12 @@ function exploreNetwork(test){
 					test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network dialog is gone");
 					casper.waitWhileVisible('div[id="loading-spinner"]', function() {
 						test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
-						this.echo("Testing meshes for network exists and are visible");
-						for(var i=0; i<expectedNetworkMeshCount; i++){
-							testMeshVisibility(test,true, "network.S["+i+"]");
-						}
+						this.echo("Testing meshes for network exist and are visible");
+						testMeshVisibility(test,true, "network.S[0]");
+						testMeshVisibility(test,true, "network.S[1]");
+						testMeshVisibility(test,true, "network.S[2]");
+						testMeshVisibility(test,true, "network.S[18]");
+						testMeshVisibility(test,true, "network.S[19]");
 					},5000);
 				},5000);
 			});
@@ -348,10 +349,12 @@ function simulateNetwork(test){
 					casper.echo("Dialog disappeared");
 					casper.waitWhileVisible('div[id="loading-spinner"]', function() {
 						casper.echo("Loading spinner disappeared");
-						this.echo("Testing meshes for network exists and are visible");
-						for(var i=0; i<expectedNetworkMeshCount; i++){
-							testMeshVisibility(test,true, "network.S["+i+"]");
-						}
+						this.echo("Testing meshes for network exist and are visible");
+						testMeshVisibility(test,true, "network.S[0]");
+						testMeshVisibility(test,true, "network.S[1]");
+						testMeshVisibility(test,true, "network.S[2]");
+						testMeshVisibility(test,true, "network.S[18]");
+						testMeshVisibility(test,true, "network.S[19]");
 					},150000);
 				},150000);
 			});
@@ -406,11 +409,13 @@ function simulateNetwork(test){
 }
 
 function testMeshVisibility(test,visible,variableName){
-	var visibility = casper.evaluate(function(variableName) {
-		var visibility = CanvasContainer.engine.getRealMeshesForInstancePath(variableName)[0].visible;
-		return visibility;
-	},variableName);
-	test.assertEquals(visibility,visible, variableName +" visibility correct");
+	casper.then(function(){		
+		var visibility = casper.evaluate(function(variableName) {
+			var visibility = CanvasContainer.engine.getRealMeshesForInstancePath(variableName)[0].visible;
+			return visibility;
+		},variableName);
+		test.assertEquals(visibility,visible, variableName +" visibility correct");
+	});
 }
 
 function waitForPlotGraphElement(test, elementID){
