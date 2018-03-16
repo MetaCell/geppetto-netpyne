@@ -138,12 +138,12 @@ export default class NetPyNEInstantiated extends React.Component {
         else if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Hist Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Stats Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Traces Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
+                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
+                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Hist Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
+                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Stats Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
+                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
+                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Traces Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
+                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
                 </Menu>
 
 

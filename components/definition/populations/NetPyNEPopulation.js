@@ -130,13 +130,13 @@ export default class NetPyNEPopulation extends React.Component {
               searchText={this.state.cellModel}
               onChange={(value) => this.setPopulationDimension(value)}
               openOnFocus={true}
-              id={"cellModel"} />
+              id={"popCellModel"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
-              id={"cellType"}
+              id={"popCellType"}
             />
           </NetPyNEField>
 

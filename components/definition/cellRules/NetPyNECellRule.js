@@ -59,16 +59,21 @@ export default class NetPyNECellRule extends React.Component {
         disabled={this.renaming}
         floatingLabelText="The name of the cell rule"
         className={"netpyneField"}
+        id={"cellRuleName"}
       />
 
       <br/>
 
       <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
+        <PythonControlledTextField 
+        	model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} 
+        	id="cellRuleCellModel"/>
       </NetPyNEField>
 
       <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
+        <PythonControlledTextField 
+        	model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} 
+        	id="cellRuleCellType"/>
       </NetPyNEField>
       <br /><br />
 
