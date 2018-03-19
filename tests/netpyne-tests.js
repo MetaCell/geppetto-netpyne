@@ -16,9 +16,9 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 	// show page level errors
 	casper.on('resource.received', function (resource) {
 		var status = resource.status;
-		if (status >= 400) {
+		//if (status >= 400) {
 			this.echo('URL: ' + resource.url + ' Status: ' + resource.status);
-		}
+		//}
 	});
 
 	//load netpyne main landing page
