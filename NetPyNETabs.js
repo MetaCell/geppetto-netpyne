@@ -147,13 +147,13 @@ export default class NetPyNETabs extends React.Component {
           contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
         >
-          <Tab label="Define your network" value="define">
+          <Tab label="Define your network" value="define" id={"defineNetwork"}>
             {defineContent}
           </Tab>
-          <Tab label="Explore your network" value="explore" >
+          <Tab label="Explore your network" value="explore" id={"exploreNetwork"}>
             {exploreContent}
           </Tab>
-          <Tab label="Simulate and analyse" value="simulate">
+          <Tab label="Simulate and analyse" value="simulate" id={"simulateNetwork"}>
             {simulateContent}
           </Tab>
         </Tabs>

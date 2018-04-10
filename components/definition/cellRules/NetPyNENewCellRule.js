@@ -29,7 +29,7 @@ export default class NetPyNENewCellRule extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+      <FloatingActionButton id={"newCellRuleButton"} mini={true} style={styles.addButton} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
 

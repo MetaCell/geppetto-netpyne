@@ -152,6 +152,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
           subtitle="Define here the rules to generate the connections in your network"
           actAsExpander={true}
           showExpandableButton={true}
+          id="Connections"
         />
         {content}
       </Card>);

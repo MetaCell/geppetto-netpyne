@@ -22,7 +22,7 @@ export default class NetPyNENewPopulation extends React.Component {
   render() {
     return (
 
-      <FloatingActionButton mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
+      <FloatingActionButton id={"newPopulationButton"} mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
 

@@ -113,13 +113,14 @@ export default class NetPyNEPopulation extends React.Component {
   render() {
     if (this.state.sectionId == "General") {
       var content =
-        <div>
+        <div id="populationMetadata">
           <TextField
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
             floatingLabelText="The name of your population"
             className={"netpyneField"}
+            id={"populationName"}
           />
 
           <NetPyNEField id="netParams.popParams.cellModel" >
@@ -128,12 +129,14 @@ export default class NetPyNEPopulation extends React.Component {
               model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
               searchText={this.state.cellModel}
               onChange={(value) => this.setPopulationDimension(value)}
-              openOnFocus={true} />
+              openOnFocus={true}
+              id={"popCellModel"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+              id={"popCellType"}
             />
           </NetPyNEField>
 

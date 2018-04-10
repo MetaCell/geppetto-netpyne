@@ -95,6 +95,7 @@ export default class DimensionsComponent extends Component {
                                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                                 modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
+                                id={"dimensions"}
                             />
                         </NetPyNEField>
                         : null

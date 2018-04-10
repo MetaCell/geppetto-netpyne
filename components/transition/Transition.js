@@ -88,6 +88,7 @@ const TransitionDialog = React.createClass({
                     primary={true}
                     keyboardFocused={true}
                     onClick={this.instantiate}
+                    id="okInstantiateNetwork"
                 />);
                 if(this.state.previousTab=='define'){
                     actions=[cancelAction, confirmAction];
@@ -105,6 +106,7 @@ const TransitionDialog = React.createClass({
                         <div style={{ marginTop: '35px' }}>
                             <Checkbox
                                 label="Run parallel simulation"
+                                id="runParallelSimulation"
                                 checked={this.state.parallelSimulation}
                                 onCheck={() => this.setState((oldState) => {
                                     return {
@@ -127,6 +129,7 @@ const TransitionDialog = React.createClass({
                     primary={true}
                     keyboardFocused={true}
                     onClick={this.simulate}
+                	id={"runSimulation"}
                 />);
                 if(this.state.previousTab=='define'){
                     actions=[cancelAction, confirmAction];

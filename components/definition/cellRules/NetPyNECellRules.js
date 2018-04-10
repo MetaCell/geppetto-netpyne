@@ -389,6 +389,7 @@ export default class NetPyNECellRules extends React.Component {
           subtitle="Define here the rules to generate the cells in your network"
           actAsExpander={true}
           showExpandableButton={true}
+          id={"CellRules"}
         />
         {content}
       </Card>);
