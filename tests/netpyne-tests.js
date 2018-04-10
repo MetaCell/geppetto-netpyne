@@ -58,7 +58,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 
 	casper.then(function () { //test full netpyne loop using a demo project
 		casper.echo("######## Running Demo ######## ");
-		var demo = "from neuron_ui.tests.tut3 import netParams, simConfig \n" +
+		var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
 		"netpyne_geppetto.netParams=netParams \n" +
 		"netpyne_geppetto.simConfig=simConfig";
 		loadModelUsingPython(test,demo);
