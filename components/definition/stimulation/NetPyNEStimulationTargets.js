@@ -24,18 +24,9 @@ export default class NetPyNEStimulationTargets extends React.Component {
       page: "main"
     };
 
-    this.selectPage = this.selectPage.bind(this);
-
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
     
-  }
-
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
-
-
-  selectPage(page) {
-    this.setState({ page: page });
   }
 
   selectStimulationTarget(StimulationTarget) {
@@ -108,7 +99,6 @@ export default class NetPyNEStimulationTargets extends React.Component {
 
   render() {
 
-    var that = this;
     var model = this.state.value;
     var content;
     if (this.state.page == 'main') {
@@ -119,7 +109,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
       }
       var selectedStimulationTarget = undefined;
       if (this.state.selectedStimulationTarget && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
-        selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} model={this.state.value[this.state.selectedStimulationTarget]} selectPage={this.selectPage} />;
+        selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget}/>;
       }
 
       content = (
@@ -131,7 +121,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewStimulationTarget handleClick={this.handleNewStimulationTarget} />
+                  <NetPyNENewStimulationTarget name={selectedStimulationTarget} handleClick={this.handleNewStimulationTarget} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
