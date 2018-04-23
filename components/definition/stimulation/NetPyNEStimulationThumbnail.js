@@ -11,13 +11,13 @@ export default class NetPyNECellRuleThumbnail extends React.Component {
   handleClick() {
     if (this.props.handleClick) {
       this.props.handleClick(this.props.name);
-    }
-  }
+    };
+  };
 
   render() {
     return (
 
-      <FloatingActionButton className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
+      <FloatingActionButton id={this.props.name} className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
         {this.props.name}
       </FloatingActionButton>
 

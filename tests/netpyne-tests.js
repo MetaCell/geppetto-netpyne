@@ -241,23 +241,27 @@ function loadModelUsingPython(test,demo){
 		},5000);
 	});
 
-	casper.then(function(){ //test first population exists after demo is loaded
-		testPopulation(test, "button#S", "S", "HH", "PYR", "20");
-	});
+	casper.then(function(){
+		casper.wait(3000, function() {
+			casper.then(function(){ //test first population exists after demo is loaded
+				testPopulation(test, "button#S", "S", "HH", "PYR", "20");
+			});
 
-	casper.then(function(){//test second population exists after demo is loaded
-		testPopulation(test, "button#M", "M", "HH", "PYR", "20");
-	});
+			casper.then(function(){//test second population exists after demo is loaded
+				testPopulation(test, "button#M", "M", "HH", "PYR", "20");
+			});
 
-	casper.then(function () { //expand cell rules view
-		casper.click('#CellRules');
-		casper.waitUntilVisible('button[id="newCellRuleButton"]', function() {
-			this.echo("Cell Rule view loaded");
-		},5000);
-	});
+			casper.then(function () { //expand cell rules view
+				casper.click('#CellRules');
+				casper.waitUntilVisible('button[id="newCellRuleButton"]', function() {
+					this.echo("Cell Rule view loaded");
+				},5000);
+			});
 
-	casper.then(function(){//test a cell rule exists after demo is loaded
-		testCellRule(test, "button#PYRrule", "PYRrule", "", "PYR");
+			casper.then(function(){//test a cell rule exists after demo is loaded
+				testCellRule(test, "button#PYRrule", "PYRrule", "", "PYR");
+			});
+		});
 	});
 }
 
