@@ -14,7 +14,6 @@ import ListComponent from '../../general/List';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNEStimulationSource extends React.Component {
@@ -114,22 +113,22 @@ export default class NetPyNEStimulationSource extends React.Component {
     if (this.state.sourceType=='IClamp'){
       var variableContent = 
         <div>
-          <NetPyNEField id="netParams.stimSourceParams.del">
+          <NetPyNEField id="netParams.stimSourceParams.IClamp.del">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['del']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.IClamp.dur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.IClamp.amp" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.i">
+          <NetPyNEField id="netParams.stimSourceParams.IClamp.i">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
             />
@@ -138,37 +137,37 @@ export default class NetPyNEStimulationSource extends React.Component {
     } else if (this.state.sourceType=='VClamp'){
       var variableContent = 
         <div>
-          <NetPyNEField id="netParams.stimSourceParams.tau1">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.tau1">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.tau2">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.tau2">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['tau2']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.dur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.amp" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.gain">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.gain">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['gain']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.rstim">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.rstim">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['rstim']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.i">
+          <NetPyNEField id="netParams.stimSourceParams.VClamp.i">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
             />
@@ -177,27 +176,27 @@ export default class NetPyNEStimulationSource extends React.Component {
     } else if (this.state.sourceType=='AlphaSynapse'){
       var variableContent = 
         <div>
-          <NetPyNEField id="netParams.stimSourceParams.onset">
+          <NetPyNEField id="netParams.stimSourceParams.AlphaSynapse.onset">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['onset']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.tau">
+          <NetPyNEField id="netParams.stimSourceParams.AlphaSynapse.tau">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['tau']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.gmax">
+          <NetPyNEField id="netParams.stimSourceParams.AlphaSynapse.gmax">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['gmax']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.e">
+          <NetPyNEField id="netParams.stimSourceParams.AlphaSynapse.e">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['e']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.i">
+          <NetPyNEField id="netParams.stimSourceParams.AlphaSynapse.i">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
             />
@@ -206,22 +205,22 @@ export default class NetPyNEStimulationSource extends React.Component {
     }else if (this.state.sourceType=='NetStim'){
       var variableContent = 
         <div>
-          <NetPyNEField id="netParams.stimSourceParams.interval">
+          <NetPyNEField id="netParams.stimSourceParams.NetStim.interval">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['interval']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.number">
+          <NetPyNEField id="netParams.stimSourceParams.NetStim.number">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['number']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.start">
+          <NetPyNEField id="netParams.stimSourceParams.NetStim.start">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['start']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.noise">
+          <NetPyNEField id="netParams.stimSourceParams.NetStim.noise">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['noise']"}
             />
@@ -230,35 +229,33 @@ export default class NetPyNEStimulationSource extends React.Component {
     } else if (this.state.sourceType=='SEClamp'){
       var variableContent = 
         <div>
-          <NetPyNEField id="netParams.stimSourceParams.rs">
+          <NetPyNEField id="netParams.stimSourceParams.SEClamp.rs">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.SEClamp.dur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.SEClamp.dur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.i">
+          <NetPyNEField id="netParams.stimSourceParams.SEClamp.i">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.stimSourceParams.vc">
+          <NetPyNEField id="netParams.stimSourceParams.SEClamp.vc">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['vc']"}
             />
           </NetPyNEField>
         </div>
-    } else {
-      var variableContent = <div/>
-    }
+    } 
     return (
       <div>
         {content}

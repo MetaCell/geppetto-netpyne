@@ -189,10 +189,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
           </div>
         )
         var extraContent = <div/>
-    } else {
-      var content = <div/>
-      var extraContent = <div/>
-    };
+    } 
+    
     var index = 0;
     var bottomNavigationItems = [];
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTarget />));
