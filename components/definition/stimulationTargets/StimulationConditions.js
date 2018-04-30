@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import IconMenu from 'material-ui/IconMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import clone from 'lodash.clone';
-import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
+import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../general/List';
-import RangeCondsComponent from './RangeConds'
+import StimulationRange from './StimulationRange';
+import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
-export default class Conditions extends React.Component {
+export default class StimulationConditions extends React.Component {
 
   constructor(props) {
     super(props);
@@ -39,7 +31,7 @@ export default class Conditions extends React.Component {
   };
   
   render() {      
-    var content = 
+    var content = (
       <div>
         <NetPyNEField id={"netParams.stimTargetParams.conds.pop"} >
           <PythonMethodControlledSelectField
@@ -49,6 +41,7 @@ export default class Conditions extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
         <NetPyNEField id={"netParams.stimTargetParams.conds.cellModel"} >
           <PythonMethodControlledSelectField
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellModel']"}
@@ -57,6 +50,7 @@ export default class Conditions extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
         <NetPyNEField id={"netParams.stimTargetParams.conds.cellType"} >
           <PythonMethodControlledSelectField
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellType']"}
@@ -65,18 +59,17 @@ export default class Conditions extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
-        <RangeCondsComponent name={this.props.name} />
+        
+        <StimulationRange name={this.props.name} />
+        
         <NetPyNEField id="netParams.stimTargetParams.conds.cellList" className="listStyle">
           <PythonControlledListComponent
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['condList']"}
           />
         </NetPyNEField>
       </div>
-  
-    return (
-      <div>
-        {content}
-      </div>
     );
-  }
+    
+    return content;
+  };
 };

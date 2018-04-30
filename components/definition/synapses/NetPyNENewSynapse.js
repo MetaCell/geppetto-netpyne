@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const styles = {
   addButton: {
@@ -15,26 +15,23 @@ export default class NetPyNENewSynapse extends React.Component {
     super(props);
     this.state = {
     };
-
     this.handleClick = this.handleClick.bind(this);
-
-  }
+  };
 
   handleClick() {
     if (this.props.handleClick) {
       this.props.handleClick({ 'Synapse': {
         'mod': '', 'tau1': 0, 'tau2': 0, 'e': 0}});
-    }
-  }
+    };
+  };
 
   render() {
-    return (
-
+    var content = (
       <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
-
-
     );
-  }
-}
+    
+    return content;
+  };
+};

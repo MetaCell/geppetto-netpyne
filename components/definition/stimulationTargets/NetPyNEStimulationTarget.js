@@ -1,33 +1,16 @@
 import React, { Component } from 'react';
-
+import CardText from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-
-import Tooltip from 'material-ui/internal/Tooltip';
-import Toggle from 'material-ui/Toggle';
-
-import IconMenu from 'material-ui/IconMenu';
-import FontIcon from 'material-ui/FontIcon';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-
-import CardText from 'material-ui/Card';
+import CondsIcon from 'material-ui/svg-icons/maps/local-offer';
+import StimTargetIcon from 'material-ui/svg-icons/action/reorder';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-
-import clone from 'lodash.clone';
-
 import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
-import Conditions from './Conditions';
+import NetPyNEField from '../../general/NetPyNEField';
+import StimulationConditions from './StimulationConditions';
 
-import Conds from 'material-ui/svg-icons/maps/local-offer';
-import StimTarget    from 'material-ui/svg-icons/action/reorder';
-
-const CondsIcon = <Conds/>;
-const StimIcon  = <StimTarget />;
- 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
@@ -61,17 +44,15 @@ export default class NetPyNEStimulationTarget extends React.Component {
     var newValue = event.target.value;
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
-      // Rename the population in Python
       Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
       that.renaming=true;
     });
   };
 
   triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
-    }
+    };
     this.updateTimer = setTimeout(updateMethod, 1000);
   };
 
@@ -129,6 +110,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
             id={"targetName"}
           />
           <br/>
+          
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
             <PythonMethodControlledSelectField
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
@@ -137,11 +119,13 @@ export default class NetPyNEStimulationTarget extends React.Component {
               multiple={false}
             />
           </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimTargetParams.sec" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimTargetParams.loc">
             <PythonControlledTextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['loc']"}
@@ -160,16 +144,19 @@ export default class NetPyNEStimulationTarget extends React.Component {
               multiple={false}
             />
           </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimTargetParams.weight" >
             <PythonControlledTextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
             />
           </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimTargetParams.delay" >
             <PythonControlledTextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
             />
           </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
             <PythonControlledTextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
@@ -178,23 +165,16 @@ export default class NetPyNEStimulationTarget extends React.Component {
           </div>
         );
       } else {
-        var extraContent = (
-          <div/>
-        );
-      }
-    } else if (this.state.sectionId == "Conditions") {
-        var content = (
-          <div> 
-            <Conditions name={this.state.currentName}/>
-          </div>
-        )
         var extraContent = <div/>
-    } 
+      };
+    } else if (this.state.sectionId == "Conditions") {
+        var content = <StimulationConditions name={this.state.currentName}/>
+    };
     
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTarget />));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions', <Conds/>));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions', <CondsIcon/>)); 
     
     return (
       <div>
