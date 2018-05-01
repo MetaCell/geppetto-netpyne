@@ -18,12 +18,22 @@ export default class NetPyNESynapse extends React.Component {
 
   constructor(props) {
     super(props);
-    var _this = this;
     this.state = {
-      currentName: props.name
+      currentName: props.name,
+      synMechMod: null
     };
-  }
+    this.synMechModOptions = [
+      { mod: 'Exp2Syn' }, 
+    ];
+    this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
+  };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.currentName!=nextProps.name){
+      this.setState({ currentName: nextProps.name, synMechMod: null});      
+    };
+  };
+  
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
@@ -43,46 +53,83 @@ export default class NetPyNESynapse extends React.Component {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
-  }
+  };
+  
+  componentDidMount() {
+    this.updateLayout();
+  };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.name});
-  }
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.currentName != prevState.currentName) {
+          this.updateLayout();
+      };
+  };
+  
+  updateLayout() {
+    const getMod = (value) => {
+      Utils
+        .sendPythonMessage("'" + value + "' in netParams.synMechParams['" + this.state.currentName + "']['mod']")
+        .then((response) => { if (response) {this.setState({synMechMod: value})}});
+    };
+    this.synMechModOptions.forEach((option) => { getMod(option.mod) });
+  };
+  
+  handleSynMechModChange(event, index, value) {
+    Utils.execPythonCommand("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
+    this.setState({ synMechMod: value });
+  };
 
   render() {
-    var that = this;
-    var content = (<div>
-
-      <TextField
-        onChange={this.handleRenameChange}
-        value = {this.state.currentName}
-        disabled={this.renaming}
-        floatingLabelText="The name of the synapse"
-        className={"netpyneField"}
-      />
-
-      <br/>
-{/* 
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
-      </NetPyNEField>
-
-      <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
-      </NetPyNEField>
-      <br /><br />
-
-      <RaisedButton
-        label="Sections"
-        labelPosition="before"
-        primary={true}
-        onClick={() => that.props.selectPage("sections")}
-      /> */}
-    </div>);
-
+    var content = (
+      <div>
+        <TextField
+          id={"synapseName"}
+          onChange={this.handleRenameChange}
+          value = {this.state.currentName}
+          disabled={this.renaming}
+          className={"netpyneField"}
+        />
+        <br/>
+        <NetPyNEField id="netParams.synMechParams.mod" className={"netpyneFieldNoWidth"} noStyle>
+          <SelectField 
+            value={this.state.synMechMod}
+            onChange={this.handleSynMechModChange}
+          >
+            {(this.synMechModOptions != undefined) ?
+                this.synMechModOptions.map(function (synMechModOption) {
+                  return (<MenuItem key={synMechModOption.mod} value={synMechModOption.mod} primaryText={synMechModOption.mod} />)
+                }) : null
+            }
+          </SelectField>
+        </NetPyNEField>  
+      </div>);
+      if (this.state.synMechMod=='Exp2Syn'){
+        var variableContent = (
+          <div>
+            <NetPyNEField id="netParams.synMechParams.tau1">
+              <PythonControlledTextField
+                model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.synMechParams.tau2">
+              <PythonControlledTextField
+                model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.synMechParams.e" >
+              <PythonControlledTextField
+                model={"netParams.synMechParams['" + this.props.name + "']['e']"}
+              />
+            </NetPyNEField>
+          </div>
+        )
+      } else {
+        var variableContent = <div/>
+      }
     return (
       <div>
         {content}
+        {variableContent}
       </div>
     );
   }
