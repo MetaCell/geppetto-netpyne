@@ -22,7 +22,6 @@ export default class NetPyNEStimulationTargets extends React.Component {
   };
 
   handleNewStimulationTarget(defaultStimulationTargets) {
-    console.log('NEW STIM TARGET')
     var key = Object.keys(defaultStimulationTargets)[0];
     var value = defaultStimulationTargets[key];
     var model = this.state.value;
@@ -35,7 +34,6 @@ export default class NetPyNEStimulationTargets extends React.Component {
   };
 
   hasSelectedStimulationTargetBeenRenamed(prevState, currentState) {
-    console.log('HAS CHANGED')
     var currentModel = prevState.value;
     var model = currentState.value;
     //deal with rename
@@ -59,7 +57,6 @@ export default class NetPyNEStimulationTargets extends React.Component {
   };
  
   componentDidUpdate(prevProps, prevState) {
-    console.log('DID UPDATED')
     var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(prevState, this.state);
     if (newStimulationTargetName) {
       this.setState({ selectedStimulationTarget: newStimulationTargetName });
@@ -67,7 +64,6 @@ export default class NetPyNEStimulationTargets extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('SHOULD UPDATE')
     var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) != false;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;

@@ -7,13 +7,11 @@ import CondsIcon from 'material-ui/svg-icons/maps/local-offer';
 import StimTargetIcon from 'material-ui/svg-icons/action/reorder';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Utils from '../../../Utils';
-import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import StimulationConditions from './StimulationConditions';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNEStimulationTarget extends React.Component {
@@ -120,8 +118,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
             />
           </NetPyNEField>
           
-          <NetPyNEField id="netParams.stimTargetParams.sec" className="listStyle">
-            <PythonControlledListComponent
+          <NetPyNEField id="netParams.stimTargetParams.sec">
+            <PythonControlledTextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
