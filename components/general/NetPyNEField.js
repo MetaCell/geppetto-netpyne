@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import MenuItem from 'material-ui/MenuItem';
 import Utils from '../../Utils';
 
 export default class NetPyNEField extends Component {
@@ -48,11 +49,11 @@ export default class NetPyNEField extends Component {
 
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
             extraProps['label'] = floatingLabelText;
-            
-            if (child.type.name!="Checkbox") {
-              extraProps['floatingLabelText'] = floatingLabelText;
+
+            if (child.type.name != "Checkbox") {
+                extraProps['floatingLabelText'] = floatingLabelText;
             }
-            
+
             var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
             if (dataSource != '') {
                 extraProps['dataSource'] = dataSource;
@@ -71,6 +72,17 @@ export default class NetPyNEField extends Component {
             var hintText = Utils.getMetadataField(this.props.id, "hintText");
             if (hintText != '') {
                 extraProps['hintText'] = hintText;
+            }
+
+            var options = Utils.getMetadataField(this.props.id, "options");
+            if (options) {
+                extraProps['children'] = options.map((name) => (
+                    <MenuItem
+                        key={name}
+                        value={name}
+                        primaryText={name}
+                    />
+                ));
             }
 
             return React.cloneElement(child, extraProps);
