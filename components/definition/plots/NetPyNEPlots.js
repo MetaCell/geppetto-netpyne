@@ -70,9 +70,9 @@ export default class NetPyNEPlots extends React.Component {
   };
 
   render() {
-    var Plots = [];
+    var plots = [];
     for (var c in this.state.value) {
-      Plots.push(<NetPyNEPlotThumbnail name={c} key={c} selected={c == this.state.selectedPlot} handleClick={this.selectPlot} />);
+      plots.push(<NetPyNEPlotThumbnail name={c} key={c} selected={c == this.state.selectedPlot} handleClick={this.selectPlot} />);
     };
     if (this.state.selectedPlot ) {
       var selectedPlot = <NetPyNEPlot name={this.state.selectedPlot} />;
@@ -92,7 +92,7 @@ export default class NetPyNEPlots extends React.Component {
             </IconMenu>
           </div>
           <div style={{ clear: "both" }}></div>
-          {Plots}
+          {plots}
         </div>
         <div className={"details"}>
           {selectedPlot}

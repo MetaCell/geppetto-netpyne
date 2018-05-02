@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../../general/List';
-import PyCheckBox from '../../../general/PyCheckBox';
 import NetPyNEField from '../../../general/NetPyNEField';
-import PySelectField from '../../../general/PySelectField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotRaster extends React.Component {
@@ -24,54 +26,43 @@ export default class PlotRaster extends React.Component {
   };
   
   render() {
-    var tags = "simConfig.analysis['plotRaster']"
-    var content = (
-      <div>
-        <NetPyNEField id="simConfig.analysis.plotRaster.include" className="listStyle" >
-          <PythonControlledListComponent model={tags + "['include']"} />
-        </NetPyNEField>
+    var tag = "simConfig.analysis['plotRaster']"
+    return <div>
+      <NetPyNEField id="simConfig.analysis.plotRaster.include" className="listStyle" >
+        <PythonControlledListComponent model={tag + "['include']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.timeRange" >
+        <PythonControlledTextField model={tag + "['timeRange']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.maxSpikes" >
+        <PythonControlledTextField model={tag + "['maxSpikes']"}/>
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.orderBy" className="listStyle" >
+        <PythonControlledSelectField model={tag+"['orderBy']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.popRates" className="listStyle" >
+        <PythonControlledSelectField model={tag+"['popRates']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.spikeHist" className="listStyle" >
+        <PythonControlledSelectField model={tag+"['spikeHist']"} />
+      </NetPyNEField>
         
-        <NetPyNEField id="simConfig.analysis.plotRaster.timeRange" >
-          <PythonControlledTextField model={tags + "['timeRange']"} />
-        </NetPyNEField>
-        
-        <NetPyNEField id="simConfig.analysis.plotRaster.maxSpikes" >
-          <PythonControlledTextField model={tags + "['maxSpikes']"}/>
-        </NetPyNEField>
-        
-        <PySelectField 
-          model={"simConfig.analysis['plotRaster']['orderBy']"}
-          meta={"simConfig.analysis.plotRaster.orderBy"}
-          items={["gid", "y", "ynorm"]}
-        />
-        
-        <PySelectField 
-          model={"simConfig.analysis['plotRaster']['popRates']"}
-          meta={"simConfig.analysis.plotRaster.popRates"}
-          items={["legend", "overlay"]}
-        />
-        
-        <PySelectField 
-          model={"simConfig.analysis['plotRaster']['spikeHist']"}
-          meta={"simConfig.analysis.plotRaster.spikeHist"}
-          items={["None", "overlay", "subplot"]}
-        />
-          
-        <NetPyNEField id="simConfig.analysis.plotRaster.spikeHistBin" >
-          <PythonControlledTextField model={tags + "['spikeHistBin']"}/>
-        </NetPyNEField>
-        
-        <PyCheckBox 
-          model={"simConfig.analysis['plotRaster']['orderInverse']"}
-          meta={"simConfig.analysis.plotRaster.orderInverse"}
-        />
-                
-        <PyCheckBox 
-          model={"simConfig.analysis['plotRaster']['syncLines']"}
-          meta={"simConfig.analysis.plotRaster.syncLines"}
-        />
-      </div>
-    );
-    return content;
+      <NetPyNEField id="simConfig.analysis.plotRaster.spikeHistBin" >
+        <PythonControlledTextField model={tag + "['spikeHistBin']"}/>
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.orderInverse" className={"netpyneCheckbox"} >
+          <PythonControlledCheckbox model={tag+"['orderInverse']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plotRaster.syncLines" className={"netpyneCheckbox"} >
+          <PythonControlledCheckbox model={tag+"['syncLines']"} />
+      </NetPyNEField>
+    </div>
   };
 };

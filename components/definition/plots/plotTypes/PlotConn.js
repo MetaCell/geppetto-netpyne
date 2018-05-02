@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
-import PySelectField from '../../../general/PySelectField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class plotConn extends React.Component {
@@ -15,32 +16,23 @@ export default class plotConn extends React.Component {
   };
   
   render() {
-    var tags = "simConfig.analysis['plotConn']"
-    var content = (
-      <div>
+    var tag = "simConfig.analysis['plotConn']"
+    return <div>
         <NetPyNEField id="simConfig.analysis.plotConn.include" className="listStyle" >
-          <PythonControlledListComponent model={tags + "['include']"} />
+          <PythonControlledListComponent model={tag + "['include']"} />
         </NetPyNEField>
         
-        <PySelectField 
-          model={"simConfig.analysis['plotConn']['feature']"}
-          meta={"simConfig.analysis.plotConn.feature"}
-          items={["weight", "delay", "numConns", "probability", "strength", "convergency", "divergency"]}
-        />
+        <NetPyNEField id="simConfig.analysis.plotConn.feature" className="listStyle" >
+          <PythonControlledSelectField model={tag+"['feature']"} />
+        </NetPyNEField>
         
-        <PySelectField 
-          model={"simConfig.analysis['plotConn']['groupBy']"}
-          meta={"simConfig.analysis.plotConn.groupBy"}
-          items={["pop", "cell"]}
-        />
+        <NetPyNEField id="simConfig.analysis.plotConn.groupBy" className="listStyle" >
+          <PythonControlledSelectField model={tag+"['groupBy']"} />
+        </NetPyNEField>
         
-        <PySelectField 
-          model={"simConfig.analysis['plotConn']['orderBy']"}
-          meta={"simConfig.analysis.plotConn.orderBy"}
-          items={["gid", "y", "ynorm"]}
-        />
+        <NetPyNEField id="simConfig.analysis.plotConn.orderBy" className="listStyle" >
+          <PythonControlledSelectField model={tag+"['orderBy']"} />
+        </NetPyNEField>
       </div>
-    );
-    return content;
   };
 };

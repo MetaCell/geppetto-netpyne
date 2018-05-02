@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../../general/List';
-import PyCheckBox from '../../../general/PyCheckBox';
 import NetPyNEField from '../../../general/NetPyNEField';
-import PySelectField from '../../../general/PySelectField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotTraces extends React.Component {
@@ -18,35 +20,27 @@ export default class PlotTraces extends React.Component {
   };
     
   render() {
-    var tags = "simConfig.analysis['plotTraces']"
-    var content = (
-      <div>
-        <NetPyNEField id="simConfig.analysis.plotTraces.include" className="listStyle" >
-          <PythonControlledListComponent model={tags + "['include']"} />
-        </NetPyNEField>
-        
-        <NetPyNEField id="simConfig.analysis.plotTraces.timeRange" >
-          <PythonControlledTextField model={tags + "['timeRange']"} />
-        </NetPyNEField>
-        
-        <PySelectField 
-          model="simConfig.analysis['plotTraces']['oneFigPer']"
-          meta="simConfig.analysis.plotTraces.oneFigPer"
-          items={["cell", "traces"]}
-        />
-        
-        <PyCheckBox 
-          model="simConfig.analysis['plotTraces']['overlay']"
-          meta="simConfig.analysis.plotTraces.overlay"
-        />
-        
-        <PyCheckBox 
-          model="simConfig.analysis['plotTraces']['rerun']"
-          meta="simConfig.analysis.plotTraces.rerun"
-        />
-      </div>
-    );
-    
-    return content;
+    var tag = "simConfig.analysis['plotTraces']"
+    return <div>
+      <NetPyNEField id="simConfig.analysis.plotTraces.include" className="listStyle" >
+        <PythonControlledListComponent model={tag + "['include']"} />
+      </NetPyNEField>
+
+      <NetPyNEField id="simConfig.analysis.plotTraces.timeRange" >
+        <PythonControlledTextField model={tag + "['timeRange']"} />
+      </NetPyNEField>
+
+      <NetPyNEField id="simConfig.analysis.plotTraces.oneFigPer" className="listStyle" >
+        <PythonControlledSelectField model={tag+"['oneFigPer']"} />
+      </NetPyNEField>
+
+      <NetPyNEField id="simConfig.analysis.plotTraces.overlay" className={"netpyneCheckbox"} >
+          <PythonControlledCheckbox model={tag+"['overlay']"} />
+      </NetPyNEField>
+
+      <NetPyNEField id="simConfig.analysis.plotTraces.rerun" className={"netpyneCheckbox"} >
+          <PythonControlledCheckbox model={tag+"['rerun']"} />
+      </NetPyNEField>
+    </div>
   };
 };

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import Checkbox from 'material-ui/Checkbox';
+import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../../general/List';
-import PyCheckBox from '../../../general/PyCheckBox';
 import NetPyNEField from '../../../general/NetPyNEField';
-import PySelectField from '../../../general/PySelectField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class Plot2Dnet extends React.Component {
@@ -16,25 +18,19 @@ export default class Plot2Dnet extends React.Component {
   };
   
   render() {
-    var tags = "simConfig.analysis['plot2Dnet']"
-    var content = (
-      <div>
-        <NetPyNEField id="simConfig.analysis.plot2Dnet.include" className="listStyle" >
-          <PythonControlledListComponent model={tags + "['include']"} />
-        </NetPyNEField>
-        
-        <PySelectField
-          model={"simConfig.analysis['plot2Dnet']['view']"}
-          meta={"simConfig.analysis.plot2Dnet.view"}
-          items={["xy", "xz"]}
-        />
-        
-        <PyCheckBox
-          model={"simConfig.analysis['plot2Dnet']['showConns']"}
-          meta={"simConfig.analysis.plot2Dnet.showConns"}
-        />
-      </div>
-    );
-    return content;
+    var tag = "simConfig.analysis['plot2Dnet']"
+    return <div>
+      <NetPyNEField id="simConfig.analysis.plot2Dnet.include" className="listStyle" >
+        <PythonControlledListComponent model={tag+"['include']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plot2Dnet.view" className="listStyle" >
+        <PythonControlledSelectField model={tag+"['view']"} />
+      </NetPyNEField>
+      
+      <NetPyNEField id="simConfig.analysis.plot2Dnet.showConns" className={"netpyneCheckbox"} >
+          <PythonControlledCheckbox model={tag+"['showConns']"} />
+      </NetPyNEField>
+    </div>
   };
 };
