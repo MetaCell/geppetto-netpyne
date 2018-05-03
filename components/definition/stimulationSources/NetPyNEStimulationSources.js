@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationSource from './NetPyNEStimulationSource';
-import NetPyNENewStimulationSource from './NetPyNENewStimulationSource';
-import NetPyNEStimulationThumbnail from './NetPyNEStimulationThumbnail';
 
 export default class NetPyNEStimulationSources extends React.Component {
 
@@ -21,7 +21,8 @@ export default class NetPyNEStimulationSources extends React.Component {
     this.setState({ selectedStimulationSource: StimulationSource });
   };
 
-  handleNewStimulationSource(defaultStimulationSources) {
+  handleNewStimulationSource() {
+    var defaultStimulationSources = { 'Source': { 'type': '', 'del': 0, 'dur': 0, 'amp': ''}};
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
     var model = this.state.value;
@@ -77,7 +78,7 @@ export default class NetPyNEStimulationSources extends React.Component {
     var model = this.state.value;
     var StimulationSources = [];
     for (var c in model) {
-      StimulationSources.push(<NetPyNEStimulationThumbnail name={c} key={c} selected={c == this.state.selectedStimulationSource} handleClick={this.selectStimulationSource} />);
+      StimulationSources.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationSource} handleClick={this.selectStimulationSource} />);
     };
     
     var selectedStimulationSource = undefined;
@@ -94,7 +95,7 @@ export default class NetPyNEStimulationSources extends React.Component {
           <div className="breadcrumb">
             <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
               iconButtonElement={
-                <NetPyNENewStimulationSource handleClick={this.handleNewStimulationSource} />
+                <NetPyNEAddNew id={"newStimulationSourceButton"} handleClick={this.handleNewStimulationSource} />
               }
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}

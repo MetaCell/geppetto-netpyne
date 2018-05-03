@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
-const styles = {
-  addButton: {
-    margin: 10,
-    float: 'left'
-  }
-};
-
-export default class NetPyNENewStimulationSource extends React.Component {
+export default class NetPyNEAddNew extends React.Component {
 
   constructor(props) {
     super(props);
@@ -20,18 +13,15 @@ export default class NetPyNENewStimulationSource extends React.Component {
 
   handleClick() {
     if (this.props.handleClick) {
-      this.props.handleClick({ 'Source': {
-        'type': '', 'del': 0, 'dur': 0, 'amp': ''}});
+      this.props.handleClick();
     };
   };
 
   render() {
-    var content = (
-      <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
+    return (
+      <FloatingActionButton id={this.props.id} mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
     );
-    
-    return content;
   };
 };

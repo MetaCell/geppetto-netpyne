@@ -3,8 +3,8 @@ import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
-import NetPyNENewSynapse from './NetPyNENewSynapse';
-import NetPyNESynapseThumbnail from './NetPyNESynapseThumbnail';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 
 export default class NetPyNESynapses extends React.Component {
 
@@ -21,7 +21,8 @@ export default class NetPyNESynapses extends React.Component {
     this.setState({ selectedSynapse: Synapse });
   };
 
-  handleNewSynapse(defaultSynapses) {
+  handleNewSynapse() {
+    var defaultSynapses = {'Synapse': {'mod': '', 'tau1': 0, 'tau2': 0, 'e': 0}};
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
     var model = this.state.value;
@@ -77,7 +78,7 @@ export default class NetPyNESynapses extends React.Component {
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
-      Synapses.push(<NetPyNESynapseThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
+      Synapses.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
     if (this.state.selectedSynapse && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
@@ -101,7 +102,7 @@ export default class NetPyNESynapses extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewSynapse handleClick={this.handleNewSynapse} />
+                  <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
