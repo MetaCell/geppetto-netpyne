@@ -7,8 +7,8 @@ import NetPyNEPopulations from './components/definition/populations/NetPyNEPopul
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
 import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
-import NetPyNEStimulationSources from './components/definition/stimulation/NetPyNEStimulationSources';
-import NetPyNEStimulationTargets from './components/definition/stimulation/NetPyNEStimulationTargets';
+import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';

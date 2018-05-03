@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const styles = {
   addButton: {
@@ -15,29 +15,26 @@ export default class NetPyNENewStimulationSource extends React.Component {
     super(props);
     this.state = {
     };
-
     this.handleClick = this.handleClick.bind(this);
-
-  }
+  };
 
   handleClick() {
-    if (this.props.handleClick) {
-      this.props.handleClick({ 'Target': {
-          'source': '',
-          'sec':'',
-          'loc': 0,
-          'conds': {'pop':''}}});
-    }
-  }
+  if (this.props.handleClick) {
+    this.props.handleClick({ 'Target': {
+      'source': '',
+      'sec':'',
+      'loc': 0,
+      'conds': {'pop':''}}});
+    };
+  };
 
   render() {
-    return (
-
+    var content = (
       <FloatingActionButton mini={true} style={styles.addButton} onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
-
-
     );
-  }
-}
+    
+    return content;
+  };
+};
