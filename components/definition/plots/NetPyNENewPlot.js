@@ -49,16 +49,16 @@ export default class NetPyNENewPlot extends React.Component {
         onRequestClose={this.handleRequestClose}
       >
         <Menu onChange={this.handleClick}>
-          <MenuItem key={"plotRaster"} value={"plotRaster"} primaryText={"plotRaster"}/>
-          <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"} primaryText={"plotSpikeHist"}/>
-          <MenuItem key={"plotSpikeStats"} value={"plotSpikeStats"} primaryText={"plotSpikeStats"}/>
-          <MenuItem key={"plotRatePSD"} value={"plotRatePSD"} primaryText={"plotRatePSD"}/>
-          <MenuItem key={"plotTraces"} value={"plotTraces"} primaryText={"plotTraces"}/>
-          <MenuItem key={"plotLFP"} value={"plotLFP"} primaryText={"plotLFP"}/>
-          <MenuItem key={"plotShape"} value={"plotShape"} primaryText={"plotShape"}/>
-          <MenuItem key={"plot2Dnet"} value={"plot2Dnet"} primaryText={"plot2Dnet"}/>
-          <MenuItem key={"plotConn"} value={"plotConn"} primaryText={"plotConn"}/>
-          <MenuItem key={"granger"} value={"granger"} primaryText={"granger"}/>
+          <MenuItem key={"plotRaster"} value={"plotRaster"} primaryText={"Raster Plot"}/>
+          <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"} primaryText={"Spike Histogram Plot"}/>
+          <MenuItem key={"plotSpikeStats"} value={"plotSpikeStats"} primaryText={"Spike Stats Plot"}/>
+          <MenuItem key={"plotRatePSD"} value={"plotRatePSD"} primaryText={"PSD Rate Plot"}/>
+          <MenuItem key={"plotTraces"} value={"plotTraces"} primaryText={"Traces Plot"}/>
+          <MenuItem key={"plotLFP"} value={"plotLFP"} primaryText={"LFP Plot"}/>
+          <MenuItem key={"plotShape"} value={"plotShape"} primaryText={"3D Cell Shape Plot"}/>
+          <MenuItem key={"plot2Dnet"} value={"plot2Dnet"} primaryText={"2D Network Plot"}/>
+          <MenuItem key={"plotConn"} value={"plotConn"} primaryText={"Network Connectivity Plot"}/>
+          <MenuItem key={"granger"} value={"granger"} primaryText={"Granger Causality Plot"}/>
         </Menu>
       </Popover>
     </div>
