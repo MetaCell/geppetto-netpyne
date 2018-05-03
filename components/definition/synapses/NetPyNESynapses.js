@@ -102,7 +102,7 @@ export default class NetPyNESynapses extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNEAddNew handleClick={this.handleNewSynapse} />
+                  <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
