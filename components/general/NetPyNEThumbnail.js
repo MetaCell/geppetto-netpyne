@@ -15,12 +15,11 @@ export default class NetPyNEThumbnail extends React.Component {
   };
 
   render() {
-    var content = (
+    return (
       <FloatingActionButton id={this.props.name} className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} onClick={this.handleClick}>
         {this.props.name}
       </FloatingActionButton>
     );
     
-    return content;
   };
 };

@@ -1,14 +1,10 @@
-
 import React, { Component } from 'react';
+import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+import Utils from '../../../Utils';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Utils from '../../../Utils';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 
 export default class NetPyNEPopulations extends React.Component {
 

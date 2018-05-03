@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
-import NetPyNEStimulationThumbnail from '../stimulationSources/NetPyNEStimulationThumbnail';
-import NetPyNENewStimulationTarget from './NetPyNENewStimulationTarget';
 
 export default class NetPyNEStimulationTargets extends React.Component {
 
@@ -21,7 +21,8 @@ export default class NetPyNEStimulationTargets extends React.Component {
     this.setState({ selectedStimulationTarget: StimulationTarget });
   };
 
-  handleNewStimulationTarget(defaultStimulationTargets) {
+  handleNewStimulationTarget() {
+    var defaultStimulationTargets = { 'Target': {'source': '', 'sec':'', 'loc': 0, 'conds': {'pop':''}}};
     var key = Object.keys(defaultStimulationTargets)[0];
     var value = defaultStimulationTargets[key];
     var model = this.state.value;
@@ -77,7 +78,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var model = this.state.value;
     var StimulationTargets = [];
     for (var c in model) {
-      StimulationTargets.push(<NetPyNEStimulationThumbnail name={c} key={c} selected={c == this.state.selectedStimulationTarget} handleClick={this.selectStimulationTarget} />);
+      StimulationTargets.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationTarget} handleClick={this.selectStimulationTarget} />);
     };
     var selectedStimulationTarget = undefined;
     if (this.state.selectedStimulationTarget && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
@@ -93,7 +94,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
           <div className="breadcrumb">
             <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
               iconButtonElement={
-                <NetPyNENewStimulationTarget name={selectedStimulationTarget} handleClick={this.handleNewStimulationTarget} />
+                <NetPyNEAddNew name={selectedStimulationTarget} handleClick={this.handleNewStimulationTarget} />
               }
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}
