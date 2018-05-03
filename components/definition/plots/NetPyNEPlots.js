@@ -2,7 +2,16 @@ import React, { Component } from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
-import NetPyNEPlot from './NetPyNEPlot';
+import PlotLFP from './plotTypes/PlotLFP';
+import PlotConn from './plotTypes/PlotConn';
+import PlotShape from './plotTypes/PlotShape';
+import Plot2Dnet from './plotTypes/Plot2Dnet';
+import PlotRaster from './plotTypes/PlotRaster';
+import PlotTraces from './plotTypes/PlotTraces';
+import PlotGranger from './plotTypes/PlotGranger';
+import PlotRatePSD from './plotTypes/PlotRatePSD';
+import PlotSpikeHist from './plotTypes/PlotSpikeHist';
+import PlotSpikeStats from './plotTypes/PlotSpikeStats';
 import NetPyNENewPlot from './NetPyNENewPlot';
 import NetPyNEPlotThumbnail from './NetPyNEPlotThumbnail';
 
@@ -22,28 +31,28 @@ export default class NetPyNEPlots extends React.Component {
   };
 
   handleNewPlot(plot) {
-    if (this.state.value!=undefined) {
-        var model = this.state.value;
-        model[plot] = true;
+    if (this.state.value != undefined) {
+      var model = this.state.value;
+      model[plot] = true;
     } else {
-        var model = {plot : true}
+      var model = { plot: true }
     };
     Utils
       .sendPythonMessage("netpyne_geppetto.getAvailablePlots", [])
       .then((response) => {
         if (response.includes(plot)) {
-          if (plot=="plotLFP") {
+          if (plot == "plotLFP") {
             var include = {
               'electrodes': ['all']
             }
-          } else if (plot=="plotShape") {
+          } else if (plot == "plotShape") {
             var include = {
-              'includePre': ['all'], 
+              'includePre': ['all'],
               'includePost': ['all']
             }
-          } else if (plot=="granger") {
+          } else if (plot == "granger") {
             var include = {
-              'cells1': ['all'], 
+              'cells1': ['all'],
               'cells2': ['all']
             }
           } else {
@@ -51,7 +60,7 @@ export default class NetPyNEPlots extends React.Component {
               'include': ['all']
             }
           };
-          Utils.execPythonCommand("netpyne_geppetto.simConfig.analysis['" + plot + "'] = "+JSON.stringify(include));
+          Utils.execPythonCommand("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
         }
       });
     this.setState({
@@ -59,11 +68,11 @@ export default class NetPyNEPlots extends React.Component {
       selectedPlot: plot
     });
   };
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
-    if (this.state.value!=undefined) {
+    if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
     return newItemCreated || selectionChanged;
@@ -74,31 +83,40 @@ export default class NetPyNEPlots extends React.Component {
     for (var c in this.state.value) {
       plots.push(<NetPyNEPlotThumbnail name={c} key={c} selected={c == this.state.selectedPlot} handleClick={this.selectPlot} />);
     };
-    if (this.state.selectedPlot ) {
-      var selectedPlot = <NetPyNEPlot name={this.state.selectedPlot} />;
+
+    switch (this.state.selectedPlot) {
+      case "plotRaster":
+          var selectedPlot = <PlotRaster />
+          break;
+      case "plotSpikeHist":
+          var selectedPlot = <PlotSpikeHist />
+          break;
+      case "plotSpikeStats":
+          var selectedPlot = <PlotSpikeStats />
+          break;
+      case "plotRatePSD":
+          var selectedPlot = <PlotRatePSD />
+          break;
+      case "plotTraces":
+          var selectedPlot = <PlotTraces />
+          break;
+      case "plotLFP":
+          var selectedPlot = <PlotLFP />
+          break;
+      case "plotShape":
+          var selectedPlot = <PlotShape />
+          break;
+      case "plotConn":
+          var selectedPlot = <PlotConn />
+          break;
+      case "plot2Dnet":
+          var selectedPlot = <Plot2Dnet />
+          break;
+      case "granger":
+          var selectedPlot = <PlotGranger />
+          break;
     };
-    
-    var content = (
-      <CardText className={"tabContainer"} expandable={true}>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
-            <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-              iconButtonElement={
-                <NetPyNENewPlot handleClick={this.handleNewPlot} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
-          </div>
-          <div style={{ clear: "both" }}></div>
-          {plots}
-        </div>
-        <div className={"details"}>
-          {selectedPlot}
-        </div>
-      </CardText>);
-      
+
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
@@ -108,7 +126,25 @@ export default class NetPyNEPlots extends React.Component {
           showExpandableButton={true}
           id="Plots"
         />
-        {content}
+        <CardText className={"tabContainer"} expandable={true}>
+          <div className={"thumbnails"}>
+            <div className="breadcrumb">
+              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
+                iconButtonElement={
+                  <NetPyNENewPlot handleClick={this.handleNewPlot} />
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+              </IconMenu>
+            </div>
+            <div style={{ clear: "both" }}></div>
+            {plots}
+          </div>
+          <div className={"details"}>
+            {selectedPlot}
+          </div>
+        </CardText>
       </Card>
     );
   };
