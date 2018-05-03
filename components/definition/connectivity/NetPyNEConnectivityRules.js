@@ -140,7 +140,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNEAddNew handleClick={this.handleNewConnectivityRule} />
+                  <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
