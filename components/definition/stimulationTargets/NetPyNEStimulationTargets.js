@@ -94,7 +94,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
           <div className="breadcrumb">
             <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
               iconButtonElement={
-                <NetPyNEAddNew name={selectedStimulationTarget} handleClick={this.handleNewStimulationTarget} />
+                <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
               }
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}
