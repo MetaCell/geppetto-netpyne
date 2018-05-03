@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 import Checkbox from 'material-ui/Checkbox';
+import TextField from 'material-ui/TextField';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import FontIcon from 'material-ui/FontIcon';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
-import Utils from '../../../Utils';
+
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
@@ -25,13 +21,13 @@ export default class NetPyNESimConfig extends React.Component {
       selectedIndex: 0,
       sectionId: "General"
     };
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       model: nextProps.model
     });
-  }
+  };
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
@@ -39,32 +35,48 @@ export default class NetPyNESimConfig extends React.Component {
     var content;
     if (this.state.sectionId == 'General') {
       content =
-        <div>
-          <NetPyNEField id="simConfig.seeds" >
-            <PythonControlledTextField model={"simConfig.seeds"} />
-          </NetPyNEField>
+        <div style={{ float: 'left', width: '100%' }}>
+          <div style={{ float: 'left', width: '45%' }}>
+            <NetPyNEField id="simConfig.seeds" >
+              <PythonControlledTextField model={"simConfig.seeds"} />
+            </NetPyNEField>
 
-          <NetPyNEField id="simConfig.addSynMechs" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.addSynMechs"} />
-          </NetPyNEField>
+            <NetPyNEField id="simConfig.duration" >
+              <PythonControlledTextField model={"simConfig.duration"} />
+            </NetPyNEField>
 
-          <NetPyNEField id="simConfig.includeParamsLabel" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.includeParamsLabel"} />
-          </NetPyNEField>
+            <NetPyNEField id="simConfig.hParams" >
+              <PythonControlledTextField model={"simConfig.hParams"} />
+            </NetPyNEField>
 
-          <NetPyNEField id="simConfig.timing" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.timing"} />
-          </NetPyNEField>
+            <NetPyNEField id="simConfig.dt" >
+              <PythonControlledTextField model={"simConfig.dt"} />
+            </NetPyNEField>
+          </div>
 
-          <NetPyNEField id="simConfig.verbose" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.verbose"} />
-          </NetPyNEField>
+          <div style={{ float: 'right', width: '45%', marginTop:50}}>
+            <NetPyNEField id="simConfig.addSynMechs" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.addSynMechs"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.includeParamsLabel" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.includeParamsLabel"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.timing" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.timing"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.verbose" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.verbose"} />
+            </NetPyNEField>
+          </div>
         </div>
     }
     else if (this.state.sectionId == 'SaveConfiguration') {
       content =
         <div style={{ float: 'left', width: '100%' }}>
-          <div style={{ float: 'left', width: '50%' }}>
+          <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.simLabel" >
               <PythonControlledTextField model={"simConfig.simLabel"} />
             </NetPyNEField>
@@ -84,10 +96,6 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledListComponent model={"simConfig.saveDataInclude"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.timestampFilename" className={"netpyneCheckbox"} >
-              <PythonControlledCheckbox model={"simConfig.timestampFilename"} />
-            </NetPyNEField>
-
             <NetPyNEField id="simConfig.backupCfgFile" >
               <PythonControlledTextField model={"simConfig.backupCfgFile"} />
             </NetPyNEField>
@@ -99,8 +107,13 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.saveCellConns" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveCellConns"} />
             </NetPyNEField>
+
+            <NetPyNEField id="simConfig.timestampFilename" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.timestampFilename"} />
+            </NetPyNEField>
           </div>
-          <div style={{ float: 'right', width: '50%' }}>
+
+          <div style={{ float: 'right', width: '45%', marginTop:50, marginLeft:50}}>
             <NetPyNEField id="simConfig.savePickle" className={"netpyneCheckbox"}>
               <PythonControlledCheckbox model={"simConfig.savePickle"} />
             </NetPyNEField>
@@ -128,32 +141,108 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.saveCSV" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveCSV"} />
             </NetPyNEField>
+
+            <NetPyNEField id="simConfig.saveTiming" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.saveTiming"} />
+            </NetPyNEField>
           </div>
         </div>
-    }
-    else if (this.state.sectionId == 'ErrorChecking') {
+    } else if (this.state.sectionId == 'Record') {
+      content = 
+        <div style={{ float: 'left', width: '100%' }}>
+          <div style={{ float: 'left', width: '45%' }}>
+            <NetPyNEField id="simConfig.recordCells" className={"listStyle"} >
+              <PythonControlledListComponent model={"simConfig.recordCells"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
+              <PythonControlledListComponent model={"simConfig.recordLFP"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.saveLFPCells" className={"netpyneCheckbox"} style={{marginTop: 25}}>
+              <PythonControlledCheckbox model={"simConfig.saveLFPCells"} />
+            </NetPyNEField>
+          </div>
+
+          <div style={{ float: 'right', width: '45%'}}>
+            <NetPyNEField id="simConfig.recordTraces" >
+              <PythonControlledTextField model={"simConfig.recordTraces"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.recordStep" >
+              <PythonControlledTextField model={"simConfig.recordStep"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.recordStim" className={"netpyneCheckbox"} style={{marginTop: 25}}>
+              <PythonControlledCheckbox model={"simConfig.recordStim"} />
+            </NetPyNEField>
+          </div>
+        </div >
+    } else if (this.state.sectionId == 'ErrorChecking') {
       content =
-        <div>
+      <div style={{ float: 'left', width: '100%' }}>
+        <div style={{ float: 'left', width: '45%' }}>
           <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
             <PythonControlledCheckbox model={"simConfig.checkErrors"} />
           </NetPyNEField>
+        </div >
+        <div style={{ float: 'right', width: '45%'}}>
           <NetPyNEField id="simConfig.checkErrorsVerbose" className={"netpyneCheckbox"} >
             <PythonControlledCheckbox model={"simConfig.checkErrorsVerbose"} />
           </NetPyNEField>
         </div>
+      </div >
     }
     else if (this.state.sectionId == 'Others') {
       content =
         <div>
-          <NetPyNEField id="simConfig.duration" >
-            <PythonControlledTextField model={"simConfig.duration"} />
+          <NetPyNEField id="simConfig.printRunTime"  >
+            <PythonControlledTextField model={"simConfig.printRunTime"} />
           </NetPyNEField>
 
-          <NetPyNEField id="simConfig.dt" >
-            <PythonControlledTextField model={"simConfig.dt"} />
-          </NetPyNEField>
-        </div >
-    }
+          <div style={{ float: 'left', width: '100%' }}>
+            <div style={{ float: 'left', width: '45%', marginTop:50}}>  
+              <NetPyNEField id="simConfig.compactConnFormat" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.compactConnFormat"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.connRandomSecFromList" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.connRandomSecFromList"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.printPopAvgRates" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.printPopAvgRates"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.printSynsAfterRule" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.printSynsAfterRule"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.gatherOnlySimData" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.gatherOnlySimData"} />
+              </NetPyNEField>
+            </div>
+
+            <div style={{ float: 'right', width: '45%', marginTop:50}}>  
+              <NetPyNEField id="simConfig.cache_efficient" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.cache_efficient"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.cvode_active" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.cvode_active"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.createNEURONObj" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.createNEURONObj"} />
+              </NetPyNEField>
+
+              <NetPyNEField id="simConfig.createPyStruct" className={"netpyneCheckbox"} >
+                <PythonControlledCheckbox model={"simConfig.createPyStruct"} />
+              </NetPyNEField>
+            </div>
+          </div>
+        </div>
+    };
 
     return (
       <Card style={{ clear: 'both' }}>
@@ -169,9 +258,10 @@ export default class NetPyNESimConfig extends React.Component {
           <div>
             <BottomNavigation selectedIndex={this.state.selectedIndex}>
               <BottomNavigationItem key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
-              <BottomNavigationItem key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(1, 'SaveConfiguration')} />
-              <BottomNavigationItem key={'ErrorChecking'} label={'Error Checking'} icon={<FontIcon className={"fa fa-exclamation"} />} onClick={() => this.select(2, 'ErrorChecking')} />
-              <BottomNavigationItem key={'Others'} label={'Others'} icon={<FontIcon className={"fa fa-list"} />} onClick={() => this.select(3, 'Others')} />
+              <BottomNavigationItem key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
+              <BottomNavigationItem key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
+              <BottomNavigationItem key={'ErrorChecking'} label={'Error Checking'} icon={<FontIcon className={"fa fa-exclamation"} />} onClick={() => this.select(3, 'ErrorChecking')} />
+              <BottomNavigationItem key={'Others'} label={'Others'} icon={<FontIcon className={"fa fa-list"} />} onClick={() => this.select(4, 'Others')} />
             </BottomNavigation>
             <br />
             {content}
@@ -179,5 +269,5 @@ export default class NetPyNESimConfig extends React.Component {
         </CardText >
       </Card >
     );
-  }
-}
+  };
+};
