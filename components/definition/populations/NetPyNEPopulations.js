@@ -1,14 +1,10 @@
-
 import React, { Component } from 'react';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import NetPyNEPopulationThumbnail from './NetPyNEPopulationThumbnail';
-import NetPyNEPopulation from './NetPyNEPopulation';
-import NetPyNENewPopulation from './NetPyNENewPopulation';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
+import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEPopulation from './NetPyNEPopulation';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -69,7 +65,8 @@ export default class NetPyNEPopulations extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged;
   }
 
-  handleNewPopulation(defaultPopulationValues) {
+  handleNewPopulation() {
+    var defaultPopulationValues = { 'Population': { 'cellModel': '', 'cellType': '' } }
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
@@ -106,7 +103,7 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var populations = [];
       for (var key in model) {
-        populations.push(<NetPyNEPopulationThumbnail name={key} key={key} selected={key == this.state.selectedPopulation} handleClick={this.selectPopulation} />);
+        populations.push(<NetPyNEThumbnail name={key} key={key} selected={key == this.state.selectedPopulation} handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
       if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
@@ -131,7 +128,7 @@ export default class NetPyNEPopulations extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewPopulation handleClick={this.handleNewPopulation} />
+                  <NetPyNEAddNew id={"NetPyNEPopulation"} handleClick={this.handleNewPopulation} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
