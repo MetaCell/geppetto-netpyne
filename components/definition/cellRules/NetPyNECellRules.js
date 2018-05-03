@@ -9,9 +9,9 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import NetPyNECellRuleThumbnail from './NetPyNECellRuleThumbnail';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNECellRule from './NetPyNECellRule';
-import NetPyNENewCellRule from './NetPyNENewCellRule';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 
 import NetPyNESection from './sections/NetPyNESection';
 import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
@@ -57,7 +57,8 @@ export default class NetPyNECellRules extends React.Component {
     this.setState({ selectedCellRule: cellRule });
   }
 
-  handleNewCellRule(defaultCellRules) {
+  handleNewCellRule() {
+    var defaultCellRules = { 'CellRule': {'conds':{}, 'secs':{}} }
     // Get Key and Value
     var key = Object.keys(defaultCellRules)[0];
     var value = defaultCellRules[key];
@@ -263,7 +264,7 @@ export default class NetPyNECellRules extends React.Component {
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
-        cellRules.push(<NetPyNECellRuleThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
+        cellRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
@@ -279,7 +280,7 @@ export default class NetPyNECellRules extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewCellRule handleClick={this.handleNewCellRule} />
+                  <NetPyNEAddNew id={"newCellRuleButton"} handleClick={this.handleNewCellRule} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}

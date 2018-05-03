@@ -8,9 +8,9 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import NetPyNEConnectivityRuleThumbnail from './NetPyNEConnectivityRuleThumbnail';
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
-import NetPyNENewConnectivityRule from './NetPyNENewConnectivityRule';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 
 import Utils from '../../../Utils';
 
@@ -42,7 +42,18 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.setState({ selectedConnectivityRule: connectivityRule });
   }
 
-  handleNewConnectivityRule(defaultConnectivityRules) {
+  handleNewConnectivityRule() {
+    var defaultConnectivityRules = { 
+      'ConnectivityRule': {
+        'preConds': {},
+        'postConds': {},
+        'synMech': [],  
+        'synsPerConn': 0,
+        'weight': 0,
+        'delay': [],  
+        'loc': []
+      }
+    };
     // Get Key and Value
     var key = Object.keys(defaultConnectivityRules)[0];
     var value = defaultConnectivityRules[key];
@@ -115,7 +126,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
       var ConnectivityRules = [];
       for (var c in model) {
-        ConnectivityRules.push(<NetPyNEConnectivityRuleThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
+        ConnectivityRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
       if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
@@ -129,7 +140,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
             <div className="breadcrumb">
               <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewConnectivityRule handleClick={this.handleNewConnectivityRule} />
+                  <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}
