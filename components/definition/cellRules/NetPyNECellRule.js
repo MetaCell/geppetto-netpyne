@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import IconMenu from 'material-ui/IconMenu';
+import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
-import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
+import ImportCellParams from './ImportCellParams';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNECellRule extends React.Component {
 
   constructor(props) {
     super(props);
-    var _this = this;
     this.state = {
-      currentName: props.name
+      currentName: props.name,
+      importCellOpen: false
     };
-  }
+    this.closeImportCell = this.closeImportCell.bind(this);
+    this.openImportCell = this.openImportCell.bind(this);
+  };
 
   handleRenameChange = (event) => {
     var that = this;
@@ -48,7 +47,27 @@ export default class NetPyNECellRule extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ currentName: nextProps.name});
   }
-
+  
+  closeImportCell = () => {
+    this.setState({ importCellOpen: false });
+  };
+  
+  openImportCell = () => {
+    this.setState({ importCellOpen: true });
+  };
+  
+  postProcessMenuItems(pythonData, selected) {
+    return pythonData.map((name) => (
+      <MenuItem
+        key={name}
+        insetChildren={true}
+        checked={selected.indexOf(name) > -1}
+        value={name}
+        primaryText={name}
+      />
+    ));
+  };
+  
   render() {
     var that = this;
     var content = (<div>
@@ -63,17 +82,32 @@ export default class NetPyNECellRule extends React.Component {
       />
 
       <br/>
-
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField 
-        	model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} 
-        	id="cellRuleCellModel"/>
+      
+      <NetPyNEField id={"netParams.cellParams.conds.pop"} >
+        <PythonMethodControlledSelectField
+          model={"netParams.cellParams['" + this.props.name + "']['conds']['pop']"}
+          method={"netpyne_geppetto.getAvailablePops"}
+          postProcessItems={this.postProcessMenuItems}
+          multiple={true}
+        />
       </NetPyNEField>
-
-      <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField 
-        	model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} 
-        	id="cellRuleCellType"/>
+      
+      <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
+        <PythonMethodControlledSelectField
+          model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"}
+          method={"netpyne_geppetto.getAvailableCellTypes"}
+          postProcessItems={this.postProcessMenuItems}
+          multiple={true}
+        />
+      </NetPyNEField>
+            
+      <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
+        <PythonMethodControlledSelectField
+          model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"}
+          method={"netpyne_geppetto.getAvailableCellModels"}
+          postProcessItems={this.postProcessMenuItems}
+          multiple={true}
+        />
       </NetPyNEField>
       <br /><br />
 
@@ -83,6 +117,20 @@ export default class NetPyNECellRule extends React.Component {
         primary={true}
         onClick={() => that.props.selectPage("sections")}
       />
+      
+      <RaisedButton
+        style={{marginLeft:40}}
+        label="Import template"
+        labelPosition="before"
+        primary={true}
+        onClick={this.openImportCell}
+      />
+      
+      <ImportCellParams 
+        name={this.props.name}
+        open={this.state.importCellOpen} 
+        onRequestClose={this.closeImportCell}
+      />
     </div>);
 
     return (
@@ -90,5 +138,5 @@ export default class NetPyNECellRule extends React.Component {
         {content}
       </div>
     );
-  }
-}
+  };
+};
