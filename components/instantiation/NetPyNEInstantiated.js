@@ -102,6 +102,7 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     componentDidMount() {
+        this.refs.canvas.engine.setLinesThreshold(20000);
         this.refs.canvas.displayAllInstances();
     }
 
