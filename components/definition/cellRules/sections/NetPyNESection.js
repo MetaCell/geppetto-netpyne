@@ -133,10 +133,6 @@ export default class NetPyNESection extends React.Component {
           model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} />
       </div>)
     }
-    else if (this.state.sectionId == "Ions") {
-      content = (<div>TBD</div>
-      )
-    }
 
 
     // Generate Menu
@@ -145,8 +141,7 @@ export default class NetPyNESection extends React.Component {
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometries', 'Geometries', 'fa-cube'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Ions', 'Ions', 'fa-dot-circle-o'));
-
+    
     return (
       <div>
 

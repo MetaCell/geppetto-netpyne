@@ -1,38 +1,72 @@
 import React, { Component } from 'react';
-import IconButton from 'material-ui/IconButton';
+import Menu from 'material-ui/Menu';
+import Popover from 'material-ui/Popover';
+import MenuItem from 'material-ui/MenuItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import FontIcon from 'material-ui/FontIcon';
-
-const hoverColor = '#66d2e2';
-const changeColor = 'rgb(0, 188, 212)';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Utils from '../../../../../Utils';
 
 export default class NetPyNENewMechanism extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
+      mechanisms: []
     };
-
     this.handleClick = this.handleClick.bind(this);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
+  };
+  
+  componentDidMount() {
+    var menuItems = []
+    Utils
+      .sendPythonMessage("netpyne_geppetto.getAvailableMechs", [])
+      .then((response) => {
+        response.forEach((item) => 
+          menuItems.push(<MenuItem key={item} value={item} primaryText={item}/>)
+        )
+        this.setState({mechanisms: menuItems})
+      })
+  };
+  
+  handleButtonClick = (event) => {
+    // This prevents ghost click.
+    event.preventDefault();
+    this.setState({
+      open: true,
+      anchorEl: event.currentTarget,
+    });
+  };
 
-  }
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+  
+  handleClick(event, value) {
+    this.handleRequestClose();
+    this.props.handleClick(value);
+  };
 
-  handleClick() {
-    if (this.props.handleClick) {
-      this.props.handleClick({ 'Mechanism': { 'gnabar': {}, 'gkbar': {} } });
-    }
-  }
-
+  
   render() {
-    return (
-      <IconButton
-        iconStyle={{ width: 44, height: 44 }}
-        className={"gearAddButton"}
-        onClick={this.handleClick}
-      >
-        <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
+    return <div>
+      <FloatingActionButton mini={true} style={{ margin: 10, float: 'left'}} onClick={this.handleButtonClick}>
         <ContentAdd />
-      </IconButton>
-    );
-  }
-}
+      </FloatingActionButton>
+      <Popover
+        open={this.state.open}
+        anchorEl={this.state.anchorEl}
+        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+        targetOrigin={{horizontal: 'left', vertical: 'top'}}
+        onRequestClose={this.handleRequestClose}
+      >
+        <Menu onChange={this.handleClick}>
+          {this.state.mechanisms}
+        </Menu>
+      </Popover>
+    </div>
+  };
+};
