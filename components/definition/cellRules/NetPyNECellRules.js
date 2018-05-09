@@ -1,25 +1,17 @@
-
 import React, { Component } from 'react';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+import RaisedButton from 'material-ui/RaisedButton';
+import Card, { CardHeader, CardText } from 'material-ui/Card';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NetPyNECellRule from './NetPyNECellRule';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-
+import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNESection from './sections/NetPyNESection';
-import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNENewSection from './sections/NetPyNENewSection';
-
+import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
-import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
+import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 
 import Utils from '../../../Utils';
 
@@ -30,7 +22,7 @@ export default class NetPyNECellRules extends React.Component {
     this.state = {
       drawerOpen: false,
       selectedCellRule: undefined,
-      page: "main"
+      page: "main",
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -45,9 +37,6 @@ export default class NetPyNECellRules extends React.Component {
     this.selectMechanism = this.selectMechanism.bind(this);
     this.handleNewMechanism = this.handleNewMechanism.bind(this);
   }
-
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
-
 
   selectPage(page) {
     this.setState({ page: page });
@@ -108,28 +97,28 @@ export default class NetPyNECellRules extends React.Component {
     this.setState({ selectedMechanism: mechanism });
   }
 
-  handleNewMechanism(defaultMechanismValues) {
+  handleNewMechanism(mechanism) {  
     // Get Key and Value
-    var key = Object.keys(defaultMechanismValues)[0];
-    var value = defaultMechanismValues[key];
     var model = this.state.value;
     var selectedCellRule = this.state.selectedCellRule;
     var selectedSection = this.state.selectedSection;
-
-    // Get New Available ID
-    var mechanismId = Utils.getAvailableKey(model[selectedCellRule].secs[selectedSection]['mechs'], key);
 
     // Create Mechanism Client side
     if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
       Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
-    }
-    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanismId + '"] = ' + JSON.stringify(value));
-
+    };
+    var params = {};
+    Utils
+      .sendPythonMessage("netpyne_geppetto.getMechParams", [mechanism])
+      .then((response) => {
+        response.forEach((param) => params[param] = 0);
+        Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanism + '"] = ' + JSON.stringify(params));
+      })
     // Update state
     this.setState({
       value: model,
-      selectedMechanism: mechanismId
+      selectedMechanism: mechanism
     });
   }
 
