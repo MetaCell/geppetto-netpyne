@@ -13,38 +13,36 @@ export default class NetPyNEMechanism extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMech: props.name,
+      currentName: props.name,
       mechFields: ''
     };
-    this.findmechFields = this.findMechFields.bind(this);
-    this.renderMechFields = this.renderMechFields.bind(this);
   };
   
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentMech: nextProps.name});
-  };
-  
-  findMechFields = () => {
-    Utils
-      .sendPythonMessage("netpyne_geppetto.getMechParams", [this.state.currentMech])
-      .then((response) => {
-        if (JSON.stringify(this.state.mechFields)!=JSON.stringify(response))
-        this.setState({mechFields: response})
-      })
+    this.setState({ currentName: nextProps.name});
   };
   
   renderMechFields = () => {
-    if (this.state.mechFields=='') return <div key={"empty"}/>
-    var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentMech + "']"
-    return this.state.mechFields.map((name, i) =>
-      <PythonControlledTextField name={name} key={name} model={tag + "['"+name+"']"} floatingLabelText={name} realType={"float"} style={{width:'100%'}}/>
-    )
+    if (this.state.mechFields=='') {
+      return <div key={"empty"}/>
+    }
+    else {
+      var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentName + "']"
+      return this.state.mechFields.map((name, i) =>
+        <PythonControlledTextField name={name} key={name} model={tag + "['"+name+"']"} floatingLabelText={name} realType={"float"} style={{width:'100%'}}/>
+      )
+    }
   };
 
   render() {
     var content = []
-    if (this.state.currentMech!=undefined && this.state.currentMech!='') {
-      this.findMechFields()
+    if (this.state.currentName!=undefined && this.state.currentName!='') {
+      Utils
+        .sendPythonMessage("netpyne_geppetto.getMechParams", [this.state.currentName])
+        .then((response) => {
+          if (JSON.stringify(this.state.mechFields)!=JSON.stringify(response))
+          this.setState({mechFields: response})
+        })
       content.push(this.renderMechFields())
     };
     
@@ -52,7 +50,7 @@ export default class NetPyNEMechanism extends React.Component {
       <div>
         <TextField
           key="netpyneField"
-          value={this.state.currentMech}
+          value={this.state.currentName}
           floatingLabelText="Mechanism"
           className={"netpyneField"}
           disabled={true}

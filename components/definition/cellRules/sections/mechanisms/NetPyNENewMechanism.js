@@ -19,10 +19,10 @@ export default class NetPyNENewMechanism extends React.Component {
   };
   
   componentDidMount() {
-    var menuItems = []
     Utils
       .sendPythonMessage("netpyne_geppetto.getAvailableMechs", [])
       .then((response) => {
+        var menuItems = []
         response.forEach((item) => 
           menuItems.push(<MenuItem key={item} value={item} primaryText={item}/>)
         )
@@ -50,7 +50,6 @@ export default class NetPyNENewMechanism extends React.Component {
     this.props.handleClick(value);
   };
 
-  
   render() {
     return <div>
       <FloatingActionButton mini={true} style={{ margin: 10, float: 'left'}} onClick={this.handleButtonClick}>
