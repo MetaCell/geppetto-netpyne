@@ -1,10 +1,9 @@
 import React from 'react';
-import Card from 'material-ui/Card/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog/Dialog';
-import CardText from 'material-ui/Card/CardText';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
@@ -38,13 +37,11 @@ export default class ImportCellParams extends React.Component {
 
   performAction = () => {
     // Show spinner
-    var message = GEPPETTO.Resources.IMPORTING_MODEL;
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
 
     // Import template
-    var action = 'netpyne_geppetto.importCellTemplate';
     Utils
-      .sendPythonMessage(action, [this.state])
+      .sendPythonMessage('netpyne_geppetto.importCellTemplate', [this.state])
       .then(() => {
         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       });
@@ -61,7 +58,7 @@ export default class ImportCellParams extends React.Component {
       />,
       <RaisedButton
         primary
-        label={"import"}
+        label={"IMPORT"}
         onTouchTap={this.performAction}
       />
     ];
@@ -74,6 +71,7 @@ export default class ImportCellParams extends React.Component {
         actions={actions}
       >
         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+          <CardTitle title="Import Cell Template" subtitle="Python or Hoc files" />
           <CardText>
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
               <TextField 
@@ -97,16 +95,16 @@ export default class ImportCellParams extends React.Component {
             </NetPyNEField>
             
             <div style={{width:'100%'}}>
-              <div style={{float:'left', width:'42%'}}>
+              <div style={{float:'left', width:'50%'}}>
                 <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox">
-                  <Checkbox
+                  <Checkbox 
                     checked={this.state.importSynMechs}
                     onCheck={(event)=>this.updateCheck('importSynMechs')}
                   />
                 </NetPyNEField>
               </div>
               
-              <div style={{float:'left', width:'50%'}}>
+              <div style={{float:'right', width:'50%'}}>
                 <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox">
                   <Checkbox
                     checked={this.state.compileMod}
