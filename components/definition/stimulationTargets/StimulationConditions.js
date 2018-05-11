@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../general/List';
-import StimulationRange from './StimulationRange';
+import OneDimRange from '../../general/OneDimRange';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -23,7 +23,7 @@ export default class StimulationConditions extends React.Component {
       <MenuItem
         key={name}
         insetChildren={true}
-        checked={selected && selected.indexOf(name) > -1}
+        checked={selected.indexOf(name) > -1}
         value={name}
         primaryText={name}
       />
@@ -60,7 +60,35 @@ export default class StimulationConditions extends React.Component {
           />
         </NetPyNEField>
         
-        <StimulationRange name={this.props.name} />
+        <OneDimRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={true}
+          items={[
+            {value: 'xRange', label:'absolute'}, 
+            {value: 'xnormRange', label:'normalized'}
+          ]}
+        />
+        
+        <OneDimRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={true}
+          items={[
+            {value: 'yRange', label:'absolute'}, 
+            {value: 'ynormRange', label:'normalized'}
+          ]}
+        />
+        
+        <OneDimRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={true}
+          items={[
+            {value: 'zRange', label:'absolute'}, 
+            {value: 'znormRange', label:'normalized'}
+          ]}
+        />
         
         <NetPyNEField id="netParams.stimTargetParams.conds.cellList" className="listStyle">
           <PythonControlledListComponent
