@@ -109,11 +109,15 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.synMech" >
-            <PythonControlledTextField
-              model={"netParams.connParams['" + this.props.name + "']['synMech']"}
-            />
-          </NetPyNEField>
+
+        <NetPyNEField id={"netParams.connParams.synMech"} >
+          <PythonMethodControlledSelectField
+            model={"netParams.connParams['" + this.props.name + "']['synMech']"}
+            method={"netpyne_geppetto.getAvailableSynMechs"}
+            postProcessItems={this.postProcessMenuItems}
+            multiple={true}
+          />
+        </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn" >
             <PythonControlledTextField
