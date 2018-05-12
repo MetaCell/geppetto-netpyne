@@ -21,6 +21,7 @@ export default class NetPyNEPlots extends React.Component {
     super(props);
     this.state = {
       selectedPlot: undefined,
+      page: "main"
     };
     this.selectPlot = this.selectPlot.bind(this);
     this.handleNewPlot = this.handleNewPlot.bind(this);
@@ -72,10 +73,12 @@ export default class NetPyNEPlots extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
     if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
-    return newItemCreated || selectionChanged;
+    return newModel || newItemCreated || selectionChanged || pageChanged;;
   };
 
   render() {

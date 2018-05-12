@@ -12,6 +12,7 @@ export default class NetPyNESynapses extends React.Component {
     super(props);
     this.state = {
       selectedSynapse: undefined,
+      page: "main"
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
@@ -68,10 +69,12 @@ export default class NetPyNESynapses extends React.Component {
     var itemRenamed = this.hasSelectedSynapseBeenRenamed(this.state, nextState) != false;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
     if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
-    return newItemCreated || itemRenamed || selectionChanged;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
   render() {
