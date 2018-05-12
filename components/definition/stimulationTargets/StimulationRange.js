@@ -24,9 +24,9 @@ export default class StimulationRange extends Component {
         rangeTypeZ: null
       };
       this.ranges = [
-          { value: 'xRange', stateVariable: 'rangeTypeX' }, { value: 'xnormRange', stateVariable: 'rangeTypeX' },
-          { value: 'yRange', stateVariable: 'rangeTypeY' }, { value: 'ynormRange', stateVariable: 'rangeTypeY' },
-          { value: 'zRange', stateVariable: 'rangeTypeZ' }, { value: 'znormRange', stateVariable: 'rangeTypeZ' }
+          { value: 'x', stateVariable: 'rangeTypeX' }, { value: 'xnorm', stateVariable: 'rangeTypeX' },
+          { value: 'y', stateVariable: 'rangeTypeY' }, { value: 'ynorm', stateVariable: 'rangeTypeY' },
+          { value: 'z', stateVariable: 'rangeTypeZ' }, { value: 'znorm', stateVariable: 'rangeTypeZ' }
       ];
   };
 
@@ -64,15 +64,15 @@ export default class StimulationRange extends Component {
   render() {
     return (
       <div>
-        <NetPyNEField id={"netParams.stimTargetParams.conds.xRange"} >
+        <NetPyNEField id={"netParams.stimTargetParams.conds.x"} >
           <SelectField
             floatingLabelText="Range type"
             id={"netParams.stimTargetParams.conds." + this.state.rangeTypeX}
             value={this.state.rangeTypeX}
             onChange={(event, index, value) => this.setState({ rangeTypeX: value })}
           >
-            <MenuItem key="xRange" value="xRange" primaryText="Absolute" />
-            <MenuItem key="xnormRange" value="xnormRange" primaryText="Normalized" />
+            <MenuItem key="x" value="x" primaryText="Absolute" />
+            <MenuItem key="xnorm" value="xnorm" primaryText="Normalized" />
           </SelectField>
         </NetPyNEField>
         {(this.state.rangeTypeX != undefined) ?
@@ -97,15 +97,15 @@ export default class StimulationRange extends Component {
           : null
         } <br />
         
-        <NetPyNEField id={"netParams.stimTargetParams.conds.yRange"} >
+        <NetPyNEField id={"netParams.stimTargetParams.conds.y"} >
           <SelectField
             floatingLabelText="Range type"
             id={"netParams.stimTargetParams.conds." + this.state.rangeTypeY}
             value={this.state.rangeTypeY}
             onChange={(event, index, value) => this.setState({ rangeTypeY: value })}
           >
-            <MenuItem key="yRange" value="yRange" primaryText="Absolute" />
-            <MenuItem key="ynormRange" value="ynormRange" primaryText="Normalized" />
+            <MenuItem key="y" value="y" primaryText="Absolute" />
+            <MenuItem key="ynorm" value="ynorm" primaryText="Normalized" />
           </SelectField>
         </NetPyNEField>
         {(this.state.rangeTypeY != undefined) ?
@@ -130,15 +130,15 @@ export default class StimulationRange extends Component {
           : null
         } <br />
         
-        <NetPyNEField id={"netParams.stimTargetParams.conds.zRange"} >
+        <NetPyNEField id={"netParams.stimTargetParams.conds.z"} >
           <SelectField
             floatingLabelText="Range type"
             id={"netParams.stimTargetParams.conds." + this.state.rangeTypeZ}
             value={this.state.rangeTypeZ}
             onChange={(event, index, value) => this.setState({ rangeTypeZ: value })}
           >
-            <MenuItem key="zRange" value="zRange" primaryText="Absolute" />
-            <MenuItem key="znormRange" value="znormRange" primaryText="Normalized" />
+            <MenuItem key="z" value="z" primaryText="Absolute" />
+            <MenuItem key="znorm" value="znorm" primaryText="Normalized" />
           </SelectField>
         </NetPyNEField>
         {(this.state.rangeTypeZ != undefined) ?
