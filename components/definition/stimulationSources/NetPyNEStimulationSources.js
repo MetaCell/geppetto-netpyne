@@ -12,6 +12,7 @@ export default class NetPyNEStimulationSources extends React.Component {
     super(props);
     this.state = {
       selectedStimulationSource: undefined,
+      page: "main"
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
@@ -68,10 +69,12 @@ export default class NetPyNEStimulationSources extends React.Component {
     var itemRenamed = this.hasSelectedStimulationSourceBeenRenamed(this.state, nextState) != false;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationSource != nextState.selectedStimulationSource;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
     if (this.state.value!=undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
-    return newItemCreated || itemRenamed || selectionChanged;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
   render() {
