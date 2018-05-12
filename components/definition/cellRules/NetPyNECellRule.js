@@ -58,6 +58,7 @@ export default class NetPyNECellRule extends React.Component {
     ));
   };
   
+
   render() {
     var content = (<div>
 
@@ -71,6 +72,10 @@ export default class NetPyNECellRule extends React.Component {
       />
 
       <br/>
+
+      <div style={{marginTop: 100}}>
+      <b>Conditions:</b>
+      </div>
       
       <NetPyNEField id={"netParams.cellParams.conds.pop"} >
         <PythonMethodControlledSelectField

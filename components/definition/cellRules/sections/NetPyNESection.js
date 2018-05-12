@@ -80,7 +80,6 @@ export default class NetPyNESection extends React.Component {
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
-        <div>
 
         <TextField
           onChange={this.handleRenameChange}
@@ -99,7 +98,7 @@ export default class NetPyNESection extends React.Component {
         </div>
       )
     }
-    else if (this.state.sectionId == "Geometries") {
+    else if (this.state.sectionId == "Geometry") {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
