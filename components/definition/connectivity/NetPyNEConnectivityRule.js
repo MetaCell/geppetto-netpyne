@@ -113,7 +113,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
         <NetPyNEField id={"netParams.connParams.synMech"} >
           <PythonMethodControlledSelectField
             model={"netParams.connParams['" + this.props.name + "']['synMech']"}
-            method={"netpyne_geppetto.getAvailableSynMechs"}
+            method={"netpyne_geppetto.getAvailableSynMech"}
             postProcessItems={this.postProcessMenuItems}
             multiple={true}
           />
@@ -211,8 +211,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
     var index = 0;
     var bottomNavigationItems = [];
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre Conditions', 'fa-caret-square-o-left'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post Conditions', 'fa-caret-square-o-right'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right'));
 
     return (
       <div>
