@@ -100,6 +100,7 @@ export default class NetPyNESection extends React.Component {
       )
     }
     else if (this.state.sectionId == "Geometry") {
+
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
@@ -111,6 +112,10 @@ export default class NetPyNESection extends React.Component {
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
+        </NetPyNEField>
+
+        <NetPyNEField id="netParams.cellParams.secs.geom.cm" >
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
         <PythonControlledTextField
