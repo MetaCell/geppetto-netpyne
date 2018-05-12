@@ -80,7 +80,8 @@ export default class NetPyNESection extends React.Component {
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
-
+        <div>
+      
         <TextField
           onChange={this.handleRenameChange}
           value = {this.state.currentName}
@@ -138,7 +139,7 @@ export default class NetPyNESection extends React.Component {
     var index = 0;
     var bottomNavigationItems = [];
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometries', 'Geometries', 'fa-cube'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
     
     return (
