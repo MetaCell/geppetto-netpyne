@@ -77,15 +77,6 @@ export default class NetPyNECellRule extends React.Component {
       <b>Conditions:</b>
       </div>
       
-      <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-        <PythonMethodControlledSelectField
-          model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
-          method={"netpyne_geppetto.getAvailablePops"}
-          postProcessItems={this.postProcessMenuItems}
-          multiple={true}
-        />
-      </NetPyNEField>
-      
       <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
         <PythonMethodControlledSelectField
           model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
@@ -104,6 +95,15 @@ export default class NetPyNECellRule extends React.Component {
         />
       </NetPyNEField>
       <br /><br />
+
+      <NetPyNEField id={"netParams.cellParams.conds.pop"} >
+        <PythonMethodControlledSelectField
+          model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
+          method={"netpyne_geppetto.getAvailablePops"}
+          postProcessItems={this.postProcessMenuItems}
+          multiple={true}
+        />
+      </NetPyNEField>
 
       <RaisedButton
         label="Sections"
