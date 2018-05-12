@@ -14,6 +14,7 @@ import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
+import ConnectivityRange from './ConnectivityRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -166,6 +167,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
+        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"preConds"}/>
       </div>
     }
     else if (this.state.sectionId == "Post Conditions") {
@@ -194,6 +197,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
+        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"postConds"}/>
       </div>
     }
 
