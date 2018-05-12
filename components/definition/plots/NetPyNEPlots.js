@@ -123,8 +123,8 @@ export default class NetPyNEPlots extends React.Component {
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
-          title="Plot Configuration"
-          subtitle="Define rules to generate Plots (or do it later after instantiation or simulation)."
+          title="Plots configuration"
+          subtitle="Define here the options to customize the plots"
           actAsExpander={true}
           showExpandableButton={true}
           id="Plots"

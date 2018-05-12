@@ -301,8 +301,8 @@ export default class NetPyNESimConfig extends React.Component {
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
-          title="Configuration"
-          subtitle="NetPyNE configuration"
+          title="Simulation configuration"
+          subtitle="Define here the configuration options for the simulation"
           actAsExpander={true}
           showExpandableButton={true}
           id={"Configuration"}
