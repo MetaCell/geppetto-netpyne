@@ -121,6 +121,13 @@ export default class NetPyNEPopulation extends React.Component {
             id={"populationName"}
           />
 
+          <NetPyNEField id="netParams.popParams.cellType" >
+            <PythonControlledTextField
+              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+              id={"popCellType"}
+            />
+          </NetPyNEField>
+
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
               dataSource={[]}
@@ -131,12 +138,6 @@ export default class NetPyNEPopulation extends React.Component {
               id={"popCellModel"} />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.popParams.cellType" >
-            <PythonControlledTextField
-              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
-              id={"popCellType"}
-            />
-          </NetPyNEField>
 
           <DimensionsComponent modelName={this.props.name} />
         </div>
@@ -145,7 +146,7 @@ export default class NetPyNEPopulation extends React.Component {
       var content = <RangeComponent modelName={this.props.name} />
     }
     else if (this.state.sectionId == "CellList") {
-      var content = <div>We should replicate population parameters</div>
+      var content = <div>Option to provide individual list of cells. Coming soon ...</div>
     }
     else {
       var content = <div>{this.state.cellModelFields}</div>;
