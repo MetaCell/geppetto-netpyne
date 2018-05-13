@@ -14,6 +14,7 @@ import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
+import ConnectivityRange from './ConnectivityRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -108,11 +109,15 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.synMech" >
-            <PythonControlledTextField
-              model={"netParams.connParams['" + this.props.name + "']['synMech']"}
-            />
-          </NetPyNEField>
+
+        <NetPyNEField id={"netParams.connParams.synMech"} >
+          <PythonMethodControlledSelectField
+            model={"netParams.connParams['" + this.props.name + "']['synMech']"}
+            method={"netpyne_geppetto.getAvailableSynMech"}
+            postProcessItems={this.postProcessMenuItems4SynMech}
+            multiple={true}
+          />
+        </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn" >
             <PythonControlledTextField
@@ -166,6 +171,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
+        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"preConds"}/>
       </div>
     }
     else if (this.state.sectionId == "Post Conditions") {
@@ -194,6 +201,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
+        
+        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"postConds"}/>
       </div>
     }
 
@@ -202,8 +211,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
     var index = 0;
     var bottomNavigationItems = [];
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre Conditions', 'fa-caret-square-o-left'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post Conditions', 'fa-caret-square-o-right'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right'));
 
     return (
       <div>

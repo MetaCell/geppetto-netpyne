@@ -21,6 +21,7 @@ export default class NetPyNEPlots extends React.Component {
     super(props);
     this.state = {
       selectedPlot: undefined,
+      page: "main"
     };
     this.selectPlot = this.selectPlot.bind(this);
     this.handleNewPlot = this.handleNewPlot.bind(this);
@@ -72,10 +73,12 @@ export default class NetPyNEPlots extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
     if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
-    return newItemCreated || selectionChanged;
+    return newModel || newItemCreated || selectionChanged || pageChanged;;
   };
 
   render() {
@@ -120,8 +123,8 @@ export default class NetPyNEPlots extends React.Component {
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
-          title="Plot Configuration"
-          subtitle="Define rules to generate Plots (or do it later after instantiation or simulation)."
+          title="Plots configuration"
+          subtitle="Define here the options to customize the plots"
           actAsExpander={true}
           showExpandableButton={true}
           id="Plots"

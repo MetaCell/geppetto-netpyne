@@ -81,7 +81,7 @@ export default class NetPyNESection extends React.Component {
     if (this.state.sectionId == "General") {
       content = (
         <div>
-
+      
         <TextField
           onChange={this.handleRenameChange}
           value = {this.state.currentName}
@@ -99,7 +99,8 @@ export default class NetPyNESection extends React.Component {
         </div>
       )
     }
-    else if (this.state.sectionId == "Geometries") {
+    else if (this.state.sectionId == "Geometry") {
+
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
@@ -111,6 +112,10 @@ export default class NetPyNESection extends React.Component {
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
+        </NetPyNEField>
+
+        <NetPyNEField id="netParams.cellParams.secs.geom.cm" >
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
         <PythonControlledTextField
@@ -139,7 +144,7 @@ export default class NetPyNESection extends React.Component {
     var index = 0;
     var bottomNavigationItems = [];
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometries', 'Geometries', 'fa-cube'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube'));
     bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
     
     return (

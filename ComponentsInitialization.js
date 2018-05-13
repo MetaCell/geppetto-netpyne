@@ -21,7 +21,7 @@ define(function (require) {
                                     <li role="presentation" className="active" id="consoleButton"><a href="#console" aria-controls="console" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Console</a></li>
                                     <li role="presentation" id="pythonConsoleButton" style={{ display: 'none' }}><a href="#pythonConsole" aria-controls="pythonConsole" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Python</a></li>
                                 </ul>
-                                <div className='netpyneversion'>NetPyNE UI Alpha version 0.1</div>
+                                <div className='netpyneversion'>NetPyNE UI Alpha version 0.2</div>
                                 <div className="tab-content">
                                     <div role="tabpanel" className="tab-pane active" id="console">Console Loading...</div>
                                     <div role="tabpanel" id="pythonConsole" className="tab-pane  panel panel-default"></div>
@@ -39,7 +39,7 @@ define(function (require) {
         GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
 
         GEPPETTO.G.setIdleTimeOut(-1);
-
+        GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
 
         var visiblePython = false;
         $('#pythonConsoleButton').click(function (e) {

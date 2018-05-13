@@ -13,12 +13,13 @@ var PythonControlledAdapterComponent = PythonControlledCapability.createPythonCo
 /**
  * Range Component
  */
-export default class StimulationRange extends Component {
+export default class ConnectivityRange extends Component {
 
   constructor(props) {
     super(props);
       this.state = {
         currentName: props.name,
+        currentConds: props.conds,
         rangeTypeX: null,
         rangeTypeY: null,
         rangeTypeZ: null
@@ -31,7 +32,7 @@ export default class StimulationRange extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
+    if (this.state.currentName != prevState.currentName || this.state.currentConds != prevState.currentConds) {
       this.updateLayout();
     };
   };
@@ -41,15 +42,15 @@ export default class StimulationRange extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.currentName != nextProps.currentName) {
-        this.setState({ currentName: nextProps.currentName, rangeTypeX: null, rangeTypeY: null, rangeTypeZ: null });
+    if (this.state.currentName != nextProps.name || this.state.currentConds != nextProps.conds) {
+        this.setState({ currentName: nextProps.name, currentConds: nextProps.conds, rangeTypeX: null, rangeTypeY: null, rangeTypeZ: null });
     };
   };
 
   updateLayout() {
     const getRange = (value, stateVariable) => {
       Utils
-        .sendPythonMessage("'" + value + "' in netParams.stimTargetParams['" + this.state.currentName + "']['conds']")
+        .sendPythonMessage("'" + value + "' in netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']")
         .then((response) => {
           if (response) {
             var newState = {};
@@ -61,13 +62,13 @@ export default class StimulationRange extends Component {
     this.ranges.forEach((range) => { getRange(range.value, range.stateVariable) });
   };
 
-  render() {
+  render() {  
     return (
       <div>
-        <NetPyNEField id={"netParams.stimTargetParams.conds.x"} >
+        <NetPyNEField id={"netParams.connParams.preConds.x"} >
           <SelectField
             floatingLabelText="Range type"
-            id={"netParams.stimTargetParams.conds." + this.state.rangeTypeX}
+            id={"netParams.connParams." + this.state.currentConds + "." + this.state.rangeTypeX}
             value={this.state.rangeTypeX}
             onChange={(event, index, value) => this.setState({ rangeTypeX: value })}
           >
@@ -78,7 +79,7 @@ export default class StimulationRange extends Component {
         {(this.state.rangeTypeX != undefined) ?
           <div className={"netpyneRightField"}>
             <PythonControlledAdapterComponent
-              model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeX + "']"}
+              model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeX + "']"}
               convertToPython={(state) => {
                 if (state.minXAxis != undefined && state.maxXAxis != undefined) {
                   return [parseFloat(state.minXAxis), parseFloat(state.maxXAxis)];
@@ -97,10 +98,10 @@ export default class StimulationRange extends Component {
           : null
         } <br />
         
-        <NetPyNEField id={"netParams.stimTargetParams.conds.y"} >
+        <NetPyNEField id={"netParams.connParams.preConds.y"} >
           <SelectField
             floatingLabelText="Range type"
-            id={"netParams.stimTargetParams.conds." + this.state.rangeTypeY}
+            id={"netParams.connParams." + this.state.currentConds + "." + this.state.rangeTypeY}
             value={this.state.rangeTypeY}
             onChange={(event, index, value) => this.setState({ rangeTypeY: value })}
           >
@@ -111,7 +112,7 @@ export default class StimulationRange extends Component {
         {(this.state.rangeTypeY != undefined) ?
           <div className={"netpyneRightField"}>
             <PythonControlledAdapterComponent
-              model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeY + "']"}
+              model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeY + "']"}
               convertToPython={(state) => {
                 if (state.minYAxis != undefined && state.maxYAxis != undefined) {
                   return [parseFloat(state.minYAxis), parseFloat(state.maxYAxis)];
@@ -130,10 +131,10 @@ export default class StimulationRange extends Component {
           : null
         } <br />
         
-        <NetPyNEField id={"netParams.stimTargetParams.conds.z"} >
+        <NetPyNEField id={"netParams.connParams.preConds.z"} >
           <SelectField
             floatingLabelText="Range type"
-            id={"netParams.stimTargetParams.conds." + this.state.rangeTypeZ}
+            id={"netParams.connParams." + this.state.currentConds + "." + this.state.rangeTypeZ}
             value={this.state.rangeTypeZ}
             onChange={(event, index, value) => this.setState({ rangeTypeZ: value })}
           >
@@ -144,7 +145,7 @@ export default class StimulationRange extends Component {
         {(this.state.rangeTypeZ != undefined) ?
           <div className={"netpyneRightField"}>
             <PythonControlledAdapterComponent
-            model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeZ + "']"}
+            model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeZ + "']"}
               convertToPython={(state) => {
                 if (state.minZAxis != undefined && state.maxZAxis != undefined) {
                   return [parseFloat(state.minZAxis), parseFloat(state.maxZAxis)];

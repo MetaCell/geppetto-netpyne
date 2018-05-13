@@ -12,6 +12,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     super(props);
     this.state = {
       selectedStimulationTarget: undefined,
+      page: "main"
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
@@ -68,10 +69,12 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) != false;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
     if (this.state.value!=undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
-    return newItemCreated || itemRenamed || selectionChanged;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
   render() {
@@ -110,8 +113,8 @@ export default class NetPyNEStimulationTargets extends React.Component {
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader
-          title="Stimulation targets"
-          subtitle="Define here the rules to generate the stimulation targets in your network"
+          title="Stimulation target rules"
+          subtitle="Define here the rules to connect stimulation sources to targets in your network"
           actAsExpander={true}
           showExpandableButton={true}
         />
