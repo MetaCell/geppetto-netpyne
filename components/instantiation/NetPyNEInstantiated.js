@@ -102,6 +102,7 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     componentDidMount() {
+        this.refs.canvas.engine.setLinesThreshold(10000);
         this.refs.canvas.displayAllInstances();
     }
 
@@ -128,9 +129,9 @@ export default class NetPyNEInstantiated extends React.Component {
         if (this.props.page == 'explore') {
             controls = (
                 <Menu>
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D Net Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNE2DNetPlot', '2D Net Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Shape Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEShapePlot', 'Shape Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connections Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEConnectionsPlot', 'Connections Plot') }} />
+                    <MenuItem id={"connectionPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connectivity" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEConnectionsPlot', 'Connections Plot') }} />
+                    <MenuItem id={"2dNetPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D network" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNE2DNetPlot', '2D Net Plot') }} />
+                    <MenuItem id={"shapePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell shape" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEShapePlot', 'Shape Plot') }} />
                 </Menu>
             );
 
@@ -138,17 +139,22 @@ export default class NetPyNEInstantiated extends React.Component {
         else if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Hist Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike Stats Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Traces Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger Plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
+                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell traces" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
+                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
+                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike histogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
+                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike stats" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
+                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
+                    <MenuItem id={"LFPTimeSeriesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP time-series" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPTimeSeriesPlot', 'LFP Time Series Plot') }} />
+                    <MenuItem id={"LFPPSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPPSDPlot', 'LFP PSD Plot') }} />
+                    <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPSpectrogramPlot', 'LFP Spectrogram Plot') }} />
+                    <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPLocationsPlot', 'LFP Locations Plot') }} />
+                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
                 </Menu>
 
 
             );
         }
+
 
         var that = this;
         return (
@@ -167,14 +173,17 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 10 }} onClick={() => { $('#controlpanel').show(); }} icon={"fa-list"} />
+                <IconButton style={{ position: 'absolute', left: 35, top: 10 }} 
+                			onClick={() => { $('#controlpanel').show(); }} 
+                			icon={"fa-list"}
+                			id={"ControlPanelButton"}/>
                 <div>
                     <IconButton
                         onClick={this.handleClick}
                         style={{ position: 'absolute', left: 35, top: 318 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
-
+                    	id="PlotButton"
                     />
                     <Popover
                         open={this.state.plotButtonOpen}
@@ -194,6 +203,7 @@ export default class NetPyNEInstantiated extends React.Component {
                         primary={true}
                         keyboardFocused={true}
                         onClick={this.handleCloseDialog}
+                    	id="netPyneDialog"
                       />}
                     open={this.state.openDialog}
                     onRequestClose={this.handleCloseDialog}

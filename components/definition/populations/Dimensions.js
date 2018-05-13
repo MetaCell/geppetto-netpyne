@@ -18,7 +18,7 @@ export default class DimensionsComponent extends Component {
             modelName: props.modelName,
             dimension: null
         };
-        this.popDimensionsOptions = [{ label: 'Density', value: 'density' }, { label: 'Number of Cells', value: 'numCells' }, { label: 'Grid Spacing', value: 'gridSpacing' }];
+        this.popDimensionsOptions = [{ label: 'Number of cells', value: 'numCells' }, { label: 'Density', value: 'density' }, { label: 'Grid spacing', value: 'gridSpacing' }];
 
     }
 
@@ -63,7 +63,7 @@ export default class DimensionsComponent extends Component {
         return (
             <div>
                 <NetPyNEField id="netParams.popParams.numCells" className={"netpyneFieldNoWidth"} noStyle>
-                    <SelectField
+                    <SelectField 
                         value={this.state.dimension}
                         onChange={(event, index, value) => this.setState({ dimension: value })}
                     >
@@ -95,6 +95,7 @@ export default class DimensionsComponent extends Component {
                                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                                 modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
+                                id={"dimensions"}
                             />
                         </NetPyNEField>
                         : null

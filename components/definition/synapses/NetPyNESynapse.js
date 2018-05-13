@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import IconMenu from 'material-ui/IconMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import clone from 'lodash.clone';
+import SelectField from 'material-ui/SelectField';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 
@@ -18,12 +12,22 @@ export default class NetPyNESynapse extends React.Component {
 
   constructor(props) {
     super(props);
-    var _this = this;
     this.state = {
-      currentName: props.name
+      currentName: props.name,
+      synMechMod: ''
     };
-  }
+    this.synMechModOptions = [
+      { mod: 'Exp2Syn' },{mod: 'ExpSyn'} 
+    ];
+    this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
+  };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.currentName!=nextProps.name){
+      this.setState({ currentName: nextProps.name, synMechMod: null});      
+    };
+  };
+  
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
@@ -43,47 +47,92 @@ export default class NetPyNESynapse extends React.Component {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
-  }
+  };
+  
+  componentDidMount() {
+    this.updateLayout();
+  };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.name});
-  }
+  componentDidUpdate(prevProps, prevState) {
+      if (this.state.currentName != prevState.currentName) {
+          this.updateLayout();
+      };
+  };
+  
+  updateLayout() {
+    const getMod = (value) => {
+      Utils
+        .sendPythonMessage("'" + value + "' in netParams.synMechParams['" + this.state.currentName + "']['mod']")
+        .then((response) => { if (response) {this.setState({synMechMod: value})}});
+    };
+    this.synMechModOptions.forEach((option) => { getMod(option.mod) });
+  };
+  
+  handleSynMechModChange(event, index, value) {
+    Utils.execPythonCommand("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
+    this.setState({ synMechMod: value });
+  };
 
   render() {
-    var that = this;
-    var content = (<div>
-
-      <TextField
-        onChange={this.handleRenameChange}
-        value = {this.state.currentName}
-        disabled={this.renaming}
-        floatingLabelText="The name of the synapse"
-        className={"netpyneField"}
-      />
-
-      <br/>
-{/* 
-      <NetPyNEField id="netParams.cellParams.conds.cellModel" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellModel']"} />
-      </NetPyNEField>
-
-      <NetPyNEField id="netParams.cellParams.conds.cellType" >
-        <PythonControlledTextField model={"netParams.cellParams['" + this.props.name + "']['conds']['cellType']"} />
-      </NetPyNEField>
-      <br /><br />
-
-      <RaisedButton
-        label="Sections"
-        labelPosition="before"
-        primary={true}
-        onClick={() => that.props.selectPage("sections")}
-      /> */}
-    </div>);
+    if (this.state.synMechMod=='' || this.state.synMechMod==undefined) {
+      var content = <div/>
+    }
+    else { 
+      var content = (
+        <div>
+          <NetPyNEField id="netParams.synMechParams.tau1">
+            <PythonControlledTextField
+              model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
+            />
+          </NetPyNEField>
+          
+          {(this.state.synMechMod=="Exp2Syn")?<div>
+            <NetPyNEField id="netParams.synMechParams.tau2">
+              <PythonControlledTextField
+                model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
+              />
+            </NetPyNEField>
+            </div> : null}
+          
+          <NetPyNEField id="netParams.synMechParams.e" >
+            <PythonControlledTextField
+              model={"netParams.synMechParams['" + this.props.name + "']['e']"}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id="netParams.synMechParams.i" >
+            <PythonControlledTextField
+              model={"netParams.synMechParams['" + this.props.name + "']['i']"}
+            />
+          </NetPyNEField>
+        </div>
+      )
+    }
 
     return (
       <div>
-        {content}
+        <TextField
+          id={"synapseName"}
+          onChange={this.handleRenameChange}
+          value = {this.state.currentName}
+          disabled={this.renaming}
+          className={"netpyneField"}
+        />
+        <br/>
+        <NetPyNEField id="netParams.synMechParams.mod" className={"netpyneFieldNoWidth"} noStyle>
+          <SelectField 
+            value={this.state.synMechMod}
+            onChange={this.handleSynMechModChange}
+          >
+            {(this.synMechModOptions != undefined) ?
+                this.synMechModOptions.map(function (synMechModOption) {
+                  return (<MenuItem key={synMechModOption.mod} value={synMechModOption.mod} primaryText={synMechModOption.mod} />)
+                }) : null
+            }
+          </SelectField>
+        </NetPyNEField>
+        {content} 
       </div>
     );
-  }
-}
+  };
+};

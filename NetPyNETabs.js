@@ -7,8 +7,9 @@ import NetPyNEPopulations from './components/definition/populations/NetPyNEPopul
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
 import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
-import NetPyNEStimulationSources from './components/definition/stimulation/NetPyNEStimulationSources';
-import NetPyNEStimulationTargets from './components/definition/stimulation/NetPyNEStimulationTargets';
+import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
+import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import Utils from './Utils';
@@ -17,7 +18,6 @@ import SettingsDialog from './components/settings/Settings';
 import TransitionDialog from './components/transition/Transition';
 import FontIcon from 'material-ui/FontIcon';
 
-
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
@@ -25,6 +25,7 @@ var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonCon
 var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
 var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
 var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
+var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
 
 export default class NetPyNETabs extends React.Component {
 
@@ -132,6 +133,7 @@ export default class NetPyNETabs extends React.Component {
         <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
         <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
         <NetPyNESimConfig model={this.state.model.simConfig} />
+        <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
       </div>
     ) : (<div></div>);
     var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
@@ -147,13 +149,13 @@ export default class NetPyNETabs extends React.Component {
           contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
           onChange={this.handleChange}
         >
-          <Tab label="Define your network" value="define">
+          <Tab label="Define your network" value="define" id={"defineNetwork"}>
             {defineContent}
           </Tab>
-          <Tab label="Explore your network" value="explore" >
+          <Tab label="Explore your network" value="explore" id={"exploreNetwork"}>
             {exploreContent}
           </Tab>
-          <Tab label="Simulate and analyse" value="simulate">
+          <Tab label="Simulate and analyse" value="simulate" id={"simulateNetwork"}>
             {simulateContent}
           </Tab>
         </Tabs>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/internal/Tooltip';
@@ -18,7 +17,6 @@ import RangeComponent from './Range';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledControl(AutoComplete);
 
 
@@ -113,14 +111,22 @@ export default class NetPyNEPopulation extends React.Component {
   render() {
     if (this.state.sectionId == "General") {
       var content =
-        <div>
+        <div id="populationMetadata">
           <TextField
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
             floatingLabelText="The name of your population"
             className={"netpyneField"}
+            id={"populationName"}
           />
+
+          <NetPyNEField id="netParams.popParams.cellType" >
+            <PythonControlledTextField
+              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+              id={"popCellType"}
+            />
+          </NetPyNEField>
 
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledAutoComplete
@@ -128,14 +134,10 @@ export default class NetPyNEPopulation extends React.Component {
               model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
               searchText={this.state.cellModel}
               onChange={(value) => this.setPopulationDimension(value)}
-              openOnFocus={true} />
+              openOnFocus={true}
+              id={"popCellModel"} />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.popParams.cellType" >
-            <PythonControlledTextField
-              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
-            />
-          </NetPyNEField>
 
           <DimensionsComponent modelName={this.props.name} />
         </div>
@@ -144,7 +146,7 @@ export default class NetPyNEPopulation extends React.Component {
       var content = <RangeComponent modelName={this.props.name} />
     }
     else if (this.state.sectionId == "CellList") {
-      var content = <div>We should replicate population parameters</div>
+      var content = <div>Option to provide individual list of cells. Coming soon ...</div>
     }
     else {
       var content = <div>{this.state.cellModelFields}</div>;
