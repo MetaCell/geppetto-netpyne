@@ -87,23 +87,18 @@ export default class NetPyNEStimulationSource extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
-            <PythonControlledListComponent
+          <NetPyNEField id="netParams.stimSourceParams.dur">
+            <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
-            <PythonControlledListComponent
+          <NetPyNEField id="netParams.stimSourceParams.amp">
+            <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.i">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
-            />
-          </NetPyNEField>
         </div>
       );
     } else if (this.state.sourceType == 'VClamp') {
@@ -179,11 +174,6 @@ export default class NetPyNEStimulationSource extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.i">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
-            />
-          </NetPyNEField>
         </div>
       );
     } else if (this.state.sourceType == 'NetStim') {
