@@ -23,7 +23,7 @@ export default class NetPyNEStimulationSources extends React.Component {
   };
 
   handleNewStimulationSource() {
-    var defaultStimulationSources = { 'Source': { 'type': '', 'del': 0, 'dur': 0, 'amp': ''}};
+    var defaultStimulationSources = { 'stim_source ': { 'type': '', 'del': 0, 'dur': 0, 'amp': ''}};
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
     var model = this.state.value;
