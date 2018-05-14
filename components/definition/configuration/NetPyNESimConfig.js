@@ -39,16 +39,9 @@ export default class NetPyNESimConfig extends React.Component {
       content =
         <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
-            <NetPyNEField id="simConfig.seeds" >
-              <PythonControlledTextField model={"simConfig.seeds"} />
-            </NetPyNEField>
 
             <NetPyNEField id="simConfig.duration" >
               <PythonControlledTextField model={"simConfig.duration"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.hParams" >
-              <PythonControlledTextField model={"simConfig.hParams"} />
             </NetPyNEField>
 
             <NetPyNEField id="simConfig.dt" >
@@ -58,6 +51,15 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.printRunTime"  >
               <PythonControlledTextField model={"simConfig.printRunTime"} />
             </NetPyNEField>
+
+            <NetPyNEField id="simConfig.hParams" >
+              <PythonControlledTextField model={"simConfig.hParams"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.seeds" >
+              <PythonControlledTextField model={"simConfig.seeds"} />
+            </NetPyNEField>
+
             
           </div>
 
@@ -260,9 +262,6 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledTextField model={"netParams.scaleConnWeightNetStims"} />
             </NetPyNEField>
             
-            <NetPyNEField id="netParams.popTagsCopiedToCells" className="listStyle">
-              <PythonControlledListComponent model={"netParams.popTagsCopiedToCells"} />
-            </NetPyNEField>
         </div>
 
         <div style={{ float: 'right', width: '45%'}}>
