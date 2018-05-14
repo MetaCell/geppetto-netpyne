@@ -23,7 +23,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
   };
 
   handleNewStimulationTarget() {
-    var defaultStimulationTargets = { 'Target': {'source': '', 'sec':'', 'loc': 0, 'conds': {'pop':''}}};
+    var defaultStimulationTargets = { 'stim_target ': {'source': '', 'sec':'', 'loc': 0, 'conds': {'pop':''}}};
     var key = Object.keys(defaultStimulationTargets)[0];
     var value = defaultStimulationTargets[key];
     var model = this.state.value;
