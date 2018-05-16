@@ -91,7 +91,7 @@ export default class NetPyNECoordsRange extends Component {
             <PythonControlledAdapterComponent
               model={path}
               convertToPython={(state) => {
-                if (state.min != undefined && state.max != undefined) {
+                if ((state.min != undefined && !isNaN(parseFloat(state.min))) && (state.max != undefined && !isNaN(parseFloat(state.max)))) {
                   return [parseFloat(state.min), parseFloat(state.max)];
                 }}
               }

@@ -23,13 +23,26 @@ export default class AdapterComponent extends Component {
         }
     }
 
+    updateInputState(event, value) {
+        if(this.state != undefined)
+            var returnObj = this.state;
+        else
+            var returnObj = {};
+        returnObj[event.target.id] = value;
+        return returnObj;
+    }
+
     handleChildChange(event, value) {
         // Update State
-        this.state[event.target.id]= value;
+        var stateObject = this.updateInputState(event, value);
+        this.setState(stateObject);
 
+        if(value.endsWith('.'))
+            return;
         // Call to conversion function
         var newValue = this.props.convertToPython(this.state);
         if (newValue != undefined && this.state.value != newValue){
+            newValue.push("StateUpdated_From_AdapterComponent");
             this.props.onChange(null, null, newValue);
         }
     }
