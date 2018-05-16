@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import ListComponent from '../../general/List';
-import StimulationRange from './StimulationRange';
 import NetPyNEField from '../../general/NetPyNEField';
+import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
@@ -23,7 +23,7 @@ export default class StimulationConditions extends React.Component {
       <MenuItem
         key={name}
         insetChildren={true}
-        checked={selected && selected.indexOf(name) > -1}
+        checked={selected.indexOf(name) > -1}
         value={name}
         primaryText={name}
       />
@@ -60,11 +60,39 @@ export default class StimulationConditions extends React.Component {
           />
         </NetPyNEField>
         
-        <StimulationRange name={this.props.name} />
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={"conds"}
+          items={[
+            {value: 'x', label:'absolute'}, 
+            {value: 'xnorm', label:'normalized'}
+          ]}
+        />
+        
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={"conds"}
+          items={[
+            {value: 'y', label:'absolute'}, 
+            {value: 'ynorm', label:'normalized'}
+          ]}
+        />
+
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.stimTargetParams'}
+          conds={"conds"}
+          items={[
+            {value: 'z', label:'absolute'}, 
+            {value: 'znorm', label:'normalized'}
+          ]}
+        />
         
         <NetPyNEField id="netParams.stimTargetParams.conds.cellList" className="listStyle">
           <PythonControlledListComponent
-            model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['condList']"}
+            model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellList']"}
           />
         </NetPyNEField>
       </div>
