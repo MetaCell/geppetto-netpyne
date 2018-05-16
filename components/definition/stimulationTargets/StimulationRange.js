@@ -80,8 +80,8 @@ export default class StimulationRange extends Component {
             <PythonControlledAdapterComponent
               model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeX + "']"}
               convertToPython={(state) => {
-                if (state.minXAxis != undefined && state.maxXAxis != undefined) {
-                  return [parseFloat(state.minXAxis), parseFloat(state.maxXAxis)];
+                if ((state.minXAxis != undefined && state.minXAxis != "") && (state.maxXAxis != undefined && state.maxXAxis != "")) {
+                  return [state.minXAxis.replace(/[^0-9.+-]/g, ''), state.maxXAxis.replace(/[^0-9.+-]/g, '')];
                 }}
               }
               convertFromPython={(prevProps, prevState, value) => {
@@ -113,8 +113,8 @@ export default class StimulationRange extends Component {
             <PythonControlledAdapterComponent
               model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeY + "']"}
               convertToPython={(state) => {
-                if (state.minYAxis != undefined && state.maxYAxis != undefined) {
-                  return [parseFloat(state.minYAxis), parseFloat(state.maxYAxis)];
+                if ((state.minYAxis != undefined && state.minYAxis != "") && (state.maxYAxis != undefined && state.maxYAxis != "")) {
+                  return [state.minYAxis.replace(/[^0-9.+-]/g, ''), state.maxYAxis.replace(/[^0-9.+-]/g, '')];
                 }
               }}
               convertFromPython={(prevProps, prevState, value) => {
@@ -146,8 +146,8 @@ export default class StimulationRange extends Component {
             <PythonControlledAdapterComponent
             model={"netParams.stimTargetParams['" + this.state.currentName + "']['conds']['" + this.state.rangeTypeZ + "']"}
               convertToPython={(state) => {
-                if (state.minZAxis != undefined && state.maxZAxis != undefined) {
-                  return [parseFloat(state.minZAxis), parseFloat(state.maxZAxis)];
+                if ((state.minZAxis != undefined && state.minZAxis != "") && (state.maxZAxis != undefined && state.maxZAxis != "")) {
+                  return [state.minZAxis.replace(/[^0-9.+-]/g, ''), state.maxZAxis.replace(/[^0-9.+-]/g, '')];
                 }
               }}
               convertFromPython={(prevProps, prevState, value) => {
