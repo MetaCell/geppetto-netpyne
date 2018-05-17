@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import ImportCellParams from './ImportCellParams';
+import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -94,7 +95,6 @@ export default class NetPyNECellRule extends React.Component {
           multiple={true}
         />
       </NetPyNEField>
-      <br /><br />
 
       <NetPyNEField id={"netParams.cellParams.conds.pop"} >
         <PythonMethodControlledSelectField
@@ -104,6 +104,38 @@ export default class NetPyNECellRule extends React.Component {
           multiple={true}
         />
       </NetPyNEField>
+
+      <NetPyNECoordsRange 
+        name={this.state.currentName} 
+        model={'netParams.cellParams'}
+        conds={'conds'}
+        items={[
+          {value: 'x', label:'absolute'}, 
+          {value: 'xnorm', label:'normalized'}
+        ]}
+      />
+
+      <NetPyNECoordsRange 
+        name={this.state.currentName} 
+        model={'netParams.cellParams'}
+        conds={'conds'}
+        items={[
+          {value: 'y', label:'absolute'}, 
+          {value: 'ynorm', label:'normalized'}
+        ]}
+      />
+
+      <NetPyNECoordsRange 
+        name={this.state.currentName} 
+        model={'netParams.cellParams'}
+        conds={'conds'}
+        items={[
+          {value: 'z', label:'absolute'}, 
+          {value: 'znorm', label:'normalized'}
+        ]}
+      />
+      
+      <br /><br />
 
       <RaisedButton
         label="Sections"

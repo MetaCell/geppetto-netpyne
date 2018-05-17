@@ -15,7 +15,7 @@ export default class NetPyNECoordsRange extends Component {
     super(props);
     this.state = {
       currentName: props.name,
-      rangeType: null,
+      rangeType: undefined,
     };
     this.ranges = [
       { value: this.props.items[0].value, stateVariable: 'rangeType' }, 
@@ -24,7 +24,7 @@ export default class NetPyNECoordsRange extends Component {
   };
  
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
+    if (this.state.currentName != prevState.currentName || this.props.conds!=prevProps.conds) {
       this.updateLayout();
     };
   };
@@ -35,25 +35,30 @@ export default class NetPyNECoordsRange extends Component {
  
   componentWillReceiveProps(nextProps) {
     if (this.state.currentName != nextProps.name) {
-      this.setState({ model: nextProps.name});
+      this.setState({ currentName: nextProps.name});
     }
   }
 
   updateLayout() {
-    var message = this.props.model + "['" + this.state.currentName + "']"
+    var flag = false;
+    var message = this.props.model + "['" + this.state.currentName + "']";
     if (this.props.conds!=undefined) message = message + "['" + this.props.conds + "']";
     const getRange = (value, stateVariable) => {
       Utils
         .sendPythonMessage("'" + value + "' in " + message)
         .then((response) => {
           if (response) {
+            flag = true;
             var newState = {};
             newState[stateVariable] = value;
-            this.setState(newState)
-          };
+            this.setState(newState);
+          }
         });
     };
     this.ranges.forEach((range) => { getRange(range.value, range.stateVariable) })
+    if (!flag) {
+      this.setState({rangeType: undefined})
+    }
   };
      
   createMenuItems = () => {
