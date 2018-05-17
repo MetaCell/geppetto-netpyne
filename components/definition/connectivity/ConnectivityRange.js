@@ -81,7 +81,9 @@ export default class ConnectivityRange extends Component {
             <PythonControlledAdapterComponent
               model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeX + "']"}
               convertToPython={(state) => {
-                if (state.minXAxis != undefined && state.maxXAxis != undefined) {
+                if(state[state.lastUpdated].toString().endsWith("."))
+                  return undefined;
+                if ((state.minXAxis != undefined && !isNaN(parseFloat(state.minXAxis))) && (state.maxXAxis != undefined && !isNaN(parseFloat(state.maxXAxis)))) {
                   return [parseFloat(state.minXAxis), parseFloat(state.maxXAxis)];
                 }}
               }
@@ -114,7 +116,9 @@ export default class ConnectivityRange extends Component {
             <PythonControlledAdapterComponent
               model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeY + "']"}
               convertToPython={(state) => {
-                if (state.minYAxis != undefined && state.maxYAxis != undefined) {
+                if(state[state.lastUpdated].toString().endsWith("."))
+                  return undefined;
+                if ((state.minYAxis != undefined && !isNaN(parseFloat(state.minYAxis))) && (state.maxYAxis != undefined && !isNaN(parseFloat(state.maxYAxis)))) {
                   return [parseFloat(state.minYAxis), parseFloat(state.maxYAxis)];
                 }
               }}
@@ -147,7 +151,9 @@ export default class ConnectivityRange extends Component {
             <PythonControlledAdapterComponent
             model={"netParams.connParams['" + this.state.currentName + "']['"+this.state.currentConds+"']['" + this.state.rangeTypeZ + "']"}
               convertToPython={(state) => {
-                if (state.minZAxis != undefined && state.maxZAxis != undefined) {
+                if(state[state.lastUpdated].toString().endsWith("."))
+                  return undefined;
+                if ((state.minZAxis != undefined && !isNaN(parseFloat(state.minZAxis))) && (state.maxZAxis != undefined && !isNaN(parseFloat(state.maxZAxis)))) {
                   return [parseFloat(state.minZAxis), parseFloat(state.maxZAxis)];
                 }
               }}

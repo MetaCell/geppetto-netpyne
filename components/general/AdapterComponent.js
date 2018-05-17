@@ -8,11 +8,21 @@ var PythonControlledTextField = PythonControlledCapability.createPythonControlle
  * The slider bar can have a set minimum and maximum, and the value can be
  * obtained through the value parameter fired on an onChange event.
  */
+
 export default class AdapterComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        /** 
+         * the state is constructed dynamically from the id props of each children
+         * in this way we are declaring a controlled component that can handle his own
+         * state when this is modified by a new input or action of the user
+         **/
+        this.stateBuilder = {};
+        this.props.children.map( (child, index) => {
+            this.stateBuilder[child.props.id] = '';
+        });
+        this.state = this.stateBuilder;
 
         this.handleChildChange = this.handleChildChange.bind(this);
     }
@@ -37,12 +47,10 @@ export default class AdapterComponent extends Component {
         var stateObject = this.updateInputState(event, value);
         this.setState(stateObject);
 
-        if(value.endsWith('.'))
-            return;
         // Call to conversion function
+        this.state["lastUpdated"] = event.target.id;
         var newValue = this.props.convertToPython(this.state);
         if (newValue != undefined && this.state.value != newValue){
-            newValue.push("StateUpdated_From_AdapterComponent");
             this.props.onChange(null, null, newValue);
         }
     }
