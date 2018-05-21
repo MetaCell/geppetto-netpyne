@@ -23,7 +23,7 @@ export default class StimulationConditions extends React.Component {
       <MenuItem
         key={name}
         insetChildren={true}
-        checked={selected && selected.indexOf(name) > -1}
+        checked={selected.indexOf(name) > -1}
         value={name}
         primaryText={name}
       />
@@ -64,7 +64,7 @@ export default class StimulationConditions extends React.Component {
         
         <NetPyNEField id="netParams.stimTargetParams.conds.cellList" className="listStyle">
           <PythonControlledListComponent
-            model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['condList']"}
+            model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellList']"}
           />
         </NetPyNEField>
       </div>
