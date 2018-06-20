@@ -107,14 +107,32 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
 
-        <NetPyNEField id={"netParams.connParams.synMech"} >
-          <PythonMethodControlledSelectField
-            model={"netParams.connParams['" + this.props.name + "']['synMech']"}
-            method={"netpyne_geppetto.getAvailableSynMech"}
-            postProcessItems={this.postProcessMenuItems4SynMech}
-            multiple={true}
-          />
-        </NetPyNEField>
+          <NetPyNEField id={"netParams.connParams.synMech"} >
+            <PythonMethodControlledSelectField
+              model={"netParams.connParams['" + this.props.name + "']['synMech']"}
+              method={"netpyne_geppetto.getAvailableSynMech"}
+              postProcessItems={this.postProcessMenuItems}
+              multiple={true}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id="netParams.connParams.convergence" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['convergence']"}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id="netParams.connParams.divergence" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['divergence']"}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id="netParams.connParams.probability" >
+            <PythonControlledTextField
+              model={"netParams.connParams['" + this.props.name + "']['probability']"}
+            />
+          </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn" >
             <PythonControlledTextField
