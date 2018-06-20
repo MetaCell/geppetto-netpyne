@@ -17,10 +17,6 @@ export default class NetPyNECoordsRange extends Component {
       currentName: props.name,
       rangeType: undefined,
     };
-    this.ranges = [
-      { value: this.props.items[0].value, stateVariable: 'rangeType' }, 
-      { value: this.props.items[1].value, stateVariable: 'rangeType' },
-    ];
   };
  
   componentDidUpdate(prevProps, prevState) {
@@ -36,31 +32,26 @@ export default class NetPyNECoordsRange extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.state.currentName != nextProps.name) {
       this.setState({ currentName: nextProps.name});
-    }
-  }
+    };
+  };
 
   updateLayout() {
-    var flag = false;
     var message = this.props.model + "['" + this.state.currentName + "']";
-    if (this.props.conds!=undefined) message = message + "['" + this.props.conds + "']";
-    const getRange = (value, stateVariable) => {
+    if (this.props.conds!=undefined) {
+      message = message + "['" + this.props.conds + "']";
+    };
+    this.setState({rangeType: undefined});
+    this.props.items.forEach((item) => {
       Utils
-        .sendPythonMessage("'" + value + "' in " + message)
+        .sendPythonMessage("'" + item.value + "' in " + message)
         .then((response) => {
           if (response) {
-            flag = true;
-            var newState = {};
-            newState[stateVariable] = value;
-            this.setState(newState);
+            this.setState({rangeType: item.value});
           }
         });
-    };
-    this.ranges.forEach((range) => { getRange(range.value, range.stateVariable) })
-    if (!flag) {
-      this.setState({rangeType: undefined})
-    }
+    });
   };
-     
+  
   createMenuItems = () => {
     return this.props.items.map((obj) => (
       <MenuItem
@@ -77,7 +68,7 @@ export default class NetPyNECoordsRange extends Component {
       var path = this.props.model + "['" + this.state.currentName + "']['" + this.props.conds + "']['" + this.state.rangeType + "']";
     } else {
       var meta = this.props.model + '.' + this.props.items[0].value;
-      var path = this.props.model + "['" + this.state.currentName + "']['" + this.state.rangeType + "']"
+      var path = this.props.model + "['" + this.state.currentName + "']['" + this.state.rangeType + "']";
     };
     
     return (
@@ -106,8 +97,8 @@ export default class NetPyNECoordsRange extends Component {
                 }}
               }
             >
-              <TextField floatingLabelText="Minimum" id="min" style={{marginLeft: 40}}/>
-              <TextField floatingLabelText="Maximum" id="max" style={{marginLeft: 80}}/>
+              <TextField floatingLabelText="Minimum" id="min" style={{marginLeft: 10}}/>
+              <TextField floatingLabelText="Maximum" id="max" style={{marginLeft: 10}}/>
             </PythonControlledAdapterComponent>
           </div>
         : null}
