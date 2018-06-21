@@ -21,7 +21,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.state = {
       drawerOpen: false,
       selectedConnectivityRule: undefined,
-      page: "main"
+      page: "main",
+      subComponentExists: true
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -40,7 +41,10 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
   /* Method that handles button click */
   selectConnectivityRule(connectivityRule, buttonExists) {
-    this.setState({ selectedConnectivityRule: connectivityRule });
+    this.setState({ 
+      selectedConnectivityRule: connectivityRule,
+      subComponentExists: buttonExists
+    });
   }
 
   handleNewConnectivityRule() {
@@ -63,10 +67,14 @@ export default class NetPyNEConnectivityRules extends React.Component {
     // Get New Available ID
     var connectivityRuleId = Utils.getAvailableKey(model, key);
 
+    // Create new Connectivity rule Object
+    var newConnectivityRule = Object.assign({name: connectivityRuleId}, value);
+
     // Create Cell Rule Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.connParams["' + connectivityRuleId + '"] = ' + JSON.stringify(value));
 
     // Update state
+    model[connectivityRuleId] = newConnectivityRule;
     this.setState({
       value: model,
       selectedConnectivityRule: connectivityRuleId
@@ -112,6 +120,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var selectionChanged = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedConnectivityRule != nextState.selectedConnectivityRule))
+      return true;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
@@ -127,10 +137,14 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
       var ConnectivityRules = [];
       for (var c in model) {
+        if((c == this.state.selectedConnectivityRule) && !this.state.subComponentExists) {
+          delete model[c];
+          continue;
+        }
         ConnectivityRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
-      if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
+      if ((this.state.selectedConnectivityRule && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} />;
       }
 

@@ -12,7 +12,8 @@ export default class NetPyNESynapses extends React.Component {
     super(props);
     this.state = {
       selectedSynapse: undefined,
-      page: "main"
+      page: "main",
+      subComponentExists: true
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
@@ -20,7 +21,10 @@ export default class NetPyNESynapses extends React.Component {
 
   /* Method that handles button click */
   selectSynapse(Synapse, buttonExists) {
-    this.setState({ selectedSynapse: Synapse });
+    this.setState({ 
+      selectedSynapse: Synapse,
+      subComponentExists: buttonExists
+    });
   };
 
   handleNewSynapse() {
@@ -29,7 +33,9 @@ export default class NetPyNESynapses extends React.Component {
     var value = defaultSynapses[key];
     var model = this.state.value;
     var SynapseId = Utils.getAvailableKey(model, key);
+    var newSynapse = Object.assign({name: SynapseId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
+    model[SynapseId] = newSynapse;
     this.setState({
       value: model,
       selectedSynapse: SynapseId
@@ -72,6 +78,8 @@ export default class NetPyNESynapses extends React.Component {
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedSynapse != nextState.selectedSynapse))
+      return true;
     if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
@@ -82,10 +90,14 @@ export default class NetPyNESynapses extends React.Component {
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
+      if((c == this.state.selectedSynapse) && !this.state.subComponentExists) {
+        delete model[c];
+        continue;
+      }
       Synapses.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
-    if (this.state.selectedSynapse && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
+    if ((this.state.selectedSynapse && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
       selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} />;
     };
 

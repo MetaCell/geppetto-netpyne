@@ -12,7 +12,8 @@ export default class NetPyNEStimulationSources extends React.Component {
     super(props);
     this.state = {
       selectedStimulationSource: undefined,
-      page: "main"
+      page: "main",
+      subComponentExists: true
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
@@ -20,7 +21,10 @@ export default class NetPyNEStimulationSources extends React.Component {
 
   /* Method that handles button click */
   selectStimulationSource(StimulationSource, buttonExists) {
-    this.setState({ selectedStimulationSource: StimulationSource });
+    this.setState({ 
+      selectedStimulationSource: StimulationSource,
+      subComponentExists: buttonExists
+    });
   };
 
   handleNewStimulationSource() {
@@ -29,10 +33,13 @@ export default class NetPyNEStimulationSources extends React.Component {
     var value = defaultStimulationSources[key];
     var model = this.state.value;
     var StimulationSourceId = Utils.getAvailableKey(model, key);
+    var newStimulationSource = Object.assign({name: StimulationSourceId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.stimSourceParams["' + StimulationSourceId + '"] = ' + JSON.stringify(value));
+    model[StimulationSourceId] = newStimulationSource;
     this.setState({
       value: model,
-      selectedStimulationSource: StimulationSourceId
+      selectedStimulationSource: StimulationSourceId,
+      subComponentExists: true
     });
   };
 
@@ -72,6 +79,8 @@ export default class NetPyNEStimulationSources extends React.Component {
     var selectionChanged = this.state.selectedStimulationSource != nextState.selectedStimulationSource;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedStimulationSource != nextState.selectedStimulationSource))
+      return true;
     if (this.state.value!=undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
@@ -82,11 +91,15 @@ export default class NetPyNEStimulationSources extends React.Component {
     var model = this.state.value;
     var StimulationSources = [];
     for (var c in model) {
+      if((c == this.state.selectedStimulationSource) && !this.state.subComponentExists) {
+        delete model[c];
+        continue;
+      }
       StimulationSources.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationSource} handleClick={this.selectStimulationSource} />);
     };
     
     var selectedStimulationSource = undefined;
-    if (this.state.selectedStimulationSource && Object.keys(model).indexOf(this.state.selectedStimulationSource)>-1) {
+    if ((this.state.selectedStimulationSource && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedStimulationSource)>-1) {
       selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} />;
     };
     
