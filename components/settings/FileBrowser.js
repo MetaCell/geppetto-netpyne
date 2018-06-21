@@ -11,7 +11,6 @@ export default class FileBrowser extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.handleClickVisualize = this.handleClickVisualize.bind(this);
 
         this.state = {};
@@ -29,18 +28,7 @@ export default class FileBrowser extends React.Component {
                     rowInfo.node.children = dirList;
                     rowInfo.node.expanded = true;
                     rowInfo.node.load = true;
-                    // this.treeData = changeNodeAtPath({ treeData: this.treeData, path: rowInfo.path, newNode: rowInfo.node, getNodeKey: ({ treeIndex }) => treeIndex });
                     var newTreeData = changeNodeAtPath({ treeData: treeData, path: rowInfo.path, newNode: rowInfo.node, getNodeKey: ({ treeIndex }) => treeIndex });
-
-                    // let newTree = addNodeUnderParent({
-                    //     treeData: this.treeData,
-                    //     newNode: dirList,
-                    //     expandParent: true,
-                    //     parentKey: rowInfo.treeIndex,
-                    //     getNodeKey: ({ treeIndex }) => treeIndex
-                    // });
-                    // this.treeData = newTree.treeData;
-                    // this.setState({ treeData: newTree.treeData });
                 }
                 else {
                     var newTreeData = dirList;
@@ -56,26 +44,12 @@ export default class FileBrowser extends React.Component {
             this.getDirList(this.refs.tree.state.treeData, rowInfo);
         }
         else if (rowInfo.node.children == undefined && rowInfo.node.load == undefined) {
-
-            // walk({
-            //     treeData: this.treeData,
-            //     getNodeKey: ({ treeIndex }) => treeIndex,
-            //     ignoreCollapsed: true,
-            //     callback: (rowInfoIter) => {
-            //         // If toggleMode just toggle to activate/inactivate selected node
-            //         // If non toggle mode inactive all nodes but selected
-            //         rowInfoIter.node.active = (rowInfoIter.treeIndex == rowInfo.treeIndex);
-            //         this.treeData = changeNodeAtPath({ treeData: this.treeData, path: rowInfoIter.path, newNode: rowInfoIter.node, getNodeKey: ({ treeIndex }) => treeIndex, ignoreCollapsed: true });
-            //         this.refs.tree.updateTreeData(this.treeData);
-            //     }
-            // });
             this.setState({ selection: rowInfo.node })
         }
-
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.open == false) {
+        if (prevProps.open == false && this.props.open) {
             this.getDirList([]);
         }
     }
