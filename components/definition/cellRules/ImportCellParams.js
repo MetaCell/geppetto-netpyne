@@ -96,7 +96,7 @@ export default class ImportCellParams extends React.Component {
         actions={actions}
       >
         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-          <CardTitle title="Import Cell Template" subtitle="Python or Hoc files" />
+          <CardTitle style={{paddingBottom: 0}} title="Import Cell Template" subtitle="Python or Hoc files" />
           <CardText>
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
               <TextField
@@ -119,10 +119,11 @@ export default class ImportCellParams extends React.Component {
               />
             </NetPyNEField>
 
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', float: 'left', marginTop: '15px' }}>
               <div style={{ float: 'left', width: '50%' }}>
-                <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox">
+                <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
                   <Checkbox
+                    style={{width: '90%'}}
                     checked={this.state.importSynMechs}
                     onCheck={(event) => this.updateCheck('importSynMechs')}
                   />
@@ -130,8 +131,9 @@ export default class ImportCellParams extends React.Component {
               </div>
 
               <div style={{ float: 'right', width: '50%' }}>
-                <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox">
+                <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
                   <Checkbox
+                    style={{width: '90%'}}
                     checked={this.state.compileMod}
                     onCheck={(event) => this.updateCheck('compileMod')}
                   />
