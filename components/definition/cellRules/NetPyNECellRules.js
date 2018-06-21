@@ -23,6 +23,7 @@ export default class NetPyNECellRules extends React.Component {
       drawerOpen: false,
       selectedCellRule: undefined,
       page: "main",
+      subComponentExists: true
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -42,8 +43,12 @@ export default class NetPyNECellRules extends React.Component {
     this.setState({ page: page });
   }
 
-  selectCellRule(cellRule) {
-    this.setState({ selectedCellRule: cellRule });
+  /* Method that handles button click */
+  selectCellRule(cellRule, buttonExists) {
+    this.setState({ 
+      selectedCellRule: cellRule,
+      subComponentExists: buttonExists
+    });
   }
 
   handleNewCellRule() {
@@ -62,7 +67,8 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     this.setState({
       value: model,
-      selectedCellRule: cellRuleId
+      selectedCellRule: cellRuleId,
+      subComponentExists: true
     });
   }
 
@@ -231,6 +237,8 @@ export default class NetPyNECellRules extends React.Component {
     var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedCellRule != nextState.selectCellRule))
+      return true;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
       if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
@@ -253,10 +261,14 @@ export default class NetPyNECellRules extends React.Component {
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
+        if((c == this.state.selectedCellRule) && !this.state.subComponentExists) {
+          delete model[c];
+          continue;
+        }
         cellRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
-      if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
+      if ((this.state.selectedCellRule && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
         selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
       }
 
@@ -286,10 +298,14 @@ export default class NetPyNECellRules extends React.Component {
       var sectionsModel = model[this.state.selectedCellRule].secs;
       var sections = [];
       for (var s in sectionsModel) {
+        if((s == this.state.selectedCellRule) && !this.state.subComponentExists) {
+          delete sectionsModel[s];
+          continue;
+        }
         sections.push(<NetPyNESectionThumbnail key={s} name={s} selected={s == this.state.selectedSection} handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
-      if (this.state.selectedSection && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
+      if ((this.state.selectedSection && this.state.subComponentExists) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
         selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} />;
       }
 
@@ -327,10 +343,14 @@ export default class NetPyNECellRules extends React.Component {
       var mechanismsModel = model[this.state.selectedCellRule].secs[this.state.selectedSection].mechs;
       var mechanisms = [];
       for (var m in mechanismsModel) {
+        if((m == this.state.selectedCellRule) && !this.state.subComponentExists) {
+          delete mechanismsModel[m];
+          continue;
+        }
         mechanisms.push(<NetPyNEMechanismThumbnail name={m} key={m} selected={m == this.state.selectedMechanism} model={mechanismsModel[m]} handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
-      if (this.state.selectedMechanism && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
+      if ((this.state.selectedMechanism && this.state.subComponentExists) && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
         selectedMechanism = <NetPyNEMechanism cellRule={this.state.selectedCellRule} section={this.state.selectedSection} name={this.state.selectedMechanism} model={mechanismsModel[this.state.selectedMechanism]} />;
       }
 

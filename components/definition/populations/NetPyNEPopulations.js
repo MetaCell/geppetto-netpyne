@@ -12,7 +12,8 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      selectedPopulation: undefined
+      selectedPopulation: undefined,
+      subComponentExists: true
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
@@ -59,6 +60,8 @@ export default class NetPyNEPopulations extends React.Component {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
+    if (this.state.subComponentExists != nextState.subComponentExists)
+      return true;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
@@ -85,13 +88,18 @@ export default class NetPyNEPopulations extends React.Component {
     model[populationId] = newPopulation;
     this.setState({
       value: model,
-      selectedPopulation: populationId
+      selectedPopulation: populationId,
+      subComponentExists: true
     });
 
   }
 
-  selectPopulation(populationName) {
-    this.setState({ selectedPopulation: populationName });
+  /* Method that handles button click */
+  selectPopulation(populationName, buttonExists) {
+    this.setState({ 
+      selectedPopulation: populationName, 
+      subComponentExists: buttonExists
+    });
   }
 
   render() {
@@ -103,10 +111,14 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var populations = [];
       for (var key in model) {
+        if(model[key].name == this.state.selectedPopulation && !this.state.subComponentExists) {
+          delete model[key];
+          continue;
+        }
         populations.push(<NetPyNEThumbnail name={key} key={key} selected={key == this.state.selectedPopulation} handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
-      if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
+      if ((this.state.selectedPopulation && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
         selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
       }
     }

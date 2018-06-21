@@ -38,7 +38,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.setState({ page: page });
   }
 
-  selectConnectivityRule(connectivityRule) {
+  /* Method that handles button click */
+  selectConnectivityRule(connectivityRule, buttonExists) {
     this.setState({ selectedConnectivityRule: connectivityRule });
   }
 

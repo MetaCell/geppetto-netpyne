@@ -18,7 +18,8 @@ export default class NetPyNEStimulationTargets extends React.Component {
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
   };
 
-  selectStimulationTarget(StimulationTarget) {
+  /* Method that handles button click */
+  selectStimulationTarget(StimulationTarget, buttonExists) {
     this.setState({ selectedStimulationTarget: StimulationTarget });
   };
 

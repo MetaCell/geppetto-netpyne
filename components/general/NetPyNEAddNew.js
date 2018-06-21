@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+require('./NetPyNEAddNew.less');
 
 export default class NetPyNEAddNew extends React.Component {
 
@@ -19,7 +20,11 @@ export default class NetPyNEAddNew extends React.Component {
 
   render() {
     return (
-      <FloatingActionButton id={this.props.id} mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
+      <FloatingActionButton 
+        id={this.props.id} 
+        mini={true} 
+        style={{ margin: 10, float: 'left' }} 
+        onClick={this.handleClick}>
         <ContentAdd />
       </FloatingActionButton>
     );

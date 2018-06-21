@@ -18,7 +18,8 @@ export default class NetPyNESynapses extends React.Component {
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
   };
 
-  selectSynapse(Synapse) {
+  /* Method that handles button click */
+  selectSynapse(Synapse, buttonExists) {
     this.setState({ selectedSynapse: Synapse });
   };
 

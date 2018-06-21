@@ -18,7 +18,8 @@ export default class NetPyNEStimulationSources extends React.Component {
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
   };
 
-  selectStimulationSource(StimulationSource) {
+  /* Method that handles button click */
+  selectStimulationSource(StimulationSource, buttonExists) {
     this.setState({ selectedStimulationSource: StimulationSource });
   };
 
