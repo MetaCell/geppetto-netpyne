@@ -53,10 +53,12 @@ export default class NetPyNEField extends Component {
             if (child.type.name != "Checkbox") {
                 extraProps['floatingLabelText'] = floatingLabelText;
             }
-
-            var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
-            if (dataSource != '') {
-                extraProps['dataSource'] = dataSource;
+            
+            if (child.type.name != "SelectField") {
+              var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
+              if (dataSource != '') {
+                  extraProps['dataSource'] = dataSource;
+              }
             }
 
             var type = Utils.getHTMLType(this.props.id);
