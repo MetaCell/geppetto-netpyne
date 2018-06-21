@@ -9,7 +9,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Utils from '../../Utils';
-import FileBrowser from './FileBrowser';
+import FileBrowser from '../general/FileBrowser';
 
 const SettingsDialog = React.createClass({
 

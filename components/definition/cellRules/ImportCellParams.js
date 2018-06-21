@@ -3,10 +3,11 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
-import {Card, CardTitle, CardText} from 'material-ui/Card';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
+import FileBrowser from '../../general/FileBrowser';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 
@@ -22,11 +23,12 @@ export default class ImportCellParams extends React.Component {
       modFolder: '',
       compileMod: false,
       importSynMechs: false,
+      explorerDialogOpen: false
     };
     this.updateCheck = this.updateCheck.bind(this);
     this.performAction = this.performAction.bind(this);
   };
-  
+
   updateCheck(name) {
     this.setState((oldState) => {
       return {
@@ -46,7 +48,30 @@ export default class ImportCellParams extends React.Component {
         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       });
     this.props.onRequestClose();
-      
+
+  };
+
+  showExplorerDialog(explorerParameter) {
+    this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter });
+  };
+
+  closeExplorerDialog(fieldValue) {
+    var newState = { explorerDialogOpen: false };
+    if (fieldValue) {
+      switch (this.state.explorerParameter) {
+        case "fileName":
+          newState["fileName"] = fieldValue.path;
+          break;
+        case "modFolder":
+          var fileName = fieldValue.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
+          var path = fieldValue.path.split(fileName)[0];
+          newState["modFolder"] = path;
+          break;
+        default:
+          throw ("Not a valid parameter!");
+      }
+    }
+    this.setState(newState);
   };
 
   render() {
@@ -74,45 +99,47 @@ export default class ImportCellParams extends React.Component {
           <CardTitle title="Import Cell Template" subtitle="Python or Hoc files" />
           <CardText>
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
-              <TextField 
-                value={this.state.fileName} 
-                onChange={(event) => this.setState({ fileName: event.target.value })}
+              <TextField
+                value={this.state.fileName}
+                onClick={() => this.showExplorerDialog('fileName')} readOnly
               />
             </NetPyNEField>
-            
+
             <NetPyNEField id="netParams.importCellParams.cellName" className="netpyneRightField">
               <TextField
-                value={this.state.cellName} 
-                onChange={(event) => this.setState({ cellName: event.target.value })} 
+                value={this.state.cellName}
+                onChange={(event) => this.setState({ cellName: event.target.value })}
               />
             </NetPyNEField>
-            
-            <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >  
-              <TextField 
-                value={this.state.modFolder} 
-                onChange={(event) => this.setState({ modFolder: event.target.value })}
+
+            <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
+              <TextField
+                value={this.state.modFolder}
+                onClick={() => this.showExplorerDialog('modFolder')} readOnly
               />
             </NetPyNEField>
-            
-            <div style={{width:'100%'}}>
-              <div style={{float:'left', width:'50%'}}>
+
+            <div style={{ width: '100%' }}>
+              <div style={{ float: 'left', width: '50%' }}>
                 <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox">
-                  <Checkbox 
+                  <Checkbox
                     checked={this.state.importSynMechs}
-                    onCheck={(event)=>this.updateCheck('importSynMechs')}
+                    onCheck={(event) => this.updateCheck('importSynMechs')}
                   />
                 </NetPyNEField>
               </div>
-              
-              <div style={{float:'right', width:'50%'}}>
+
+              <div style={{ float: 'right', width: '50%' }}>
                 <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox">
                   <Checkbox
                     checked={this.state.compileMod}
-                    onCheck={(event)=>this.updateCheck('compileMod')}
+                    onCheck={(event) => this.updateCheck('compileMod')}
                   />
                 </NetPyNEField>
               </div>
             </div>
+
+            <FileBrowser open={this.state.explorerDialogOpen} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </CardText>
         </Card>
       </Dialog>
