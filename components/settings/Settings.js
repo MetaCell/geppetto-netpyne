@@ -9,6 +9,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Utils from '../../Utils';
+import FileBrowser from './FileBrowser';
 
 const SettingsDialog = React.createClass({
 
@@ -24,7 +25,9 @@ const SettingsDialog = React.createClass({
             simConfigModuleName: "",
             simConfigVariable: "simConfig",
             modFolder: "",
-            compileMod: false
+            compileMod: false,
+            explorerDialogOpen: false,
+            explorerParameter: ""
         };
     },
 
@@ -51,6 +54,18 @@ const SettingsDialog = React.createClass({
             .then(() => {
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             });
+    },
+
+    showExplorerDialog(explorerParameter) {
+        this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter });
+    },
+
+    closeExplorerDialog(fieldValue) {
+        var newState = { explorerDialogOpen: false };
+        if (fieldValue) {
+            newState[this.state.explorerParameter] = fieldValue.path;
+        }
+        this.setState(newState);
     },
 
     render() {
@@ -84,17 +99,16 @@ const SettingsDialog = React.createClass({
                     <Tab value="import" label={'Import'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
                             <CardText>
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath')} readOnly/>
+                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath')} readOnly/>
 
-                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams path" value={this.state.netParamsPath} onChange={(event) => this.setState({ netParamsPath: event.target.value })} />
-                                <TextField className="netpyneRightField" floatingLabelText="SimConfig path" value={this.state.simConfigPath} onChange={(event) => this.setState({ simConfigPath: event.target.value })} />
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onChange={(event) => this.setState({ netParamsModuleName: event.target.value })} />
+                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onChange={(event) => this.setState({ simConfigModuleName: event.target.value })} />
 
-                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onChange={(event) => this.setState({ netParamsModuleName: event.target.value })} />
-                                <TextField className="netpyneRightField" floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onChange={(event) => this.setState({ simConfigModuleName: event.target.value })} />
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
 
-                                <TextField className="netpyneFieldNoWidth" floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
-                                <TextField className="netpyneRightField" floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-
-                                <div style={{ marginTop: 30, float: 'left', clear: 'both' }}>
+                                <div style={{ marginTop: 30, float: 'left', clear: 'both', width: '48%' }}>
                                     <Checkbox
                                         style={{ float: 'left', clear: 'both' }}
                                         label="Compile mod files"
@@ -105,9 +119,10 @@ const SettingsDialog = React.createClass({
                                             };
                                         })}
                                     />
-                                    <TextField style={{ float: 'left', clear: 'both' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onChange={(event) => this.setState({ modFolder: event.target.value })} />
+                                    <TextField style={{ float: 'left', clear: 'both', width: '100%' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onClick={() => this.showExplorerDialog('modFolder')} readOnly/>
                                 </div>
 
+                                <FileBrowser open={this.state.explorerDialogOpen} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                             </CardText>
                         </Card>
                     </Tab>
