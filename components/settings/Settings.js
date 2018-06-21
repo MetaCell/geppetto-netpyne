@@ -118,8 +118,8 @@ const SettingsDialog = React.createClass({
                                 <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath')} readOnly/>
                                 <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath')} readOnly/>
 
-                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onChange={(event) => this.setState({ netParamsModuleName: event.target.value })} />
-                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onChange={(event) => this.setState({ simConfigModuleName: event.target.value })} />
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath')} readOnly/>
+                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath')} readOnly/>
 
                                 <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
                                 <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
