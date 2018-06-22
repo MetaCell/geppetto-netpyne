@@ -64,16 +64,17 @@ const SettingsDialog = React.createClass({
     closeExplorerDialog(fieldValue) {
         var newState = { explorerDialogOpen: false };
         if (fieldValue) {
-            var fileName = fieldValue.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
-            var path = fieldValue.path.split(fileName)[0];
+            var fileName = fieldValue.path.replace(/^.*[\\\/]/, '');
+            var fileNameNoExtension= fileName.replace(/\.[^/.]+$/, "");
+            var path = fieldValue.path.split(fileName).slice(0, -1).join('');
             switch (this.state.explorerParameter) {
                 case "netParamsPath":
                     newState["netParamsPath"] = path;
-                    newState["netParamsModuleName"] = fileName;
+                    newState["netParamsModuleName"] = fileNameNoExtension;
                     break;
                 case "simConfigPath":
                     newState["simConfigPath"] = path;
-                    newState["simConfigModuleName"] = fileName;
+                    newState["simConfigModuleName"] = fileNameNoExtension;
                     break;
                 case "modFolder":
                     newState["modFolder"] = fieldValue.path;
