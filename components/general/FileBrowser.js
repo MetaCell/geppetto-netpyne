@@ -22,7 +22,7 @@ export default class FileBrowser extends React.Component {
         }
 
         Utils
-            .sendPythonMessage('netpyne_geppetto.getDirList', [path])
+            .sendPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs])
             .then((dirList) => {
                 if (treeData != [] && treeData.length > 0) {
                     rowInfo.node.children = dirList;
@@ -33,7 +33,12 @@ export default class FileBrowser extends React.Component {
                 else {
                     var newTreeData = dirList;
                 }
-                this.setState({ selection: undefined })
+                if (!this.props.exploreOnlyDirs || rowInfo == undefined){
+                    this.setState({ selection: undefined })
+                }
+                else{
+                    this.setState({ selection: rowInfo.node })
+                }
                 this.refs.tree.updateTreeData(newTreeData);
             });
     }
@@ -43,7 +48,7 @@ export default class FileBrowser extends React.Component {
         if (rowInfo.node.load == false) {
             this.getDirList(this.refs.tree.state.treeData, rowInfo);
         }
-        else if (rowInfo.node.children == undefined && rowInfo.node.load == undefined) {
+        else if (this.props.exploreOnlyDirs || (rowInfo.node.children == undefined && rowInfo.node.load == undefined)) {
             this.setState({ selection: rowInfo.node })
         }
     }
@@ -87,6 +92,7 @@ export default class FileBrowser extends React.Component {
                     treeData={[]}
                     handleClick={this.handleClickVisualize}
                     rowHeight={30}
+                    activateParentsNodeOnClick={this.props.exploreOnlyDirs}
                     ref="tree"
                 />
             </Dialog>
