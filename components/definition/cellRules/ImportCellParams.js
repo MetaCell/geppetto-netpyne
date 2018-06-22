@@ -16,8 +16,6 @@ export default class ImportCellParams extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      label: props.name,
-      conds: {},
       fileName: '',
       cellName: '',
       modFolder: '',
@@ -41,12 +39,22 @@ export default class ImportCellParams extends React.Component {
     // Show spinner
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
 
-    // Import template
     Utils
-      .sendPythonMessage('netpyne_geppetto.importCellTemplate', [this.state])
-      .then(() => {
-        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-      });
+      .sendPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
+      .then((response) => {
+        var data = {
+          conds : response,
+          label : this.props.name,
+          fileName : this.state.fileName,
+          cellName : this.state.cellName
+        };
+        // Import template
+        Utils
+          .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
+          .then(() => {
+            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+          });
+    });
     this.props.onRequestClose();
 
   };
