@@ -14,7 +14,7 @@ import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
-import ConnectivityRange from './ConnectivityRange';
+import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -71,7 +71,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       <MenuItem
         key={name}
         insetChildren={true}
-        checked={selected && selected.indexOf(name) > -1}
+        checked={selected.indexOf(name) > -1}
         value={name}
         primaryText={name}
       />
@@ -83,9 +83,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   render() {
-    var that = this;
-
-
     if (this.state.sectionId == "General") {
       var content =
         <div>
@@ -190,7 +187,36 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         
-        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"preConds"}/>
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'preConds'}
+          items={[
+            {value: 'x', label:'absolute'}, 
+            {value: 'xnorm', label:'normalized'}
+          ]}
+        />
+
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'preConds'}
+          items={[
+            {value: 'y', label:'absolute'}, 
+            {value: 'ynorm', label:'normalized'}
+          ]}
+        />
+
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'preConds'}
+          items={[
+            {value: 'z', label:'absolute'}, 
+            {value: 'znorm', label:'normalized'}
+          ]}
+        />
+      
       </div>
     }
     else if (this.state.sectionId == "Post Conditions") {
@@ -220,7 +246,36 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         
-        <ConnectivityRange id={"ConnpostConds"} name={this.props.name} conds={"postConds"}/>
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'postConds'}
+          items={[
+            {value: 'x', label:'absolute'}, 
+            {value: 'xnorm', label:'normalized'}
+          ]}
+        />
+
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'postConds'}
+          items={[
+            {value: 'y', label:'absolute'}, 
+            {value: 'ynorm', label:'normalized'}
+          ]}
+        />
+
+        <NetPyNECoordsRange 
+          name={this.props.name} 
+          model={'netParams.connParams'}
+          conds={'postConds'}
+          items={[
+            {value: 'z', label:'absolute'}, 
+            {value: 'znorm', label:'normalized'}
+          ]}
+        />
+        
       </div>
     }
 

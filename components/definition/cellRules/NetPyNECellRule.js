@@ -6,9 +6,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import ImportCellParams from './ImportCellParams';
+import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNECellRule extends React.Component {
@@ -28,8 +28,8 @@ export default class NetPyNECellRule extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-      that.renaming=true;
+      Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
+      that.renaming = true;
     });
 
   }
@@ -43,9 +43,9 @@ export default class NetPyNECellRule extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.name});
+    this.setState({ currentName: nextProps.name });
   }
-  
+
   postProcessMenuItems(pythonData, selected) {
     return pythonData.map((name) => (
       <MenuItem
@@ -57,79 +57,106 @@ export default class NetPyNECellRule extends React.Component {
       />
     ));
   };
-  
 
   render() {
-    var content = (<div>
-
-      <TextField
-        onChange={this.handleRenameChange}
-        value = {this.state.currentName}
-        disabled={this.renaming}
-        floatingLabelText="The name of the cell rule"
-        className={"netpyneField"}
-        id={"cellRuleName"}
-      />
-
-      <br/>
-
-      <div style={{marginTop: 100}}>
-      <b>Conditions:</b>
-      </div>
-      
-      <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
-        <PythonMethodControlledSelectField
-          model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
-          method={"netpyne_geppetto.getAvailableCellTypes"}
-          postProcessItems={this.postProcessMenuItems}
-          multiple={true}
-        />
-      </NetPyNEField>
-            
-      <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-        <PythonMethodControlledSelectField
-          model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
-          method={"netpyne_geppetto.getAvailableCellModels"}
-          postProcessItems={this.postProcessMenuItems}
-          multiple={true}
-        />
-      </NetPyNEField>
-      <br /><br />
-
-      <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-        <PythonMethodControlledSelectField
-          model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
-          method={"netpyne_geppetto.getAvailablePops"}
-          postProcessItems={this.postProcessMenuItems}
-          multiple={true}
-        />
-      </NetPyNEField>
-
-      <RaisedButton
-        label="Sections"
-        labelPosition="before"
-        primary={true}
-        onClick={() => this.props.selectPage("sections")}
-      />
-      
-      <RaisedButton
-        style={{marginLeft:40}}
-        label="Import template"
-        labelPosition="before"
-        primary={true}
-        onClick={() => this.setState({ importCellOpen: true })}
-      />
-      
-      <ImportCellParams 
-        name={this.state.currentName}
-        open={this.state.importCellOpen} 
-        onRequestClose={() => this.setState({ importCellOpen: false })}
-      />
-    </div>);
 
     return (
       <div>
-        {content}
+        <div>
+
+          <TextField
+            onChange={this.handleRenameChange}
+            value={this.state.currentName}
+            disabled={this.renaming}
+            floatingLabelText="The name of the cell rule"
+            className={"netpyneField"}
+            id={"cellRuleName"}
+          />
+
+          <div style={{ float: 'left', marginTop: '20px' }}>
+            <b>Conditions:</b>
+          </div>
+
+          <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
+            <PythonMethodControlledSelectField
+              model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
+              method={"netpyne_geppetto.getAvailableCellTypes"}
+              postProcessItems={this.postProcessMenuItems}
+              multiple={true}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
+            <PythonMethodControlledSelectField
+              model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
+              method={"netpyne_geppetto.getAvailableCellModels"}
+              postProcessItems={this.postProcessMenuItems}
+              multiple={true}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id={"netParams.cellParams.conds.pop"} >
+            <PythonMethodControlledSelectField
+              model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
+              method={"netpyne_geppetto.getAvailablePops"}
+              postProcessItems={this.postProcessMenuItems}
+              multiple={true}
+            />
+          </NetPyNEField>
+
+          <NetPyNECoordsRange
+            name={this.state.currentName}
+            model={'netParams.cellParams'}
+            conds={'conds'}
+            items={[
+              { value: 'x', label: 'absolute' },
+              { value: 'xnorm', label: 'normalized' }
+            ]}
+          />
+
+          <NetPyNECoordsRange
+            name={this.state.currentName}
+            model={'netParams.cellParams'}
+            conds={'conds'}
+            items={[
+              { value: 'y', label: 'absolute' },
+              { value: 'ynorm', label: 'normalized' }
+            ]}
+          />
+
+          <NetPyNECoordsRange
+            name={this.state.currentName}
+            model={'netParams.cellParams'}
+            conds={'conds'}
+            items={[
+              { value: 'z', label: 'absolute' },
+              { value: 'znorm', label: 'normalized' }
+            ]}
+          />
+
+          <div style={{ float: 'left', marginTop: '10px' }}>
+            <RaisedButton
+              label="Sections"
+              labelPosition="before"
+              primary={true}
+              onClick={() => this.props.selectPage("sections")}
+            />
+
+            <RaisedButton
+              style={{ marginLeft: 40 }}
+              label="Import template"
+              labelPosition="before"
+              primary={true}
+              onClick={() => this.setState({ importCellOpen: true })}
+            />
+          </div>
+
+          <ImportCellParams
+            name={this.state.currentName}
+            open={this.state.importCellOpen}
+            onRequestClose={() => this.setState({ importCellOpen: false })}
+          />
+        </div>
       </div>
     );
   };
