@@ -12,6 +12,7 @@ import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
+import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
 
 import Utils from '../../../Utils';
 
@@ -23,7 +24,8 @@ export default class NetPyNECellRules extends React.Component {
       drawerOpen: false,
       selectedCellRule: undefined,
       page: "main",
-      subComponentExists: true
+      subComponentExists: true,
+      deleteButton: false
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -31,12 +33,13 @@ export default class NetPyNECellRules extends React.Component {
     this.selectCellRule = this.selectCellRule.bind(this);
     this.handleNewCellRule = this.handleNewCellRule.bind(this);
 
-
     this.selectSection = this.selectSection.bind(this);
     this.handleNewSection = this.handleNewSection.bind(this);
 
     this.selectMechanism = this.selectMechanism.bind(this);
     this.handleNewMechanism = this.handleNewMechanism.bind(this);
+
+    this.handleDialogBox = this.handleDialogBox.bind(this);
   }
 
   selectPage(page) {
@@ -47,7 +50,8 @@ export default class NetPyNECellRules extends React.Component {
   selectCellRule(cellRule, buttonExists) {
     this.setState({ 
       selectedCellRule: cellRule,
-      subComponentExists: buttonExists
+      subComponentExists: buttonExists,
+      deleteButton: false
     });
   }
 
@@ -241,6 +245,8 @@ export default class NetPyNECellRules extends React.Component {
     var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if (this.state.deleteButton != nextState.deleteButton)
+      return true;
     if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedCellRule != nextState.selectCellRule))
       return true;
     if (!newModel) {
@@ -257,20 +263,31 @@ export default class NetPyNECellRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
+  handleDialogBox(childResponse) {
+    this.setState({
+      deleteButton: childResponse,
+      subComponentExists: !childResponse
+    });
+  }
+
   render() {
 
+    var deleteDialogBox = "";
     var that = this;
     var model = this.state.value;
     var content;
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
-        if((c == this.state.selectedCellRule) && !this.state.subComponentExists) {
+        if((c == this.state.selectedCellRule) && !this.state.subComponentExists && this.state.deleteButton) {
           var action = 'netpyne_geppetto.deleteParam';
           var paramToDel = "cellParams['" + this.state.selectedCellRule + "']";
           Utils.sendPythonMessage(action, [paramToDel]);
           delete model[c];
           continue;
+        }
+        if((c == this.state.selectedCellRule) && !this.state.subComponentExists && (this.state.deleteButton == false)) {
+          deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedCellRule}/>;
         }
         cellRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
       }
@@ -409,6 +426,7 @@ export default class NetPyNECellRules extends React.Component {
           id={"CellRules"}
         />
         {content}
+        {deleteDialogBox}
       </Card>);
   }
 }

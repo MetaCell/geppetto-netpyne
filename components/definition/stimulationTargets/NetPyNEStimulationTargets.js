@@ -5,6 +5,8 @@ import Utils from '../../../Utils';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
+import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
+
 
 export default class NetPyNEStimulationTargets extends React.Component {
 
@@ -13,17 +15,20 @@ export default class NetPyNEStimulationTargets extends React.Component {
     this.state = {
       selectedStimulationTarget: undefined,
       page: "main",
-      subComponentExists: true
+      subComponentExists: true,
+      deleteButton: false
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
+    this.handleDialogBox = this.handleDialogBox.bind(this);
   };
 
   /* Method that handles button click */
   selectStimulationTarget(StimulationTarget, buttonExists) {
     this.setState({ 
       selectedStimulationTarget: StimulationTarget,
-      subComponentExists: buttonExists
+      subComponentExists: buttonExists,
+      deleteButton: false
     });
   };
 
@@ -79,6 +84,8 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if (this.state.deleteButton != nextState.deleteButton)
+      return true;
     if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedStimulationTarget != nextState.selectedStimulationTarget))
       return true;
     if (this.state.value!=undefined) {
@@ -87,16 +94,27 @@ export default class NetPyNEStimulationTargets extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
+  handleDialogBox(childResponse) {
+    this.setState({
+      deleteButton: childResponse,
+      subComponentExists: !childResponse
+    });
+  }
+
   render() {
+    var deleteDialogBox = "";
     var model = this.state.value;
     var StimulationTargets = [];
     for (var c in model) {
-      if((c == this.state.selectedStimulationTarget) && !this.state.subComponentExists) {
+      if((c == this.state.selectedStimulationTarget) && !this.state.subComponentExists && this.state.deleteButton) {
         var action = 'netpyne_geppetto.deleteParam';
           var paramToDel = "stimTargetParams['" + this.state.selectedStimulationTarget + "']";
           Utils.sendPythonMessage(action, [paramToDel]);
         delete model[c];
         continue;
+      }
+      if((c == this.state.selectedStimulationTarget) && !this.state.subComponentExists && (this.state.deleteButton == false)) {
+        deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedStimulationTarget}/>;
       }
       StimulationTargets.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationTarget} handleClick={this.selectStimulationTarget} />);
     };
@@ -123,6 +141,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
           </div>
           <div style={{ clear: "both" }}></div>
           {StimulationTargets}
+          {deleteDialogBox}
         </div>
       </CardText>
     );

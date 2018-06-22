@@ -7,6 +7,8 @@ import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
+
 
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
@@ -22,14 +24,15 @@ export default class NetPyNEConnectivityRules extends React.Component {
       drawerOpen: false,
       selectedConnectivityRule: undefined,
       page: "main",
-      subComponentExists: true
+      subComponentExists: true,
+      deleteButton: false
     };
 
     this.selectPage = this.selectPage.bind(this);
 
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
-
+    this.handleDialogBox = this.handleDialogBox.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -43,7 +46,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
   selectConnectivityRule(connectivityRule, buttonExists) {
     this.setState({ 
       selectedConnectivityRule: connectivityRule,
-      subComponentExists: buttonExists
+      subComponentExists: buttonExists,
+      deleteButton: false
     });
   }
 
@@ -121,6 +125,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var selectionChanged = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
+    if (this.state.deleteButton != nextState.deleteButton)
+      return true;
     if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedConnectivityRule != nextState.selectedConnectivityRule))
       return true;
     if (!newModel) {
@@ -129,8 +135,16 @@ export default class NetPyNEConnectivityRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
+  handleDialogBox(childResponse) {
+    this.setState({
+      deleteButton: childResponse,
+      subComponentExists: !childResponse
+    });
+  }
+
   render() {
 
+    var deleteDialogBox = "";
     var that = this;
     var model = this.state.value;
     var content;
@@ -138,12 +152,15 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
       var ConnectivityRules = [];
       for (var c in model) {
-        if((c == this.state.selectedConnectivityRule) && !this.state.subComponentExists) {
+        if((c == this.state.selectedConnectivityRule) && !this.state.subComponentExists && this.state.deleteButton) {
           var action = 'netpyne_geppetto.deleteParam';
           var paramToDel = "connParams['" + this.state.selectedConnectivityRule + "']";
           Utils.sendPythonMessage(action, [paramToDel]);
           delete model[c];
           continue;
+        }
+        if((c == this.state.selectedConnectivityRule && !this.state.subComponentExists) && (this.state.deleteButton == false)) {
+          deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedConnectivityRule}/>;
         }
         ConnectivityRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
       }
@@ -171,6 +188,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
           </div>
           <div className={"details"}>
             {selectedConnectivityRule}
+            {deleteDialogBox}
           </div>
         </CardText>);
     }
