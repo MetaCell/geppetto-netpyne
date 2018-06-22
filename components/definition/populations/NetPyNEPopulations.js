@@ -113,8 +113,8 @@ export default class NetPyNEPopulations extends React.Component {
       for (var key in model) {
         if(model[key].name == this.state.selectedPopulation && !this.state.subComponentExists) {
           var action = 'netpyne_geppetto.deleteParam';
-          var paramToDel = 'netParams.popParams["' + this.state.selectedPopulation + '"]';
-          Utils.sendPythonMessage(action, paramToDel);
+          var paramToDel = "popParams['" + this.state.selectedPopulation + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
           delete model[key];
           continue;
         }

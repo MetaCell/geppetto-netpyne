@@ -266,6 +266,9 @@ export default class NetPyNECellRules extends React.Component {
       var cellRules = [];
       for (var c in model) {
         if((c == this.state.selectedCellRule) && !this.state.subComponentExists) {
+          var action = 'netpyne_geppetto.deleteParam';
+          var paramToDel = "cellParams['" + this.state.selectedCellRule + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
           delete model[c];
           continue;
         }

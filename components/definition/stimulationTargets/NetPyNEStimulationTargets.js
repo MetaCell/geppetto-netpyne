@@ -92,6 +92,9 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var StimulationTargets = [];
     for (var c in model) {
       if((c == this.state.selectedStimulationTarget) && !this.state.subComponentExists) {
+        var action = 'netpyne_geppetto.deleteParam';
+          var paramToDel = "stimTargetParams['" + this.state.selectedStimulationTarget + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
         delete model[c];
         continue;
       }

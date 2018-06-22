@@ -38,7 +38,8 @@ export default class NetPyNESynapses extends React.Component {
     model[SynapseId] = newSynapse;
     this.setState({
       value: model,
-      selectedSynapse: SynapseId
+      selectedSynapse: SynapseId,
+      subComponentExists: true
     });
   };
 
@@ -91,6 +92,9 @@ export default class NetPyNESynapses extends React.Component {
     var Synapses = [];
     for (var c in model) {
       if((c == this.state.selectedSynapse) && !this.state.subComponentExists) {
+        var action = 'netpyne_geppetto.deleteParam';
+          var paramToDel = "synMechParams['" + this.state.selectedSynapse + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
         delete model[c];
         continue;
       }

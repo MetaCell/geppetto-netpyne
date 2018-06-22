@@ -77,7 +77,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     model[connectivityRuleId] = newConnectivityRule;
     this.setState({
       value: model,
-      selectedConnectivityRule: connectivityRuleId
+      selectedConnectivityRule: connectivityRuleId,
+      subComponentExists: true
     });
   }
 
@@ -138,6 +139,9 @@ export default class NetPyNEConnectivityRules extends React.Component {
       var ConnectivityRules = [];
       for (var c in model) {
         if((c == this.state.selectedConnectivityRule) && !this.state.subComponentExists) {
+          var action = 'netpyne_geppetto.deleteParam';
+          var paramToDel = "connParams['" + this.state.selectedConnectivityRule + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
           delete model[c];
           continue;
         }

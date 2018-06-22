@@ -92,6 +92,9 @@ export default class NetPyNEStimulationSources extends React.Component {
     var StimulationSources = [];
     for (var c in model) {
       if((c == this.state.selectedStimulationSource) && !this.state.subComponentExists) {
+        var action = 'netpyne_geppetto.deleteParam';
+          var paramToDel = "stimSourceParams['" + this.state.selectedStimulationSource + "']";
+          Utils.sendPythonMessage(action, [paramToDel]);
         delete model[c];
         continue;
       }
