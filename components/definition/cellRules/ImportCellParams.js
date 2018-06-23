@@ -48,6 +48,7 @@ export default class ImportCellParams extends React.Component {
           fileName : this.state.fileName,
           cellName : this.state.cellName
         };
+
         // Import template
         Utils
           .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
@@ -79,6 +80,7 @@ export default class ImportCellParams extends React.Component {
           throw ("Not a valid parameter!");
       }
     }
+
     this.setState(newState);
   };
 
