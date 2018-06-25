@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-require('./NetPyNEAddNew.less');
 
 export default class NetPyNEAddNew extends React.Component {
 
