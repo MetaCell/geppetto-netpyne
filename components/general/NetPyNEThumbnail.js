@@ -26,8 +26,6 @@ export default class NetPyNEThumbnail extends React.Component {
     }
   };
 
-  
-
   handleHoverIn() {
     this.setState({
       isHovered: true
@@ -42,7 +40,6 @@ export default class NetPyNEThumbnail extends React.Component {
 
   handleDialogBox(response){
     if (this.props.handleClick && response) {
-      console.log(response)
       this.props.deleteMethod(this.props.name);
     }
   }
@@ -59,7 +56,7 @@ export default class NetPyNEThumbnail extends React.Component {
           onClick={this.handleClick}>
           {(this.state.isHovered && this.props.selected) ? "" : this.props.name}
         </FloatingActionButton>
-        <DeleteDialogBox open={this.state.dialogOpen} onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedCellRule} />
+        <DeleteDialogBox open={this.state.dialogOpen} onDialogResponse={this.handleDialogBox} textForDialog={this.props.name} />
       </div>
     );
   };

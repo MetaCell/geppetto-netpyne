@@ -24,8 +24,6 @@ export default class DeleteDialogBox extends React.Component {
     };
     
     componentDidUpdate(prevProps, prevState) {
-        console.log(prevProps);
-        console.log(this.props);
         if (prevProps.open != this.props.open){
             this.setState({open: this.props.open});
         }
