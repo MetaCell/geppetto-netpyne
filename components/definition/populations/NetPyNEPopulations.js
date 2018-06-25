@@ -66,7 +66,7 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   handleNewPopulation() {
-    var defaultPopulationValues = { 'Population': { 'cellModel': undefined, 'cellType': undefined } }
+    var defaultPopulationValues = { 'Population': { 'cellModel': '', 'cellType': '' } }
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
