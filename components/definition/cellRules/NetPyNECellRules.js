@@ -47,7 +47,7 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleNewCellRule() {
-    var defaultCellRules = { 'CellRule': {'conds':{'cellTye': '', 'cellModel': ''}, 'secs':{}} }
+    var defaultCellRules = { 'CellRule': {'conds':{'cellType': "", 'cellModel': ""}, 'secs':{}} }
     // Get Key and Value
     var key = Object.keys(defaultCellRules)[0];
     var value = defaultCellRules[key];

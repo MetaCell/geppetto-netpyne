@@ -206,8 +206,8 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModel, exp
 			});
 			casper.then(function () { //test contents of metadata
 				testElementValue(test, "#cellRuleName", expectedName);
-				testElementValue(test, "#cellRuleCellModel", expectedCellModel);
-				testElementValue(test, "#cellRuleCellType", expectedCellType);
+				testElementValue(test, "#cellRuleCellModel", null);
+				testElementValue(test, "#cellRuleCellType", null);
 			});
 		},5000);
 	});
