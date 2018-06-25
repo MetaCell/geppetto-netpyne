@@ -5,7 +5,6 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { changeNodeAtPath, walk, addNodeUnderParent } from 'react-sortable-tree';
 import Dialog from 'material-ui/Dialog';
-require('./FileBrowser.less')
 
 export default class FileBrowser extends React.Component {
 
@@ -73,8 +72,10 @@ export default class FileBrowser extends React.Component {
                 disabled={!this.state.selection}
             />
         ];
-
+        
+        var selectMessage=this.props.exploreOnlyDirs?"Select a folder. ":"Select a file. ";
         return (
+            
             <Dialog
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
@@ -82,13 +83,14 @@ export default class FileBrowser extends React.Component {
                 actions={actions}
             >
                 <div style={{marginBottom: '15px'}}>
-                    These paths are relative to 
+                    <b>{selectMessage}</b>
+                    These paths are relative to:<br/>
                     {window.isDocker ? " the folder you shared with docker (your mounted volume)" :
                         <span style={{border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px"}}>{window.currentFolder}</span>}
                 </div>
                 < Tree
                     id="TreeContainerCutting"
-                    style={{ width: "100%", height: "500px", float: 'left', marginTop: "-5px" }}
+                    style={{ width: "100%", height: "400px", float: 'left'}}
                     treeData={[]}
                     handleClick={this.handleClickVisualize}
                     rowHeight={30}
