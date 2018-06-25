@@ -19,7 +19,7 @@ export default class AdapterComponent extends Component {
          * state when this is modified by a new input or action of the user
          **/
         this.stateBuilder = {};
-        this.props.children.map( (child, index) => {
+        this.props.children.forEach( (child, index) => {
             this.stateBuilder[child.props.id] = '';
         });
         this.state = this.stateBuilder;

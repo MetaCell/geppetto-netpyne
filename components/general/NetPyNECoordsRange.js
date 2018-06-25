@@ -15,16 +15,12 @@ export default class NetPyNECoordsRange extends Component {
     super(props);
     this.state = {
       currentName: props.name,
-      rangeType: null,
+      rangeType: undefined,
     };
-    this.ranges = [
-      { value: this.props.items[0].value, stateVariable: 'rangeType' }, 
-      { value: this.props.items[1].value, stateVariable: 'rangeType' },
-    ];
   };
  
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
+    if (this.state.currentName != prevState.currentName || this.props.conds!=prevProps.conds) {
       this.updateLayout();
     };
   };
@@ -35,27 +31,27 @@ export default class NetPyNECoordsRange extends Component {
  
   componentWillReceiveProps(nextProps) {
     if (this.state.currentName != nextProps.name) {
-      this.setState({ model: nextProps.name});
-    }
-  }
+      this.setState({ currentName: nextProps.name});
+    };
+  };
 
   updateLayout() {
-    var message = this.props.model + "['" + this.state.currentName + "']"
-    if (this.props.conds!=undefined) message = message + "['" + this.props.conds + "']";
-    const getRange = (value, stateVariable) => {
+    var message = this.props.model + "['" + this.state.currentName + "']";
+    if (this.props.conds!=undefined) {
+      message = message + "['" + this.props.conds + "']";
+    };
+    this.setState({rangeType: undefined});
+    this.props.items.forEach((item) => {
       Utils
-        .sendPythonMessage("'" + value + "' in " + message)
+        .sendPythonMessage("'" + item.value + "' in " + message)
         .then((response) => {
           if (response) {
-            var newState = {};
-            newState[stateVariable] = value;
-            this.setState(newState)
-          };
+            this.setState({rangeType: item.value});
+          }
         });
-    };
-    this.ranges.forEach((range) => { getRange(range.value, range.stateVariable) })
+    });
   };
-     
+  
   createMenuItems = () => {
     return this.props.items.map((obj) => (
       <MenuItem
@@ -72,7 +68,7 @@ export default class NetPyNECoordsRange extends Component {
       var path = this.props.model + "['" + this.state.currentName + "']['" + this.props.conds + "']['" + this.state.rangeType + "']";
     } else {
       var meta = this.props.model + '.' + this.props.items[0].value;
-      var path = this.props.model + "['" + this.state.currentName + "']['" + this.state.rangeType + "']"
+      var path = this.props.model + "['" + this.state.currentName + "']['" + this.state.rangeType + "']";
     };
     
     return (
@@ -93,7 +89,7 @@ export default class NetPyNECoordsRange extends Component {
               convertToPython={(state) => {
                 if(state[state.lastUpdated].toString().endsWith("."))
                   return undefined;
-                if ((state.min != undefined && !isNaN(parseFloat(state.min))) && (state.max != undefined && !isNaN(parseFloat(state.max)))) {
+                if ((!isNaN(parseFloat(state.min))) && (!isNaN(parseFloat(state.max)))) {
                   return [parseFloat(state.min), parseFloat(state.max)];
                 }}
               }
@@ -103,8 +99,8 @@ export default class NetPyNECoordsRange extends Component {
                 }}
               }
             >
-              <TextField floatingLabelText="Minimum" id="min" style={{marginLeft: 40}}/>
-              <TextField floatingLabelText="Maximum" id="max" style={{marginLeft: 80}}/>
+              <TextField floatingLabelText="Minimum" id="min" style={{marginLeft: 10}}/>
+              <TextField floatingLabelText="Maximum" id="max" style={{marginLeft: 10}}/>
             </PythonControlledAdapterComponent>
           </div>
         : null}
