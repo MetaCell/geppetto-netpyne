@@ -12,7 +12,11 @@ export default class AdapterComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.stateBuilder = {};
+         props.children.forEach( (child, index) => {
+             this.stateBuilder[child.props.id] = '';
+        });
+        this.state = this.stateBuilder;
 
         this.handleChildChange = this.handleChildChange.bind(this);
     }
@@ -22,12 +26,23 @@ export default class AdapterComponent extends Component {
             this.setState(newValue);
         }
     }
+    
+    updateInputState(event, value) {
+        if(this.state != undefined)
+            var returnObj = this.state;
+        else
+            var returnObj = {};
+        returnObj[event.target.id] = value;
+        return returnObj;
+    }
 
     handleChildChange(event, value) {
         // Update State
-        this.state[event.target.id]= value;
+        var stateObject = this.updateInputState(event, value);
+        this.setState(stateObject);
 
         // Call to conversion function
+        this.state["lastUpdated"] = event.target.id;
         var newValue = this.props.convertToPython(this.state);
         if (newValue != undefined && this.state.value != newValue){
             this.props.onChange(null, null, newValue);

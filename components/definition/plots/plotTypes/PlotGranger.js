@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
+import TimeRange from '../TimeRange'
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -44,7 +45,7 @@ export default class PlotGranger extends React.Component {
         </NetPyNEField>
         
         <NetPyNEField id="simConfig.analysis.granger.timeRange" >
-          <PythonControlledTextField model={tags + "['timeRange']"} />
+          <TimeRange model={tags + "['timeRange']"} />
         </NetPyNEField>
         
         <NetPyNEField id="simConfig.analysis.granger.binSize" >
