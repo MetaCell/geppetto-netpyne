@@ -15,7 +15,7 @@ export default class DictComponent extends Component {
         children: {},
         newItemValue: ""
     };
-    
+
     this.addChild = this.addChild.bind(this);
     this.handleNewItemChange = this.handleNewItemChange.bind(this);
   }
@@ -35,7 +35,7 @@ export default class DictComponent extends Component {
   getErrorMessage() {
     switch (this.props.realType) {
       case 'dict':
-        var message = 'Key:Value pairs must be separated by a colon --> : ';
+        var message = 'Key:Value pairs must be separated by colon : ';
         break;
       default:
         var message = 'No valid value';
@@ -61,13 +61,13 @@ export default class DictComponent extends Component {
           var newValue = this.state.newItemValue;
           break;
       }
-      if (!isNaN(newValue[1])) { 
+      if (!isNaN(newValue[1])) {
         newValue[1] = parseFloat(newValue[1])
       }
       children[newValue[0]] = newValue[1];
       // Call to conversion function
       this.convertToPython(children);
-    } 
+    }
     else {
     this.setState({ newItemErrorText: this.getErrorMessage() })
     }
@@ -83,7 +83,7 @@ export default class DictComponent extends Component {
   convertToPython(children) {
     // Update State
     this.setState({ children: children, newItemValue: "" });
-    
+
     if (children != undefined) {
       this.props.onChange(null, null, children);
     }
@@ -136,7 +136,7 @@ export default class DictComponent extends Component {
       />
       {!this.state.newItemErrorText &&
         <IconButton
-          iconStyle={{ width: 10, height: 10 }}
+          iconStyle={{ width: 10, height: 10}}
           className={"listButtonLarge"}
           onClick={this.addChild}
           tooltip="Add item to the list"
