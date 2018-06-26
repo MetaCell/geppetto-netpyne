@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
 import AdapterComponent from '../../general/AdapterComponent';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
