@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 /**
- * The slider bar can have a set minimum and maximum, and the value can be
- * obtained through the value parameter fired on an onChange event.
+ * The adapter component provides a mechanism to group graphical components.
+ * that act as a single component when communicating to python.
+ * This creates a 1-to-n mapping between the python variable and the 
+ * multiple js components.
  */
+
 export default class AdapterComponent extends Component {
 
     constructor(props) {
         super(props);
+        /** 
+         * the state is constructed dynamically from the id props of each children
+         * in this way we are declaring a controlled component that can handle his own
+         * state when this is modified by a new input or action of the user
+         **/
         this.stateBuilder = {};
-         props.children.forEach( (child, index) => {
-             this.stateBuilder[child.props.id] = '';
+        this.props.children.forEach( (child, index) => {
+            this.stateBuilder[child.props.id] = '';
         });
         this.state = this.stateBuilder;
 
@@ -26,23 +30,15 @@ export default class AdapterComponent extends Component {
             this.setState(newValue);
         }
     }
-    
-    updateInputState(event, value) {
-        if(this.state != undefined)
-            var returnObj = this.state;
-        else
-            var returnObj = {};
-        returnObj[event.target.id] = value;
-        return returnObj;
-    }
 
     handleChildChange(event, value) {
         // Update State
-        var stateObject = this.updateInputState(event, value);
-        this.setState(stateObject);
+        var newState =this.state;
+        newState['lastUpdated']= event.target.id;
+        newState[event.target.id]=value;
+        this.setState(newState)
 
         // Call to conversion function
-        this.state["lastUpdated"] = event.target.id;
         var newValue = this.props.convertToPython(this.state);
         if (newValue != undefined && this.state.value != newValue){
             this.props.onChange(null, null, newValue);
@@ -50,7 +46,6 @@ export default class AdapterComponent extends Component {
     }
 
     render() {
-
         const childrenWithExtraProp = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
                 onChange: this.handleChildChange,
