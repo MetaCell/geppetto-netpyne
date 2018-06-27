@@ -16,10 +16,14 @@ export default class NetPyNEStimulationTargets extends React.Component {
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
+    this.deleteStimulationTarget = this.deleteStimulationTarget.bind(this);
   };
 
+  /* Method that handles button click */
   selectStimulationTarget(StimulationTarget) {
-    this.setState({ selectedStimulationTarget: StimulationTarget });
+    this.setState({ 
+      selectedStimulationTarget: StimulationTarget
+    });
   };
 
   handleNewStimulationTarget() {
@@ -77,11 +81,24 @@ export default class NetPyNEStimulationTargets extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
+  deleteStimulationTarget(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["stimTargetParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedStimulationTarget: undefined});
+    });
+  }
+
   render() {
     var model = this.state.value;
     var StimulationTargets = [];
     for (var c in model) {
-      StimulationTargets.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationTarget} handleClick={this.selectStimulationTarget} />);
+      StimulationTargets.push(<NetPyNEThumbnail 
+        name={c} 
+        key={c} 
+        selected={c == this.state.selectedStimulationTarget} 
+        deleteMethod={this.deleteStimulationTarget}
+        handleClick={this.selectStimulationTarget} />);
     };
     var selectedStimulationTarget = undefined;
     if (this.state.selectedStimulationTarget && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {

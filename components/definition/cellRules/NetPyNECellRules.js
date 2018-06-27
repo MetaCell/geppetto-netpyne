@@ -22,28 +22,33 @@ export default class NetPyNECellRules extends React.Component {
     this.state = {
       drawerOpen: false,
       selectedCellRule: undefined,
-      page: "main",
+      selectedSection: undefined,
+      selectedMechanism: undefined,
+      page: "main"
     };
 
     this.selectPage = this.selectPage.bind(this);
 
     this.selectCellRule = this.selectCellRule.bind(this);
     this.handleNewCellRule = this.handleNewCellRule.bind(this);
-
+    this.deleteCellRule = this.deleteCellRule.bind(this);
 
     this.selectSection = this.selectSection.bind(this);
     this.handleNewSection = this.handleNewSection.bind(this);
+    this.deleteSection = this.deleteSection.bind(this);
 
     this.selectMechanism = this.selectMechanism.bind(this);
     this.handleNewMechanism = this.handleNewMechanism.bind(this);
+    this.deleteMechanism = this.deleteMechanism.bind(this);
   }
 
   selectPage(page) {
     this.setState({ page: page });
   }
 
+  /* Method that handles button click */
   selectCellRule(cellRule) {
-    this.setState({ selectedCellRule: cellRule });
+    this.setState({selectedCellRule: cellRule});
   }
 
   handleNewCellRule() {
@@ -245,6 +250,34 @@ export default class NetPyNECellRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
+  deleteCellRule(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedCellRule: undefined});
+    });
+  };
+
+  deleteMechanism(name) {
+    if(this.state.selectedCellRule != undefined && this.state.selectedSection != undefined) {
+      Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + this.state.selectedCellRule + "']['secs']['" + this.state.selectedSection + "']['mechs']['" + name + "']"]).then((response) =>{
+        var model = this.state.value;
+        delete model[this.state.selectedCellRule].secs[this.state.selectedSection]['mechs'][name];
+        this.setState({value: model, selectedMechanism: undefined});
+      });
+    }
+  };
+
+  deleteSection(name) {
+    if(this.state.selectedCellRule != undefined) {
+      Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + this.state.selectedCellRule + "']['secs']['" + name + "']"]).then((response) =>{
+        var model = this.state.value;
+        delete model[this.state.selectedCellRule]['secs'][name];
+        this.setState({value: model, selectedSection: undefined});
+      });
+    }
+  };
+
   render() {
 
     var that = this;
@@ -253,7 +286,12 @@ export default class NetPyNECellRules extends React.Component {
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
-        cellRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
+        cellRules.push(<NetPyNEThumbnail 
+          name={c} 
+          key={c} 
+          selected={c == this.state.selectedCellRule}
+          deleteMethod={this.deleteCellRule}
+          handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
@@ -286,7 +324,11 @@ export default class NetPyNECellRules extends React.Component {
       var sectionsModel = model[this.state.selectedCellRule].secs;
       var sections = [];
       for (var s in sectionsModel) {
-        sections.push(<NetPyNESectionThumbnail key={s} name={s} selected={s == this.state.selectedSection} handleClick={this.selectSection} />);
+        sections.push(<NetPyNESectionThumbnail 
+          key={s} name={s} 
+          selected={s == this.state.selectedSection}
+          deleteMethod={this.deleteSection}
+          handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
       if (this.state.selectedSection && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
@@ -327,7 +369,13 @@ export default class NetPyNECellRules extends React.Component {
       var mechanismsModel = model[this.state.selectedCellRule].secs[this.state.selectedSection].mechs;
       var mechanisms = [];
       for (var m in mechanismsModel) {
-        mechanisms.push(<NetPyNEMechanismThumbnail name={m} key={m} selected={m == this.state.selectedMechanism} model={mechanismsModel[m]} handleClick={this.selectMechanism} />);
+        mechanisms.push(<NetPyNEMechanismThumbnail 
+          name={m} 
+          key={m} 
+          selected={m == this.state.selectedMechanism} 
+          model={mechanismsModel[m]} 
+          deleteMethod={this.deleteMechanism}
+          handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
       if (this.state.selectedMechanism && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {

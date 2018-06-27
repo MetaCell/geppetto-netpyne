@@ -16,10 +16,12 @@ export default class NetPyNEStimulationSources extends React.Component {
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
+    this.deleteStimulationSource = this.deleteStimulationSource.bind(this);
   };
 
+  /* Method that handles button click */
   selectStimulationSource(StimulationSource) {
-    this.setState({ selectedStimulationSource: StimulationSource });
+    this.setState({selectedStimulationSource: StimulationSource});
   };
 
   handleNewStimulationSource() {
@@ -77,11 +79,24 @@ export default class NetPyNEStimulationSources extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
+  deleteStimulationSource(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["stimSourceParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedStimulationSource: undefined});
+    });
+  }
+
   render() {
     var model = this.state.value;
     var StimulationSources = [];
     for (var c in model) {
-      StimulationSources.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedStimulationSource} handleClick={this.selectStimulationSource} />);
+      StimulationSources.push(<NetPyNEThumbnail 
+        name={c} 
+        key={c} 
+        selected={c == this.state.selectedStimulationSource} 
+        deleteMethod={this.deleteStimulationSource}
+        handleClick={this.selectStimulationSource} />);
     };
     
     var selectedStimulationSource = undefined;
