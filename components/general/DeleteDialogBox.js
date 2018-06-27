@@ -6,7 +6,7 @@
  *  @author Adrian Quintana
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -19,9 +19,6 @@ export default class DeleteDialogBox extends React.Component {
             open: props.open,
             response: false
         };
-
-        this.handleCloseNo = this.handleCloseNo.bind(this);
-        this.handleCloseOk = this.handleCloseOk.bind(this);
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -30,29 +27,18 @@ export default class DeleteDialogBox extends React.Component {
       }
     }
     
-    handleCloseOk() {
-        this.props.onDialogResponse(true);
-        this.setState({open: false});
-
-    };
-
-    handleCloseNo() {
-        this.props.onDialogResponse(false);
-        this.setState({open: false});
-    };
-    
     render() {
         const actions = [
           <FlatButton
             label="Cancel"
             primary={true}
-            onClick={this.handleCloseNo}
+            onClick={() => this.props.onDialogResponse(false)}
           />,
           <FlatButton
             label="Confirm"
             primary={true}
             keyboardFocused={true}
-            onClick={this.handleCloseOk}
+            onClick={() => this.props.onDialogResponse(true)}
           />,
         ];
     
