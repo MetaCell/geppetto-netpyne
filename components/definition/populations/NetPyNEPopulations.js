@@ -120,12 +120,10 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var selectedPopulation = undefined;
       if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
-        selectedPopulation = <NetPyNEPopulation 
-          name={this.state.selectedPopulation} 
-          model={this.state.value[this.state.selectedPopulation]} />;
+        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
       }
     }
-    
+
     return (
       <Card style={{ clear: 'both' }}>
         <CardHeader

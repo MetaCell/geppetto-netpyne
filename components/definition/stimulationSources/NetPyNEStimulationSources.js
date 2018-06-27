@@ -101,8 +101,7 @@ export default class NetPyNEStimulationSources extends React.Component {
     
     var selectedStimulationSource = undefined;
     if (this.state.selectedStimulationSource && Object.keys(model).indexOf(this.state.selectedStimulationSource)>-1) {
-      selectedStimulationSource = <NetPyNEStimulationSource 
-        name={this.state.selectedStimulationSource} />;
+      selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} />;
     };
     
     var content = (

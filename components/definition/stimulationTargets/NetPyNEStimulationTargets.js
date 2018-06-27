@@ -6,7 +6,6 @@ import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
 
-
 export default class NetPyNEStimulationTargets extends React.Component {
 
   constructor(props) {
@@ -103,8 +102,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     };
     var selectedStimulationTarget = undefined;
     if (this.state.selectedStimulationTarget && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
-      selectedStimulationTarget = <NetPyNEStimulationTarget 
-        name={this.state.selectedStimulationTarget}/>;
+      selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget}/>;
     };
 
     var content = (
