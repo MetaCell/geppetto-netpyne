@@ -7,7 +7,6 @@ import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
 
 
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -23,16 +22,14 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.state = {
       drawerOpen: false,
       selectedConnectivityRule: undefined,
-      page: "main",
-      subComponentExists: true,
-      deleteButton: false
+      page: "main"
     };
 
     this.selectPage = this.selectPage.bind(this);
 
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
-    this.handleDialogBox = this.handleDialogBox.bind(this);
+    this.deleteConnectivityRule = this.deleteConnectivityRule.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -43,12 +40,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
   }
 
   /* Method that handles button click */
-  selectConnectivityRule(connectivityRule, buttonExists) {
-    this.setState({ 
-      selectedConnectivityRule: connectivityRule,
-      subComponentExists: buttonExists,
-      deleteButton: false
-    });
+  selectConnectivityRule(connectivityRule) {
+    this.setState({selectedConnectivityRule: connectivityRule});
   }
 
   handleNewConnectivityRule() {
@@ -71,18 +64,13 @@ export default class NetPyNEConnectivityRules extends React.Component {
     // Get New Available ID
     var connectivityRuleId = Utils.getAvailableKey(model, key);
 
-    // Create new Connectivity rule Object
-    var newConnectivityRule = Object.assign({name: connectivityRuleId}, value);
-
     // Create Cell Rule Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.connParams["' + connectivityRuleId + '"] = ' + JSON.stringify(value));
 
     // Update state
-    model[connectivityRuleId] = newConnectivityRule;
     this.setState({
       value: model,
-      selectedConnectivityRule: connectivityRuleId,
-      subComponentExists: true
+      selectedConnectivityRule: connectivityRuleId
     });
   }
 
@@ -125,26 +113,22 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var selectionChanged = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.deleteButton != nextState.deleteButton)
-      return true;
-    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedConnectivityRule != nextState.selectedConnectivityRule))
-      return true;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
-  handleDialogBox(childResponse) {
-    this.setState({
-      deleteButton: childResponse,
-      subComponentExists: !childResponse
+  deleteConnectivityRule(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["connParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedConnectivityRule: undefined});
     });
   }
 
   render() {
 
-    var deleteDialogBox = "";
     var that = this;
     var model = this.state.value;
     var content;
@@ -152,21 +136,19 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
       var ConnectivityRules = [];
       for (var c in model) {
-        if((c == this.state.selectedConnectivityRule) && !this.state.subComponentExists && this.state.deleteButton) {
-          var action = 'netpyne_geppetto.deleteParam';
-          var paramToDel = "connParams['" + this.state.selectedConnectivityRule + "']";
-          Utils.sendPythonMessage(action, [paramToDel]);
-          delete model[c];
-          continue;
-        }
-        if((c == this.state.selectedConnectivityRule && !this.state.subComponentExists) && (this.state.deleteButton == false)) {
-          deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedConnectivityRule}/>;
-        }
-        ConnectivityRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
+        ConnectivityRules.push(<NetPyNEThumbnail 
+          name={c} 
+          key={c} 
+          selected={c == this.state.selectedConnectivityRule} 
+          deleteMethod={this.deleteConnectivityRule}
+          handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
-      if ((this.state.selectedConnectivityRule && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
-        selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} />;
+      if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
+        selectedConnectivityRule = <NetPyNEConnectivityRule 
+          name={this.state.selectedConnectivityRule} 
+          model={this.state.value[this.state.selectedConnectivityRule]} 
+          selectPage={this.selectPage} />;
       }
 
       content = (
@@ -188,7 +170,6 @@ export default class NetPyNEConnectivityRules extends React.Component {
           </div>
           <div className={"details"}>
             {selectedConnectivityRule}
-            {deleteDialogBox}
           </div>
         </CardText>);
     }

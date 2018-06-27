@@ -5,7 +5,6 @@ import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
 
 
 export default class NetPyNESynapses extends React.Component {
@@ -14,22 +13,16 @@ export default class NetPyNESynapses extends React.Component {
     super(props);
     this.state = {
       selectedSynapse: undefined,
-      page: "main",
-      subComponentExists: true,
-      deleteButton: false
+      page: "main"
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
-    this.handleDialogBox = this.handleDialogBox.bind(this);
+    this.deleteSynapse = this.deleteSynapse.bind(this);
   };
 
   /* Method that handles button click */
-  selectSynapse(Synapse, buttonExists) {
-    this.setState({ 
-      selectedSynapse: Synapse,
-      subComponentExists: buttonExists,
-      deleteButton: false
-    });
+  selectSynapse(Synapse) {
+    this.setState({selectedSynapse: Synapse});
   };
 
   handleNewSynapse() {
@@ -38,13 +31,10 @@ export default class NetPyNESynapses extends React.Component {
     var value = defaultSynapses[key];
     var model = this.state.value;
     var SynapseId = Utils.getAvailableKey(model, key);
-    var newSynapse = Object.assign({name: SynapseId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
-    model[SynapseId] = newSynapse;
     this.setState({
       value: model,
-      selectedSynapse: SynapseId,
-      subComponentExists: true
+      selectedSynapse: SynapseId
     });
   };
 
@@ -84,20 +74,17 @@ export default class NetPyNESynapses extends React.Component {
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.deleteButton != nextState.deleteButton)
-      return true;
-    if ((this.state.subComponentExists != nextState.subComponentExists) || (this.state.selectedSynapse != nextState.selectedSynapse))
-      return true;
     if (this.state.value != undefined) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
-  handleDialogBox(childResponse) {
-    this.setState({
-      deleteButton: childResponse,
-      subComponentExists: !childResponse
+  deleteSynapse(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedSynapse: undefined});
     });
   }
 
@@ -106,20 +93,15 @@ export default class NetPyNESynapses extends React.Component {
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
-      if((c == this.state.selectedSynapse) && !this.state.subComponentExists && this.state.deleteButton) {
-        var action = 'netpyne_geppetto.deleteParam';
-          var paramToDel = "synMechParams['" + this.state.selectedSynapse + "']";
-          Utils.sendPythonMessage(action, [paramToDel]);
-        delete model[c];
-        continue;
-      }
-      if((c == this.state.selectedSynapse) && !this.state.subComponentExists && (this.state.deleteButton == false)) {
-        deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedSynapse}/>;
-      }
-      Synapses.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
+      Synapses.push(<NetPyNEThumbnail 
+        name={c} 
+        key={c} 
+        selected={c == this.state.selectedSynapse}
+        deleteMethod={this.deleteSynapse}
+        handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
-    if ((this.state.selectedSynapse && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
+    if (this.state.selectedSynapse && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
       selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} />;
     };
 
@@ -149,7 +131,6 @@ export default class NetPyNESynapses extends React.Component {
             </div>
             <div style={{ clear: "both" }}></div>
             {Synapses}
-            {deleteDialogBox}
           </div>
         </CardText>
       </Card>

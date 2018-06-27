@@ -5,7 +5,6 @@ import Utils from '../../../Utils';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import DialogBox from '../../../../../js/components/controls/dialogBox/DialogBox';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -13,14 +12,12 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      selectedPopulation: undefined,
-      subComponentExists: true,
-      deleteButton: false
+      selectedPopulation: undefined
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
-    this.handleDialogBox = this.handleDialogBox.bind(this);
+    this.deletePopulation = this.deletePopulation.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -62,10 +59,6 @@ export default class NetPyNEPopulations extends React.Component {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
-    if (this.state.deleteButton != nextState.deleteButton)
-      return true;
-    if (this.state.subComponentExists != nextState.subComponentExists)
-      return true;
     if (!newModel) {
       newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
@@ -92,31 +85,26 @@ export default class NetPyNEPopulations extends React.Component {
     model[populationId] = newPopulation;
     this.setState({
       value: model,
-      selectedPopulation: populationId,
-      subComponentExists: true
+      selectedPopulation: populationId
     });
 
   }
 
   /* Method that handles button click */
-  selectPopulation(populationName, buttonExists) {
-    this.setState({ 
-      selectedPopulation: populationName, 
-      subComponentExists: buttonExists,
-      deleteButton: false
-    });
+  selectPopulation(populationName) {
+    this.setState({selectedPopulation: populationName});
   }
 
-  handleDialogBox(childResponse) {
-    this.setState({
-      deleteButton: childResponse,
-      subComponentExists: !childResponse
+  deletePopulation(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedPopulation: undefined});
     });
   }
 
   render() {
 
-    var deleteDialogBox = "";
     if (this.state.value != undefined && this.state.value != "") {
       var model = this.state.value;
       for (var m in model) {
@@ -124,21 +112,17 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var populations = [];
       for (var key in model) {
-        if(model[key].name == this.state.selectedPopulation && !this.state.subComponentExists && this.state.deleteButton) {
-          var action = 'netpyne_geppetto.deleteParam';
-          var paramToDel = "popParams['" + this.state.selectedPopulation + "']";
-          Utils.sendPythonMessage(action, [paramToDel]);
-          delete model[key];
-          continue;
-        }
-        if((model[key].name == this.state.selectedPopulation && !this.state.subComponentExists) && (this.state.deleteButton == false)) {
-          deleteDialogBox = <DialogBox onDialogResponse={this.handleDialogBox} textForDialog={this.state.selectedPopulation}/>;
-        }
-        populations.push(<NetPyNEThumbnail name={key} key={key} selected={key == this.state.selectedPopulation} handleClick={this.selectPopulation} />);
+        populations.push(<NetPyNEThumbnail 
+          name={key} key={key} 
+          selected={key == this.state.selectedPopulation}
+          deleteMethod={this.deletePopulation}
+          handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
-      if ((this.state.selectedPopulation && this.state.subComponentExists) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
-        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
+      if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
+        selectedPopulation = <NetPyNEPopulation 
+          name={this.state.selectedPopulation} 
+          model={this.state.value[this.state.selectedPopulation]} />;
       }
     }
     
@@ -168,7 +152,6 @@ export default class NetPyNEPopulations extends React.Component {
             </div>
             <div style={{ clear: "both" }}></div>
             {populations}
-            {deleteDialogBox}
           </div>
         </CardText>
       </Card>
