@@ -13,6 +13,7 @@ import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 
+
 import Utils from '../../../Utils';
 
 export default class NetPyNECellRules extends React.Component {
@@ -29,6 +30,7 @@ export default class NetPyNECellRules extends React.Component {
 
     this.selectCellRule = this.selectCellRule.bind(this);
     this.handleNewCellRule = this.handleNewCellRule.bind(this);
+    this.deleteCellRule = this.deleteCellRule.bind(this);
 
 
     this.selectSection = this.selectSection.bind(this);
@@ -245,6 +247,14 @@ export default class NetPyNECellRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
+  deleteCellRule(name){
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedCellRule: undefined });
+    });
+  }
+
   render() {
 
     var that = this;
@@ -253,11 +263,19 @@ export default class NetPyNECellRules extends React.Component {
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
-        cellRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedCellRule} handleClick={this.selectCellRule} />);
+        cellRules.push(<NetPyNEThumbnail
+          name={c}
+          key={c}
+          selected={c == this.state.selectedCellRule}
+          deleteMethod={this.deleteCellRule}
+          handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
       if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
-        selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
+        selectedCellRule = <NetPyNECellRule
+              name={this.state.selectedCellRule}
+              model={this.state.value[this.state.selectedCellRule]}
+              selectPage={this.selectPage} />;
       }
 
       content = (
@@ -382,6 +400,7 @@ export default class NetPyNECellRules extends React.Component {
           id={"CellRules"}
         />
         {content}
+        
       </Card>);
   }
 }
