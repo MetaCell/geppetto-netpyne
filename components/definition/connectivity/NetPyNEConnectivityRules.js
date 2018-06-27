@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-
 
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';

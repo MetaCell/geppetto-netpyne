@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
@@ -89,7 +89,6 @@ export default class NetPyNESynapses extends React.Component {
   }
 
   render() {
-    var deleteDialogBox = "";
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {

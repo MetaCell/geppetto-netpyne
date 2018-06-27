@@ -332,11 +332,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedSection = undefined;
       if (this.state.selectedSection && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
-        selectedSection = <NetPyNESection 
-          name={this.state.selectedSection} 
-          cellRule={this.state.selectedCellRule} 
-          model={sectionsModel[this.state.selectedSection]} 
-          selectPage={this.selectPage} />;
+        selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} />;
       }
 
       content = (
