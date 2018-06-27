@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import TimeRange from '../TimeRange'
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -33,7 +34,7 @@ export default class PlotRaster extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.timeRange" >
-        <PythonControlledTextField model={tag + "['timeRange']"} />
+        <TimeRange model={tag + "['timeRange']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.maxSpikes" >
