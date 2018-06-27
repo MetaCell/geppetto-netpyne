@@ -22,7 +22,6 @@ export default class ImportCellParams extends React.Component {
       compileMod: false,
       importSynMechs: false,
       explorerDialogOpen: false,
-      
       cellArgs: {},
       newItemValue: ""
     };
@@ -67,8 +66,8 @@ export default class ImportCellParams extends React.Component {
 
   };
 
-  showExplorerDialog(explorerParameter) {
-    this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter });
+  showExplorerDialog(explorerParameter, exploreOnlyDirs) {
+    this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
   };
 
   closeExplorerDialog(fieldValue) {
@@ -79,9 +78,7 @@ export default class ImportCellParams extends React.Component {
           newState["fileName"] = fieldValue.path;
           break;
         case "modFolder":
-          var fileName = fieldValue.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
-          var path = fieldValue.path.split(fileName)[0];
-          newState["modFolder"] = path;
+          newState["modFolder"] = fieldValue.path;
           break;
         default:
           throw ("Not a valid parameter!");
@@ -174,7 +171,7 @@ export default class ImportCellParams extends React.Component {
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
               <TextField
                 value={this.state.fileName}
-                onClick={() => this.showExplorerDialog('fileName')} readOnly
+                onClick={() => this.showExplorerDialog('fileName', false)} readOnly
               />
             </NetPyNEField>
 
@@ -188,7 +185,7 @@ export default class ImportCellParams extends React.Component {
             <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
               <TextField
                 value={this.state.modFolder}
-                onClick={() => this.showExplorerDialog('modFolder')} readOnly
+                onClick={() => this.showExplorerDialog('modFolder', true)} readOnly
               />
             </NetPyNEField>
             
@@ -236,7 +233,7 @@ export default class ImportCellParams extends React.Component {
             
             
 
-            <FileBrowser open={this.state.explorerDialogOpen} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </CardText>
         </Card>
       </Dialog>
