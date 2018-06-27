@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+
 
 export default class NetPyNESynapses extends React.Component {
 
@@ -16,10 +17,12 @@ export default class NetPyNESynapses extends React.Component {
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
+    this.deleteSynapse = this.deleteSynapse.bind(this);
   };
 
+  /* Method that handles button click */
   selectSynapse(Synapse) {
-    this.setState({ selectedSynapse: Synapse });
+    this.setState({selectedSynapse: Synapse});
   };
 
   handleNewSynapse() {
@@ -77,11 +80,24 @@ export default class NetPyNESynapses extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
+  deleteSynapse(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedSynapse: undefined});
+    });
+  }
+
   render() {
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
-      Synapses.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedSynapse} handleClick={this.selectSynapse} />);
+      Synapses.push(<NetPyNEThumbnail 
+        name={c} 
+        key={c} 
+        selected={c == this.state.selectedSynapse}
+        deleteMethod={this.deleteSynapse}
+        handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
     if (this.state.selectedSynapse && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
