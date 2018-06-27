@@ -174,6 +174,7 @@ const TransitionDialog = React.createClass({
                 modal={true}
                 open={this.state.transitionOpen}
                 onRequestClose={this.closeTransition}
+                style={{whiteSpace: "pre-wrap", overflow: "auto"}}
             >
                 {children}
             </Dialog>
