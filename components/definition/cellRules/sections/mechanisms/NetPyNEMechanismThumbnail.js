@@ -51,14 +51,19 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{float: "left"}}>
       <IconButton
         onMouseEnter={this.handleHoverIn}
         onMouseLeave={this.handleHoverOut}
         className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
         onClick={this.handleClick}>
-          {(this.state.isHovered && this.props.selected) ? <FontIcon className="fa fa-trash-o" color={changeColor} hoverColor={hoverColor}/>: <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear"/>}
-          {(this.state.isHovered && this.props.selected) ? "" : <span className={"gearThumbLabel"}> {this.props.name}</span>}
+          <div>
+           {(this.state.isHovered && this.props.selected) ? 
+            <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={{zIndex:10,marginTop:37,marginLeft:40,position:"absolute",backgroundColor:"#f23d7a"}}/> :
+            <span className={"gearThumbLabel"}> {this.props.name}</span>}
+           <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear"/>
+          </div>
+           
       </IconButton>
       <DeleteDialogBox
             open={this.state.dialogOpen}
