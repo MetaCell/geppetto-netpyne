@@ -36,6 +36,15 @@ const SettingsDialog = React.createClass({
         this.setState({ currentTab: value });
     },
 
+    processError(parsedResponse) {
+        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            alert(parsedResponse['message'] + parsedResponse['details'])
+            return true;
+        }
+        return false;
+    },
+    
     performAction() {
         // Show spinner
         if (this.state.currentTab == "import") {
@@ -52,8 +61,11 @@ const SettingsDialog = React.createClass({
         // Import/Export model python side
         Utils
             .sendPythonMessage(action, [this.state])
-            .then(() => {
-                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            .then(response => {
+                var parsedResponse = JSON.parse(response);
+                if (!this.processError(parsedResponse)) {
+                    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                }
             });
     },
 
