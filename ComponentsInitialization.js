@@ -5,6 +5,7 @@ define(function (require) {
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
         var NetPyNETabs = require('./NetPyNETabs').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
+        var Utils = require('./Utils').default;
         injectTapEventPlugin();
 
         function App() {
@@ -83,9 +84,15 @@ define(function (require) {
                 GEPPETTO.trigger('kernel:ready', "Kernel started");
 
                 var kernel = IPython.notebook.kernel;
-                kernel.execute('from netpyne_ui import netpyne_geppetto');
-                kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
-                kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
+                kernel.execute('from netpyne_ui import geppetto_init');
+                kernel.execute('from netpyne_ui import netpyneui_init');
+
+                Utils.sendPythonMessage('netpyneui_init.netpyneui_init.init', [])
+                .then(response => {
+                    var parsedResponse = JSON.parse(response);
+                    alert(parsedResponse);
+                });
+
             });
         }
 
