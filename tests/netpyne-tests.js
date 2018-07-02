@@ -157,7 +157,7 @@ function addCellRule(test){
 			this.echo('Add Cell Rule button exists.');
 			this.click('#newCellRuleButton');
 			casper.then(function(){
-				testCellRule(test, "button#CellRule", "CellRule", "", "");
+				testCellRule(test, "button#CellRule", "CellRule", 'div[id="netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']"]', 'div[id="netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']"]');
 			});
 		},5000);
 	});
@@ -195,7 +195,7 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
 /**
  * Test adding a new cell rule and its contents
  */
-function testCellRule(test, buttonSelector, expectedName, expectedCellModel, expectedCellType){
+function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, expectedCellTypeId){
 	casper.then(function(){
 		this.echo("------Testing cell rules button "+ buttonSelector);
 		casper.waitUntilVisible(buttonSelector, function() {
@@ -206,6 +206,8 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModel, exp
 			});
 			casper.then(function () { //test contents of metadata
 				testElementValue(test, "#cellRuleName", expectedName);
+				test.assertExists(expectedCellModelId, "cellRullCellModel exists");
+				test.assertExists(expectedCellTypeId, "cellRullCellType exists");
 			});
 		},5000);
 	});
@@ -255,7 +257,7 @@ function loadModelUsingPython(test,demo){
 	});
 
 	casper.then(function(){//test a cell rule exists after demo is loaded
-		testCellRule(test, "button#PYRrule", "PYRrule", "", "PYR");
+		testCellRule(test, "button#PYRrule", "PYRrule", 'div[id="netParams.cellParams[\'PYRrule\'][\'conds\'][\'cellModel\']"]', 'div[id="netParams.cellParams[\'PYRrule\'][\'conds\'][\'cellType\']"]');
 	});
 }
 
