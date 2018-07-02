@@ -94,8 +94,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
             className={"netpyneField"}
           />
 
-          <NetPyNEField id="netParams.connParams.sec">
-            <PythonControlledTextField
+          <NetPyNEField id="netParams.connParams.sec" className="listStyle">
+            <PythonControlledListComponent
               model={"netParams.connParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
@@ -105,7 +105,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>
-
 
           <NetPyNEField id={"netParams.connParams.synMech"} >
             <PythonMethodControlledSelectField
@@ -147,7 +146,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.delay" className="listStyle" noStyle>
-            <PythonControlledListComponent
+            <PythonControlledTextField
               model={"netParams.connParams['" + this.props.name + "']['delay']"}
             />
           </NetPyNEField>

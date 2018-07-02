@@ -27,7 +27,8 @@ const SettingsDialog = React.createClass({
             modFolder: "",
             compileMod: false,
             explorerDialogOpen: false,
-            explorerParameter: ""
+            explorerParameter: "",
+            exploreOnlyDirs: false
         };
     },
 
@@ -35,6 +36,15 @@ const SettingsDialog = React.createClass({
         this.setState({ currentTab: value });
     },
 
+    processError(parsedResponse) {
+        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            alert(parsedResponse['message'] + parsedResponse['details'])
+            return true;
+        }
+        return false;
+    },
+    
     performAction() {
         // Show spinner
         if (this.state.currentTab == "import") {
@@ -51,31 +61,35 @@ const SettingsDialog = React.createClass({
         // Import/Export model python side
         Utils
             .sendPythonMessage(action, [this.state])
-            .then(() => {
-                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            .then(response => {
+                var parsedResponse = JSON.parse(response);
+                if (!this.processError(parsedResponse)) {
+                    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                }
             });
     },
 
-    showExplorerDialog(explorerParameter) {
-        this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter });
+    showExplorerDialog(explorerParameter, exploreOnlyDirs) {
+        this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
     },
 
     closeExplorerDialog(fieldValue) {
         var newState = { explorerDialogOpen: false };
         if (fieldValue) {
-            var fileName = fieldValue.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
-            var path = fieldValue.path.split(fileName)[0];
+            var fileName = fieldValue.path.replace(/^.*[\\\/]/, '');
+            var fileNameNoExtension= fileName.replace(/\.[^/.]+$/, "");
+            var path = fieldValue.path.split(fileName).slice(0, -1).join('');
             switch (this.state.explorerParameter) {
                 case "netParamsPath":
                     newState["netParamsPath"] = path;
-                    newState["netParamsModuleName"] = fileName;
+                    newState["netParamsModuleName"] = fileNameNoExtension;
                     break;
                 case "simConfigPath":
                     newState["simConfigPath"] = path;
-                    newState["simConfigModuleName"] = fileName;
+                    newState["simConfigModuleName"] = fileNameNoExtension;
                     break;
                 case "modFolder":
-                    newState["modFolder"] = path;
+                    newState["modFolder"] = fieldValue.path;
                     break;
                 default:
                     throw("Not a valid parameter!");
@@ -115,11 +129,11 @@ const SettingsDialog = React.createClass({
                     <Tab value="import" label={'Import'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
                             <CardText>
-                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath')} readOnly/>
-                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath')} readOnly/>
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%', cursor:'pointer'}} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly/>
+                                <TextField className="netpyneRightField" style={{width: '48%', cursor:'pointer'}} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly/>
 
-                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath')} readOnly/>
-                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath')} readOnly/>
+                                <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly/>
+                                <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly/>
 
                                 <TextField className="netpyneFieldNoWidth" style={{width: '48%'}} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
                                 <TextField className="netpyneRightField" style={{width: '48%'}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
@@ -135,10 +149,10 @@ const SettingsDialog = React.createClass({
                                             };
                                         })}
                                     />
-                                    <TextField style={{ float: 'left', clear: 'both', width: '100%' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onClick={() => this.showExplorerDialog('modFolder')} readOnly/>
+                                    <TextField style={{ float: 'left', clear: 'both', width: '100%', cursor:'pointer' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onClick={() => this.showExplorerDialog('modFolder', true)} readOnly/>
                                 </div>
 
-                                <FileBrowser open={this.state.explorerDialogOpen} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                             </CardText>
                         </Card>
                     </Tab>

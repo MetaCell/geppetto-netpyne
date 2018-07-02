@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
 
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
@@ -28,7 +22,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
-
+    this.deleteConnectivityRule = this.deleteConnectivityRule.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -38,8 +32,9 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.setState({ page: page });
   }
 
+  /* Method that handles button click */
   selectConnectivityRule(connectivityRule) {
-    this.setState({ selectedConnectivityRule: connectivityRule });
+    this.setState({selectedConnectivityRule: connectivityRule});
   }
 
   handleNewConnectivityRule() {
@@ -117,6 +112,14 @@ export default class NetPyNEConnectivityRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
+  deleteConnectivityRule(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["connParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedConnectivityRule: undefined});
+    });
+  }
+
   render() {
 
     var that = this;
@@ -126,7 +129,12 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
       var ConnectivityRules = [];
       for (var c in model) {
-        ConnectivityRules.push(<NetPyNEThumbnail name={c} key={c} selected={c == this.state.selectedConnectivityRule} handleClick={this.selectConnectivityRule} />);
+        ConnectivityRules.push(<NetPyNEThumbnail 
+          name={c} 
+          key={c} 
+          selected={c == this.state.selectedConnectivityRule} 
+          deleteMethod={this.deleteConnectivityRule}
+          handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
       if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
