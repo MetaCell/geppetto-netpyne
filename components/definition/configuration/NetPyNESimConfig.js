@@ -6,6 +6,7 @@ import SelectField from 'material-ui/SelectField';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import ListComponent from '../../general/List';
+import DictComponent from '../../general/Dict';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -13,6 +14,7 @@ var PythonControlledSelectField = PythonControlledCapability.createPythonControl
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
+var PythonControlledDictComponent = PythonControlledCapability.createPythonControlledControl(DictComponent);
 
 export default class NetPyNESimConfig extends React.Component {
 
@@ -47,20 +49,20 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.dt" >
               <PythonControlledTextField model={"simConfig.dt"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="simConfig.printRunTime"  >
               <PythonControlledTextField model={"simConfig.printRunTime"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.hParams" >
-              <PythonControlledTextField model={"simConfig.hParams"} />
+            <NetPyNEField id="simConfig.hParams" className="listStyle">
+              <PythonControlledDictComponent model={"simConfig.hParams"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.seeds" >
-              <PythonControlledTextField model={"simConfig.seeds"} />
+            <NetPyNEField id="simConfig.seeds" className="listStyle">
+              <PythonControlledDictComponent model={"simConfig.seeds"} />
             </NetPyNEField>
 
-            
+
           </div>
 
           <div style={{ float: 'right', width: '45%', marginTop:10}}>
@@ -71,7 +73,7 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.createPyStruct" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.createPyStruct"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="simConfig.addSynMechs" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.addSynMechs"} />
             </NetPyNEField>
@@ -79,7 +81,7 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.includeParamsLabel" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.includeParamsLabel"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="simConfig.timing" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.timing"} />
             </NetPyNEField>
@@ -87,7 +89,7 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.verbose" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.verbose"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="simConfig.compactConnFormat" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.compactConnFormat"} />
             </NetPyNEField>
@@ -107,7 +109,7 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.gatherOnlySimData" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.gatherOnlySimData"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="simConfig.cache_efficient" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.cache_efficient"} />
             </NetPyNEField>
@@ -193,7 +195,7 @@ export default class NetPyNESimConfig extends React.Component {
           </div>
         </div>
     } else if (this.state.sectionId == 'Record') {
-      content = 
+      content =
         <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.recordCells" className={"listStyle"} >
@@ -245,54 +247,54 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="netParams.scale" >
               <PythonControlledTextField model={"netParams.scale"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="netParams.defaultWeight" >
               <PythonControlledTextField model={"netParams.defaultWeight"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="netParams.defaultDelay" >
               <PythonControlledTextField model={"netParams.defaultDelay"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="netParams.scaleConnWeight" >
               <PythonControlledTextField model={"netParams.scaleConnWeight"} />
             </NetPyNEField>
-            
+
             <NetPyNEField id="netParams.scaleConnWeightNetStims" >
               <PythonControlledTextField model={"netParams.scaleConnWeightNetStims"} />
             </NetPyNEField>
-            
+
+            <NetPyNEField id="netParams.scaleConnWeightModels" className={"listStyle"}>
+              <PythonControlledDictComponent model={"netParams.scaleConnWeightModels"} />
+            </NetPyNEField>
+
         </div>
 
         <div style={{ float: 'right', width: '45%'}}>
           <NetPyNEField id="netParams.sizeX" >
             <PythonControlledTextField model={"netParams.sizeX"} />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.sizeY" >
             <PythonControlledTextField model={"netParams.sizeY"} />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.sizeZ" >
             <PythonControlledTextField model={"netParams.sizeZ"} />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.propVelocity" >
             <PythonControlledTextField model={"netParams.propVelocity"} />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.shape">
             <PythonControlledSelectField model={"netParams.shape"} />
           </NetPyNEField>
-          
-          <NetPyNEField id="netParams.scaleConnWeightModels" >
-            <PythonControlledTextField model={"netParams.scaleConnWeightModels"} />
-          </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.rotateCellsRandomly" >
             <PythonControlledTextField model={"netParams.rotateCellsRandomly"} />
           </NetPyNEField>
-          
+
         </div>
       </div>
     }
