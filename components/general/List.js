@@ -161,10 +161,11 @@ export default class ListComponent extends Component {
                 />
                 {!this.state.newItemErrorText &&
                     <IconButton
-                        iconStyle={{ width: 10, height: 10 }}
+                        iconStyle={{ width: 25, height: 25 }}
                         className={"listButtonLarge"}
                         onClick={this.addChild}
                         tooltip="Add item to the list"
+                        tooltipPosition={"top-left"}
                     >
                         <FontIcon className={"fa fa-plus-circle listIcon"} />
                     </IconButton>
