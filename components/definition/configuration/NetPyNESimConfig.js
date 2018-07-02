@@ -6,15 +6,13 @@ import SelectField from 'material-ui/SelectField';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import ListComponent from '../../general/List';
-import DictComponent from '../../general/Dict';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonControlledDictComponent = PythonControlledCapability.createPythonControlledControl(DictComponent);
 
 export default class NetPyNESimConfig extends React.Component {
 
@@ -55,11 +53,11 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
 
             <NetPyNEField id="simConfig.hParams" className="listStyle">
-              <PythonControlledDictComponent model={"simConfig.hParams"} />
+              <PythonControlledListComponent model={"simConfig.hParams"} />
             </NetPyNEField>
 
             <NetPyNEField id="simConfig.seeds" className="listStyle">
-              <PythonControlledDictComponent model={"simConfig.seeds"} />
+              <PythonControlledListComponent model={"simConfig.seeds"} />
             </NetPyNEField>
 
 
@@ -265,7 +263,7 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
 
             <NetPyNEField id="netParams.scaleConnWeightModels" className={"listStyle"}>
-              <PythonControlledDictComponent model={"netParams.scaleConnWeightModels"} />
+              <PythonControlledListComponent model={"netParams.scaleConnWeightModels"} />
             </NetPyNEField>
 
         </div>
