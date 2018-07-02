@@ -17,6 +17,7 @@ export default class NetPyNEPopulations extends React.Component {
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
+    this.deletePopulation = this.deletePopulation.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -51,7 +52,6 @@ export default class NetPyNEPopulations extends React.Component {
     if (newPopulationName) {
       this.setState({ selectedPopulation: newPopulationName });
     }
-
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -90,8 +90,17 @@ export default class NetPyNEPopulations extends React.Component {
 
   }
 
+  /* Method that handles button click */
   selectPopulation(populationName) {
-    this.setState({ selectedPopulation: populationName });
+    this.setState({selectedPopulation: populationName});
+  }
+
+  deletePopulation(name) {
+    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedPopulation: undefined});
+    });
   }
 
   render() {
@@ -103,7 +112,11 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var populations = [];
       for (var key in model) {
-        populations.push(<NetPyNEThumbnail name={key} key={key} selected={key == this.state.selectedPopulation} handleClick={this.selectPopulation} />);
+        populations.push(<NetPyNEThumbnail 
+          name={key} key={key} 
+          selected={key == this.state.selectedPopulation}
+          deleteMethod={this.deletePopulation}
+          handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
       if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {

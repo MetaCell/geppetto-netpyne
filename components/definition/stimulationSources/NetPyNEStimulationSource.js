@@ -16,7 +16,7 @@ export default class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: null
+      sourceType: ''
     };
     this.stimSourceTypeOptions = [
       { type: 'IClamp' },
@@ -116,13 +116,13 @@ export default class NetPyNEStimulationSource extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.vClampDur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.vClampAmp" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
