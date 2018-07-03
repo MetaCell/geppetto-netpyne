@@ -9,8 +9,6 @@ import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import FileBrowser from '../../general/FileBrowser';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-
 export default class ImportCellParams extends React.Component {
 
   constructor(props) {

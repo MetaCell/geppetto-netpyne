@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 import Utils from '../../../../../Utils';
-import NetPyNEField from '../../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNEMechanism extends React.Component {
 
