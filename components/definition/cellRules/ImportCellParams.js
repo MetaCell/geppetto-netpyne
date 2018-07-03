@@ -22,6 +22,7 @@ export default class ImportCellParams extends React.Component {
       compileMod: false,
       importSynMechs: false,
       explorerDialogOpen: false,
+      exploreOnlyDirs: false,
       cellArgs: {},
       newItemValue: ""
     };
@@ -190,7 +191,7 @@ export default class ImportCellParams extends React.Component {
             </NetPyNEField>
             
             <TextField
-              floatingLabelText={"Add new key:value pair"}
+              floatingLabelText={"Cell Template Parameters (add new key:value pair)"}
               onChange={this.handleNewItemChange}
               value={this.state.newItemValue}
               style={{ width: '90%' }}
