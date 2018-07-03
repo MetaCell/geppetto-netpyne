@@ -40,7 +40,6 @@ const SettingsDialog = React.createClass({
     processError(parsedResponse) {
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            // alert(parsedResponse['message'] + parsedResponse['details'])
             this.setState({ errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
             return true;
         }
