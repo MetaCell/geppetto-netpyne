@@ -82,7 +82,7 @@ const TransitionDialog = React.createClass({
 
     render() {
         var cancelAction = (<FlatButton
-            label="Cancel"
+            label="CANCEL"
             primary={true}
             onClick={this.cancelTransition}
         />)
@@ -173,7 +173,8 @@ const TransitionDialog = React.createClass({
                 modal={true}
                 open={this.state.transitionOpen}
                 onRequestClose={this.closeTransition}
-                style={{whiteSpace: "pre-wrap", overflow: "auto"}}
+                bodyStyle={{ overflow: 'auto' }}
+                style={{whiteSpace: "pre-wrap"}}
             >
                 {children}
             </Dialog>
