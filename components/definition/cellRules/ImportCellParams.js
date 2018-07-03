@@ -1,9 +1,7 @@
 import React from 'react';
-import FontIcon from 'material-ui/FontIcon';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog/Dialog';
-import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
@@ -25,8 +23,6 @@ export default class ImportCellParams extends React.Component {
       importSynMechs: false,
       explorerDialogOpen: false,
       exploreOnlyDirs: false,
-      cellArgs: {},
-      newItemValue: ""
     };
     this.updateCheck = this.updateCheck.bind(this);
     this.performAction = this.performAction.bind(this);
@@ -160,7 +156,6 @@ export default class ImportCellParams extends React.Component {
               </div>
             </div>
             
-
             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </CardText>
         </Card>
