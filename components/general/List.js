@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
 /**
- * Generic List Component
+ * Generic List/Dict Component
  */
 export default class ListComponent extends Component {
 
@@ -163,50 +163,30 @@ export default class ListComponent extends Component {
     }
 
     render() {
-        if (this.props.realType=='dict') {
-            var childrenWithExtraProp = Object.keys(this.state.children).map((key) => {
-                return <div key={key} style={{ marginRight: 30, float: 'left' }}>
-                    <TextField
-                        value={key + " : " + this.state.children[key]}
-                        id={key}
-                        // onChange={this.handleChildChange}
-                        style={{ width: 100}}
-                        inputStyle={{color:"rgb(2, 188, 212)"}}
-                        disabled
-                    />
-                    <IconButton
-                        iconStyle={{ width: 7, height: 7 }}
-                        className={"listButtonSmall"}
-                        onClick={() => this.removeChild(key)}
-                        tooltip="Remove item from the list"
-                    >
-                        <FontIcon className={"fa fa-minus-circle listIcon"} />
-                    </IconButton>
-                </div>
-            });
-        }
-        else {
-            var childrenWithExtraProp = this.state.children.map((child, i) => {
-                return <div key={i.toString()} style={{ marginRight: 30, float: 'left' }}>
-                    <TextField
-                        value={this.state.children[i]}
-                        id={i.toString()}
-                        // onChange={this.handleChildChange}
-                        style={{ width: 60}}
-                        inputStyle={{color:"rgb(2, 188, 212)"}}
-                        disabled
-                    />
-                    <IconButton
-                        iconStyle={{ width: 7, height: 7 }}
-                        className={"listButtonSmall"}
-                        onClick={() => this.removeChild(i.toString())}
-                        tooltip="Remove item from the list"
-                    >
-                        <FontIcon className={"fa fa-minus-circle listIcon"} />
-                    </IconButton>
-                </div>
-            });
-        }
+
+        var childrenWithExtraProp = Object.keys(this.state.children).map((key) => {
+            key = key.toString();
+            var value = (this.props.realType=="dict")?(key + " : " + this.state.children[key]):this.state.children[key];
+            return <div key={key} style={{ marginRight: 30, float: 'left' }}>
+                <TextField
+                    value={value}
+                    id={key}
+                    // onChange={this.handleChildChange}
+                    style={{ width: 100}}
+                    inputStyle={{color:"rgb(2, 188, 212)"}}
+                    disabled
+                />
+                <IconButton
+                    iconStyle={{ width: 7, height: 7 }}
+                    className={"listButtonSmall"}
+                    onClick={() => this.removeChild(key)}
+                    tooltip="Remove item from the list"
+                >
+                    <FontIcon className={"fa fa-minus-circle listIcon"} />
+                </IconButton>
+            </div>
+        });
+
         return (
             <div>
                 <TextField
