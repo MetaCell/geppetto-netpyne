@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
 /**
- * Generic List Component
+ * Generic List/Dict Component
  */
 export default class ListComponent extends Component {
 
@@ -12,7 +12,7 @@ export default class ListComponent extends Component {
         super(props);
         this.state = {
             model: props.model,
-            children: [],
+            children: (props.realType=="dict")?{}:[],
             newItemValue: ""
         };
 
@@ -33,6 +33,9 @@ export default class ListComponent extends Component {
                     }
                 });
                 break;
+            case 'dict':
+                var valid = (value.match(/:/g)||[]).length==1 && !value.startsWith(":") && !value.endsWith(":");
+                break;
             default:
                 var valid = true;
                 break;
@@ -48,6 +51,9 @@ export default class ListComponent extends Component {
             case 'list(list(float))':
                 var message = 'Only comma separated float numbers are allowed.';
                 break;
+            case 'dict':
+              var message = 'Key:Value pairs must be separated by colon : ';
+              break;
             default:
                 var message = 'No valid value';
                 break;
@@ -65,12 +71,22 @@ export default class ListComponent extends Component {
             switch (this.props.realType) {
                 case 'list(list(float))':
                     var newValue = "[" + this.state.newItemValue + "]";
+                    children.push(newValue);
+                    break;
+                case 'dict':
+                    var newValue = this.state.newItemValue.split(":").map(entry => {
+                        return entry
+                    });
+                    if (!isNaN(newValue[1])) {
+                        newValue[1] = parseFloat(newValue[1])
+                    }
+                    children[newValue[0]] = newValue[1];
                     break;
                 default:
                     var newValue = this.state.newItemValue;
+                    children.push(newValue);
                     break;
             }
-            children.push(newValue);
             // Call to conversion function
             this.convertToPython(children);
         }
@@ -81,7 +97,12 @@ export default class ListComponent extends Component {
 
     removeChild(childIndex) {
         var children = this.state.children;
-        children.splice(childIndex, 1);
+        if (this.props.realType=="dict") {
+            delete children[childIndex];
+        }
+        else {
+            children.splice(childIndex, 1);
+        }
         // Call to conversion function
         this.convertToPython(children);
     }
@@ -90,23 +111,26 @@ export default class ListComponent extends Component {
         // Update State
         this.setState({ children: children, newItemValue: "" });
 
-        var newValue = this.state.children.map((child, i) => {
-            switch (this.props.realType) {
-                case 'list(float)':
-                    var childConverted = parseFloat(child)
-                    break;
-                case 'list(list(float))':
-                    var childConverted = JSON.parse(child);
-                    break;
-                // TODO: Decide if this is actually needed
-                // case 'list(list(string))':
-                //     break;
-                default:
-                    var childConverted = child;
-                    break;
-            }
-            return childConverted;
-        })
+        if (this.props.realType=='dict') {
+            var newValue = children;
+        }
+        else{
+            var newValue = this.state.children.map((child, i) => {
+                switch (this.props.realType) {
+                    case 'list(float)':
+                        var childConverted = parseFloat(child)
+                        break;
+                    case 'list(list(float))':
+                        var childConverted = JSON.parse(child);
+                        break;
+                    default:
+                        var childConverted = child;
+                        break;
+                }
+                return childConverted;
+            })
+        }
+        
         if (newValue != undefined && this.state.value != newValue) {
             this.props.onChange(null, null, newValue);
         }
@@ -114,9 +138,15 @@ export default class ListComponent extends Component {
 
     convertFromPython(prevProps, prevState, value) {
         if (value != undefined && prevProps.value != value && value != '') {
-            return value.map((child, i) => {
-                return (typeof child == 'string') ? child : JSON.stringify(child);
-            });
+            if (this.props.realType=='dict') {
+                return JSON.parse(value);
+            }
+            else {
+                return value.map((child, i) => {
+                    return (typeof child == 'string') ? child : JSON.stringify(child);
+                });
+            }
+            
         }
     }
 
@@ -129,20 +159,21 @@ export default class ListComponent extends Component {
 
     render() {
 
-        const childrenWithExtraProp = this.state.children.map((child, i) => {
-            return <div key={i.toString()} style={{ marginRight: 30, float: 'left' }}>
+        var childrenWithExtraProp = Object.keys(this.state.children).map((key) => {
+            key = key.toString();
+            var value = (this.props.realType=="dict")?(key + " : " + this.state.children[key]):this.state.children[key];
+            return <div key={key} style={{ marginRight: 30, float: 'left' }}>
                 <TextField
-                    value={this.state.children[i]}
-                    id={i.toString()}
-                    // onChange={this.handleChildChange}
-                    style={{ width: 60}}
+                    value={value}
+                    id={key}
+                    style={{ width: 100}}
                     inputStyle={{color:"rgb(2, 188, 212)"}}
                     disabled
                 />
                 <IconButton
                     iconStyle={{ width: 7, height: 7 }}
                     className={"listButtonSmall"}
-                    onClick={() => this.removeChild(i.toString())}
+                    onClick={() => this.removeChild(key)}
                     tooltip="Remove item from the list"
                 >
                     <FontIcon className={"fa fa-minus-circle listIcon"} />
