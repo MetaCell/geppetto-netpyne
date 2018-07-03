@@ -23,6 +23,8 @@ export default class ImportCellParams extends React.Component {
       importSynMechs: false,
       explorerDialogOpen: false,
       exploreOnlyDirs: false,
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.updateCheck = this.updateCheck.bind(this);
     this.performAction = this.performAction.bind(this);
@@ -35,6 +37,15 @@ export default class ImportCellParams extends React.Component {
         [name]: !oldState[name],
       };
     });
+  };
+
+  processError(parsedResponse) {
+      if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+          this.setState({ errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
+          return true;
+      }
+      return false;
   };
 
   performAction = () => {
@@ -55,11 +66,15 @@ export default class ImportCellParams extends React.Component {
         // Import template
         Utils
           .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
-          .then(() => {
-            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+          .then(response => {
+            var parsedResponse = JSON.parse(response);
+            if (!this.processError(parsedResponse)) {
+                this.props.onRequestClose();
+                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            }
           });
     });
-    this.props.onRequestClose();
+    
 
   };
 
@@ -86,28 +101,22 @@ export default class ImportCellParams extends React.Component {
   };
 
   render() {
-    const actions = [
-      <FlatButton
-        label={'CANCEL'}
-        onTouchTap={this.props.onRequestClose}
-        style={{ marginRight: 16 }}
-      />,
-      <RaisedButton
-        primary
-        label={"IMPORT"}
-        onTouchTap={this.performAction}
-      />
-    ];
-
-    return (
-      <Dialog
-        open={this.props.open}
-        onRequestClose={this.props.onRequestClose}
-        bodyStyle={{ overflow: 'auto' }}
-        actions={actions}
-      >
-        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-          <CardTitle style={{paddingBottom: 0}} title="Import Cell Template" subtitle="Python or Hoc files" />
+    var cancelAction = <FlatButton
+    label={'CANCEL'}
+    onTouchTap={this.props.onRequestClose}
+    style={{ marginRight: 16 }}
+  />
+    if (this.state.errorMessage == undefined) {
+      var actions = [
+        cancelAction ,
+        <RaisedButton
+          primary
+          label={"IMPORT"}
+          onTouchTap={this.performAction}
+        />
+      ];
+      var children = <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+          <CardTitle style={{paddingBottom: 0}} title={"Import Cell Template"} subtitle="Python or Hoc files" />
           <CardText>
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
               <TextField
@@ -159,6 +168,30 @@ export default class ImportCellParams extends React.Component {
             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </CardText>
         </Card>
+    }
+    else{
+      var actions = [
+        cancelAction,
+        <RaisedButton
+          primary
+          label={"BACK"}
+          onTouchTap={()=> this.setState({ errorMessage: undefined, errorDetails: undefined })}
+        />
+      ];
+      var title = this.state.errorMessage;
+      var children = this.state.errorDetails;
+    }
+
+    return (
+      <Dialog
+        title={title}
+        open={this.props.open}
+        onRequestClose={this.props.onRequestClose}
+        bodyStyle={{ overflow: 'auto' }}
+        actions={actions}
+        style={{whiteSpace: "pre-wrap"}}
+      >
+        {children}
       </Dialog>
     );
   };
