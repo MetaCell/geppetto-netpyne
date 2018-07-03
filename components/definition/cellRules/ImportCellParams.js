@@ -28,7 +28,7 @@ export default class ImportCellParams extends React.Component {
     };
     this.updateCheck = this.updateCheck.bind(this);
     this.performAction = this.performAction.bind(this);
-    
+    this.closeDialog = this.closeDialog.bind(this);
   };
 
   updateCheck(name) {
@@ -100,10 +100,15 @@ export default class ImportCellParams extends React.Component {
     this.setState(newState);
   };
 
+  closeDialog(){
+    this.setState({errorMessage: undefined, errorDetails: undefined})
+    this.props.onRequestClose();
+  }
+
   render() {
     var cancelAction = <FlatButton
     label={'CANCEL'}
-    onTouchTap={this.props.onRequestClose}
+    onTouchTap={this.closeDialog}
     style={{ marginRight: 16 }}
   />
     if (this.state.errorMessage == undefined) {
@@ -187,8 +192,8 @@ export default class ImportCellParams extends React.Component {
         title={title}
         open={this.props.open}
         onRequestClose={this.props.onRequestClose}
-        bodyStyle={{ overflow: 'auto' }}
         actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
         style={{whiteSpace: "pre-wrap"}}
       >
         {children}
