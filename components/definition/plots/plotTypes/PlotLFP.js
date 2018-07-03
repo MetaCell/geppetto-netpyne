@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
@@ -11,7 +11,7 @@ var PythonControlledCapability = require('../../../../../../js/communication/gep
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 
 export default class PlotLFP extends React.Component {
 
@@ -40,13 +40,9 @@ export default class PlotLFP extends React.Component {
       <NetPyNEField id="simConfig.analysis.plotLFP.electrodes" className="listStyle" >
         <PythonControlledListComponent model={tag + "['electrodes']"} />
       </NetPyNEField>
-      
-      <NetPyNEField id="simConfig.analysis.plotLFP.plots" >
-        <PythonMethodControlledSelectField 
-          model={tag+"['plots']"}
-          postProcessItems={this.postProcessMenuItems}
-          multiple={true}
-        />
+
+      <NetPyNEField id="simConfig.analysis.plotLFP.plots">
+        <PythonControlledSelectField model={tag+"['plots']"} multiple={true}/>
       </NetPyNEField>
               
       <NetPyNEField id="simConfig.analysis.plotLFP.timeRange" >
