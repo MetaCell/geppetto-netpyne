@@ -1,5 +1,4 @@
 import React from 'react';
-import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
@@ -20,18 +19,6 @@ export default class PlotLFP extends React.Component {
     this.state = {
       plots: '',
     };
-  };
-  
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
-      <MenuItem
-        key={name}
-        insetChildren={true}
-        checked={selected.indexOf(name) > -1}
-        value={name}
-        primaryText={name}
-      />
-    ));
   };
     
   render() {
