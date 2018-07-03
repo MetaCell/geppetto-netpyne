@@ -131,7 +131,7 @@ export default class ListComponent extends Component {
             })
         }
         
-        if (newValue != undefined && this.state.value != newValue) {
+        if (newValue != undefined && this.state.value != newValue && this.props.onChange != undefined) {
             this.props.onChange(null, null, newValue);
         }
     }
