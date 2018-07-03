@@ -111,7 +111,10 @@ export default class ListComponent extends Component {
         // Update State
         this.setState({ children: children, newItemValue: "" });
 
-        if (this.props.realType!='dict') {
+        if (this.props.realType=='dict') {
+            var newValue = children;
+        }
+        else{
             var newValue = this.state.children.map((child, i) => {
                 switch (this.props.realType) {
                     case 'list(float)':
@@ -120,25 +123,17 @@ export default class ListComponent extends Component {
                     case 'list(list(float))':
                         var childConverted = JSON.parse(child);
                         break;
-                    // TODO: Decide if this is actually needed
-                    // case 'list(list(string))':
-                    //     break;
                     default:
                         var childConverted = child;
                         break;
                 }
                 return childConverted;
             })
-            if (newValue != undefined && this.state.value != newValue) {
-                this.props.onChange(null, null, newValue);
-            }
-        }
-        else {
-            if (children != undefined) {
-                this.props.onChange(null, null, children);
-            }
         }
         
+        if (newValue != undefined && this.state.value != newValue) {
+            this.props.onChange(null, null, newValue);
+        }
     }
 
     convertFromPython(prevProps, prevState, value) {
@@ -171,7 +166,6 @@ export default class ListComponent extends Component {
                 <TextField
                     value={value}
                     id={key}
-                    // onChange={this.handleChildChange}
                     style={{ width: 100}}
                     inputStyle={{color:"rgb(2, 188, 212)"}}
                     disabled

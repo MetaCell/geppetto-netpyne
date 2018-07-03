@@ -9,9 +9,9 @@ import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNESimConfig extends React.Component {
