@@ -80,96 +80,95 @@ const TransitionDialog = React.createClass({
     },
 
     render() {
-        var cancelAction = (<FlatButton
-            label="CANCEL"
-            primary={true}
-            onClick={this.cancelTransition}
-        />)
-        var title = "NetPyNE";
-        var actions = [];
-        if (this.state.errorMessage == undefined) {
-            switch (this.props.tab) {
-                case "define":
-                    var children = "You are back to network definition, any changes will require to reinstantiate your network."
-                    var confirmAction = (<FlatButton
-                        label="Ok"
-                        primary={true}
-                        keyboardFocused={true}
-                        onClick={this.closeTransition}
-                    />);
-                    actions = [confirmAction];
-                    break;
-                case "explore":
-                    var children = "We are about to instantiate your network, this could take some time.";
-                    var confirmAction = (<FlatButton
-                        label="Ok"
-                        primary={true}
-                        keyboardFocused={true}
-                        onClick={this.instantiate}
-                        id="okInstantiateNetwork"
-                    />);
-                    if (this.state.previousTab == 'define') {
-                        actions = [cancelAction, confirmAction];
-                    }
-                    else {
-                        actions = [confirmAction];
-                    }
-                    break;
-                case "simulate":
-                    var children = (
-                        <div>
-                            <div >
-                                We are about to simulate your network, this could take some time.
-                                </div>
-                            <div style={{ marginTop: '35px' }}>
-                                <Checkbox
-                                    label="Run parallel simulation"
-                                    id="runParallelSimulation"
-                                    checked={this.state.parallelSimulation}
-                                    onCheck={() => this.setState((oldState) => {
-                                        return {
-                                            parallelSimulation: !oldState.parallelSimulation,
-                                        };
-                                    })}
-                                />
-                            </div>
-                            <div className="netpyneRightField">
-                                <TextField
-                                    floatingLabelText="Number of cores"
-                                    type="number"
-                                    onChange={(event) => this.setState({ cores: event.target.value })}
-                                />
-                            </div>
-                        </div>
-                    )
-                    var confirmAction = (<FlatButton
-                        label="Ok"
-                        primary={true}
-                        keyboardFocused={true}
-                        onClick={this.simulate}
-                        id={"runSimulation"}
-                    />);
-                    if (this.state.previousTab == 'define') {
-                        actions = [cancelAction, confirmAction];
-                    }
-                    else {
-                        actions = [confirmAction];
-                    }
-
-                    break;
-            }
-        }
-        else {
-            title = this.state.errorMessage
-            var children = this.state.errorDetails;
-            actions = [cancelAction];
-        }
-
-        var dialog = null;
-        //Once the dialog closes it can't be reopened (which is useful when we need to throw an error) therefore we just return
-        //null when transitionOpen is false
+        //Once the dialog closes it can't be reopened (which is useful when we need to throw an error) 
+        //therefore we just return null when transitionOpen is false
         if (this.state.transitionOpen) {
-            dialog = (<Dialog
+            var cancelAction = (<FlatButton
+                label="CANCEL"
+                primary={true}
+                onClick={this.cancelTransition}
+            />)
+            var title = "NetPyNE";
+            var actions = [];
+            if (this.state.errorMessage == undefined) {
+                switch (this.props.tab) {
+                    case "define":
+                        var children = "You are back to network definition, any changes will require to reinstantiate your network."
+                        var confirmAction = (<FlatButton
+                            label="Ok"
+                            primary={true}
+                            keyboardFocused={true}
+                            onClick={this.closeTransition}
+                        />);
+                        actions = [confirmAction];
+                        break;
+                    case "explore":
+                        var children = "We are about to instantiate your network, this could take some time.";
+                        var confirmAction = (<FlatButton
+                            label="Ok"
+                            primary={true}
+                            keyboardFocused={true}
+                            onClick={this.instantiate}
+                            id="okInstantiateNetwork"
+                        />);
+                        if (this.state.previousTab == 'define') {
+                            actions = [cancelAction, confirmAction];
+                        }
+                        else {
+                            actions = [confirmAction];
+                        }
+                        break;
+                    case "simulate":
+                        var children = (
+                            <div>
+                                <div >
+                                    We are about to simulate your network, this could take some time.
+                                    </div>
+                                <div style={{ marginTop: '35px' }}>
+                                    <Checkbox
+                                        label="Run parallel simulation"
+                                        id="runParallelSimulation"
+                                        checked={this.state.parallelSimulation}
+                                        onCheck={() => this.setState((oldState) => {
+                                            return {
+                                                parallelSimulation: !oldState.parallelSimulation,
+                                            };
+                                        })}
+                                    />
+                                </div>
+                                <div className="netpyneRightField">
+                                    <TextField
+                                        floatingLabelText="Number of cores"
+                                        type="number"
+                                        onChange={(event) => this.setState({ cores: event.target.value })}
+                                    />
+                                </div>
+                            </div>
+                        )
+                        var confirmAction = (<FlatButton
+                            label="Ok"
+                            primary={true}
+                            keyboardFocused={true}
+                            onClick={this.simulate}
+                            id={"runSimulation"}
+                        />);
+                        if (this.state.previousTab == 'define') {
+                            actions = [cancelAction, confirmAction];
+                        }
+                        else {
+                            actions = [confirmAction];
+                        }
+
+                        break;
+                }
+            }
+            else {
+                title = this.state.errorMessage
+                var children = this.state.errorDetails;
+                actions = [cancelAction];
+            }
+
+            return (<Dialog
                 title={title}
                 actions={actions}
                 modal={true}
@@ -180,10 +179,8 @@ const TransitionDialog = React.createClass({
             >
                 {children}
             </Dialog>);
-
         }
-
-        return dialog;
+        return null;
     },
 });
 
