@@ -16,6 +16,7 @@ const SettingsDialog = React.createClass({
     getInitialState() {
 
         return {
+            open: false,
             currentTab: "import",
             netParamsPath: "",
             netParamsModuleName: "",
@@ -33,6 +34,16 @@ const SettingsDialog = React.createClass({
         };
     },
 
+    componentWillReceiveProps(nextProps) {
+        // switch (nextProps.tab) {
+        //TODO: we need to define the rules here
+        if (this.props.open != nextProps.open) {
+            this.setState({
+                open: true
+            });
+        }
+    },
+
     onChangeTab(value) {
         this.setState({ currentTab: value });
     },
@@ -40,7 +51,7 @@ const SettingsDialog = React.createClass({
     processError(parsedResponse) {
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.setState({ errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
+            this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
             return true;
         }
         return false;
@@ -59,6 +70,7 @@ const SettingsDialog = React.createClass({
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
 
         // Import/Export model python side
+        this.closeDialog();
         Utils
             .sendPythonMessage(action, [this.state])
             .then(response => {
@@ -99,96 +111,102 @@ const SettingsDialog = React.createClass({
         this.setState(newState);
     },
 
-    closeDialog(){
-        this.setState({errorMessage: undefined, errorDetails: undefined})
+    closeDialog() {
+        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
+
+    },
+
+    cancelDialog() {
+        this.closeDialog();
         this.props.onRequestClose();
     },
 
     render() {
+        if (this.state.open) {
+            var cancelAction = (<FlatButton
+                label="CANCEL"
+                primary={true}
+                onClick={this.cancelDialog}
+            />)
 
-        var cancelAction = (<FlatButton
-            label="CANCEL"
-            primary={true}
-            onClick={this.closeDialog}
-        />)
+            if (this.state.errorMessage == undefined) {
+                var actions = [
+                    cancelAction,
+                    <RaisedButton
+                        primary
+                        label={this.state.currentTab == "import" ? 'Import' : 'Export'}
+                        onTouchTap={this.performAction}
+                    />
+                ];
+                var children = <Tabs
+                    style={{ paddingTop: 10 }}
+                    value={this.state.currentTab}
+                    onChange={this.onChangeTab}
+                    tabTemplateStyle={{ float: 'left', height: '100%' }}
+                >
+                    <Tab value="import" label={'Import'}>
+                        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+                            <CardText>
+                                <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+                                <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
-        if (this.state.errorMessage == undefined) {
-            var actions = [
-                cancelAction,
-                <RaisedButton
-                    primary
-                    label={this.state.currentTab == "import" ? 'Import' : 'Export'}
-                    onTouchTap={this.performAction}
-                />
-            ];
-            var children = <Tabs
-                style={{ paddingTop: 10 }}
-                value={this.state.currentTab}
-                onChange={this.onChangeTab}
-                tabTemplateStyle={{ float: 'left', height: '100%' }}
-            >
-                <Tab value="import" label={'Import'}>
-                    <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-                        <CardText>
-                            <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
-                            <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+                                <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+                                <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
-                            <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
-                            <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+                                <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                                <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
 
-                            <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
-                            <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
+                                <div style={{ marginTop: 30, float: 'left', clear: 'both', width: '48%' }}>
+                                    <Checkbox
+                                        style={{ float: 'left', clear: 'both' }}
+                                        label="Compile mod files"
+                                        checked={this.state.compileMod}
+                                        onCheck={() => this.setState((oldState) => {
+                                            return {
+                                                compileMod: !oldState.compileMod,
+                                            };
+                                        })}
+                                    />
+                                    <TextField style={{ float: 'left', clear: 'both', width: '100%', cursor: 'pointer' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onClick={() => this.showExplorerDialog('modFolder', true)} readOnly />
+                                </div>
 
-                            <div style={{ marginTop: 30, float: 'left', clear: 'both', width: '48%' }}>
-                                <Checkbox
-                                    style={{ float: 'left', clear: 'both' }}
-                                    label="Compile mod files"
-                                    checked={this.state.compileMod}
-                                    onCheck={() => this.setState((oldState) => {
-                                        return {
-                                            compileMod: !oldState.compileMod,
-                                        };
-                                    })}
-                                />
-                                <TextField style={{ float: 'left', clear: 'both', width: '100%', cursor: 'pointer' }} floatingLabelText="Mod path folder" value={this.state.modFolder} onClick={() => this.showExplorerDialog('modFolder', true)} readOnly />
-                            </div>
+                                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                            </CardText>
+                        </Card>
+                    </Tab>
 
-                            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-                        </CardText>
-                    </Card>
-                </Tab>
-
-                <Tab value="export" label={'Export'}>
-                    <div style={{ padding: 20 }}>
-                        Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
+                    <Tab value="export" label={'Export'}>
+                        <div style={{ padding: 20 }}>
+                            Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
                         </div>
-                </Tab>
-            </Tabs>
+                    </Tab>
+                </Tabs>
+            }
+            else {
+                var actions = [
+                    cancelAction,
+                    <RaisedButton
+                        primary
+                        label={"BACK"}
+                        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+                    />
+                ];
+                var title = this.state.errorMessage;
+                var children = this.state.errorDetails;
+            }
+            return (
+                <Dialog
+                    title={title}
+                    open={this.props.open}
+                    actions={actions}
+                    bodyStyle={{ overflow: 'auto' }}
+                    style={{ whiteSpace: "pre-wrap" }}
+                >
+                    {children}
+                </Dialog>
+            );
         }
-        else {
-            var actions = [
-                cancelAction,
-                <RaisedButton
-                    primary
-                    label={"BACK"}
-                    onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-                />
-            ];
-            var title = this.state.errorMessage;
-            var children = this.state.errorDetails;
-        }
-        return (
-            <Dialog
-                title={title}
-                open={this.props.open}
-                onRequestClose={this.props.onRequestClose}
-                actions={actions}
-                bodyStyle={{ overflow: 'auto' }}
-                style={{ whiteSpace: "pre-wrap" }}
-            >
-                {children}
-            </Dialog>
-        );
+        return null;
     },
 });
 
