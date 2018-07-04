@@ -41,7 +41,7 @@ const TransitionDialog = React.createClass({
     processError(parsedResponse) {
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.setState({ errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
+            this.setState({ transitionOpen: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
             return true;
         }
         return false;
@@ -50,12 +50,11 @@ const TransitionDialog = React.createClass({
     instantiate() {
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
-
+        this.closeTransition();
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
                 if (!this.processError(parsedResponse)) {
-                    this.closeTransition();
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
@@ -67,11 +66,11 @@ const TransitionDialog = React.createClass({
     simulate() {
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
+        this.closeTransition();
         Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [this.state])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
                 if (!this.processError(parsedResponse)) {
-                    this.closeTransition();
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
@@ -166,19 +165,25 @@ const TransitionDialog = React.createClass({
             actions = [cancelAction];
         }
 
-        return (
-            <Dialog
+        var dialog = null;
+        //Once the dialog closes it can't be reopened (which is useful when we need to throw an error) therefore we just return
+        //null when transitionOpen is false
+        if (this.state.transitionOpen) {
+            dialog = (<Dialog
                 title={title}
                 actions={actions}
                 modal={true}
-                open={this.state.transitionOpen}
+                open={true}
                 onRequestClose={this.closeTransition}
                 bodyStyle={{ overflow: 'auto' }}
-                style={{whiteSpace: "pre-wrap"}}
+                style={{ whiteSpace: "pre-wrap" }}
             >
                 {children}
-            </Dialog>
-        );
+            </Dialog>);
+
+        }
+
+        return dialog;
     },
 });
 
