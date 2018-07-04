@@ -108,12 +108,6 @@ export default class NetPyNETabs extends React.Component {
       transitionDialog: false
     });
   }
-  
-  // componentDidUpdate(prevProps, prevState) {
-  //   if(!this.state.transitionDialog){
-  //     this.set
-  //   }
-  // }
 
   closeSettings = () => {
     this.setState({ settingsOpen: false });
