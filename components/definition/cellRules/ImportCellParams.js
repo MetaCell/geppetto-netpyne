@@ -92,8 +92,6 @@ export default class ImportCellParams extends React.Component {
   };
 
   closeImportCellParams() {
-    // this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
-    // this.props.onRequestClose();
     this.setState({ open: false, errorMessage: undefined, errorDetails: undefined });
   }
 
@@ -211,7 +209,6 @@ export default class ImportCellParams extends React.Component {
         <Dialog
           title={title}
           open={this.props.open}
-          // onRequestClose={this.props.onRequestClose}
           actions={actions}
           bodyStyle={{ overflow: 'auto' }}
           style={{ whiteSpace: "pre-wrap" }}
