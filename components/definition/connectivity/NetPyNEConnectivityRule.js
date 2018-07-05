@@ -1,13 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import IconMenu from 'material-ui/IconMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
