@@ -142,6 +142,9 @@ export default class ListComponent extends Component {
                 return JSON.parse(value);
             }
             else {
+                if ( !Array.isArray(value) ){
+                    value = [value];
+                }
                 return value.map((child, i) => {
                     return (typeof child == 'string') ? child : JSON.stringify(child);
                 });
