@@ -85,22 +85,22 @@ export default class NetPyNEField extends Component {
 
         const childWithProp = React.Children.map(this.props.children, (child) => {
             var extraProps = {}
+            
+            if (child.type.name != "SelectField") {
+                extraProps['validate'] = this.setErrorMessage;
+                extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 
-            extraProps['validate'] = this.setErrorMessage;
-            extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
-
+                var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
+                if (dataSource != '') {
+                    extraProps['dataSource'] = dataSource;
+                }
+            }
+            
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
             extraProps['label'] = floatingLabelText;
 
             if (child.type.name != "Checkbox") {
                 extraProps['floatingLabelText'] = floatingLabelText;
-            }
-
-            if (child.type.name != "SelectField") {
-                var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
-                if (dataSource != '') {
-                    extraProps['dataSource'] = dataSource;
-                }
             }
 
             var type = Utils.getHTMLType(this.props.id);
