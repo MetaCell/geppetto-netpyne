@@ -29,8 +29,8 @@ export default class PlotSpikeStats extends React.Component {
         <TimeRange model={tag + "['timeRange']"} />
       </NetPyNEField>
       
-      <NetPyNEField id="simConfig.analysis.plotSpikeStats.popColors" >
-        <PythonControlledTextField model={tag + "['popColors']"}/>
+      <NetPyNEField id="simConfig.analysis.plotSpikeStats.popColors" className="listStyle">
+        <PythonControlledListComponent model={tag + "['popColors']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.graphType" className="listStyle" >
@@ -39,7 +39,7 @@ export default class PlotSpikeStats extends React.Component {
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.stats" className="listStyle" >
         <PythonControlledSelectField model={tag + "['stats']"} />
-      </NetPyNEField>      
+      </NetPyNEField>
     </div>
   };
 };
