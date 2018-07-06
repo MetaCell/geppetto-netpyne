@@ -203,21 +203,22 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
               <PythonControlledListComponent model={"simConfig.recordLFP"} />
             </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveLFPCells" className={"netpyneCheckbox"} style={{marginTop: 25}}>
-              <PythonControlledCheckbox model={"simConfig.saveLFPCells"} />
+            
+            <NetPyNEField id="simConfig.recordTraces" className={"listStyle"} >
+              <PythonControlledListComponent model={"simConfig.recordTraces"}  />
             </NetPyNEField>
-          </div>
-
-          <div style={{ float: 'right', width: '45%'}}>
-            <NetPyNEField id="simConfig.recordTraces" >
-              <PythonControlledTextField model={"simConfig.recordTraces"} />
-            </NetPyNEField>
-
+            
             <NetPyNEField id="simConfig.recordStep" >
               <PythonControlledTextField model={"simConfig.recordStep"} />
             </NetPyNEField>
+            
+          </div>
 
+          <div style={{ float: 'right', width: '45%'}}>
+            <NetPyNEField id="simConfig.saveLFPCells" className={"netpyneCheckbox"} style={{marginTop: 25}}>
+              <PythonControlledCheckbox model={"simConfig.saveLFPCells"} />
+            </NetPyNEField>
+            
             <NetPyNEField id="simConfig.recordStim" className={"netpyneCheckbox"} style={{marginTop: 25}}>
               <PythonControlledCheckbox model={"simConfig.recordStim"} />
             </NetPyNEField>
