@@ -82,6 +82,16 @@ export default class NetPyNEInstantiated extends React.Component {
         var that = this;
         Utils.sendPythonMessage(pythonFigureMethod, [])
             .then(response => {
+                if (response.startsWith("{") && response.endsWith("}")) {
+                    var parsedResponse = JSON.parse(response);
+                    if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+                        this.setState({
+                            dialogMessage: "NetPyNE returned an error plotting " + plotName,
+                            openDialog: true
+                        });
+                        return;
+                    }
+                }
                 if (response.startsWith("[") && response.endsWith("]")) {
                     response = eval(response);
                 }
