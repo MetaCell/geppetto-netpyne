@@ -148,7 +148,8 @@ export default class ListComponent extends Component {
 
     removeChild(childIndex) {
         var children = this.state.children;
-        if (this.props.realType.startsWith('dict')) {
+        if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
+            
             delete children[childIndex];
         }
         else {
@@ -162,7 +163,7 @@ export default class ListComponent extends Component {
         // Update State
         this.setState({ children: children, newItemValue: '' });
 
-        if (this.props.realType.startsWith('dict')) {
+        if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
             var newValue = children;
         }
         else{
@@ -189,7 +190,7 @@ export default class ListComponent extends Component {
 
     convertFromPython(prevProps, prevState, value) {
         if (value != undefined && prevProps.value != value && value != '') {
-            if (this.props.realType.startsWith('dict')) {
+            if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
                 return (typeof value == 'string') ? JSON.parse(value) : value;
             }
             else {
