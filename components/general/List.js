@@ -12,7 +12,7 @@ export default class ListComponent extends Component {
         super(props);
         this.state = {
             model: props.model,
-            children: (props.realType.startsWith('dict'))?{}:[],
+            children: (props.realType=='dict' || props.realType=='dict(dict())')?{}:[],
             newItemValue: ''
         };
 
