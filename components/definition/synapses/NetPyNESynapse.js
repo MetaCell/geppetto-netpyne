@@ -17,7 +17,7 @@ export default class NetPyNESynapse extends React.Component {
       synMechMod: ''
     };
     this.synMechModOptions = [
-      { mod: 'Exp2Syn' },{mod: 'ExpSyn'} 
+      { mod: 'Exp2Syn' }, {mod: 'ExpSyn'} 
     ];
     this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
   };
@@ -62,7 +62,7 @@ export default class NetPyNESynapse extends React.Component {
   updateLayout() {
     const getMod = (value) => {
       Utils
-        .sendPythonMessage("'" + value + "' in netParams.synMechParams['" + this.state.currentName + "']['mod']")
+        .sendPythonMessage("'" + value + "' == netParams.synMechParams['" + this.state.currentName + "']['mod']")
         .then((response) => { if (response) {this.setState({synMechMod: value})}});
     };
     this.synMechModOptions.forEach((option) => { getMod(option.mod) });

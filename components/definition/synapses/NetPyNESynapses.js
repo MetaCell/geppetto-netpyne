@@ -26,7 +26,7 @@ export default class NetPyNESynapses extends React.Component {
   };
 
   handleNewSynapse() {
-    var defaultSynapses = {'Synapse': {'mod': '', 'tau1': 0, 'tau2': 0, 'e': 0}};
+    var defaultSynapses = {'Synapse': {'mod': ''}};
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
     var model = this.state.value;

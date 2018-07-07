@@ -105,7 +105,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={this.postProcessMenuItems}
-              multiple={true}
+              multiple={false}
             />
           </NetPyNEField>
           
