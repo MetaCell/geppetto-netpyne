@@ -76,7 +76,6 @@ export default class NetPyNESection extends React.Component {
       return pythonData[this.props.cellRule].map((name) => (
         <MenuItem
           key={name}
-          insetChildren={true}
           value={name}
           primaryText={name}
         />
