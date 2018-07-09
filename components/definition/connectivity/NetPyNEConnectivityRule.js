@@ -19,7 +19,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   constructor(props) {
     super(props);
-    var _this = this;
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
