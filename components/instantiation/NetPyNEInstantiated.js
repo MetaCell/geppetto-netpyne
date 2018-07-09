@@ -162,7 +162,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPSpectrogramPlot', 'LFP Spectrogram Plot') }} />
                     <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPLocationsPlot', 'LFP Locations Plot') }} />
                     <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
-                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERxDConcentration', 'RxD concentration plot') }} />
+                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERxDConcentrationPlot', 'RxD concentration plot') }} />
                 </Menu>
 
 
