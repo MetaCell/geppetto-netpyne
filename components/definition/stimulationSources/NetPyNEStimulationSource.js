@@ -179,6 +179,12 @@ export default class NetPyNEStimulationSource extends React.Component {
     } else if (this.state.sourceType == 'NetStim') {
       var variableContent = (
         <div>
+          <NetPyNEField id="netParams.stimSourceParams.rate">
+            <PythonControlledTextField
+              model={"netParams.stimSourceParams['" + this.props.name + "']['rate']"}
+            />
+          </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimSourceParams.interval">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['interval']"}
