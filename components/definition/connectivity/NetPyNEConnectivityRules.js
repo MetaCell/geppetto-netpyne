@@ -41,12 +41,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var defaultConnectivityRules = { 
       'ConnectivityRule': {
         'preConds': {},
-        'postConds': {},
-        'synMech': [],  
-        'synsPerConn': 0,
-        'weight': 0,
-        'delay': [],  
-        'loc': []
+        'postConds': {}
       }
     };
     // Get Key and Value

@@ -104,23 +104,24 @@ export default class NetPyNEConnectivityRule extends React.Component {
             <PythonMethodControlledSelectField
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
-              postProcessItems={this.postProcessMenuItems}
-              multiple={true}
+              postProcessItems={(pythonData, selected) => {
+                return pythonData.map((name) => (<MenuItem key={name} value={name} primaryText={name} />));
+              }}
             />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.connParams.convergence" >
             <PythonControlledTextField
               model={"netParams.connParams['" + this.props.name + "']['convergence']"}
             />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.connParams.divergence" >
             <PythonControlledTextField
               model={"netParams.connParams['" + this.props.name + "']['divergence']"}
             />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.connParams.probability" >
             <PythonControlledTextField
               model={"netParams.connParams['" + this.props.name + "']['probability']"}
@@ -179,37 +180,37 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
-        
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            {value: 'x', label:'absolute'}, 
-            {value: 'xnorm', label:'normalized'}
+            { value: 'x', label: 'absolute' },
+            { value: 'xnorm', label: 'normalized' }
           ]}
         />
 
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            {value: 'y', label:'absolute'}, 
-            {value: 'ynorm', label:'normalized'}
+            { value: 'y', label: 'absolute' },
+            { value: 'ynorm', label: 'normalized' }
           ]}
         />
 
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            {value: 'z', label:'absolute'}, 
-            {value: 'znorm', label:'normalized'}
+            { value: 'z', label: 'absolute' },
+            { value: 'znorm', label: 'normalized' }
           ]}
         />
-      
+
       </div>
     }
     else if (this.state.sectionId == "Post Conditions") {
@@ -238,37 +239,37 @@ export default class NetPyNEConnectivityRule extends React.Component {
             multiple={true}
           />
         </NetPyNEField>
-        
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            {value: 'x', label:'absolute'}, 
-            {value: 'xnorm', label:'normalized'}
+            { value: 'x', label: 'absolute' },
+            { value: 'xnorm', label: 'normalized' }
           ]}
         />
 
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            {value: 'y', label:'absolute'}, 
-            {value: 'ynorm', label:'normalized'}
+            { value: 'y', label: 'absolute' },
+            { value: 'ynorm', label: 'normalized' }
           ]}
         />
 
-        <NetPyNECoordsRange 
-          name={this.props.name} 
+        <NetPyNECoordsRange
+          name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            {value: 'z', label:'absolute'}, 
-            {value: 'znorm', label:'normalized'}
+            { value: 'z', label: 'absolute' },
+            { value: 'znorm', label: 'normalized' }
           ]}
         />
-        
+
       </div>
     }
 
