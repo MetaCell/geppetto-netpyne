@@ -87,9 +87,6 @@ export default class NetPyNEField extends Component {
             var extraProps = {}
             
             if (child.type.name != "SelectField" && child.type.name != 'PythonControlledControlWithPythonDataFetch') {
-                extraProps['validate'] = this.setErrorMessage;
-                extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
-
                 var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
                 if (dataSource != '') {
                     extraProps['dataSource'] = dataSource;
@@ -109,6 +106,8 @@ export default class NetPyNEField extends Component {
             }
 
             if (child.type.name == "PythonControlledControl") {
+                extraProps['validate'] = this.setErrorMessage;
+                extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
                 var realType = Utils.getMetadataField(this.props.id, "type");
                 extraProps['realType'] = realType;
             }
