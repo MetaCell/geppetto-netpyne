@@ -114,7 +114,6 @@ export default class NetPyNEStimulationTarget extends React.Component {
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
-              multiple={false}
             />
           </NetPyNEField>
           
@@ -139,7 +138,6 @@ export default class NetPyNEStimulationTarget extends React.Component {
               model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={this.postProcessMenuItems4SynMech}
-              multiple={false}
             />
           </NetPyNEField>
           
