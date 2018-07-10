@@ -21,7 +21,6 @@ export default class NetPyNEStimulationSource extends React.Component {
     this.stimSourceTypeOptions = [
       { type: 'IClamp' },
       { type: 'VClamp' },
-      { type: 'SEClamp' },
       { type: 'NetStim' },
       { type: 'AlphaSynapse' }
     ];
@@ -213,40 +212,6 @@ export default class NetPyNEStimulationSource extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sourceType == 'SEClamp') {
-      var variableContent = (
-        <div>
-          <NetPyNEField id="netParams.stimSourceParams.rs">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
-            <PythonControlledListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
-            <PythonControlledListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.i">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.vc">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['vc']"}
-            />
-          </NetPyNEField>
-        </div>
-      )
     } else {
       var variableContent = <div />
     };
