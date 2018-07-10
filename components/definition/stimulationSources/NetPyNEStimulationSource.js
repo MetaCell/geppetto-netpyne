@@ -29,9 +29,7 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.currentName != nextProps.name) {
-      this.setState({ currentName: nextProps.name, sourceType: null });
-    };
+    
   };
 
   handleRenameChange = (event) => {
@@ -53,20 +51,25 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   componentDidMount() {
-    this.updateLayout();
+    this.updateLayout(this.state.currentName);
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
-      this.updateLayout();
+    if (prevProps.name != this.props.name) {
+      this.setState({ currentName: this.props.name, sourceType: null });
+      this.updateLayout(this.props.name);
     };
-  };
-
-  updateLayout() {
+  }
+  updateLayout(name) {
     const getType = (value) => {
       Utils
-        .sendPythonMessage("'" + value + "' in netParams.stimSourceParams['" + this.state.currentName + "']['type']")
-        .then((response) => { if (response) { this.setState({ sourceType: value }) } });
+        .sendPythonMessage("'" + value + "' in netParams.stimSourceParams['" + name + "']['type']")
+        .then((response) => { if (response) { 
+          if (value!= this.state.sourceType) {
+            this.setState({ sourceType: value }) 
+          }
+        } 
+      });
     };
     this.stimSourceTypeOptions.forEach((option) => { getType(option.type) });
   };
