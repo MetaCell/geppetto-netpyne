@@ -79,7 +79,6 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     plotFigure(pythonFigureMethod, plotName) {
-        var that = this;
         Utils.sendPythonMessage(pythonFigureMethod, [])
             .then(response => {
                 //TODO Fix this, use just JSON
@@ -99,7 +98,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     }
                 }
                 if ($.isArray(response)) {
-                    that.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
+                    this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
                 }
                 else if (response == -1) {
                     this.setState({
@@ -108,7 +107,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     });
                 }
                 else {
-                    that.newPlotWidget(plotName, response, response, 0, 0);
+                    this.newPlotWidget(plotName, response, response, 0, 0);
                 }
             });
     }
