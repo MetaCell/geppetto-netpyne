@@ -82,18 +82,21 @@ export default class NetPyNEInstantiated extends React.Component {
         var that = this;
         Utils.sendPythonMessage(pythonFigureMethod, [])
             .then(response => {
-                if (response.startsWith("{") && response.endsWith("}")) {
-                    var parsedResponse = JSON.parse(response);
-                    if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-                        this.setState({
-                            dialogMessage: "NetPyNE returned an error plotting " + plotName,
-                            openDialog: true
-                        });
-                        return;
+                //TODO Fix this, use just JSON
+                if(typeof response === 'string'){
+                    if (response.startsWith("{") && response.endsWith("}")) {
+                        var parsedResponse = JSON.parse(response);
+                        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+                            this.setState({
+                                dialogMessage: "NetPyNE returned an error plotting " + plotName,
+                                openDialog: true
+                            });
+                            return;
+                        }
                     }
-                }
-                if (response.startsWith("[") && response.endsWith("]")) {
-                    response = eval(response);
+                    if (response.startsWith("[") && response.endsWith("]")) {
+                        response = eval(response);
+                    }
                 }
                 if ($.isArray(response)) {
                     that.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
