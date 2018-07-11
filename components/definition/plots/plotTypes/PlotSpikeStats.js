@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import TimeRange from '../TimeRange'
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -25,11 +26,11 @@ export default class PlotSpikeStats extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.timeRange" >
-        <PythonControlledTextField model={tag + "['timeRange']"} />
+        <TimeRange model={tag + "['timeRange']"} />
       </NetPyNEField>
       
-      <NetPyNEField id="simConfig.analysis.plotSpikeStats.popColors" >
-        <PythonControlledTextField model={tag + "['popColors']"}/>
+      <NetPyNEField id="simConfig.analysis.plotSpikeStats.popColors" className="listStyle">
+        <PythonControlledListComponent model={tag + "['popColors']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.graphType" className="listStyle" >
@@ -38,7 +39,7 @@ export default class PlotSpikeStats extends React.Component {
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.stats" className="listStyle" >
         <PythonControlledSelectField model={tag + "['stats']"} />
-      </NetPyNEField>      
+      </NetPyNEField>
     </div>
   };
 };

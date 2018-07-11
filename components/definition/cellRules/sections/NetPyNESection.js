@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 import Utils from '../../../../Utils';
+
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
@@ -24,15 +23,13 @@ export default class NetPyNESection extends React.Component {
   constructor(props) {
     super(props);
 
-    var _this = this;
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
       sectionId: "General"
     };
-
-
     this.setPage = this.setPage.bind(this);
+    this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
   }
 
   setPage(page) {
@@ -73,7 +70,19 @@ export default class NetPyNESection extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ currentName: nextProps.name});
   }
-
+  
+  postProcessMenuItems(pythonData, selected) {
+    if (pythonData[this.props.cellRule]!= undefined) {
+      return pythonData[this.props.cellRule].map((name) => (
+        <MenuItem
+          key={name}
+          value={name}
+          primaryText={name}
+        />
+      ));
+    }
+  };
+      
   render() {
 
     var content;
@@ -118,24 +127,36 @@ export default class NetPyNESection extends React.Component {
           <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
-        <PythonControlledTextField
-          floatingLabelText="Pt3d"
-          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['pt3d']"} />
+        <NetPyNEField id="netParams.cellParams.secs.geom.pt3d" className="listStyle">
+          <PythonControlledListComponent
+            model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['pt3d']"} />
+        </NetPyNEField>
+
       </div>)
     }
     else if (this.state.sectionId == "Topology") {
       content = (<div>
-        <PythonControlledTextField
-          floatingLabelText="Parent Section"
-          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"} />
+        <NetPyNEField id="netParams.cellParams.secs.topol.parentSec" >
+          <PythonMethodControlledSelectField
+            model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"}
+            method={"netpyne_geppetto.getAvailableSections"}
+            postProcessItems={this.postProcessMenuItems}
+          />
+        </NetPyNEField>
         <br />
-        <PythonControlledTextField
-          floatingLabelText="Parent x"
-          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"} />
+        
+        <NetPyNEField id="netParams.cellParams.secs.topol.parentX" >
+          <PythonControlledTextField
+            model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"}
+          />
+        </NetPyNEField>
         <br />
-        <PythonControlledTextField
-          floatingLabelText="Child x"
-          model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} />
+        
+        <NetPyNEField id="netParams.cellParams.secs.topol.childX" >
+          <PythonControlledTextField
+            model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} 
+          />
+        </NetPyNEField>
       </div>)
     }
 

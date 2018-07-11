@@ -79,20 +79,35 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     plotFigure(pythonFigureMethod, plotName) {
-        var that = this;
         Utils.sendPythonMessage(pythonFigureMethod, [])
             .then(response => {
+                //TODO Fix this, use just JSON
+                if(typeof response === 'string'){
+                    if (response.startsWith("{") && response.endsWith("}")) {
+                        var parsedResponse = JSON.parse(response);
+                        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+                            this.setState({
+                                dialogMessage: "NetPyNE returned an error plotting " + plotName,
+                                openDialog: true
+                            });
+                            return;
+                        }
+                    }
+                    if (response.startsWith("[") && response.endsWith("]")) {
+                        response = eval(response);
+                    }
+                }
                 if ($.isArray(response)) {
-                    that.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
+                    this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
                 }
                 else if (response == -1) {
                     this.setState({
-                        dialogMessage: "NetPyNE returned an error plotting "+plotName,
+                        dialogMessage: "NetPyNE returned an error plotting " + plotName,
                         openDialog: true
-                      });
+                    });
                 }
                 else {
-                    that.newPlotWidget(plotName, response, response, 0, 0);
+                    this.newPlotWidget(plotName, response, response, 0, 0);
                 }
             });
     }
@@ -149,6 +164,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPSpectrogramPlot', 'LFP Spectrogram Plot') }} />
                     <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPLocationsPlot', 'LFP Locations Plot') }} />
                     <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
+                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERxDConcentrationPlot', 'RxD concentration plot') }} />
                 </Menu>
 
 
@@ -173,17 +189,17 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 10 }} 
-                			onClick={() => { $('#controlpanel').show(); }} 
-                			icon={"fa-list"}
-                			id={"ControlPanelButton"}/>
+                <IconButton style={{ position: 'absolute', left: 35, top: 10 }}
+                    onClick={() => { $('#controlpanel').show(); }}
+                    icon={"fa-list"}
+                    id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
                         style={{ position: 'absolute', left: 35, top: 318 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
-                    	id="PlotButton"
+                        id="PlotButton"
                     />
                     <Popover
                         open={this.state.plotButtonOpen}
@@ -203,8 +219,8 @@ export default class NetPyNEInstantiated extends React.Component {
                         primary={true}
                         keyboardFocused={true}
                         onClick={this.handleCloseDialog}
-                    	id="netPyneDialog"
-                      />}
+                        id="netPyneDialog"
+                    />}
                     open={this.state.openDialog}
                     onRequestClose={this.handleCloseDialog}
                 >

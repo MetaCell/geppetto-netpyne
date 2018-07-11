@@ -13,7 +13,7 @@ import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
-import RangeComponent from './Range';
+import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -143,7 +143,35 @@ export default class NetPyNEPopulation extends React.Component {
         </div>
     }
     else if (this.state.sectionId == "SpatialDistribution") {
-      var content = <RangeComponent modelName={this.props.name} />
+      var content = 
+        <div>
+          <NetPyNECoordsRange 
+            name={this.props.name} 
+            model={'netParams.popParams'}
+            items={[
+              {value: 'xRange', label:'absolute'}, 
+              {value: 'xnormRange', label:'normalized'}
+            ]}
+          />
+
+          <NetPyNECoordsRange 
+            name={this.props.name} 
+            model={'netParams.popParams'}
+            items={[
+              {value: 'yRange', label:'absolute'}, 
+              {value: 'ynormRange', label:'normalized'}
+            ]}
+          />
+
+          <NetPyNECoordsRange 
+            name={this.props.name} 
+            model={'netParams.popParams'}
+            items={[
+              {value: 'zRange', label:'absolute'}, 
+              {value: 'znormRange', label:'normalized'}
+            ]}
+          />
+        </div>
     }
     else if (this.state.sectionId == "CellList") {
       var content = <div>Option to provide individual list of cells. Coming soon ...</div>

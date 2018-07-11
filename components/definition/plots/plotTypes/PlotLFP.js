@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
-import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import TimeRange from '../TimeRange'
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 
 export default class PlotLFP extends React.Component {
 
@@ -26,13 +27,13 @@ export default class PlotLFP extends React.Component {
       <NetPyNEField id="simConfig.analysis.plotLFP.electrodes" className="listStyle" >
         <PythonControlledListComponent model={tag + "['electrodes']"} />
       </NetPyNEField>
-      
-      <NetPyNEField id="simConfig.analysis.plotLFP.plots" className="listStyle" >
-        <PythonControlledSelectField model={tag+"['plots']"} />
+
+      <NetPyNEField id="simConfig.analysis.plotLFP.plots">
+        <PythonControlledSelectField model={tag+"['plots']"} multiple={true}/>
       </NetPyNEField>
               
       <NetPyNEField id="simConfig.analysis.plotLFP.timeRange" >
-        <PythonControlledTextField model={tag + "['timeRange']"} />
+        <TimeRange model={tag + "['timeRange']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.NFFT" >

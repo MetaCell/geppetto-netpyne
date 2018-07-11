@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
@@ -16,12 +16,13 @@ export default class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: null
+      sourceType: ''
     };
     this.stimSourceTypeOptions = [
       { type: 'IClamp' },
       { type: 'VClamp' },
-      { type: 'SEClamp' },
+        // TO BE READDED ONCE WE FIX DUR AND AMP TYPE
+      // { type: 'SEClamp' },
       { type: 'NetStim' },
       { type: 'AlphaSynapse' }
     ];
@@ -66,7 +67,7 @@ export default class NetPyNEStimulationSource extends React.Component {
     const getType = (value) => {
       Utils
         .sendPythonMessage("'" + value + "' in netParams.stimSourceParams['" + this.state.currentName + "']['type']")
-        .then((response) => { if (response) { this.setState({ sourceType: value }) } });
+        .then((response) => { if (response == true) { this.setState({ sourceType: value }) } });
     };
     this.stimSourceTypeOptions.forEach((option) => { getType(option.type) });
   };
@@ -116,13 +117,13 @@ export default class NetPyNEStimulationSource extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.vClampDur" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
+          <NetPyNEField id="netParams.stimSourceParams.vClampAmp" className="listStyle">
             <PythonControlledListComponent
               model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
@@ -179,6 +180,12 @@ export default class NetPyNEStimulationSource extends React.Component {
     } else if (this.state.sourceType == 'NetStim') {
       var variableContent = (
         <div>
+          <NetPyNEField id="netParams.stimSourceParams.rate">
+            <PythonControlledTextField
+              model={"netParams.stimSourceParams['" + this.props.name + "']['rate']"}
+            />
+          </NetPyNEField>
+          
           <NetPyNEField id="netParams.stimSourceParams.interval">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['interval']"}
@@ -204,41 +211,44 @@ export default class NetPyNEStimulationSource extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sourceType == 'SEClamp') {
-      var variableContent = (
-        <div>
-          <NetPyNEField id="netParams.stimSourceParams.rs">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
-            />
-          </NetPyNEField>
+    } 
+    // TO BE READDED ONCE WE FIX DUR AND AMP TYPE
+    // else if (this.state.sourceType == 'SEClamp') {
+    //   var variableContent = (
+    //     <div>
+    //       <NetPyNEField id="netParams.stimSourceParams.rs">
+    //         <PythonControlledTextField
+    //           model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
+    //         />
+    //       </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
-            <PythonControlledListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
-            />
-          </NetPyNEField>
+    //       <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
+    //         <PythonControlledListComponent
+    //           model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
+    //         />
+    //       </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
-            <PythonControlledListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
-            />
-          </NetPyNEField>
+    //       <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
+    //         <PythonControlledListComponent
+    //           model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+    //         />
+    //       </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.i">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
-            />
-          </NetPyNEField>
+    //       <NetPyNEField id="netParams.stimSourceParams.i">
+    //         <PythonControlledTextField
+    //           model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
+    //         />
+    //       </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.vc">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['vc']"}
-            />
-          </NetPyNEField>
-        </div>
-      )
-    } else {
+    //       <NetPyNEField id="netParams.stimSourceParams.vc">
+    //         <PythonControlledTextField
+    //           model={"netParams.stimSourceParams['" + this.props.name + "']['vc']"}
+    //         />
+    //       </NetPyNEField>
+    //     </div>
+    //   )
+    // }
+    else {
       var variableContent = <div />
     };
 

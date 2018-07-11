@@ -49,11 +49,11 @@ export default class NetPyNENewPlot extends React.Component {
         onRequestClose={this.handleRequestClose}
       >
         <Menu onChange={this.handleClick}>
+         <MenuItem key={"plotTraces"} value={"plotTraces"} primaryText={"Traces Plot"}/>
           <MenuItem key={"plotRaster"} value={"plotRaster"} primaryText={"Raster Plot"}/>
           <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"} primaryText={"Spike Histogram Plot"}/>
           <MenuItem key={"plotSpikeStats"} value={"plotSpikeStats"} primaryText={"Spike Stats Plot"}/>
           <MenuItem key={"plotRatePSD"} value={"plotRatePSD"} primaryText={"PSD Rate Plot"}/>
-          <MenuItem key={"plotTraces"} value={"plotTraces"} primaryText={"Traces Plot"}/>
           <MenuItem key={"plotLFP"} value={"plotLFP"} primaryText={"LFP Plot"}/>
           <MenuItem key={"plotShape"} value={"plotShape"} primaryText={"3D Cell Shape Plot"}/>
           <MenuItem key={"plot2Dnet"} value={"plot2Dnet"} primaryText={"2D Network Plot"}/>
