@@ -2,9 +2,8 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import Card from 'material-ui/Card/Card';
-import CardText from 'material-ui/Card/CardText';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Tabs, Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Utils from '../../Utils';
@@ -30,7 +29,8 @@ const SettingsDialog = React.createClass({
             explorerParameter: "",
             exploreOnlyDirs: false,
             errorMessage: undefined,
-            errorDetails: undefined
+            errorDetails: undefined,
+            scriptName: 'script_output'
         };
     },
 
@@ -63,12 +63,17 @@ const SettingsDialog = React.createClass({
             var action = 'netpyne_geppetto.importModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
         }
-        else {
+        else if (this.state.currentTab == "export") {
             var action = 'netpyne_geppetto.exportModel';
             var message = GEPPETTO.Resources.EXPORTING_MODEL;
         }
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+        else {
+            var action = 'netpyne_geppetto.generateScript';
+            var message = GEPPETTO.Resources.EXPORTING_MODEL;
+        }
 
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+        
         // Import/Export model python side
         this.closeDialog();
         Utils
@@ -134,7 +139,7 @@ const SettingsDialog = React.createClass({
                     cancelAction,
                     <RaisedButton
                         primary
-                        label={this.state.currentTab == "import" ? 'Import' : 'Export'}
+                        label={this.state.currentTab == "import" ? 'Import' : this.state.currentTab== 'Export'? 'Export': 'To script'}
                         onTouchTap={this.performAction}
                     />
                 ];
@@ -179,6 +184,18 @@ const SettingsDialog = React.createClass({
                         <div style={{ padding: 20 }}>
                             Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
                         </div>
+                    </Tab>
+                    
+                    <Tab value="script" label={'To script'}>
+                        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+                            <CardHeader
+                                title="Save your work as NetPyNE script."
+                                subtitle="The file will be saved in the current working directory (where you initialized NetPyNE-UI)"
+                            />
+                            <CardText>
+                                <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
+                            </CardText>
+                        </Card>
                     </Tab>
                 </Tabs>
             }
