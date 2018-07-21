@@ -8,6 +8,7 @@ import NetPyNEField from '../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNEStimulationSource extends React.Component {
@@ -16,25 +17,28 @@ export default class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: ''
     };
-    this.stimSourceTypeOptions = [
-      { type: 'IClamp' },
-      { type: 'VClamp' },
-        // TO BE READDED ONCE WE FIX DUR AND AMP TYPE
-      // { type: 'SEClamp' },
-      { type: 'NetStim' },
-      { type: 'AlphaSynapse' }
-    ];
+    
     this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
   };
+  
+  componentDidMount() {
+    this.findCurrentSourceType()
+  }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.currentName != nextProps.name) {
-      this.setState({ currentName: nextProps.name, sourceType: null });
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.name != this.state.currentName) {
+      this.setState({ currentName: this.props.name})
+      this.findCurrentSourceType()
     };
   };
-
+  
+  findCurrentSourceType () {
+    Utils.sendPythonMessage("netParams.stimSourceParams['" + this.props.name + "']['type']").then((response) =>{
+      this.setState({ sourceType: response!=undefined? response : ''});
+    });
+  }
+  
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
@@ -53,28 +57,8 @@ export default class NetPyNEStimulationSource extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   };
 
-  componentDidMount() {
-    this.updateLayout();
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
-      this.updateLayout();
-    };
-  };
-
-  updateLayout() {
-    const getType = (value) => {
-      Utils
-        .sendPythonMessage("'" + value + "' in netParams.stimSourceParams['" + this.state.currentName + "']['type']")
-        .then((response) => { if (response == true) { this.setState({ sourceType: value }) } });
-    };
-    this.stimSourceTypeOptions.forEach((option) => { getType(option.type) });
-  };
-
-  handleStimSourceTypeChange(event, index, value) {
-    Utils.execPythonCommand("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
-    this.setState({ sourceType: value });
+  handleStimSourceTypeChange = (value) => {
+      this.setState({ sourceType: value });
   };
 
   render() {
@@ -82,21 +66,21 @@ export default class NetPyNEStimulationSource extends React.Component {
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
         <div>
+          <NetPyNEField id="netParams.stimSourceParams.amp">
+            <PythonControlledTextField
+              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+            />
+          </NetPyNEField>
+        
           <NetPyNEField id="netParams.stimSourceParams.del">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['del']"}
             />
           </NetPyNEField>
-
+          
           <NetPyNEField id="netParams.stimSourceParams.dur">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.amp">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
             />
           </NetPyNEField>
 
@@ -212,42 +196,29 @@ export default class NetPyNEStimulationSource extends React.Component {
         </div>
       );
     } 
-    // TO BE READDED ONCE WE FIX DUR AND AMP TYPE
-    // else if (this.state.sourceType == 'SEClamp') {
-    //   var variableContent = (
-    //     <div>
-    //       <NetPyNEField id="netParams.stimSourceParams.rs">
-    //         <PythonControlledTextField
-    //           model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
-    //         />
-    //       </NetPyNEField>
+    else if (this.state.sourceType == 'SEClamp') {
+      var variableContent = (
+        <div>
+          <NetPyNEField id="netParams.stimSourceParams.SECdur" className="listStyle">
+            <PythonControlledListComponent
+              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id="netParams.stimSourceParams.SECamp" className="listStyle">
+            <PythonControlledListComponent
+              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+            />
+          </NetPyNEField>
 
-    //       <NetPyNEField id="netParams.stimSourceParams.dur" className="listStyle">
-    //         <PythonControlledListComponent
-    //           model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
-    //         />
-    //       </NetPyNEField>
-
-    //       <NetPyNEField id="netParams.stimSourceParams.amp" className="listStyle">
-    //         <PythonControlledListComponent
-    //           model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
-    //         />
-    //       </NetPyNEField>
-
-    //       <NetPyNEField id="netParams.stimSourceParams.i">
-    //         <PythonControlledTextField
-    //           model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
-    //         />
-    //       </NetPyNEField>
-
-    //       <NetPyNEField id="netParams.stimSourceParams.vc">
-    //         <PythonControlledTextField
-    //           model={"netParams.stimSourceParams['" + this.props.name + "']['vc']"}
-    //         />
-    //       </NetPyNEField>
-    //     </div>
-    //   )
-    // }
+          <NetPyNEField id="netParams.stimSourceParams.SECrs">
+            <PythonControlledTextField
+              model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
+            />
+          </NetPyNEField>
+        </div>
+      )
+    }
     else {
       var variableContent = <div />
     };
@@ -262,21 +233,13 @@ export default class NetPyNEStimulationSource extends React.Component {
             className={"netpyneField"}
             id={"sourceName"}
           />
-          <br />
-
-          <NetPyNEField id="netParams.stimSourceParams.type" className={"netpyneFieldNoWidth"} noStyle>
-            <SelectField
-              floatingLabelText="stimulation type"
-              value={this.state.sourceType}
-              onChange={this.handleStimSourceTypeChange}
-            >
-              {(this.stimSourceTypeOptions != undefined) ?
-                this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
-                  return (<MenuItem key={stimSourceTypeOption.type} value={stimSourceTypeOption.type} primaryText={stimSourceTypeOption.type} />)
-                }) : null
-              }
-            </SelectField>
+          
+          <NetPyNEField id="netParams.stimSourceParams.type" >
+            <PythonControlledSelectField 
+              model={"netParams.stimSourceParams['" + this.state.currentName + "']['type']"} 
+              letParentKnowValueChanged={this.handleStimSourceTypeChange}/>
           </NetPyNEField>
+          <br />
         </div>
         {variableContent}
       </div>
