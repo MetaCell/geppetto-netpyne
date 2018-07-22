@@ -46,20 +46,20 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 		testConsoles(test);
 	});
 
-	// casper.then(function () { // test adding a population using UI
-	// 	casper.echo("######## Test Add Population ######## ");
-	// 	addPopulation(test);
-	// });
-	// 
-	// casper.then(function () { // test adding a cell rule using UI
-	// 	casper.echo("######## Test Add Cell Rule ######## ");
-	// 	addCellRule(test);
-	// });
-	// 
-	// casper.then(function () { // test adding a connection using UI
-	// 	casper.echo("######## Test Add Connection Rule ######## ");
-	// 	addConnection(test);
-	// });
+	casper.then(function () { // test adding a population using UI
+		casper.echo("######## Test Add Population ######## ");
+		addPopulation(test);
+	});
+	
+	casper.then(function () { // test adding a cell rule using UI
+		casper.echo("######## Test Add Cell Rule ######## ");
+		addCellRule(test);
+	});
+	
+	casper.then(function () { // test adding a connection using UI
+		casper.echo("######## Test Add Connection Rule ######## ");
+		addConnection(test);
+	});
 	
 	casper.then(function () { // test adding a stimulus target using UI
 		casper.echo("######## Test Add stimTarget Rule ######## ");
@@ -67,23 +67,23 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 	});
 	
 	
-	// casper.then(function () { //test full netpyne loop using a demo project
-	// 	casper.echo("######## Running Demo ######## ");
-	// 	var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
-	// 	"netpyne_geppetto.netParams=netParams \n" +
-	// 	"netpyne_geppetto.simConfig=simConfig";
-	// 	loadModelUsingPython(test,demo);
-	// });
-	// 
-	// casper.then(function(){ //test explore network tab functionality
-	// 	casper.echo("######## Test Explore Network Functionality ######## ");
-	// 	exploreNetwork(test);
-	// });
-	// 
-	// casper.then(function(){ //test simulate network tab functionality
-	// 	casper.echo("######## Test Simulate Network Functionality ######## ");
-	// 	simulateNetwork(test);
-	// });
+	casper.then(function () { //test full netpyne loop using a demo project
+		casper.echo("######## Running Demo ######## ");
+		var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
+		"netpyne_geppetto.netParams=netParams \n" +
+		"netpyne_geppetto.simConfig=simConfig";
+		loadModelUsingPython(test,demo);
+	});
+	
+	casper.then(function(){ //test explore network tab functionality
+		casper.echo("######## Test Explore Network Functionality ######## ");
+		exploreNetwork(test);
+	});
+	
+	casper.then(function(){ //test simulate network tab functionality
+		casper.echo("######## Test Simulate Network Functionality ######## ");
+		simulateNetwork(test);
+	});
 
 	casper.run(function() {
 		test.done();
