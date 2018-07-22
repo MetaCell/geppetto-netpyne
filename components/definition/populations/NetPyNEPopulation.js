@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import Toggle from 'material-ui/Toggle';
 import Slider from '../../general/Slider';
@@ -69,8 +70,8 @@ export default class NetPyNEPopulation extends React.Component {
     var select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId })
 
     var modelParameters = [];
-    modelParameters.push(<BottomNavigationItem key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
-    modelParameters.push(<BottomNavigationItem key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);
+    modelParameters.push(<BottomNavigationItem id={'generalPopTab'} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
+    modelParameters.push(<BottomNavigationItem id={'spatialDistPopTab'} key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);
     if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
       modelParameters.push(<BottomNavigationItem key={this.state.cellModel} label={this.state.cellModel + " Model"} icon={<FontIcon className={"fa fa-balance-scale"} />} onClick={() => select(2, this.state.cellModel)} />);
     }
@@ -145,30 +146,33 @@ export default class NetPyNEPopulation extends React.Component {
     else if (this.state.sectionId == "SpatialDistribution") {
       var content = 
         <div>
-          <NetPyNECoordsRange 
+          <NetPyNECoordsRange
+            id={"xRangePop"}
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'xRange', label:'absolute'}, 
-              {value: 'xnormRange', label:'normalized'}
+              {value: 'xRange', label:'Absolute'}, 
+              {value: 'xnormRange', label:'Normalized'}
             ]}
           />
 
           <NetPyNECoordsRange 
+            id="yRangePop"
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'yRange', label:'absolute'}, 
-              {value: 'ynormRange', label:'normalized'}
+              {value: 'yRange', label:'Absolute'}, 
+              {value: 'ynormRange', label:'Normalized'}
             ]}
           />
 
           <NetPyNECoordsRange 
+            id="zRangePop"
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'zRange', label:'absolute'}, 
-              {value: 'znormRange', label:'normalized'}
+              {value: 'zRange', label:'Absolute'}, 
+              {value: 'znormRange', label:'Normalized'}
             ]}
           />
         </div>

@@ -46,33 +46,44 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
 		testConsoles(test);
 	});
 
-	casper.then(function () { // test adding a population using UI
-		casper.echo("######## Test Add Population ######## ");
-		addPopulation(test);
+	// casper.then(function () { // test adding a population using UI
+	// 	casper.echo("######## Test Add Population ######## ");
+	// 	addPopulation(test);
+	// });
+	// 
+	// casper.then(function () { // test adding a cell rule using UI
+	// 	casper.echo("######## Test Add Cell Rule ######## ");
+	// 	addCellRule(test);
+	// });
+	// 
+	// casper.then(function () { // test adding a connection using UI
+	// 	casper.echo("######## Test Add Connection Rule ######## ");
+	// 	addConnection(test);
+	// });
+	
+	casper.then(function () { // test adding a stimulus target using UI
+		casper.echo("######## Test Add stimTarget Rule ######## ");
+		addStimTarget(test);
 	});
-
-	casper.then(function () { // test adding a cell rusing using UI
-		casper.echo("######## Test Add Cell Rule ######## ");
-		addCellRule(test);
-	});
-
-	casper.then(function () { //test full netpyne loop using a demo project
-		casper.echo("######## Running Demo ######## ");
-		var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
-		"netpyne_geppetto.netParams=netParams \n" +
-		"netpyne_geppetto.simConfig=simConfig";
-		loadModelUsingPython(test,demo);
-	});
-
-	casper.then(function(){ //test explore network tab functionality
-		casper.echo("######## Test Explore Network Functionality ######## ");
-		exploreNetwork(test);
-	});
-
-	casper.then(function(){ //test simulate network tab functionality
-		casper.echo("######## Test Simulate Network Functionality ######## ");
-		simulateNetwork(test);
-	});
+	
+	
+	// casper.then(function () { //test full netpyne loop using a demo project
+	// 	casper.echo("######## Running Demo ######## ");
+	// 	var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
+	// 	"netpyne_geppetto.netParams=netParams \n" +
+	// 	"netpyne_geppetto.simConfig=simConfig";
+	// 	loadModelUsingPython(test,demo);
+	// });
+	// 
+	// casper.then(function(){ //test explore network tab functionality
+	// 	casper.echo("######## Test Explore Network Functionality ######## ");
+	// 	exploreNetwork(test);
+	// });
+	// 
+	// casper.then(function(){ //test simulate network tab functionality
+	// 	casper.echo("######## Test Simulate Network Functionality ######## ");
+	// 	simulateNetwork(test);
+	// });
 
 	casper.run(function() {
 		test.done();
@@ -134,41 +145,161 @@ function addPopulation(test){
 		casper.click('#Populations');
 		casper.waitUntilVisible('button[id="newPopulationButton"]', function() {
 			this.click('#newPopulationButton');
-			casper.then(function(){
+			casper.then(function () {
 				testPopulation(test, "button#Population", "Population", "", "", null);
 			});
 		},5000);
 	});
-	casper.then(function () { //hide populations view
-		casper.click('#Populations');
-		casper.waitWhileVisible('button[id="newPopulationButton"]', function() {
-			test.assertDoesntExist('button[id="newPopulationButton"]', "Populations view collapsed");
-		},5000);
-	});
+	casper.then(function () {// explore spatial distribution tab
+		casper.click('#spatialDistPopTab')
+		casper.then(function () {
+			casper.wait(500, function () {
+				this.echo("--------testing range component in popParams--------")
+			});
+			casper.then(function () {
+				exploreRangeComponent(test, "#xRangePopSelect", "#xRangePopAbsoluteMenuItem", "x");
+				exploreRangeComponent(test, "#yRangePopSelect", "#yRangePopAbsoluteMenuItem", "y");
+				exploreRangeComponent(test, "#zRangePopSelect", "#zRangePopAbsoluteMenuItem", "z");
+				exploreRangeComponent(test, "#xRangePopSelect", "#xRangePopNormalizedMenuItem", "x");
+				exploreRangeComponent(test, "#yRangePopSelect", "#yRangePopNormalizedMenuItem", "y");
+				exploreRangeComponent(test, "#zRangePopSelect", "#zRangePopNormalizedMenuItem", "z");
+			});
+		});
+		casper.then(function () {
+			casper.wait(5000)
+			casper.then(function () {
+				casper.click('#generalPopTab');
+			})
+			this.echo("------------------------------------------------------")
+		});
+		casper.then(function () { //hide populations view
+			casper.click('#Populations');
+			casper.waitWhileVisible('button[id="newPopulationButton"]', function() {
+				test.assertDoesntExist('button[id="newPopulationButton"]', "Populations view collapsed");
+			},5000);
+		})
+	})
 }
-
 /**
  * Adds a cell rule using the add cell rule button
  */
-function addCellRule(test){
+function addCellRule(test) {
 	casper.then(function () { //expand cell rules view and add a new one using the button
 		casper.click('#CellRules');
 		casper.waitUntilVisible('button[id="newCellRuleButton"]', function() {
 			this.echo('Add Cell Rule button exists.');
-			this.click('#newCellRuleButton');
+			casper.click('#newCellRuleButton');
 			casper.then(function(){
 				testCellRule(test, "button#CellRule", "CellRule", 'div[id="netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']"]', 'div[id="netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']"]');
 			});
-		},5000);
+		}, 5000);
+	});
+	casper.then(function () {// explore spatial distribution tab
+		casper.wait(500, function () {
+			this.echo("--------testing range component in cellParams--------");
+		});
+		casper.then(function () {
+			exploreRangeComponent(test, "#xRangeRuleSelect", "#xRangeRuleAbsoluteMenuItem", "x");
+			exploreRangeComponent(test, "#yRangeRuleSelect", "#yRangeRuleAbsoluteMenuItem", "y");
+			exploreRangeComponent(test, "#zRangeRuleSelect", "#zRangeRuleAbsoluteMenuItem", "z");
+			exploreRangeComponent(test, "#xRangeRuleSelect", "#xRangeRuleNormalizedMenuItem", "x");
+			exploreRangeComponent(test, "#yRangeRuleSelect", "#yRangeRuleNormalizedMenuItem", "y");
+			exploreRangeComponent(test, "#zRangeRuleSelect", "#zRangeRuleNormalizedMenuItem", "z");		
+		});
+	});
+	casper.then(function () {
+		this.echo("------------------------------------------------------")
 	});
 	casper.then(function () { //hide the cell rules view
 		casper.click('#CellRules');
 		casper.waitWhileVisible('button[id="newCellRuleButton"]', function() {
 			test.assertDoesntExist('button[id="newCellRuleButton"]', "Cell Rules view collapsed");
-		},5000);
+		},1000);
 	});
 }
+/**
+ * Adds a connectivity rule using the add conn button
+ */
+function addConnection(test){
+	casper.then(function () { //expand ConnParams view and add a new connectivityRule using the button
+		casper.click('#Connections');
+		casper.waitUntilVisible('button[id="newConnectivityRuleButton"]', function() {
+			casper.click('#newConnectivityRuleButton');
+		}, 1000)
+	});
+	casper.then(function () {// explore spatial distribution for preConn
+		casper.waitUntilVisible('button[id="preCondsConnTab"]', function () {
+			this.echo("--------testing range component in connParams.preConds--------");
+			casper.click("#preCondsConnTab");
+		})
+		casper.then(function() {
+			exploreRangeComponent(test, "#xRangePreConnSelect", "#xRangePreConnAbsoluteMenuItem", "x");
+			exploreRangeComponent(test, "#yRangePreConnSelect", "#yRangePreConnAbsoluteMenuItem", "y");
+			exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnAbsoluteMenuItem", "z");
+			exploreRangeComponent(test, "#xRangePreConnSelect", "#xRangePreConnNormalizedMenuItem", "x");
+			exploreRangeComponent(test, "#yRangePreConnSelect", "#yRangePreConnNormalizedMenuItem", "y");
+			exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnNormalizedMenuItem", "z");
+		});
+	});
+	casper.then(function () {// explore spatial distribution for postConn
+		casper.waitUntilVisible('button[id="postCondsConnTab"]', function () {
+			this.echo("--------testing range component in connParams.postConds--------");
+			casper.click("#postCondsConnTab");
+		})
+		casper.then(function() {
+			exploreRangeComponent(test, "#xRangePostConnSelect", "#xRangePostConnAbsoluteMenuItem", "x");
+			exploreRangeComponent(test, "#yRangePostConnSelect", "#yRangePostConnAbsoluteMenuItem", "y");
+			exploreRangeComponent(test, "#zRangePostConnSelect", "#zRangePostConnAbsoluteMenuItem", "z");
+			exploreRangeComponent(test, "#xRangePostConnSelect", "#xRangePostConnNormalizedMenuItem", "x");
+			exploreRangeComponent(test, "#yRangePostConnSelect", "#yRangePostConnNormalizedMenuItem", "y");
+			exploreRangeComponent(test, "#zRangePostConnSelect", "#zRangePostConnNormalizedMenuItem", "z");
+		});
+	});
+	casper.then(function () {
+		this.echo("------------------------------------------------------")
+	});
+	casper.then(function () { //hide populations view
+		casper.click('#Connections');
+		casper.waitWhileVisible('button[id="newConnectivityRuleButton"]', function() {
+			test.assertDoesntExist('button[id="newConnectivityRuleButton"]', "Connectivity view collapsed");
+		},20000);
+	})
+}
 
+/**
+ * Adds a stimulus Target rule using the add stimTarget rule button
+ */
+function addStimTarget(test){
+	casper.then(function () { //expand ConnParams view and add a new connectivityRule using the button
+		casper.click('#stimTargets');
+		casper.waitUntilVisible('button[id="newStimulationTargetButton"]', function() {
+			casper.click('#newStimulationTargetButton');
+		}, 2000)
+	});
+	casper.then(function () {// explore spatial distribution for preConn
+		casper.waitUntilVisible('button[id="stimTargetCondsTab"]', function () {
+			this.echo("--------testing range component in stimTarget.conds--------");
+			casper.click("#stimTargetCondsTab");
+		})
+		casper.then(function() {
+			exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetAbsoluteMenuItem", "x");
+			exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetAbsoluteMenuItem", "y");
+			exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetAbsoluteMenuItem", "z");
+			exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetNormalizedMenuItem", "x");
+			exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetNormalizedMenuItem", "y");
+			exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetNormalizedMenuItem", "z");
+		});
+	});
+	casper.then(function () {
+		this.echo("------------------------------------------------------")
+	});
+	casper.then(function () { //hide populations view
+		casper.click('#stimTargets');
+		casper.waitWhileVisible('button[id="newStimulationTargetButton"]', function() {
+			test.assertDoesntExist('button[id="newStimulationTargetButton"]', "StimTarget view collapsed");
+		},5000);
+	})
+}
 /**
  * Tests adding a new population and its contents
  */
@@ -193,6 +324,32 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
 }
 
 /**
+ * Explore SelectField, MenuItems and TextField inside RangeComponent
+ */
+function exploreRangeComponent(test, elementID, secondElementID, xyz) {
+	casper.waitForSelector(elementID, function() {
+		var absNorm = secondElementID.includes('Absolute')?"Absolute":"Normalized"
+		test.assertExist(elementID, "SelectField in "+xyz+"-axis EXISTS");
+		casper.evaluate(function (elementID) {
+			document.getElementById(elementID).scrollIntoView();}, elementID.replace("#", ''));
+		var info = this.getElementInfo(elementID);
+		this.mouse.click(info.x+2, info.y+2);
+		casper.wait(1000, function() {
+			casper.waitForSelector(secondElementID, function() {
+				test.assertExist(secondElementID, absNorm + " menu item in " +xyz+ "-axis EXISTS");
+				casper.click(secondElementID)
+				casper.wait(500, function() {
+					casper.waitForSelector(elementID.replace('Select','')+"MinRange", function() {
+						test.assertExist(elementID.replace('Select','')+"MinRange", absNorm +" min in " +xyz+ "-axis EXISTS");
+						test.assertExist(elementID.replace('Select','')+"MaxRange", absNorm +" max in " +xyz+ "-axis EXISTS");
+					});
+				})
+			});
+		})
+	});
+};
+
+/**
  * Test adding a new cell rule and its contents
  */
 function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, expectedCellTypeId){
@@ -202,7 +359,7 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, e
 			this.echo('Cell Rule button exists.');
 			this.click('#'+expectedName);
 			casper.then(function(){ //give it some time to allow metadata to load
-				casper.wait(2000,function(){this.echo("I've waited a second for metadata to be populated")});
+				casper.wait(500,function(){this.echo("I've waited a second for metadata to be populated")});
 			});
 			casper.then(function () { //test contents of metadata
 				testElementValue(test, "#cellRuleName", expectedName);
