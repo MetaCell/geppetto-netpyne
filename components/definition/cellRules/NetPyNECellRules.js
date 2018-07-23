@@ -286,7 +286,8 @@ export default class NetPyNECellRules extends React.Component {
     if (this.state.page == 'main' || Object.keys(model).indexOf(this.state.selectedCellRule) < 0) {
       var cellRules = [];
       for (var c in model) {
-        cellRules.push(<NetPyNEThumbnail 
+        cellRules.push(<NetPyNEThumbnail
+          id={c}
           name={c} 
           key={c} 
           selected={c == this.state.selectedCellRule}
@@ -340,6 +341,7 @@ export default class NetPyNECellRules extends React.Component {
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <FloatingActionButton
+                id={"fromSection2CellRuleButton"}
                 className={"actionButton smallActionButton breadcrumbButton"}
                 style={{ marginTop: "10px", float: "left" }}
                 onClick={() => { that.selectPage("main"); that.setState({ selectedSection: undefined }); }}>
@@ -393,7 +395,7 @@ export default class NetPyNECellRules extends React.Component {
                 {this.state.selectedCellRule}
               </FloatingActionButton>
               <div style={{ float: 'left', marginTop: "30px", color: 'grey', fontSize: "20px" }}>&gt;</div>
-              <RaisedButton primary={true} className={"addRectangularButton breadcrumbButton"}
+              <RaisedButton id={"fromMech2SectionButton"}primary={true} className={"addRectangularButton breadcrumbButton"}
                 onClick={() => { that.selectPage("sections"); that.setState({ selectedMechanism: undefined }); }}
                 style={{ float: 'left', marginTop: "28px", color: 'white' }}
               >
@@ -402,7 +404,7 @@ export default class NetPyNECellRules extends React.Component {
               <div style={{ float: 'left', marginTop: "30px", color: 'grey', fontSize: "20px" }}>&gt;</div>
               <IconMenu style={{ float: 'left', marginTop: "18px" }}
                 iconButtonElement={
-                  <NetPyNENewMechanism handleClick={this.handleNewMechanism} />
+                  <NetPyNENewMechanism id={"newCellRuleMechButton"} handleClick={this.handleNewMechanism} />
                 }
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                 targetOrigin={{ horizontal: 'left', vertical: 'top' }}

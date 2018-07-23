@@ -23,7 +23,7 @@ export default class NetPyNENewSection extends React.Component {
   render() {
     return (
 
-      <RaisedButton primary={true} className={"addRectangularButton"} onClick={this.handleClick}>
+      <RaisedButton primary={true} id={"newCellRuleSectionButton"} className={"addRectangularButton"} onClick={this.handleClick}>
         <ContentAdd />
       </RaisedButton>
 
