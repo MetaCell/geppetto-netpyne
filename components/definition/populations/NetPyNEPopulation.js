@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
 import Tooltip from 'material-ui/internal/Tooltip';
 import Toggle from 'material-ui/Toggle';
 import Slider from '../../general/Slider';

@@ -50,7 +50,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   getBottomNavigationItem(index, sectionId, label, icon, id) {
-    console.log(id)
     return <BottomNavigationItem
       id={id}
       key={sectionId}
