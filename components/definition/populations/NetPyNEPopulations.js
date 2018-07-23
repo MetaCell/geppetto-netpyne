@@ -112,7 +112,7 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var populations = [];
       for (var key in model) {
-        populations.push(<NetPyNEThumbnail 
+        populations.push(<NetPyNEThumbnail
           name={key} key={key} 
           selected={key == this.state.selectedPopulation}
           deleteMethod={this.deletePopulation}

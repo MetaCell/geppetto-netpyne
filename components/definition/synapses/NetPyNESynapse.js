@@ -60,12 +60,19 @@ export default class NetPyNESynapse extends React.Component {
   };
   
   updateLayout() {
-    const getMod = (value) => {
-      Utils
-        .sendPythonMessage("'" + value + "' == netParams.synMechParams['" + this.state.currentName + "']['mod']")
-        .then((response) => { if (response) {this.setState({synMechMod: value})}});
-    };
-    this.synMechModOptions.forEach((option) => { getMod(option.mod) });
+    Utils
+      .sendPythonMessage("[value == netParams.synMechParams['" + this.state.currentName + "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]")
+      .then((response) => { 
+        if (response[0]) {
+          this.setState({synMechMod: "ExpSyn"})
+        }
+        else if(response[1]) {
+          this.setState({synMechMod: "Exp2Syn"})
+        }
+        else {
+          this.setState({synMechMod: ""})
+        }
+      });
   };
   
   handleSynMechModChange(event, index, value) {
@@ -82,6 +89,7 @@ export default class NetPyNESynapse extends React.Component {
         <div>
           <NetPyNEField id="netParams.synMechParams.tau1">
             <PythonControlledTextField
+              id={"synMechTau1"}
               model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
@@ -89,6 +97,7 @@ export default class NetPyNESynapse extends React.Component {
           {(this.state.synMechMod=="Exp2Syn")?<div>
             <NetPyNEField id="netParams.synMechParams.tau2">
               <PythonControlledTextField
+                id={"synMechTau2"}
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
             </NetPyNEField>
@@ -96,13 +105,8 @@ export default class NetPyNESynapse extends React.Component {
           
           <NetPyNEField id="netParams.synMechParams.e" >
             <PythonControlledTextField
+              id={"synMechE"}
               model={"netParams.synMechParams['" + this.props.name + "']['e']"}
-            />
-          </NetPyNEField>
-          
-          <NetPyNEField id="netParams.synMechParams.i" >
-            <PythonControlledTextField
-              model={"netParams.synMechParams['" + this.props.name + "']['i']"}
             />
           </NetPyNEField>
         </div>
@@ -121,14 +125,10 @@ export default class NetPyNESynapse extends React.Component {
         <br/>
         <NetPyNEField id="netParams.synMechParams.mod" className={"netpyneFieldNoWidth"} noStyle>
           <SelectField 
+            id={"synapseModSelect"}
             value={this.state.synMechMod}
             onChange={this.handleSynMechModChange}
           >
-            {(this.synMechModOptions != undefined) ?
-                this.synMechModOptions.map(function (synMechModOption) {
-                  return (<MenuItem key={synMechModOption.mod} value={synMechModOption.mod} primaryText={synMechModOption.mod} />)
-                }) : null
-            }
           </SelectField>
         </NetPyNEField>
         {content} 

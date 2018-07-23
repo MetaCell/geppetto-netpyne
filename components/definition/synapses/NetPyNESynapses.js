@@ -92,7 +92,8 @@ export default class NetPyNESynapses extends React.Component {
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
-      Synapses.push(<NetPyNEThumbnail 
+      Synapses.push(<NetPyNEThumbnail
+        id={"synThumb"+c.replace(" ", "")}
         name={c} 
         key={c} 
         selected={c == this.state.selectedSynapse}
