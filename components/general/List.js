@@ -211,15 +211,18 @@ export default class ListComponent extends Component {
             this.setState({ children: newValue });
         }
     }
-
+    componentDidMount(){
+      console.log(this.props)
+    }
     render() {
-        var childrenWithExtraProp = Object.keys(this.state.children).map((key) => {
+        var that = this;
+        var childrenWithExtraProp = Object.keys(this.state.children).map((key, index) => {
             key = key.toString();
             if (this.props.realType=='dict') {
                 var value = key + ' : ' + JSON.stringify(this.state.children[key]);
             }
             else if (this.props.realType=='dict(dict())') {
-                var value =  key + ':   ' + JSON.stringify(this.state.children[key]).replace(/"/g, '').replace(/,/g, ', ').replace(/:/g, ': ');
+                var value =  key + ':   ' + JSON.stringify(this.state.children[key]).replace(/["::]/g, '');
             }
             else {
                 var value = this.state.children[key];
@@ -227,12 +230,13 @@ export default class ListComponent extends Component {
             return <div key={key} style={this.props.realType!='dict(dict())'?{ marginRight: 30, float: 'left' }:{ marginRight: 30}}>
                 <TextField
                     value={value}
-                    id={key}
+                    id={this.props.id.replace(/[\[. '\]]/g,'')+index}
                     style={{ width: this.props.realType=='dict(dict())'?400:100}}
                     inputStyle={{color:'rgb(2, 188, 212)'}}
                     disabled
                 />
                 <IconButton
+                    id={this.props.id.replace(/[\[. '\]]/g,'')+index+"RemoveButton"}
                     iconStyle={{ width: 7, height: 7 }}
                     className={'listButtonSmall'}
                     onClick={() => this.removeChild(key)}
@@ -242,10 +246,11 @@ export default class ListComponent extends Component {
                 </IconButton>
             </div>
         });
-
+        
         return (
             <div>
                 <TextField
+                    id={this.props.id.replace(/[\[. '\]]/g,'')}
                     floatingLabelText={this.props.floatingLabelText ? 'Add new ' + this.props.floatingLabelText : 'Add new item'}
                     onChange={this.handleNewItemChange}
                     value={this.state.newItemValue}
@@ -254,6 +259,7 @@ export default class ListComponent extends Component {
                 />
                 {!this.state.newItemErrorText &&
                     <IconButton
+                        id={this.props.id.replace(/[\[. '\]]/g,'')+"addButton"}
                         iconStyle={{ width: 25, height: 25 }}
                         className={'listButtonLarge'}
                         onClick={this.addChild}

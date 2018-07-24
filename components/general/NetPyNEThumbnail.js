@@ -49,7 +49,7 @@ export default class NetPyNEThumbnail extends React.Component {
       return (
         <div>
           <FloatingActionButton 
-            id={this.props.name.replace(" ", "")}
+            id={this.props.name.replace(/[ ]/g, "")}
             onMouseEnter={this.handleHoverIn}
             onMouseLeave={this.handleHoverOut}
             iconClassName={(this.state.isHovered && this.props.selected) ? "fa fa-trash-o" : ""} 

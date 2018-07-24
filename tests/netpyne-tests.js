@@ -40,38 +40,43 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     casper.echo("######## Testing landping page contents and layout ######## ");
     testLandingPage(test);
   });
-
+  
   casper.then(function() { //test initial state of consoles
     casper.echo("######## Test Consoles ######## ");
     testConsoles(test);
   });
-
+  
   casper.then(function() { // test adding a population using UI
     casper.echo("######## Test Add Population ######## ");
     addPopulation(test);
   });
-
+  
   casper.then(function() { // test adding a cell rule using UI
     casper.echo("######## Test Add Cell Rule ######## ");
     addCellRule(test);
   });
-
+  
   casper.then(function() { // test adding a population using UI
     casper.echo("######## Test Add Synapse ######## ");
     addSynapse(test);
   });
-
+  
   casper.then(function() { // test adding a connection using UI
     casper.echo("######## Test Add Connection Rule ######## ");
     addConnection(test);
   });
-
+  
+  casper.then(function() { // test adding a connection using UI
+    casper.echo("######## Test Add stim Source Rule ######## ");
+    addStimSource(test);
+  });
+  
   casper.then(function() { // test adding a stimulus target using UI
     casper.echo("######## Test Add stimTarget Rule ######## ");
     addStimTarget(test);
   });
-
-
+  
+  
   casper.then(function() { //test full netpyne loop using a demo project
     casper.echo("######## Running Demo ######## ");
     var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
@@ -79,12 +84,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
       "netpyne_geppetto.simConfig=simConfig";
     loadModelUsingPython(test, demo);
   });
-
+  
   casper.then(function() { //test explore network tab functionality
     casper.echo("######## Test Explore Network Functionality ######## ");
     exploreNetwork(test);
   });
-
+  
   casper.then(function() { //test simulate network tab functionality
     casper.echo("######## Test Simulate Network Functionality ######## ");
     simulateNetwork(test);
@@ -142,10 +147,9 @@ function loadConsole(test, consoleButton, consoleContainer) {
   });
 }
 
-/**
- * Adds a population using the add population button 
- * and goes field by field checking everithing exist
- */
+/*****************************************************
+ * Create  population  rule  using  the  add  button *
+ *****************************************************/
 function addPopulation(test) {
   casper.click('#Populations'); //open Pop Card
 
@@ -215,35 +219,35 @@ function addPopulation(test) {
     })
   });
 
-  casper.thenClick('#newPopulationButton', function() {
+  casper.thenClick('#newPopulationButton', function() { //add second population
     casper.waitUntilVisible('button[id="Population2"]', function() {
       test.assertExist("#Population2", "Population2 thumbnail added");
     });
   })
-  casper.then(function() {
+  casper.then(function() {//delete first population
     delThumbnail("#Population")
     casper.waitWhileVisible('button[id="Population"]', function() {
       test.assertDoesntExist('button[id="#Population"]', "Population deletion");
     })
   })
 
-  casper.then(function() {
+  casper.then(function() { // delete second population
     delThumbnail("#Population2")
     casper.waitWhileVisible('button[id="Population2"]', function() {
       test.assertDoesntExist('button[id="#Population2"]', "Population2 deletion");
     })
   })
 
-  casper.thenClick("#Populations", function() {
+  casper.thenClick("#Populations", function() { // colapse card
     casper.waitWhileVisible('button[id="newPopulationButton"]', function() {
       test.assertDoesntExist('button[id="newPopulationButton"]', "Populations view collapsed");
     }, 5000);
   });
 }
 
-/**
- * Adds a cell rule using the add cell rule button
- */
+/***********************************************
+ * Create  cell  rule  using  the  add  button *
+ ***********************************************/
 function addCellRule(test) {
   casper.click('#CellRules', function() { // expand card
     casper.waitUntilVisible('button[id="newCellRuleButton"]', function() {
@@ -424,9 +428,9 @@ function addCellRule(test) {
     }, 1000);
   });
 }
-/**
- * Adds a synapse Rule using the add synapse button
- */
+/**************************************************
+ * Create  Synapse  rule  using  the  add  button *
+ **************************************************/
 function addSynapse(test) {
   casper.then(function() { //expand synapse card
     casper.click('#Synapses', function() {
@@ -518,22 +522,54 @@ function addSynapse(test) {
   });
 }
 
-/**
- * Adds a connectivity rule using the add conn button
- */
+/*******************************************************
+ * Create  connectivity  rule  using  the  add  button *
+ *******************************************************/
 function addConnection(test) {
-  casper.then(function() { //expand ConnParams view and add a new connectivityRule using the button
-    casper.click('#Connections');
+  casper.click('#Connections'); //open Connection Card
+
+  casper.then(function() { // check add conn button exist 
     casper.waitUntilVisible('button[id="newConnectivityRuleButton"]', function() {
-      casper.click('#newConnectivityRuleButton');
-    }, 1000)
-  });
-  casper.then(function() { // explore spatial distribution for preConn
+      test.assertExist("#newConnectivityRuleButton", "add connection rule button exists")
+    });
+  })
+  
+  casper.thenClick("#newConnectivityRuleButton", function() { //add new connectivity rule
+    casper.waitUntilVisible('button[id="ConnectivityRule"]', function() {
+      test.assertExists("#ConnectivityRule", "Conn thumbnail created");
+      casper.wait(1000, function() {
+        this.echo("waited for metadata")
+      })
+    });
+  })
+
+  casper.then(function() { // check all fields exist
+    test.assertExists("#ConnectivityRule", "Connectivity Name field Exists");
+    test.assertExists("#netParamsconnParamsConnectivityRulesec", "Connectivity section list field Exists");
+    test.assertExists("#netParamsconnParamsConnectivityRuleloc", "Connectivity location list field Exists");
+    test.assertExists("#connPlasticity", "Connectivity plasticity field Exists");
+    test.assertExists("#connSynMech", "Connectivity synMechanism SelectField Exists");
+    test.assertExists("#connConv", "Connectivity convergence field Exists");
+    test.assertExists("#connDiv", "Connectivity divergence field Exists");
+    test.assertExists("#connProb", "Connectivity probability field Exists");
+    test.assertExists("#connSynPerConn", "Connectivity synPerConn field Exists");
+    test.assertExists("#connWeight", "Connectivity weight field Exists");
+    test.assertExists("#connDelay", "Connectivity delay field Exists");
+    test.assertExists("#connPlasticity", "Connectivity plasticity field Exists");
+
+  })
+  
+  casper.then(function() { // Go to preConds tab
     casper.waitUntilVisible('button[id="preCondsConnTab"]', function() {
       this.echo("--------testing range component in connParams.preConds--------");
       casper.click("#preCondsConnTab");
     })
-    casper.then(function() {
+    casper.then(function() {//check fields exist
+      test.assertExists("#connPreCondsPop", "Connectivity pre Pop SelectField Exists");
+      test.assertExists("#connPreCondsCellModel", "Connectivity pre CellModel SelectField Exists");
+      test.assertExists("#connPreCondsCellType", "Connectivity pre CellType SelectField Exists");
+    })
+    casper.then(function() {//check rangeComponent exist
       exploreRangeComponent(test, "#xRangePreConnSelect", "#xRangePreConnAbsoluteMenuItem", "x");
       exploreRangeComponent(test, "#yRangePreConnSelect", "#yRangePreConnAbsoluteMenuItem", "y");
       exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnAbsoluteMenuItem", "z");
@@ -542,12 +578,17 @@ function addConnection(test) {
       exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnNormalizedMenuItem", "z");
     });
   });
-  casper.then(function() { // explore spatial distribution for postConn
+  casper.then(function() { // go to postConds
     casper.waitUntilVisible('button[id="postCondsConnTab"]', function() {
       this.echo("--------testing range component in connParams.postConds--------");
       casper.click("#postCondsConnTab");
     })
-    casper.then(function() {
+    casper.then(function() { //check fields exist
+      test.assertExists("#connPostCondsPop", "Connectivity post Pop SelectField Exists");
+      test.assertExists("#connPostCondsCellModel", "Connectivity post CellModel SelectField Exists");
+      test.assertExists("#connPostCondsCellType", "Connectivity post CellType SelectField Exists");
+    })
+    casper.then(function() { //check rangeComponent exist
       exploreRangeComponent(test, "#xRangePostConnSelect", "#xRangePostConnAbsoluteMenuItem", "x");
       exploreRangeComponent(test, "#yRangePostConnSelect", "#yRangePostConnAbsoluteMenuItem", "y");
       exploreRangeComponent(test, "#zRangePostConnSelect", "#zRangePostConnAbsoluteMenuItem", "z");
@@ -559,16 +600,162 @@ function addConnection(test) {
   casper.then(function() {
     this.echo("------------------------------------------------------")
   });
-  casper.then(function() { //hide populations view
+  casper.then(function(){//wait before start deleting rules
+    casper.wait(500)
+  })
+  casper.thenClick("#newConnectivityRuleButton", function() { //add new connectivity rule
+    casper.waitUntilVisible('button[id="ConnectivityRule2"]', function() {
+      test.assertExists("#ConnectivityRule2", "Conn 2 thumbnail created");
+    });
+  })
+  casper.then(function() { // delete connectivity rule
+    delThumbnail("#ConnectivityRule")
+    casper.waitWhileVisible('button[id="ConnectivityRule"]', function() {
+      test.assertDoesntExist("#ConnectivityRule", "Connectivity rule deleted");
+    })
+  })
+  casper.then(function() { // delete connectivity rule
+    delThumbnail("#ConnectivityRule2")
+    casper.waitWhileVisible('button[id="ConnectivityRule2"]', function() {
+      test.assertDoesntExist("#ConnectivityRule2", "Connectivity rule 2 deleted");
+    })
+  })
+  casper.then(function() { //close card
     casper.click('#Connections');
     casper.waitWhileVisible('button[id="newConnectivityRuleButton"]', function() {
       test.assertDoesntExist('button[id="newConnectivityRuleButton"]', "Connectivity view collapsed");
-    }, 20000);
+    });
   })
 }
-/**
- * Adds a stimulus Target rule using the add stimTarget rule button
- */
+/*****************************************************
+ * Create  StimSource  rule  using  the  add  button *
+ *****************************************************/
+ function addStimSource(test) {
+   casper.then(function() { //expand stimSource card
+     casper.click('#SimulationSources', function() {
+       casper.waitUntilVisible('button[id="newStimulationSourceButton"]', function() {
+         test.assertExist("#newStimulationSourceButton", "Add stimSource button exist");
+       })
+     });
+   })
+   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
+     casper.waitUntilVisible('button[id="stim_source"]', function() {
+       test.assertExist("#stim_source", "new stimSource rule created");
+     })
+   })
+   casper.then(function() { // check fields exist
+     casper.waitForSelector("#sourceName", function() {
+       test.assertExist("#sourceName", "stim source Name field Exist");
+       test.assertExist("#stimSourceSelect", "stim source selectField Exist");
+     })
+   })
+   casper.then(function() { //check selectField has corretc MenuItems
+     click("#stimSourceSelect")
+     casper.then(function() {
+       casper.waitForSelector("#IClampMenuItem", function() {
+         test.assertExist("#IClampMenuItem", "IClamp stimSource MenuItem Exist");
+         test.assertExist("#VClampMenuItem", "VClamp stimSource MenuItem Exist");
+         test.assertExist("#NetStimMenuItem", "NetStim stimSource MenuItem Exist");
+         test.assertExist("#AlphaSynapseMenuItem", "AlphaSynapse stimSource MenuItem Exist");
+       })
+     })
+   })
+   casper.thenClick("#IClampMenuItem", function() { // select ICLamp source and check correct params
+     casper.waitForSelector("#stimSourceIClampDel", function() {
+       test.assertExist("#stimSourceIClampDel", "del param Exist for IClamp");
+       test.assertExist("#stimSourceIClampDur", "dur param Exist for IClamp");
+       test.assertExist("#stimSourceIClampAmp", "amp param Exist for IClamp");
+     })
+   })
+   casper.then(function() { //wait before continuing
+     casper.wait(500)
+   })
+   casper.then(function() { //change to VClamp in SelectField
+     click("#stimSourceSelect")
+     casper.then(function() {
+       casper.waitForSelector("#VClampMenuItem", function() {
+         casper.click("#VClampMenuItem");
+       })
+     })
+   })
+   casper.then(function() { // select VClamp source and check correct params
+     casper.waitForSelector("#stimSourceVClampTau1", function() {
+       test.assertExist("#stimSourceVClampTau1", "tau1 param Exist for VClamp");
+       test.assertExist("#stimSourceVClampTau2", "tau2 param Exist for VClamp");
+       test.assertExist("#stimSourceVClampGain", "gain param Exist for VClamp");
+       test.assertExist("#stimSourceVClampRstim", "rstim param Exist for VClamp");
+       test.assertExist("#netParamsstimSourceParamsstim_sourcedur", "VClamp duration field exist");
+       test.assertExist("#netParamsstimSourceParamsstim_sourceamp", "VClamp amplitud field exist");
+       test.assertExist("#netParamsstimSourceParamsstim_sourceduraddButton", "VClamp add duration item exist");
+       test.assertExist("#netParamsstimSourceParamsstim_sourceampaddButton", "VClamp add amplitud item exist");
+     })
+   })
+   casper.then(function() { //wait before continuing
+     casper.wait(500)
+   })
+   casper.then(function() { //change to NetStim source in SelectField
+     click("#stimSourceSelect")
+     casper.then(function() {
+       casper.waitForSelector("#NetStimMenuItem", function() {
+         casper.click("#NetStimMenuItem");
+       })
+     })
+   })
+   casper.then(function() { // select NetStim source and check correct params
+     casper.waitForSelector("#stimSourceNetStimRate", function() {
+       test.assertExist("#stimSourceNetStimRate", "rate param Exist for NetStim");
+       test.assertExist("#stimSourceNetStimInterval", "interval param Exist for NetStim");
+       test.assertExist("#stimSourceNetStimNumber", "number param Exist for NetStim");
+       test.assertExist("#stimSourceNetStimStart", "start param Exist for NetStim");
+       test.assertExist("#stimSourceNetStimNoise", "noise param Exist for NetStim");
+     })
+   })
+   casper.then(function() { //wait before continuing
+     casper.wait(500)
+   })
+   casper.then(function() { //change to NetStim source in SelectField
+     click("#stimSourceSelect")
+     casper.then(function() {
+       casper.waitForSelector("#AlphaSynapseMenuItem", function() {
+         casper.click("#AlphaSynapseMenuItem");
+       })
+     })
+   })
+   casper.then(function() { // select AlphaSynapseMenuItem source and check correct params
+     casper.waitForSelector("#stimSourceAlphaSynapseOnset", function() {
+       test.assertExist("#stimSourceAlphaSynapseOnset", "onset param Exist for AlphaSynapse");
+       test.assertExist("#stimSourceAlphaSynapseTau", "tau param Exist for AlphaSynapse");
+       test.assertExist("#stimSourceAlphaSynapseGmax", "gmax param Exist for AlphaSynapse");
+       test.assertExist("#stimSourceAlphaSynapseE", "e param Exist for AlphaSynapse");
+     })
+   })
+   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
+     casper.waitUntilVisible('button[id="stim_source2"]', function() {
+       test.assertExist("#stim_source2", "new stimSource rule created");
+     })
+   })
+   casper.then(function() { // delete synapse rule 1
+     delThumbnail("#stim_source")
+     casper.waitWhileVisible('button[id="stim_source"]', function() {
+       test.assertDoesntExist("#stim_source", "stim_source thumbnail deleted");
+     })
+   })
+   casper.then(function() { //delete synapse rule 2
+     delThumbnail("#stim_source2")
+     casper.waitWhileVisible('button[id="stim_source2"]', function() {
+       test.assertDoesntExist("#Synapse2", "stim_source 2 thumbnail deleted");
+     })
+   })
+   casper.then(function() { // colapse card
+     casper.click('#SimulationSources');
+     casper.waitWhileVisible('button[id="newStimulationSourceButton"]', function() {
+       test.assertDoesntExist('button[id="newStimulationSourceButton"]', "stim_source view collapsed");
+     });
+   });
+ }
+/*****************************************************
+ * Create  StimTarget  rule  using  the  add  button *
+ *****************************************************/
 function addStimTarget(test) {
   casper.then(function() { //expand ConnParams view and add a new connectivityRule using the button
     casper.click('#stimTargets');
