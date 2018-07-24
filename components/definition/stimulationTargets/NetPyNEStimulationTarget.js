@@ -112,6 +112,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
             <PythonMethodControlledSelectField
+              id={"stimTargetSource"}
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -120,12 +121,14 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
           <NetPyNEField id="netParams.stimTargetParams.sec">
             <PythonControlledTextField
+              id={"stimTargetSec"}
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.stimTargetParams.loc">
             <PythonControlledTextField
+              id={"stimTargetLoc"}
               model={"netParams.stimTargetParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>

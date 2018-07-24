@@ -757,34 +757,71 @@ function addConnection(test) {
  * Create  StimTarget  rule  using  the  add  button *
  *****************************************************/
 function addStimTarget(test) {
-  casper.then(function() { //expand ConnParams view and add a new connectivityRule using the button
+  casper.then(function() { //expand card
     casper.click('#stimTargets');
     casper.waitUntilVisible('button[id="newStimulationTargetButton"]', function() {
       casper.click('#newStimulationTargetButton');
-    }, 2000)
+    })
   });
-  casper.then(function() { // explore spatial distribution for preConn
+  
+  casper.then(function() { //check new stimTarget rule was created
+    casper.waitUntilVisible('button[id="stim_target"]', function(){
+      test.assertExist("#stim_target", "stimTarget thumbnail created")
+    })
+  })
+  casper.then(function(){ //check fields exist
+    casper.waitForSelector("#targetName", function(){
+      test.assertExist("#targetName", "stimTarget name field exist")
+      test.assertExist("#stimTargetSource", "stimTarget source type field exist")
+      test.assertExist("#stimTargetSec", "stimTarget section field exist")
+      test.assertExist("#stimTargetLoc", "stimTarget location field exist")
+    })
+  })
+  casper.then(function() { // move to conds tab
     casper.waitUntilVisible('button[id="stimTargetCondsTab"]', function() {
       this.echo("--------testing range component in stimTarget.conds--------");
       casper.click("#stimTargetCondsTab");
     })
-    casper.then(function() {
-      exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetAbsoluteMenuItem", "x");
-      exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetAbsoluteMenuItem", "y");
-      exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetAbsoluteMenuItem", "z");
-      exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetNormalizedMenuItem", "x");
-      exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetNormalizedMenuItem", "y");
-      exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetNormalizedMenuItem", "z");
-    });
+  })
+  casper.then(function(){ // check conds fields exist
+    test.assertExist("#stimTargetCondsPops", "stimTarget pop conds field exist")
+    test.assertExist("#stimTargetCondsCellType", "stimTarget cellType conds field exist")
+    test.assertExist("#stimTargetCondsCellModel", "stimTarget cellModel conds field exist")
+  })
+  casper.then(function() { // test range component
+    exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetAbsoluteMenuItem", "x");
+    exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetAbsoluteMenuItem", "y");
+    exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetAbsoluteMenuItem", "z");
+    exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetNormalizedMenuItem", "x");
+    exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetNormalizedMenuItem", "y");
+    exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetNormalizedMenuItem", "z");
   });
   casper.then(function() {
     this.echo("------------------------------------------------------")
   });
-  casper.then(function() { //hide populations view
+  
+  casper.thenClick("#newStimulationTargetButton", function() { //add new stim target rule
+    casper.waitUntilVisible('button[id="stim_target2"]', function() {
+      test.assertExist("#stim_target2", "new stimTarget rule created");
+    })
+  })
+  casper.then(function() { // delete target rule 1
+    delThumbnail("#stim_target")
+    casper.waitWhileVisible('button[id="stim_target"]', function() {
+      test.assertDoesntExist("#stim_target", "stim_target thumbnail deleted");
+    })
+  })
+  casper.then(function() { //delete target rule 2
+    delThumbnail("#stim_target2")
+    casper.waitWhileVisible('button[id="stim_target2"]', function() {
+      test.assertDoesntExist("#stim_target2", "stim_target 2 thumbnail deleted");
+    })
+  })
+  casper.then(function() { //colapse card 
     casper.click('#stimTargets');
     casper.waitWhileVisible('button[id="newStimulationTargetButton"]', function() {
       test.assertDoesntExist('button[id="newStimulationTargetButton"]', "StimTarget view collapsed");
-    }, 5000);
+    });
   })
 }
 /**
