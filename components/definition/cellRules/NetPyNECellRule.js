@@ -108,7 +108,7 @@ export default class NetPyNECellRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNECoordsRange
-            id="xRangeRule"
+            id="xRangeCellParams"
             name={this.state.currentName}
             model={'netParams.cellParams'}
             conds={'conds'}
@@ -119,7 +119,7 @@ export default class NetPyNECellRule extends React.Component {
           />
 
           <NetPyNECoordsRange
-            id="yRangeRule"
+            id="yRangeCellParams"
             name={this.state.currentName}
             model={'netParams.cellParams'}
             conds={'conds'}
@@ -130,7 +130,7 @@ export default class NetPyNECellRule extends React.Component {
           />
 
           <NetPyNECoordsRange
-            id="zRangeRule"
+            id="zRangeCellParams"
             name={this.state.currentName}
             model={'netParams.cellParams'}
             conds={'conds'}

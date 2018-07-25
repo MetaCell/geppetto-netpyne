@@ -132,7 +132,6 @@ export default class NetPyNESection extends React.Component {
 
         <NetPyNEField id="netParams.cellParams.secs.geom.pt3d" className="listStyle">
           <PythonControlledListComponent
-             id={"sectionPt3d"}
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['pt3d']"} />
         </NetPyNEField>
 

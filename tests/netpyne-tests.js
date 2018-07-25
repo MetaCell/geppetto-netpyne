@@ -56,7 +56,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     addCellRule(test);
   });
   
-  casper.then(function() { // test adding a population using UI
+  casper.then(function() { // test adding a synapse rule using UI
     casper.echo("######## Test Add Synapse ######## ");
     addSynapse(test);
   });
@@ -66,7 +66,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     addConnection(test);
   });
   
-  casper.then(function() { // test adding a connection using UI
+  casper.then(function() { // test adding a stimulus  source using UI
     casper.echo("######## Test Add stim Source Rule ######## ");
     addStimSource(test);
   });
@@ -76,7 +76,11 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     addStimTarget(test);
   });
   
-  
+  casper.then(function() { // test config 
+    casper.echo("######## Test default simConfig ######## ");
+    checkSimConfigParams(test);
+  });
+
   casper.then(function() { //test full netpyne loop using a demo project
     casper.echo("######## Running Demo ######## ");
     var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
@@ -158,7 +162,7 @@ function addPopulation(test) {
       test.assertExist("#newPopulationButton", "add population button exists")
     });
   })
-  
+
   casper.thenClick("#newPopulationButton", function() { //add new population
     test.assertExists("#Population", "Pop thumbnail Exists");
     casper.wait(1000, function() {
@@ -168,8 +172,8 @@ function addPopulation(test) {
 
   casper.then(function() { // check all fields exist
     test.assertExists("#populationName", "Pop name Exists");
-    test.assertExists("#popCellModel", "Pop cellModel Exists");
-    test.assertExists("#popCellType", "Pop cellType Exists");
+    test.assertExists('input[id="netParams.popParams[\'Population\'][\'cellModel\']', "Pop cellModel Exists");
+    test.assertExists('input[id="netParams.popParams[\'Population\'][\'cellType\']', "Pop cellType Exists");
     test.assertExists("#popParamsDimensionsSelect", "Pop dimensions selectField Exists");
   })
   casper.then(function() { //check MenuItems for Dimension exist
@@ -197,19 +201,18 @@ function addPopulation(test) {
   })
 
   casper.thenClick('#spatialDistPopTab', function() { //go to second tab in population
-    casper.waitForSelector("#xRangePopSelect", function() {
+    casper.waitForSelector("#xRangePopParamsSelect", function() {
       this.echo("--------testing range component in popParams--------")
     })
   })
-
-  casper.then(function() { // test rangeComponent
-    exploreRangeComponent(test, "#xRangePopSelect", "#xRangePopAbsoluteMenuItem", "x");
-    exploreRangeComponent(test, "#yRangePopSelect", "#yRangePopAbsoluteMenuItem", "y");
-    exploreRangeComponent(test, "#zRangePopSelect", "#zRangePopAbsoluteMenuItem", "z");
-    exploreRangeComponent(test, "#xRangePopSelect", "#xRangePopNormalizedMenuItem", "x");
-    exploreRangeComponent(test, "#yRangePopSelect", "#yRangePopNormalizedMenuItem", "y");
-    exploreRangeComponent(test, "#zRangePopSelect", "#zRangePopNormalizedMenuItem", "z");
-  });
+  casper.then(function () { // test range component selectFields, MenuItems and inputs
+    exploreRangeComponent(test, "PopParams", "x", "Absolute");
+    exploreRangeComponent(test, "PopParams", "x", "Normalized");
+    exploreRangeComponent(test, "PopParams", "y", "Absolute");
+    exploreRangeComponent(test, "PopParams", "y", "Normalized");
+    exploreRangeComponent(test, "PopParams", "z", "Absolute");
+    exploreRangeComponent(test, "PopParams", "z", "Normalized");
+  })
 
   casper.then(function() { //back to General tab
     casper.click('#generalPopTab');
@@ -224,7 +227,7 @@ function addPopulation(test) {
       test.assertExist("#Population2", "Population2 thumbnail added");
     });
   })
-  casper.then(function() {//delete first population
+  casper.then(function() { //delete first population
     delThumbnail("#Population")
     casper.waitWhileVisible('button[id="Population"]', function() {
       test.assertDoesntExist('button[id="#Population"]', "Population deletion");
@@ -272,12 +275,12 @@ function addCellRule(test) {
       this.echo("--------testing range component in cellParams--------");
     });
     casper.then(function() {
-      exploreRangeComponent(test, "#xRangeRuleSelect", "#xRangeRuleAbsoluteMenuItem", "x");
-      exploreRangeComponent(test, "#yRangeRuleSelect", "#yRangeRuleAbsoluteMenuItem", "y");
-      exploreRangeComponent(test, "#zRangeRuleSelect", "#zRangeRuleAbsoluteMenuItem", "z");
-      exploreRangeComponent(test, "#xRangeRuleSelect", "#xRangeRuleNormalizedMenuItem", "x");
-      exploreRangeComponent(test, "#yRangeRuleSelect", "#yRangeRuleNormalizedMenuItem", "y");
-      exploreRangeComponent(test, "#zRangeRuleSelect", "#zRangeRuleNormalizedMenuItem", "z");
+      exploreRangeComponent(test, "CellParams", "x", "Absolute");
+      exploreRangeComponent(test, "CellParams", "x", "Normalized");
+      exploreRangeComponent(test, "CellParams", "y", "Absolute");
+      exploreRangeComponent(test, "CellParams", "y", "Normalized");
+      exploreRangeComponent(test, "CellParams", "z", "Absolute");
+      exploreRangeComponent(test, "CellParams", "z", "Normalized");
     });
   });
   casper.then(function() {
@@ -302,7 +305,8 @@ function addCellRule(test) {
       test.assertExist("#sectionL", "section L field Exist");
       test.assertExist("#sectionCm", "section Ra field Exist");
       test.assertExist("#sectionRa", "section Cm field Exist");
-      //REVIEW test.assertExist("#sectionPt3d", "section Pt3d field Exist"); 
+      assertExist(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']")
+      assertExist(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']AddButton", "button")
     });
   })
 
@@ -533,7 +537,7 @@ function addConnection(test) {
       test.assertExist("#newConnectivityRuleButton", "add connection rule button exists")
     });
   })
-  
+
   casper.thenClick("#newConnectivityRuleButton", function() { //add new connectivity rule
     casper.waitUntilVisible('button[id="ConnectivityRule"]', function() {
       test.assertExists("#ConnectivityRule", "Conn thumbnail created");
@@ -545,8 +549,10 @@ function addConnection(test) {
 
   casper.then(function() { // check all fields exist
     test.assertExists("#ConnectivityRule", "Connectivity Name field Exists");
-    test.assertExists("#netParamsconnParamsConnectivityRulesec", "Connectivity section list field Exists");
-    test.assertExists("#netParamsconnParamsConnectivityRuleloc", "Connectivity location list field Exists");
+    assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']")
+    assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']AddButton", "button")
+    assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']")
+    assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']AddButton", "button")
     test.assertExists("#connPlasticity", "Connectivity plasticity field Exists");
     test.assertExists("#connSynMech", "Connectivity synMechanism SelectField Exists");
     test.assertExists("#connConv", "Connectivity convergence field Exists");
@@ -558,24 +564,24 @@ function addConnection(test) {
     test.assertExists("#connPlasticity", "Connectivity plasticity field Exists");
 
   })
-  
+
   casper.then(function() { // Go to preConds tab
     casper.waitUntilVisible('button[id="preCondsConnTab"]', function() {
       this.echo("--------testing range component in connParams.preConds--------");
       casper.click("#preCondsConnTab");
     })
-    casper.then(function() {//check fields exist
+    casper.then(function() { //check fields exist
       test.assertExists("#connPreCondsPop", "Connectivity pre Pop SelectField Exists");
       test.assertExists("#connPreCondsCellModel", "Connectivity pre CellModel SelectField Exists");
       test.assertExists("#connPreCondsCellType", "Connectivity pre CellType SelectField Exists");
     })
-    casper.then(function() {//check rangeComponent exist
-      exploreRangeComponent(test, "#xRangePreConnSelect", "#xRangePreConnAbsoluteMenuItem", "x");
-      exploreRangeComponent(test, "#yRangePreConnSelect", "#yRangePreConnAbsoluteMenuItem", "y");
-      exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnAbsoluteMenuItem", "z");
-      exploreRangeComponent(test, "#xRangePreConnSelect", "#xRangePreConnNormalizedMenuItem", "x");
-      exploreRangeComponent(test, "#yRangePreConnSelect", "#yRangePreConnNormalizedMenuItem", "y");
-      exploreRangeComponent(test, "#zRangePreConnSelect", "#zRangePreConnNormalizedMenuItem", "z");
+    casper.then(function() { //check rangeComponent exist
+      exploreRangeComponent(test, "PreConn", "x", "Absolute");
+      exploreRangeComponent(test, "PreConn", "x", "Normalized");
+      exploreRangeComponent(test, "PreConn", "y", "Absolute");
+      exploreRangeComponent(test, "PreConn", "y", "Normalized");
+      exploreRangeComponent(test, "PreConn", "z", "Absolute");
+      exploreRangeComponent(test, "PreConn", "z", "Normalized");
     });
   });
   casper.then(function() { // go to postConds
@@ -589,18 +595,18 @@ function addConnection(test) {
       test.assertExists("#connPostCondsCellType", "Connectivity post CellType SelectField Exists");
     })
     casper.then(function() { //check rangeComponent exist
-      exploreRangeComponent(test, "#xRangePostConnSelect", "#xRangePostConnAbsoluteMenuItem", "x");
-      exploreRangeComponent(test, "#yRangePostConnSelect", "#yRangePostConnAbsoluteMenuItem", "y");
-      exploreRangeComponent(test, "#zRangePostConnSelect", "#zRangePostConnAbsoluteMenuItem", "z");
-      exploreRangeComponent(test, "#xRangePostConnSelect", "#xRangePostConnNormalizedMenuItem", "x");
-      exploreRangeComponent(test, "#yRangePostConnSelect", "#yRangePostConnNormalizedMenuItem", "y");
-      exploreRangeComponent(test, "#zRangePostConnSelect", "#zRangePostConnNormalizedMenuItem", "z");
+      exploreRangeComponent(test, "PostConn", "x", "Absolute");
+      exploreRangeComponent(test, "PostConn", "x", "Normalized");
+      exploreRangeComponent(test, "PostConn", "y", "Absolute");
+      exploreRangeComponent(test, "PostConn", "y", "Normalized");
+      exploreRangeComponent(test, "PostConn", "z", "Absolute");
+      exploreRangeComponent(test, "PostConn", "z", "Normalized");
     });
   });
   casper.then(function() {
     this.echo("------------------------------------------------------")
   });
-  casper.then(function(){//wait before start deleting rules
+  casper.then(function() { //wait before start deleting rules
     casper.wait(500)
   })
   casper.thenClick("#newConnectivityRuleButton", function() { //add new connectivity rule
@@ -630,129 +636,129 @@ function addConnection(test) {
 /*****************************************************
  * Create  StimSource  rule  using  the  add  button *
  *****************************************************/
- function addStimSource(test) {
-   casper.then(function() { //expand stimSource card
-     casper.click('#SimulationSources', function() {
-       casper.waitUntilVisible('button[id="newStimulationSourceButton"]', function() {
-         test.assertExist("#newStimulationSourceButton", "Add stimSource button exist");
-       })
-     });
-   })
-   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
-     casper.waitUntilVisible('button[id="stim_source"]', function() {
-       test.assertExist("#stim_source", "new stimSource rule created");
-     })
-   })
-   casper.then(function() { // check fields exist
-     casper.waitForSelector("#sourceName", function() {
-       test.assertExist("#sourceName", "stim source Name field Exist");
-       test.assertExist("#stimSourceSelect", "stim source selectField Exist");
-     })
-   })
-   casper.then(function() { //check selectField has corretc MenuItems
-     click("#stimSourceSelect")
-     casper.then(function() {
-       casper.waitForSelector("#IClampMenuItem", function() {
-         test.assertExist("#IClampMenuItem", "IClamp stimSource MenuItem Exist");
-         test.assertExist("#VClampMenuItem", "VClamp stimSource MenuItem Exist");
-         test.assertExist("#NetStimMenuItem", "NetStim stimSource MenuItem Exist");
-         test.assertExist("#AlphaSynapseMenuItem", "AlphaSynapse stimSource MenuItem Exist");
-       })
-     })
-   })
-   casper.thenClick("#IClampMenuItem", function() { // select ICLamp source and check correct params
-     casper.waitForSelector("#stimSourceIClampDel", function() {
-       test.assertExist("#stimSourceIClampDel", "del param Exist for IClamp");
-       test.assertExist("#stimSourceIClampDur", "dur param Exist for IClamp");
-       test.assertExist("#stimSourceIClampAmp", "amp param Exist for IClamp");
-     })
-   })
-   casper.then(function() { //wait before continuing
-     casper.wait(500)
-   })
-   casper.then(function() { //change to VClamp in SelectField
-     click("#stimSourceSelect")
-     casper.then(function() {
-       casper.waitForSelector("#VClampMenuItem", function() {
-         casper.click("#VClampMenuItem");
-       })
-     })
-   })
-   casper.then(function() { // select VClamp source and check correct params
-     casper.waitForSelector("#stimSourceVClampTau1", function() {
-       test.assertExist("#stimSourceVClampTau1", "tau1 param Exist for VClamp");
-       test.assertExist("#stimSourceVClampTau2", "tau2 param Exist for VClamp");
-       test.assertExist("#stimSourceVClampGain", "gain param Exist for VClamp");
-       test.assertExist("#stimSourceVClampRstim", "rstim param Exist for VClamp");
-       test.assertExist("#netParamsstimSourceParamsstim_sourcedur", "VClamp duration field exist");
-       test.assertExist("#netParamsstimSourceParamsstim_sourceamp", "VClamp amplitud field exist");
-       test.assertExist("#netParamsstimSourceParamsstim_sourceduraddButton", "VClamp add duration item exist");
-       test.assertExist("#netParamsstimSourceParamsstim_sourceampaddButton", "VClamp add amplitud item exist");
-     })
-   })
-   casper.then(function() { //wait before continuing
-     casper.wait(500)
-   })
-   casper.then(function() { //change to NetStim source in SelectField
-     click("#stimSourceSelect")
-     casper.then(function() {
-       casper.waitForSelector("#NetStimMenuItem", function() {
-         casper.click("#NetStimMenuItem");
-       })
-     })
-   })
-   casper.then(function() { // select NetStim source and check correct params
-     casper.waitForSelector("#stimSourceNetStimRate", function() {
-       test.assertExist("#stimSourceNetStimRate", "rate param Exist for NetStim");
-       test.assertExist("#stimSourceNetStimInterval", "interval param Exist for NetStim");
-       test.assertExist("#stimSourceNetStimNumber", "number param Exist for NetStim");
-       test.assertExist("#stimSourceNetStimStart", "start param Exist for NetStim");
-       test.assertExist("#stimSourceNetStimNoise", "noise param Exist for NetStim");
-     })
-   })
-   casper.then(function() { //wait before continuing
-     casper.wait(500)
-   })
-   casper.then(function() { //change to NetStim source in SelectField
-     click("#stimSourceSelect")
-     casper.then(function() {
-       casper.waitForSelector("#AlphaSynapseMenuItem", function() {
-         casper.click("#AlphaSynapseMenuItem");
-       })
-     })
-   })
-   casper.then(function() { // select AlphaSynapseMenuItem source and check correct params
-     casper.waitForSelector("#stimSourceAlphaSynapseOnset", function() {
-       test.assertExist("#stimSourceAlphaSynapseOnset", "onset param Exist for AlphaSynapse");
-       test.assertExist("#stimSourceAlphaSynapseTau", "tau param Exist for AlphaSynapse");
-       test.assertExist("#stimSourceAlphaSynapseGmax", "gmax param Exist for AlphaSynapse");
-       test.assertExist("#stimSourceAlphaSynapseE", "e param Exist for AlphaSynapse");
-     })
-   })
-   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
-     casper.waitUntilVisible('button[id="stim_source2"]', function() {
-       test.assertExist("#stim_source2", "new stimSource rule created");
-     })
-   })
-   casper.then(function() { // delete synapse rule 1
-     delThumbnail("#stim_source")
-     casper.waitWhileVisible('button[id="stim_source"]', function() {
-       test.assertDoesntExist("#stim_source", "stim_source thumbnail deleted");
-     })
-   })
-   casper.then(function() { //delete synapse rule 2
-     delThumbnail("#stim_source2")
-     casper.waitWhileVisible('button[id="stim_source2"]', function() {
-       test.assertDoesntExist("#Synapse2", "stim_source 2 thumbnail deleted");
-     })
-   })
-   casper.then(function() { // colapse card
-     casper.click('#SimulationSources');
-     casper.waitWhileVisible('button[id="newStimulationSourceButton"]', function() {
-       test.assertDoesntExist('button[id="newStimulationSourceButton"]', "stim_source view collapsed");
-     });
-   });
- }
+function addStimSource(test) {
+  casper.then(function() { //expand stimSource card
+    casper.click('#SimulationSources', function() {
+      casper.waitUntilVisible('button[id="newStimulationSourceButton"]', function() {
+        test.assertExist("#newStimulationSourceButton", "Add stimSource button exist");
+      })
+    });
+  })
+  casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
+    casper.waitUntilVisible('button[id="stim_source"]', function() {
+      test.assertExist("#stim_source", "new stimSource rule created");
+    })
+  })
+  casper.then(function() { // check fields exist
+    casper.waitForSelector("#sourceName", function() {
+      test.assertExist("#sourceName", "stim source Name field Exist");
+      test.assertExist("#stimSourceSelect", "stim source selectField Exist");
+    })
+  })
+  casper.then(function() { //check selectField has corretc MenuItems
+    click("#stimSourceSelect")
+    casper.then(function() {
+      casper.waitForSelector("#IClampMenuItem", function() {
+        test.assertExist("#IClampMenuItem", "IClamp stimSource MenuItem Exist");
+        test.assertExist("#VClampMenuItem", "VClamp stimSource MenuItem Exist");
+        test.assertExist("#NetStimMenuItem", "NetStim stimSource MenuItem Exist");
+        test.assertExist("#AlphaSynapseMenuItem", "AlphaSynapse stimSource MenuItem Exist");
+      })
+    })
+  })
+  casper.thenClick("#IClampMenuItem", function() { // select ICLamp source and check correct params
+    casper.waitForSelector("#stimSourceIClampDel", function() {
+      test.assertExist("#stimSourceIClampDel", "del param Exist for IClamp");
+      test.assertExist("#stimSourceIClampDur", "dur param Exist for IClamp");
+      test.assertExist("#stimSourceIClampAmp", "amp param Exist for IClamp");
+    })
+  })
+  casper.then(function() { //wait before continuing
+    casper.wait(500)
+  })
+  casper.then(function() { //change to VClamp in SelectField
+    click("#stimSourceSelect")
+    casper.then(function() {
+      casper.waitForSelector("#VClampMenuItem", function() {
+        casper.click("#VClampMenuItem");
+      })
+    })
+  })
+  casper.then(function() { // select VClamp source and check correct params
+    casper.waitForSelector("#stimSourceVClampTau1", function() {
+      test.assertExist("#stimSourceVClampTau1", "tau1 param Exist for VClamp");
+      test.assertExist("#stimSourceVClampTau2", "tau2 param Exist for VClamp");
+      test.assertExist("#stimSourceVClampGain", "gain param Exist for VClamp");
+      test.assertExist("#stimSourceVClampRstim", "rstim param Exist for VClamp");
+      assertExist(test, "netParams.stimSourceParams[\'stim_source \'][\'dur\']")
+      assertExist(test, "netParams.stimSourceParams[\'stim_source \'][\'amp\']")
+      assertExist(test, "netParams.stimSourceParams[\'stim_source \'][\'dur\']AddButton", "button");
+      assertExist(test, "netParams.stimSourceParams[\'stim_source \'][\'amp\']AddButton", "button");
+    })
+  })
+  casper.then(function() { //wait before continuing
+    casper.wait(500)
+  })
+  casper.then(function() { //change to NetStim source in SelectField
+    click("#stimSourceSelect")
+    casper.then(function() {
+      casper.waitForSelector("#NetStimMenuItem", function() {
+        casper.click("#NetStimMenuItem");
+      })
+    })
+  })
+  casper.then(function() { // select NetStim source and check correct params
+    casper.waitForSelector("#stimSourceNetStimRate", function() {
+      test.assertExist("#stimSourceNetStimRate", "rate param Exist for NetStim");
+      test.assertExist("#stimSourceNetStimInterval", "interval param Exist for NetStim");
+      test.assertExist("#stimSourceNetStimNumber", "number param Exist for NetStim");
+      test.assertExist("#stimSourceNetStimStart", "start param Exist for NetStim");
+      test.assertExist("#stimSourceNetStimNoise", "noise param Exist for NetStim");
+    })
+  })
+  casper.then(function() { //wait before continuing
+    casper.wait(500)
+  })
+  casper.then(function() { //change to NetStim source in SelectField
+    click("#stimSourceSelect")
+    casper.then(function() {
+      casper.waitForSelector("#AlphaSynapseMenuItem", function() {
+        casper.click("#AlphaSynapseMenuItem");
+      })
+    })
+  })
+  casper.then(function() { // select AlphaSynapseMenuItem source and check correct params
+    casper.waitForSelector("#stimSourceAlphaSynapseOnset", function() {
+      test.assertExist("#stimSourceAlphaSynapseOnset", "onset param Exist for AlphaSynapse");
+      test.assertExist("#stimSourceAlphaSynapseTau", "tau param Exist for AlphaSynapse");
+      test.assertExist("#stimSourceAlphaSynapseGmax", "gmax param Exist for AlphaSynapse");
+      test.assertExist("#stimSourceAlphaSynapseE", "e param Exist for AlphaSynapse");
+    })
+  })
+  casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
+    casper.waitUntilVisible('button[id="stim_source2"]', function() {
+      test.assertExist("#stim_source2", "new stimSource rule created");
+    })
+  })
+  casper.then(function() { // delete synapse rule 1
+    delThumbnail("#stim_source")
+    casper.waitWhileVisible('button[id="stim_source"]', function() {
+      test.assertDoesntExist("#stim_source", "stim_source thumbnail deleted");
+    })
+  })
+  casper.then(function() { //delete synapse rule 2
+    delThumbnail("#stim_source2")
+    casper.waitWhileVisible('button[id="stim_source2"]', function() {
+      test.assertDoesntExist("#Synapse2", "stim_source 2 thumbnail deleted");
+    })
+  })
+  casper.then(function() { // colapse card
+    casper.click('#SimulationSources');
+    casper.waitWhileVisible('button[id="newStimulationSourceButton"]', function() {
+      test.assertDoesntExist('button[id="newStimulationSourceButton"]', "stim_source view collapsed");
+    });
+  });
+}
 /*****************************************************
  * Create  StimTarget  rule  using  the  add  button *
  *****************************************************/
@@ -763,14 +769,14 @@ function addStimTarget(test) {
       casper.click('#newStimulationTargetButton');
     })
   });
-  
+
   casper.then(function() { //check new stimTarget rule was created
-    casper.waitUntilVisible('button[id="stim_target"]', function(){
+    casper.waitUntilVisible('button[id="stim_target"]', function() {
       test.assertExist("#stim_target", "stimTarget thumbnail created")
     })
   })
-  casper.then(function(){ //check fields exist
-    casper.waitForSelector("#targetName", function(){
+  casper.then(function() { //check fields exist
+    casper.waitForSelector("#targetName", function() {
       test.assertExist("#targetName", "stimTarget name field exist")
       test.assertExist("#stimTargetSource", "stimTarget source type field exist")
       test.assertExist("#stimTargetSec", "stimTarget section field exist")
@@ -783,23 +789,26 @@ function addStimTarget(test) {
       casper.click("#stimTargetCondsTab");
     })
   })
-  casper.then(function(){ // check conds fields exist
+  casper.then(function() { // check conds fields exist
     test.assertExist("#stimTargetCondsPops", "stimTarget pop conds field exist")
     test.assertExist("#stimTargetCondsCellType", "stimTarget cellType conds field exist")
     test.assertExist("#stimTargetCondsCellModel", "stimTarget cellModel conds field exist")
   })
   casper.then(function() { // test range component
-    exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetAbsoluteMenuItem", "x");
-    exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetAbsoluteMenuItem", "y");
-    exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetAbsoluteMenuItem", "z");
-    exploreRangeComponent(test, "#xRangeStimTargetSelect", "#xRangeStimTargetNormalizedMenuItem", "x");
-    exploreRangeComponent(test, "#yRangeStimTargetSelect", "#yRangeStimTargetNormalizedMenuItem", "y");
-    exploreRangeComponent(test, "#zRangeStimTargetSelect", "#zRangeStimTargetNormalizedMenuItem", "z");
+    exploreRangeComponent(test, "StimTarget", "x", "Absolute");
+    exploreRangeComponent(test, "StimTarget", "x", "Normalized");
+    exploreRangeComponent(test, "StimTarget", "y", "Absolute");
+    exploreRangeComponent(test, "StimTarget", "y", "Normalized");
+    exploreRangeComponent(test, "StimTarget", "z", "Absolute");
+    exploreRangeComponent(test, "StimTarget", "z", "Normalized");
   });
+  casper.then(function (){
+    assertExist(test, "netParams.stimTargetParams[\'stim_target \'][\'conds\'][\'cellList\']")
+    assertExist(test, "netParams.stimTargetParams[\'stim_target \'][\'conds\'][\'cellList\']AddButton", "button")
+  })
   casper.then(function() {
     this.echo("------------------------------------------------------")
   });
-  
   casper.thenClick("#newStimulationTargetButton", function() { //add new stim target rule
     casper.waitUntilVisible('button[id="stim_target2"]', function() {
       test.assertExist("#stim_target2", "new stimTarget rule created");
@@ -824,9 +833,178 @@ function addStimTarget(test) {
     });
   })
 }
-/**
- * Tests adding a new population and its contents
- */
+
+
+/*************************************
+ * Check  simConfig  initial  state  *
+ *************************************/
+function checkSimConfigParams(test) {
+  casper.thenClick('#Configuration', function(){ // expand configuration Card
+    casper.wait(100)
+  });
+  assertExist(test, "simConfig.hParams")
+  assertExist(test, "simConfig.hParams")
+  testElementValue(test, "simConfig.duration", "1000");
+  testElementValue(test, "simConfig.dt", "0.025");
+  testElementValue(test, "simConfig.printRunTime", "false");
+  testElementValue(test, "simConfig.hParams0", "clamp_resist : 0.001");
+  testElementValue(test, "simConfig.hParams1", "celsius : 6.3");
+  testElementValue(test, "simConfig.hParams2", "v_init : -65");
+  testElementValue(test, "simConfig.seeds0", "loc : 1");
+  testElementValue(test, "simConfig.seeds1", "stim : 1");
+  testElementValue(test, "simConfig.seeds2", "conn : 1");
+  testCheckBoxValue(test, "simConfig.createNEURONObj", true);
+  testCheckBoxValue(test, "simConfig.createPyStruct", true);
+  testCheckBoxValue(test, "simConfig.addSynMechs", true);
+  testCheckBoxValue(test, "simConfig.includeParamsLabel", true);
+  testCheckBoxValue(test, "simConfig.timing", true);
+  testCheckBoxValue(test, "simConfig.verbose", false);
+  testCheckBoxValue(test, "simConfig.compactConnFormat", false);
+  testCheckBoxValue(test, "simConfig.connRandomSecFromList", true);
+  testCheckBoxValue(test, "simConfig.printPopAvgRates", false);
+  testCheckBoxValue(test, "simConfig.printSynsAfterRule", false);
+  
+  casper.thenClick("#configRecord", function(){ //go to record tab
+    casper.wait(1000);
+  });
+  assertExist(test, "simConfig.recordLFP")
+  assertExist(test, "simConfig.recordCells")
+  assertExist(test, "simConfig.recordTraces")
+  testElementValue(test, "simConfig.recordStep", "0.1");
+  testCheckBoxValue(test, "simConfig.saveLFPCells", false);
+  testCheckBoxValue(test, "simConfig.recordStim", false);
+  
+  casper.thenClick("#configSaveConfiguration", function(){//go to saveConfig tab
+    casper.wait(1000)
+  }); 
+  assertExist(test, "simConfig.simLabel")
+  assertExist(test, "simConfig.saveFolder")
+  assertExist(test, "simConfig.saveDataInclude")
+  assertExist(test, "simConfig.backupCfgFile")
+  testElementValue(test, "simConfig.filename", "model_output");
+  testElementValue(test, "simConfig.saveDataInclude0", "netParams");
+  testElementValue(test, "simConfig.saveDataInclude1", "netCells");
+  testElementValue(test, "simConfig.saveDataInclude2", "netPops");
+  testElementValue(test, "simConfig.saveDataInclude3", "simConfig");
+  testElementValue(test, "simConfig.saveDataInclude4", "simData");
+  testCheckBoxValue(test, "simConfig.saveCellSecs", true);
+  testCheckBoxValue(test, "simConfig.saveCellConns", true);
+  testCheckBoxValue(test, "simConfig.timestampFilename", false);
+  testCheckBoxValue(test, "simConfig.savePickle", false);
+  testCheckBoxValue(test, "simConfig.saveJson", false);
+  testCheckBoxValue(test, "simConfig.saveMat", false);
+  testCheckBoxValue(test, "simConfig.saveHDF5", false);
+  testCheckBoxValue(test, "simConfig.saveDpk", false);
+  testCheckBoxValue(test, "simConfig.saveDat", false);
+  testCheckBoxValue(test, "simConfig.saveCSV", false);
+  testCheckBoxValue(test, "simConfig.saveTiming", false);
+  
+  casper.thenClick("#configErrorChecking", function(){//go to checkError tab
+    casper.wait(1000)
+  }); 
+  testCheckBoxValue(test, "simConfig.checkErrors", false);
+  testCheckBoxValue(test, "simConfig.checkErrorsVerbose", false);
+
+  casper.thenClick("#confignetParams", function(){ //go to network configuration tab
+    casper.wait(1000)
+  });
+  assertExist(test, "netParams.scaleConnWeightModels")
+  testElementValue(test, "netParams.scale", "1");
+  testElementValue(test, "netParams.defaultWeight", "1");
+  testElementValue(test, "netParams.defaultDelay", "1");
+  testElementValue(test, "netParams.scaleConnWeight", "1");
+  testElementValue(test, "netParams.scaleConnWeightNetStims", "1");
+  testElementValue(test, "netParams.sizeX", "100");
+  testElementValue(test, "netParams.sizeY", "100");
+  testElementValue(test, "netParams.sizeZ", "100");
+  testElementValue(test, "netParams.propVelocity", "500");
+  testElementValue(test, "netParams.rotateCellsRandomly", "false");
+  testSelectFieldValue(test, "netParams.shape", "cuboid")
+  
+
+}
+/*******************************************************
+ *                    functions                        *
+ *******************************************************/
+
+function assertExist(test, elementID, component="input") {
+  casper.then(function() {
+    this.waitForSelector(component+'[id="' + elementID + '"]', function() {
+      test.assertExist(component+'[id="' + elementID + '"]', elementID + " exist")
+    })
+  })
+}
+function assertExistButton(test, elementID) {
+  casper.then(function() {
+    this.waitForSelector('button[id="' + elementID + '"]', function() {
+      test.assertExist('button[id="' + elementID + '"]', elementID + " exist")
+    })
+  })
+}
+function testSelectFieldValue(test, elementID, expected) {
+  casper.then(function() {
+    this.waitForSelector('div[id="'+elementID+'"]', function() {
+      var text = casper.evaluate(function(elementID) {
+        return document.getElementById(elementID).getElementsByTagName("div")[0].textContent;
+      }, elementID)
+      test.assertEquals(text, expected, elementID+ " field value OK");
+    })
+  });
+}
+
+function testElementValue(test, elementID, expectedName) {
+  casper.then(function() {
+    this.waitForSelector('input[id="' + elementID + '"]', function() {
+      var name = casper.evaluate(function(elementID) {
+        return $('input[id="' + elementID + '"]').val();
+      }, elementID);
+      test.assertEquals(name, expectedName, elementID + " field value OK");
+    });
+  })
+}
+
+function testCheckBoxValue(test, elementID, expectedName) {
+  casper.waitForSelector('input[id="' + elementID + '"]', function() {
+    var name = casper.evaluate(function(elementID) {
+      return $('input[id="' + elementID + '"]').prop('checked');
+    }, elementID);
+    test.assertEquals(name, expectedName, elementID + " checkBox value OK");
+  })
+}
+
+function delThumbnail(elementID) {
+  casper.wait(300)
+  casper.then(function() {
+    casper.waitForSelector(elementID, function() {
+      casper.mouse.doubleclick(elementID);
+    })
+  })
+  casper.then(function() {
+    casper.wait(500)
+  })
+  casper.thenClick(elementID, function() {
+    casper.wait(500)
+  })
+  casper.then(function() {
+    casper.waitUntilVisible('button[id="confirmDeletion"]', function() {
+      casper.thenClick("#confirmDeletion")
+    })
+  })
+}
+
+function click(elementID) {
+  casper.evaluate(function(elementID) {
+    document.getElementById(elementID).scrollIntoView();
+  }, elementID.replace("#", ''));
+  var info = casper.getElementInfo(elementID);
+  casper.mouse.click(info.x + 1, info.y + 1);
+}
+
+
+
+/**************************************************
+ * Tests adding a new population and its contents *
+ **************************************************/
 function testPopulation(test, buttonSelector, expectedName, expectedCellModel, expectedCellType, expectedDimensions) {
   casper.then(function() {
     this.echo("------Testing population button " + buttonSelector);
@@ -840,62 +1018,39 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
       });
       this.echo('Population metadata loaded.');
       casper.then(function() { //test metadata contents
-        testElementValue(test, "#populationName", expectedName);
-        testElementValue(test, "#popCellModel", expectedCellModel);
-        testElementValue(test, "#popCellType", expectedCellType);
-        testElementValue(test, "#popParamsDimensions", expectedDimensions);
+        testElementValue(test, "populationName", expectedName);
+        testElementValue(test, "popCellModel", expectedCellModel);
+        testElementValue(test, "popCellType", expectedCellType);
+        testElementValue(test, "popParamsDimensions", expectedDimensions);
       });
     }, 5000);
   });
 }
 
-function delThumbnail(elementID) {
-  casper.wait(300)
-  casper.waitForSelector(elementID, function() {
-    casper.mouse.doubleclick(elementID);
-  })
-  casper.then(function() {
-    casper.wait(500)
-  })
-  casper.then(function() {
-    casper.click(elementID)
-  })
-  casper.then(function() {
-    casper.wait(500)
-  })
-  casper.waitUntilVisible('button[id="confirmDeletion"]', function() {
-    casper.thenClick("#confirmDeletion")
-  })
-}
-
-function click(elementID) {
-  casper.evaluate(function(elementID) {
-    document.getElementById(elementID).scrollIntoView();
-  }, elementID.replace("#", ''));
-  var info = casper.getElementInfo(elementID);
-  casper.mouse.click(info.x + 1, info.y + 1);
-}
 /**
  * Explore SelectField, MenuItems and TextField inside RangeComponent
  */
-function exploreRangeComponent(test, elementID, secondElementID, xyz) {
-  casper.waitForSelector(elementID, function() {
-    var absNorm = secondElementID.includes('Absolute') ? "Absolute" : "Normalized"
-    test.assertExist(elementID, "SelectField in " + xyz + "-axis EXISTS");
-    click(elementID)
-    casper.wait(1000, function() {
-      casper.waitForSelector(secondElementID, function() {
-        test.assertExist(secondElementID, absNorm + " menu item in " + xyz + "-axis EXISTS");
-        casper.click(secondElementID)
-        casper.wait(500, function() {
-          casper.waitForSelector(elementID.replace('Select', '') + "MinRange", function() {
-            test.assertExist(elementID.replace('Select', '') + "MinRange", absNorm + " min in " + xyz + "-axis EXISTS");
-            test.assertExist(elementID.replace('Select', '') + "MaxRange", absNorm + " max in " + xyz + "-axis EXISTS");
-          });
-        })
-      });
-    })
-  });
+function exploreRangeComponent(test, model, axis, norm) {
+  casper.then(function () {
+    var elementID = "#" + axis + "Range" + model + "Select"
+    var secondElementID = "#" + axis + "Range" + model + norm + "MenuItem"
+    casper.waitForSelector(elementID, function() {
+      test.assertExist(elementID, "SelectField in " + axis + "-axis EXISTS");
+      click(elementID)
+      casper.wait(1000, function() {
+        casper.waitForSelector(secondElementID, function() {
+          test.assertExist(secondElementID, norm + " menu item in " + axis + "-axis EXISTS");
+          casper.click(secondElementID)
+          casper.wait(500, function() {
+            casper.waitForSelector(elementID.replace('Select', '') + "MinRange", function() {
+              test.assertExist(elementID.replace('Select', '') + "MinRange", norm + " min in " + axis + "-axis EXISTS");
+              test.assertExist(elementID.replace('Select', '') + "MaxRange", norm + " max in " + axis + "-axis EXISTS");
+            });
+          })
+        });
+      })
+    });
+  })
 };
 
 /**
@@ -913,23 +1068,13 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, e
         });
       });
       casper.then(function() { //test contents of metadata
-        testElementValue(test, "#cellRuleName", expectedName);
+        testElementValue(test, "cellRuleName", expectedName);
         test.assertExists(expectedCellModelId, "cellRullCellModel exists");
         test.assertExists(expectedCellTypeId, "cellRullCellType exists");
       });
     }, 5000);
   });
 }
-
-function testElementValue(test, elementID, expectedName) {
-  casper.then(function() {
-    var name = casper.evaluate(function(elementID) {
-      return $(elementID).val();
-    }, elementID);
-    test.assertEquals(name, expectedName, elementID + " field correctly populated");
-  });
-}
-
 /**
  * Load demo model using python
  */

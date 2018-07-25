@@ -124,7 +124,6 @@ export default class NetPyNEPopulation extends React.Component {
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
-              id={"popCellType"}
             />
           </NetPyNEField>
 
@@ -135,7 +134,7 @@ export default class NetPyNEPopulation extends React.Component {
               searchText={this.state.cellModel}
               onChange={(value) => this.setPopulationDimension(value)}
               openOnFocus={true}
-              id={"popCellModel"} />
+            />
           </NetPyNEField>
 
 
@@ -146,7 +145,7 @@ export default class NetPyNEPopulation extends React.Component {
       var content = 
         <div>
           <NetPyNECoordsRange
-            id={"xRangePop"}
+            id={"xRangePopParams"}
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
@@ -156,7 +155,7 @@ export default class NetPyNEPopulation extends React.Component {
           />
 
           <NetPyNECoordsRange 
-            id="yRangePop"
+            id="yRangePopParams"
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
@@ -166,7 +165,7 @@ export default class NetPyNEPopulation extends React.Component {
           />
 
           <NetPyNECoordsRange 
-            id="zRangePop"
+            id="zRangePopParams"
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
