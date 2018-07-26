@@ -219,7 +219,7 @@ export default class ListComponent extends Component {
                 var value = key + ' : ' + JSON.stringify(this.state.children[key]);
             }
             else if (this.props.realType=='dict(dict())') {
-                var value =  key + ':   ' + JSON.stringify(this.state.children[key]).replace(/["::]/g, '');
+                var value =  key + ':   ' + JSON.stringify(this.state.children[key]).replace(/["':]/g, '');
             }
             else {
                 var value = this.state.children[key];

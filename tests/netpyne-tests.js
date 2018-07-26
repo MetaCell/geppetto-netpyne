@@ -40,47 +40,47 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     casper.echo("######## Testing landping page contents and layout ######## ");
     testLandingPage(test);
   });
-  
+
   casper.then(function() { //test initial state of consoles
     casper.echo("######## Test Consoles ######## ");
     testConsoles(test);
   });
-  
+
   casper.then(function() { // test adding a population using UI
     casper.echo("######## Test Add Population ######## ");
     addPopulation(test);
   });
-  
+
   casper.then(function() { // test adding a cell rule using UI
     casper.echo("######## Test Add Cell Rule ######## ");
     addCellRule(test);
   });
-  
+
   casper.then(function() { // test adding a synapse rule using UI
     casper.echo("######## Test Add Synapse ######## ");
     addSynapse(test);
   });
-  
+
   casper.then(function() { // test adding a connection using UI
     casper.echo("######## Test Add Connection Rule ######## ");
     addConnection(test);
   });
-  
+
   casper.then(function() { // test adding a stimulus  source using UI
     casper.echo("######## Test Add stim Source Rule ######## ");
     addStimSource(test);
   });
-  
+
   casper.then(function() { // test adding a stimulus target using UI
     casper.echo("######## Test Add stimTarget Rule ######## ");
     addStimTarget(test);
   });
-  
+
   casper.then(function() { // test config 
     casper.echo("######## Test default simConfig ######## ");
     checkSimConfigParams(test);
   });
-  
+
   casper.then(function() { //test full netpyne loop using a demo project
     casper.echo("######## Running Demo ######## ");
     var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
@@ -88,12 +88,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
       "netpyne_geppetto.simConfig=simConfig";
     loadModelUsingPython(test, demo);
   });
-  
+
   casper.then(function() { //test explore network tab functionality
     casper.echo("######## Test Explore Network Functionality ######## ");
     exploreNetwork(test);
   });
-  
+
   casper.then(function() { //test simulate network tab functionality
     casper.echo("######## Test Simulate Network Functionality ######## ");
     simulateNetwork(test);
@@ -119,15 +119,6 @@ function testLandingPage(test) {
     assertExist(test, "exploreNetwork", "button")
     assertExist(test, "simulateNetwork", "button")
     assertExist(test, "setupNetwork", "button")
-    // test.assertExists('div[id="Populations"]', 'Populations button exists.');
-    // test.assertExists('div[id="CellRules"]', "Cell rules button exists.");
-    // test.assertExists('div[id="Synapses"]', "Synapses button exists.");
-    // test.assertExists('div[id="Connections"]', "Connections button exists.");
-    // test.assertExists('div[id="SimulationSources"]', "Connections button exists.");
-    // test.assertExists('div[id="Configuration"]', "Configuration button exists.");
-    // test.assertExists('button[id="defineNetwork"]', 'Define network button exists.');
-    // test.assertExists('button[id="exploreNetwork"]', 'Explore network button exists.');
-    // test.assertExists('button[id="simulateNetwork"]', 'Simulate network button exists.');
   });
 }
 
@@ -264,7 +255,7 @@ function addCellRule(test) {
   casper.thenClick('button[id="newCellRuleButton"]', function() { //click add cellRule
     assertExist(test, "CellRule", "button")
   })
-  
+
   message("explore cellParams fields")
   casper.then(function() { // check fields exist
     assertExist(test, "cellRuleName")
@@ -280,7 +271,7 @@ function addCellRule(test) {
     exploreRangeComponent(test, "CellParams", "y", "Normalized");
     exploreRangeComponent(test, "CellParams", "z", "Normalized");
   });
-  
+
   message("create new section")
   casper.thenClick('button[id="cellParamsGoSectionButton"]', function() { //go to sections
     assertExist(test, "newCellRuleSectionButton", "button")
@@ -288,7 +279,7 @@ function addCellRule(test) {
   casper.thenClick('#newCellRuleSectionButton', function() { //add new section and check name
     assertExist(test, "cellParamsSectionName")
   });
-  
+
   message("explore cellParams.section fields")
   casper.thenClick("#sectionGeomTab", function() { //go to geom tab and chec fields
     assertExist(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'diam\']")
@@ -312,7 +303,7 @@ function addCellRule(test) {
       })
     })
   })
-  
+
   message("explore cellParams.section.mechanisms fields")
   casper.thenClick('#addNewMechButton', function() { // click SelectField and check MenuItems
     assertExist(test, "pas", "span")
@@ -327,7 +318,7 @@ function addCellRule(test) {
     assertExist(test, "mechNameel");
   })
   casper.thenClick('#addNewMechButton', function() { // add pas mech and check Fields
-    casper.waitForSelector("#pas", function(){
+    casper.waitForSelector("#pas", function() {
       casper.thenClick("#pas", function() {
         assertExist(test, "singleMechName");
         assertExist(test, "mechNameg");
@@ -336,7 +327,7 @@ function addCellRule(test) {
     })
   });
   casper.thenClick('#addNewMechButton', function() { // add pas mech and check Fields
-    casper.waitForSelector("#fastpas", function(){
+    casper.waitForSelector("#fastpas", function() {
       casper.thenClick("#fastpas", function() {
         assertExist(test, "singleMechName");
         assertExist(test, "mechNameg");
@@ -358,7 +349,7 @@ function addCellRule(test) {
     delThumbnail("mechThumbfastpas")
     assertDoesntExist(test, "mechThumbfastpas", "button");
   })
-  
+
   message("delete cellParams.section")
   casper.thenClick('#fromMech2SectionButton', function() { // come back to --secion--
     assertDoesntExist(test, "addNewMechButton", "button")
@@ -371,10 +362,10 @@ function addCellRule(test) {
   })
   casper.then(function() { //delete second section and check non exist
     delThumbnail("Section 2")
-      assertDoesntExist(test, "Section", "button");
-      assertDoesntExist(test, "Section 2", "button");
+    assertDoesntExist(test, "Section", "button");
+    assertDoesntExist(test, "Section 2", "button");
   })
-  
+
   message("delete cellParams rule")
   casper.thenClick("#fromSection2CellRuleButton", function() { // go back to cellRule main content
     assertDoesntExist(test, "newCellRuleSectionButton", "button")
@@ -383,9 +374,9 @@ function addCellRule(test) {
     delThumbnail("CellRule")
     assertDoesntExist(test, "CellRule", "button")
   })
-  
+
   message("colapse cellParams rule")
-  casper.thenClick('#CellRules', function(){
+  casper.thenClick('#CellRules', function() {
     assertDoesntExist(test, "newCellRuleButton", "button")
   });
 }
@@ -406,7 +397,7 @@ function addSynapse(test) {
       test.assertExist('button[id="Synapse"]', "New Synapse rule added");
     })
   })
-  
+
   message("explore synMechParams fields")
   casper.then(function() {
     casper.waitForSelector("#synapseModSelect", function() {
@@ -423,14 +414,14 @@ function addSynapse(test) {
       })
     })
   })
-  
+
   message("synapse type Exp2Syn")
   casper.thenClick("#Exp2Syn", function() { // select Exp2Syn mod and check correct params
     assertExist(test, "netParams.synMechParams[\'Synapse\'][\'tau1\']");
     assertExist(test, "netParams.synMechParams[\'Synapse\'][\'tau2\']");
     assertExist(test, "netParams.synMechParams[\'Synapse\'][\'e\']");
   })
-  casper.then(function(){
+  casper.then(function() {
     casper.wait(1000)
   })
   casper.then(function() { //change to ExpSyn mod in SelectField
@@ -441,14 +432,14 @@ function addSynapse(test) {
       })
     })
   })
-  
+
   message("synapse type ExpSyn")
   casper.then(function() { // check ExpSyn mod has correct params
     assertExist(test, "netParams.synMechParams[\'Synapse\'][\'e\']");
     assertExist(test, "netParams.synMechParams[\'Synapse\'][\'tau1\']");
     assertDoesntExist(test, "netParams.synMechParams[\'Synapse\'][\'tau2\']");
   })
-  
+
   message("delete synMechParams rules")
   casper.thenClick("#newSynapseButton", function() { //add new synaptic rule
     casper.waitUntilVisible('button[id="Synapse 2"]', function() {
@@ -476,9 +467,9 @@ function addSynapse(test) {
       test.assertDoesntExist('button[id="Synapse 2"]', "Synapse 2 deleted");
     })
   })
-  
+
   message("colapse synMechParams card")
-  casper.thenClick('#Synapses', function(){
+  casper.thenClick('#Synapses', function() {
     assertDoesntExist(test, "newSynapseButton", "button")
   });
 }
@@ -502,7 +493,7 @@ function addConnection(test) {
       })
     })
   })
-  
+
   message("explore connParams fields")
   casper.then(function() { // check all fields exist
     test.assertExists("#ConnectivityRule", "Connectivity Name field Exists");
@@ -519,7 +510,7 @@ function addConnection(test) {
     assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'synsPerConn\']")
     assertExist(test, "netParams.connParams[\'ConnectivityRule\'][\'synMech\']", "div")
   })
-  
+
   message("explore connParams.preConds fields")
   casper.then(function() { // Go to preConds tab
     casper.waitUntilVisible('button[id="preCondsConnTab"]', function() {
@@ -537,7 +528,7 @@ function addConnection(test) {
       exploreRangeComponent(test, "PreConn", "z", "Normalized");
     });
   });
-  
+
   message("explore connParams.preConds fields")
   casper.then(function() { // go to postConds
     casper.waitUntilVisible('button[id="postCondsConnTab"]', function() {
@@ -555,7 +546,7 @@ function addConnection(test) {
       exploreRangeComponent(test, "PostConn", "z", "Normalized");
     });
   });
-  
+
   message("delete connParams rules")
   casper.then(function() { //wait before start deleting rules
     casper.wait(500)
@@ -571,9 +562,9 @@ function addConnection(test) {
     delThumbnail("ConnectivityRule 2")
     assertDoesntExist(test, "ConnectivityRule 2", "button")
   })
-  
+
   message("colapse connParams card")
-  casper.thenClick('#Connections', function(){
+  casper.thenClick('#Connections', function() {
     assertDoesntExist(test, "newConnectivityRuleButton", "button")
   });
 }
@@ -592,7 +583,7 @@ function addStimSource(test) {
   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
     assertExist(test, "stim_source", "button")
   })
-  
+
   message("explore stimSource fields")
   casper.then(function() { // check fields exist
     casper.waitForSelector("#sourceName", function() {
@@ -611,14 +602,14 @@ function addStimSource(test) {
       })
     })
   })
-  
+
   message("explore IClamp source fields")
   casper.thenClick("#IClampMenuItem", function() { // select ICLamp source and check correct params
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'del\']")
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']")
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']")
   })
-  
+
   message("explore VClamp source fields")
   casper.then(function() { //wait before continuing
     casper.wait(500)
@@ -641,7 +632,7 @@ function addStimSource(test) {
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']AddButton", "button");
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']AddButton", "button");
   })
-  
+
   message("explore NetStim source fields")
   casper.then(function() { //wait before continuing
     casper.wait(500)
@@ -661,7 +652,7 @@ function addStimSource(test) {
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'start\']")
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'noise\']")
   })
-    
+
   message("explore AlphaSynapse source fields")
   casper.then(function() { //wait before continuing
     casper.wait(500)
@@ -680,7 +671,7 @@ function addStimSource(test) {
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'gmax\']")
     assertExist(test, "netParams.stimSourceParams[\'stim_source\'][\'e\']")
   })
-  
+
   message("delete stimSourceParams rules")
   casper.thenClick("#newStimulationSourceButton", function() { //add new stim source rule
     assertExist(test, "stim_source 2", "button")
@@ -693,9 +684,9 @@ function addStimSource(test) {
     delThumbnail("stim_source 2")
     assertDoesntExist(test, "stim_source 2")
   })
-  
+
   message("collapse stimSourceParams")
-  casper.thenClick('#SimulationSources', function(){//collapse card
+  casper.thenClick('#SimulationSources', function() { //collapse card
     assertDoesntExist(test, "newStimulationSourceButton", "button")
   });
 }
@@ -713,7 +704,7 @@ function addStimTarget(test) {
   casper.then(function() { //check new stimTarget rule was created
     assertExist(test, "stim_target", "button")
   })
-  
+
   message("explore stimTargetParams rule fields")
   casper.then(function() { //check fields exist
     test.assertExist("#targetName", "stimTarget name field exist")
@@ -721,7 +712,7 @@ function addStimTarget(test) {
     assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'sec\']")
     assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'loc\']")
   })
-  
+
   message("explore stimTargeParams rule conditions")
   casper.then(function() { // move to conds tab
     casper.waitUntilVisible('button[id="stimTargetCondsTab"]', function() {
@@ -745,7 +736,7 @@ function addStimTarget(test) {
     assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']")
     assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']AddButton", "button")
   })
-  
+
   message("delete stimTargetParams rules")
   casper.thenClick("#newStimulationTargetButton", function() { //add new stim target rule
     assertExist(test, "stim_target 2", "button")
@@ -758,9 +749,9 @@ function addStimTarget(test) {
     delThumbnail("stim_target 2")
     assertDoesntExist(test, "stim_target 2", "button")
   })
-  
+
   message("collapse stimTargetParams rule")
-  casper.thenClick('#stimTargets', function(){//colapse stimTarget card
+  casper.thenClick('#stimTargets', function() { //colapse stimTarget card
     assertDoesntExist(test, "newStimulationTargetButton", "button")
   });
 }
@@ -931,7 +922,7 @@ function delThumbnail(elementID) {
 }
 
 function click(elementID) {
-  casper.then(function (){
+  casper.then(function() {
     this.evaluate(function(elementID) {
       document.getElementById(elementID).scrollIntoView();
     }, elementID.replace("#", ''));
@@ -959,8 +950,8 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
       this.echo('Population metadata loaded.');
       casper.then(function() { //test metadata contents
         testElementValue(test, "populationName", expectedName);
-        testElementValue(test, "netParams.popParams[\'"+expectedName+"\'][\'cellModel\']", expectedCellModel);
-        testElementValue(test, "netParams.popParams[\'"+expectedName+"\'][\'cellType\']", expectedCellType);
+        testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellModel\']", expectedCellModel);
+        testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellType\']", expectedCellType);
         testElementValue(test, "popParamsDimensions", expectedDimensions);
       });
     }, 5000);
@@ -977,10 +968,10 @@ function exploreRangeComponent(test, model, axis, norm) {
       test.assertExist(elementID, "SelectField in " + axis + "-axis EXISTS");
     })
     click(elementID)
-    casper.then(function(){
+    casper.then(function() {
       casper.waitForSelector(secondElementID, function() {
         test.assertExist(secondElementID, norm + " menu item in " + axis + "-axis EXISTS");
-        casper.thenClick(secondElementID, function(){
+        casper.thenClick(secondElementID, function() {
           casper.wait(500, function() {
             casper.waitForSelector(elementID.replace('Select', '') + "MinRange", function() {
               test.assertExist(elementID.replace('Select', '') + "MinRange", norm + " min in " + axis + "-axis EXISTS");
@@ -989,7 +980,7 @@ function exploreRangeComponent(test, model, axis, norm) {
           })
         })
       });
-    })  
+    })
   })
 };
 /************************************************
