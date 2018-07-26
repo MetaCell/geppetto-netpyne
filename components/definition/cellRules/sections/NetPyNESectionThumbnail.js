@@ -52,7 +52,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
     return (
       <div>
       <RaisedButton
-        id={"sectionThumb"+this.props.name.replace(" ", "")}
+        id={this.props.name}
         onMouseEnter={this.handleHoverIn}
         onMouseLeave={this.handleHoverOut}
         primary={true} 

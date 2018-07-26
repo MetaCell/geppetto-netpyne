@@ -92,13 +92,13 @@ export default class NetPyNESection extends React.Component {
       content = (
         <div>
       
-        <TextField
-          id={"cellParamsSectionName"}
-          onChange={this.handleRenameChange}
-          value = {this.state.currentName}
-          floatingLabelText="The name of the section"
-          className={"netpyneField"}
-        />
+          <TextField
+            id={"cellParamsSectionName"}
+            onChange={this.handleRenameChange}
+            value = {this.state.currentName}
+            floatingLabelText="The name of the section"
+            className={"netpyneField"}
+          />
           <br /><br />
           <IconButton
             id={"cellParamsGoMechsButton"}
@@ -115,19 +115,19 @@ export default class NetPyNESection extends React.Component {
 
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
-          <PythonControlledTextField id={"sectionDiam"} model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.L" >
-          <PythonControlledTextField id={"sectionL"} model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
-          <PythonControlledTextField id={"sectionRa"} model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.cm" >
-          <PythonControlledTextField id={"sectionCm"} model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
+          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.pt3d" className="listStyle">
@@ -141,7 +141,6 @@ export default class NetPyNESection extends React.Component {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.topol.parentSec" >
           <PythonMethodControlledSelectField
-            id={"sectionParentSec"}
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"}
             method={"netpyne_geppetto.getAvailableSections"}
             postProcessItems={this.postProcessMenuItems}
@@ -151,7 +150,6 @@ export default class NetPyNESection extends React.Component {
         
         <NetPyNEField id="netParams.cellParams.secs.topol.parentX" >
           <PythonControlledTextField
-            id={"sectionParentX"}
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"}
           />
         </NetPyNEField>
@@ -159,7 +157,6 @@ export default class NetPyNESection extends React.Component {
         
         <NetPyNEField id="netParams.cellParams.secs.topol.childX" >
           <PythonControlledTextField
-            id={"sectionChildX"}
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} 
           />
         </NetPyNEField>

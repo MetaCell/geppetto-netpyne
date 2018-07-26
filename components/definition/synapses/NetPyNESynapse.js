@@ -89,7 +89,6 @@ export default class NetPyNESynapse extends React.Component {
         <div>
           <NetPyNEField id="netParams.synMechParams.tau1">
             <PythonControlledTextField
-              id={"synMechTau1"}
               model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
@@ -97,7 +96,6 @@ export default class NetPyNESynapse extends React.Component {
           {(this.state.synMechMod=="Exp2Syn")?<div>
             <NetPyNEField id="netParams.synMechParams.tau2">
               <PythonControlledTextField
-                id={"synMechTau2"}
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
             </NetPyNEField>
@@ -105,7 +103,6 @@ export default class NetPyNESynapse extends React.Component {
           
           <NetPyNEField id="netParams.synMechParams.e" >
             <PythonControlledTextField
-              id={"synMechE"}
               model={"netParams.synMechParams['" + this.props.name + "']['e']"}
             />
           </NetPyNEField>
