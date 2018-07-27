@@ -5,6 +5,8 @@ define(function (require) {
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
         var NetPyNETabs = require('./NetPyNETabs').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
+        var Console = require('../../js/components/interface/console/Console');
+		var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
         injectTapEventPlugin();
 
         function App() {
@@ -16,17 +18,6 @@ define(function (require) {
 
                     <div id="footer">
                         <div id="footerHeader">
-                            <div id="consoleButtonContainer">
-                                <ul className="btn nav nav-tabs" role="tablist" id="tabButton">
-                                    <li role="presentation" className="active" id="consoleButton"><a href="#console" aria-controls="console" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Console</a></li>
-                                    <li role="presentation" id="pythonConsoleButton" style={{ display: 'none' }}><a href="#pythonConsole" aria-controls="pythonConsole" role="tab" data-toggle="tab"><i className="fa fa-terminal"></i> Python</a></li>
-                                </ul>
-                                <div className='netpyneversion'>NetPyNE UI Alpha version 0.4</div>
-                                <div className="tab-content">
-                                    <div role="tabpanel" className="tab-pane active" id="console">Console Loading...</div>
-                                    <div role="tabpanel" id="pythonConsole" className="tab-pane  panel panel-default"></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,9 +25,8 @@ define(function (require) {
         }
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
-        GEPPETTO.ComponentFactory.addComponent('CONSOLE', {}, document.getElementById("console"));
         var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb";
-        GEPPETTO.ComponentFactory.addComponent('PYTHONCONSOLE', { pythonNotebookPath: pythonNotebookPath }, document.getElementById("pythonConsole"));
+        GEPPETTO.ComponentFactory.addComponent('DRAWER', {children: [Console, PythonConsole], childrenProp: [null, { pythonNotebookPath: pythonNotebookPath }], labels: ["Console", "Python"], iconClass: ["fa fa-terminal", "fa fa-flask"]}, document.getElementById("footerHeader"));
 
         GEPPETTO.G.setIdleTimeOut(-1);
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
