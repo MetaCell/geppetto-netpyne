@@ -40,7 +40,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     casper.echo("######## Testing landping page contents and layout ######## ");
     testLandingPage(test);
   });
-
+  
   casper.then(function() { //test initial state of consoles
     casper.echo("######## Test Consoles ######## ");
     testConsoles(test);
@@ -55,32 +55,32 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     casper.echo("######## Test Add Cell Rule ######## ");
     addCellRule(test);
   });
-
+  
   casper.then(function() { // test adding a synapse rule using UI
     casper.echo("######## Test Add Synapse ######## ");
     addSynapse(test);
   });
-
+  
   casper.then(function() { // test adding a connection using UI
     casper.echo("######## Test Add Connection Rule ######## ");
     addConnection(test);
   });
-
+  
   casper.then(function() { // test adding a stimulus  source using UI
     casper.echo("######## Test Add stim Source Rule ######## ");
     addStimSource(test);
   });
-
+  
   casper.then(function() { // test adding a stimulus target using UI
     casper.echo("######## Test Add stimTarget Rule ######## ");
     addStimTarget(test);
   });
-
+  
   casper.then(function() { // test config 
     casper.echo("######## Test default simConfig ######## ");
     checkSimConfigParams(test);
   });
-
+  
   casper.then(function() { //test full netpyne loop using a demo project
     casper.echo("######## Running Demo ######## ");
     var demo = "from netpyne_ui.tests.tut3 import netParams, simConfig \n" +
@@ -88,12 +88,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
       "netpyne_geppetto.simConfig=simConfig";
     loadModelUsingPython(test, demo);
   });
-
+  
   casper.then(function() { //test explore network tab functionality
     casper.echo("######## Test Explore Network Functionality ######## ");
     exploreNetwork(test);
   });
-
+  
   casper.then(function() { //test simulate network tab functionality
     casper.echo("######## Test Simulate Network Functionality ######## ");
     simulateNetwork(test);
@@ -156,27 +156,30 @@ function loadConsole(test, consoleButton, consoleContainer) {
  * Create  population  rule  using  the  add  button *
  *****************************************************/
 function addPopulation(test) {
-  message("add new popParams rule")
-  casper.click('#Populations'); //open Pop Card
-  casper.then(function() { // check add pop button exist 
-    casper.waitUntilVisible('button[id="newPopulationButton"]', function() {
-      test.assertExist('button[id="newPopulationButton"]', "add population button exists")
-    });
+  message("add popParams rule")
+  casper.waitForSelector('#Populations', function(){
+    casper.thenClick('#Populations'); //open Pop Card
+    casper.then(function() { // check add-pop button exist 
+      casper.waitUntilVisible('button[id="newPopulationButton"]', function() {
+        test.assertExist('button[id="newPopulationButton"]', "add population button exists")
+      });
+    })
   })
+  
   casper.thenClick('button[id="newPopulationButton"]', function() { //add new population
     test.assertExists('button[id="Population"]', "Pop thumbnail Exists");
     casper.wait(1000, function() {
       this.echo("waited for metadata")
     });
   })
-  message("check popParams fields")
-  casper.then(function() { // check all fields exist
+  message("checking popParams fields")
+  casper.then(function(){//populate some fields
     test.assertExists("#populationName", "Pop name Exists");
-    assertExist(test, "netParams.popParams[\'Population\'][\'cellType\']")
-    assertExist(test, "netParams.popParams[\'Population\'][\'cellModel\']")
-    test.assertExists("#popParamsDimensionsSelect", "Pop dimensions selectField Exists");
+    setInputValue(test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
+    setInputValue(test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
   })
-  casper.then(function() { //check MenuItems for Dimension exist
+  
+  casper.then(function() { //check MenuItems for DimensionSelectField exist
     click("#popParamsDimensionsSelect");
     casper.waitForSelector("#popParamSgridSpacing", function() {
       test.assertExist("#popParamSnumCells", "Pop numCells menuItem Exist");
@@ -184,8 +187,8 @@ function addPopulation(test) {
       test.assertExist("#popParamSgridSpacing", "Pop gridSpacing menuItem Exist");
     });
   })
-  casper.thenClick("#popParamSnumCells", function() { //check 1st menuItem shows field
-    test.assertExist("#popParamsDimensions", "Pop numCells field Exist");
+  casper.thenClick("#popParamSdensity", function() { //check 3st menuItem shows field
+    test.assertExist("#popParamSgridSpacing", "Pop gridSpacing field Exist");
   })
   casper.then(function() { //click SelectField again
     click("#popParamsDimensionsSelect")
@@ -196,51 +199,107 @@ function addPopulation(test) {
   casper.then(function() { //click SelectField again
     click("#popParamsDimensionsSelect")
   })
-  casper.thenClick("#popParamSdensity", function() { //check 3st menuItem shows field
-    test.assertExist("#popParamSgridSpacing", "Pop gridSpacing field Exist");
+  casper.thenClick("#popParamSnumCells", function() { //check 1st menuItem shows field
+    setInputValue(test, "popParamsDimensions", 20)
   })
-
-  casper.thenClick('#spatialDistPopTab', function() { //go to second tab in population
+  casper.then(function(){// let python receive changes
+    casper.wait(1500)
+  })
+  
+  message("checking spatial distribution fields")
+  casper.thenClick('#spatialDistPopTab', function() { //go to second tab (spatial distribution)
     casper.waitForSelector("#xRangePopParamsSelect", function() {
       exploreRangeComponent(test, "PopParams", "x", "Absolute");
-      exploreRangeComponent(test, "PopParams", "x", "Normalized");
-      exploreRangeComponent(test, "PopParams", "y", "Absolute");
       exploreRangeComponent(test, "PopParams", "y", "Normalized");
       exploreRangeComponent(test, "PopParams", "z", "Absolute");
+      exploreRangeComponent(test, "PopParams", "x", "Normalized");
+      exploreRangeComponent(test, "PopParams", "y", "Absolute");
       exploreRangeComponent(test, "PopParams", "z", "Normalized");
     })
   })
-  message("add and delete populations")
-  casper.then(function() { //back to General tab
-    casper.click('#generalPopTab');
-    casper.waitForSelector("#populationName", function() {
-      test.assertExists("#populationName", "come back to general tab");
+  casper.then(function(){ // populate fields with correct and wrong values
+    setInputValue(test, "xRangePopParamsMinRange", 0.1)
+    setInputValue(test, "xRangePopParamsMaxRange", 0.9)
+    setInputValue(test, "yRangePopParamsMinRange", 100)
+    setInputValue(test, "yRangePopParamsMaxRange", 900)
+    setInputValue(test, "zRangePopParamsMinRange", 0.2)
+    setInputValue(test, "zRangePopParamsMaxRange", "A")
+    casper.then(function(){//let python receive data
+      casper.wait(2000) 
     })
-  });
+  })
+  casper.then(function(){
+    leaveReEnterTab(test, "spatialDistPopTab", "xRangePopParamsSelect", "generalPopTab", "populationName", "div")
+  })
+  
+  casper.then(function(){ // check values after leaving current tab
+    casper.wait(1500, function(){// let pyhton populate fields
+      testElementValue(test, "xRangePopParamsMinRange", "0.1");
+      testElementValue(test, "xRangePopParamsMaxRange", "0.9");
+      testElementValue(test, "yRangePopParamsMinRange", "100");
+      testElementValue(test, "yRangePopParamsMaxRange", "900");
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+    })
+  })
+  
+  message("rename pop and check data is preserved")
+  casper.thenClick('#generalPopTab', function() { //go to second tab (spatial distribution)
+    renameRule(test, "populationName", "newPop1")
+    colapseReOpenCard(test, "Populations", "newPopulationButton")
+  })
+  casper.then(function(){
+    testElementValue(test, "populationName", "newPop1");
+    testElementValue(test, "netParams.popParams[\'newPop1\'][\'cellType\']", "PYR");
+    testElementValue(test, "netParams.popParams[\'newPop1\'][\'cellModel\']", "HH");
+    testElementValue(test, "popParamsDimensions", "20");
+  })
+  casper.thenClick('#spatialDistPopTab', function() { //go to second tab (spatial distribution)
+    casper.wait(1000, function(){//wait for python to populate fields
+      testElementValue(test, "xRangePopParamsMinRange", "0.1");
+      testElementValue(test, "xRangePopParamsMaxRange", "0.9");
+      testElementValue(test, "yRangePopParamsMinRange", "100");
+      testElementValue(test, "yRangePopParamsMaxRange", "900");
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+    })
+  })
 
+  message("check delete populations")
   casper.thenClick('button[id="newPopulationButton"]', function() { //add second population
-    casper.waitUntilVisible('button[id="Population 2"]', function() {
-      test.assertExist('button[id="Population 2"]', "Population 2 thumbnail added");
+    casper.waitUntilVisible('button[id="Population"]', function() {
+      test.assertExist('button[id="Population"]', "Population thumbnail added");
     });
   })
-  casper.then(function() { //delete first population
-    delThumbnail("Population")
-    casper.waitWhileVisible('button[id="Population"]', function() {
-      test.assertDoesntExist('button[id="Population"]', "Population deletion");
+  casper.then(function(){
+    casper.wait(1500, function(){//let pyhton populate fields
+      testElementValue(test, "populationName", "Population");
+      testElementValue(test, "netParams.popParams[\'Population\'][\'cellType\']", "");
+      testElementValue(test, "netParams.popParams[\'Population\'][\'cellModel\']", "");
+      assertDoesntExist(test, "popParamsDimensions");
     })
+  })
+  casper.thenClick('#spatialDistPopTab', function() { //go to second tab (spatial distribution)
+    casper.wait(1000, function(){//wait for python to populate fields
+      assertDoesntExist(test, "xRangePopParamsMinRange");
+      assertDoesntExist(test, "xRangePopParamsMaxRange");
+      assertDoesntExist(test, "yRangePopParamsMinRange");
+      assertDoesntExist(test, "yRangePopParamsMaxRange");
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+      assertDoesntExist(test, "zRangePopParamsMaxRange")
+    })
+  })
+    
+  delThumbnail("Population")
+  casper.waitWhileVisible('button[id="Population"]', function() {
+    test.assertDoesntExist('button[id="Population"]', "Population deletion");
   })
 
-  casper.then(function() { // delete second population
-    delThumbnail("Population 2")
-    casper.waitWhileVisible('button[id="Population 2"]', function() {
-      test.assertDoesntExist('button[id="Population 2"]', "Population 2 deletion");
-    })
-  })
   message("colapse popParams card")
   casper.thenClick("#Populations", function() { // colapse card
     casper.waitWhileVisible('button[id="newPopulationButton"]', function() {
       test.assertDoesntExist('button[id="newPopulationButton"]', "Populations view collapsed");
-    }, 5000);
+    });
   });
 }
 
@@ -762,7 +821,7 @@ function addStimTarget(test) {
  *************************************/
 function checkSimConfigParams(test) {
   casper.thenClick('#Configuration', function() { // expand configuration Card
-    casper.wait(100)
+    casper.wait(1500)
   });
   assertExist(test, "simConfig.hParams")
   assertExist(test, "simConfig.hParams")
@@ -787,7 +846,7 @@ function checkSimConfigParams(test) {
   testCheckBoxValue(test, "simConfig.printSynsAfterRule", false);
 
   casper.thenClick("#configRecord", function() { //go to record tab
-    casper.wait(1000);
+    casper.wait(1500);
   });
   assertExist(test, "simConfig.recordLFP")
   assertExist(test, "simConfig.recordCells")
@@ -797,7 +856,7 @@ function checkSimConfigParams(test) {
   testCheckBoxValue(test, "simConfig.recordStim", false);
 
   casper.thenClick("#configSaveConfiguration", function() { //go to saveConfig tab
-    casper.wait(1000)
+    casper.wait(1500)
   });
   assertExist(test, "simConfig.simLabel")
   assertExist(test, "simConfig.saveFolder")
@@ -822,13 +881,13 @@ function checkSimConfigParams(test) {
   testCheckBoxValue(test, "simConfig.saveTiming", false);
 
   casper.thenClick("#configErrorChecking", function() { //go to checkError tab
-    casper.wait(1000)
+    casper.wait(1500)
   });
   testCheckBoxValue(test, "simConfig.checkErrors", false);
   testCheckBoxValue(test, "simConfig.checkErrorsVerbose", false);
 
   casper.thenClick("#confignetParams", function() { //go to network configuration tab
-    casper.wait(1000)
+    casper.wait(1500)
   });
   assertExist(test, "netParams.scaleConnWeightModels")
   testElementValue(test, "netParams.scale", "1");
@@ -848,6 +907,58 @@ function checkSimConfigParams(test) {
 /*******************************************************
  *                    functions                        *
  *******************************************************/
+
+function leaveReEnterTab(test, mainTabID, mainTabElementID, secondTabID, SecondTabElementID, mainElementType="input") {
+  casper.thenClick('button[id="'+secondTabID+'"]', function() {
+    casper.waitForSelector('input[id="'+SecondTabElementID+'"]', function() {
+      test.assertExists('input[id="'+SecondTabElementID+'"]', "leave current tab");
+    })
+  }); 
+  casper.thenClick('button[id="'+mainTabID+'"]', function() {
+    casper.wait(1000, function() {
+      casper.waitForSelector(mainElementType+'[id="'+mainTabElementID+'"]', function() {
+        test.assertExists(mainElementType+'[id="'+mainTabElementID+'"]', "re-enter current tab");
+      })
+    })
+  })
+  casper.then(function(){
+    casper.wait(1000) //wait for python to populate fields
+  })
+}
+function colapseReOpenCard(test, cardID, buttonID){
+  casper.thenClick("#"+cardID, function() {
+    assertDoesntExist(test, buttonID, "button")
+  });
+  casper.thenClick("#"+cardID, function() {
+    assertExist(test, buttonID, "button")
+  })
+}
+function renameRule(test, elementID, value){
+  casper.then(function(){
+    casper.wait(2500, function(){
+      casper.waitForSelector("#"+elementID, function(){
+        casper.then(function(){
+          casper.sendKeys("#"+elementID, value, {reset: true})
+        })
+      })
+    })
+    casper.wait(1500)
+  })
+}
+
+function setInputValue(test, elementID, value){
+  casper.then(function(){
+    assertExist(test, elementID)
+    casper.thenEvaluate(function(elementID, value){
+      var element = document.getElementById(elementID);
+      var ev = new Event('input', { bubbles: true});
+      ev.simulated = true;
+      element.value = value;
+      element.dispatchEvent(ev);
+    }, elementID, value);
+  })
+}
+
 function message(message) {
   casper.then(function() {
     this.echo("------" + message + "-----")
@@ -857,15 +968,15 @@ function message(message) {
 function assertExist(test, elementID, component = "input") {
   casper.then(function() {
     this.waitForSelector(component + '[id="' + elementID + '"]', function() {
-      test.assertExist(component + '[id="' + elementID + '"]', elementID + " " + component + " exist")
+      test.assertExist(component + '[id="' + elementID + '"]')
     })
   })
 }
 
-function assertDoesntExist(test, elementID, component = "input") {
+function assertDoesntExist(test, elementID, component = "input", message=false) {
   casper.then(function() {
     this.waitWhileSelector(component + '[id="' + elementID + '"]', function() {
-      test.assertDoesntExist(component + '[id="' + elementID + '"]', elementID + " " + component + " does not exist")
+      test.assertDoesntExist(component + '[id="' + elementID + '"]')
     })
   })
 }
@@ -902,19 +1013,20 @@ function testCheckBoxValue(test, elementID, expectedName) {
 }
 
 function delThumbnail(elementID) {
-  casper.wait(500)
   casper.then(function() {
     casper.waitForSelector('button[id="' + elementID + '"]', function() {
-      casper.mouse.doubleclick('button[id="' + elementID + '"]');
+      casper.mouse.click('button[id="' + elementID + '"]');
     })
   })
   casper.then(function() {
-    casper.wait(500)
-  })
-  casper.thenClick('button[id="' + elementID + '"]', function() {
-    casper.wait(500)
+    casper.mouse.move('button[id="' + elementID + '"]', function(){
+      casper.mouse.click('button[id="' + elementID + '"]');
+    });
   })
   casper.then(function() {
+    casper.mouse.click('button[id="' + elementID + '"]')
+  })
+  casper.then(function(){
     casper.waitUntilVisible('button[id="confirmDeletion"]', function() {
       casper.thenClick('button[id="confirmDeletion"]')
     })
@@ -941,20 +1053,19 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
     this.echo("------Testing population button " + buttonSelector);
     casper.waitUntilVisible(buttonSelector, function() {
       test.assertExists(buttonSelector, "Population " + expectedName + " correctly created");
-      casper.click('#' + expectedName);
-      casper.then(function() { //give it time so metadata gets loaded
-        casper.wait(2000, function() {
-          this.echo("I've waited a second for metadata to be populated")
-        });
-      });
-      this.echo('Population metadata loaded.');
-      casper.then(function() { //test metadata contents
-        testElementValue(test, "populationName", expectedName);
-        testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellModel\']", expectedCellModel);
-        testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellType\']", expectedCellType);
-        testElementValue(test, "popParamsDimensions", expectedDimensions);
-      });
-    }, 5000);
+    })
+  })
+  casper.thenClick('#' + expectedName);// click pop thumbnail
+  casper.then(function() { //let python populate fields
+    casper.wait(2000, function() {
+      this.echo("I've waited a second for metadata to be populated")
+    });
+  });
+  casper.then(function() { //test metadata contents
+    testElementValue(test, "populationName", expectedName);
+    testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellModel\']", expectedCellModel);
+    testElementValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellType\']", expectedCellType);
+    testElementValue(test, "popParamsDimensions", expectedDimensions);
   });
 }
 /**********************************************************************
