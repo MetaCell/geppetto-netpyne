@@ -47,8 +47,9 @@ export default class NetPyNECellRule extends React.Component {
   }
 
   postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+    return pythonData.map((name, index) => (
       <MenuItem
+        id={name+"MenuItem"+index}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
