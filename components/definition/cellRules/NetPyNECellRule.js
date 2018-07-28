@@ -78,19 +78,19 @@ export default class NetPyNECellRule extends React.Component {
             <b>Conditions:</b>
           </div>
 
-          <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-            <PythonMethodControlledSelectField
-              model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
-              method={"netpyne_geppetto.getAvailableCellModels"}
-              postProcessItems={this.postProcessMenuItems}
-              multiple={true}
-            />
-          </NetPyNEField>
-
           <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
             <PythonMethodControlledSelectField
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
               method={"netpyne_geppetto.getAvailableCellTypes"}
+              postProcessItems={this.postProcessMenuItems}
+              multiple={true}
+            />
+          </NetPyNEField>
+          
+          <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
+            <PythonMethodControlledSelectField
+              model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
+              method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
               multiple={true}
             />
