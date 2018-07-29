@@ -74,9 +74,9 @@ export default class NetPyNESection extends React.Component {
   
   postProcessMenuItems(pythonData, selected) {
     if (pythonData[this.props.cellRule]!= undefined) {
-      return pythonData[this.props.cellRule].map((name, index) => (
+      return pythonData[this.props.cellRule].map((name) => (
         <MenuItem
-          id={name+"MenuItem"+index}
+          id={name+"MenuItem"}
           key={name}
           value={name}
           primaryText={name}

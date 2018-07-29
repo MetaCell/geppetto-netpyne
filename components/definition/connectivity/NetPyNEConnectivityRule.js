@@ -63,6 +63,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
   postProcessMenuItems(pythonData, selected) {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -81,7 +82,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       var content =
         <div>
           <TextField
-            id={this.props.name}
+            id={"ConnectivityName"}
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
@@ -106,7 +107,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={(pythonData, selected) => {
-                return pythonData.map((name) => (<MenuItem key={name} value={name} primaryText={name} />));
+                return pythonData.map((name) => (<MenuItem id={name+"MenuItem"}key={name} value={name} primaryText={name} />));
               }}
             />
           </NetPyNEField>
