@@ -134,7 +134,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
           subtitle="Define here the rules to connect stimulation sources to targets in your network"
           actAsExpander={true}
           showExpandableButton={true}
-          id="stimTargets"
+          id="StimulationTargets"
         />
         {content}
       </Card>

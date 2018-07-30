@@ -46,10 +46,10 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   //   testConsoles(test);
   // });
 
-  // casper.then(function() { // test adding a population using UI
-  //   casper.echo("######## Test Add Population ######## ");
-  //   addPopulation(test);
-  // });
+  casper.then(function() { // test adding a population using UI
+    casper.echo("######## Test Add Population ######## ");
+    addPopulation(test);
+  });
   // 
   // casper.then(function() { // test adding a cell rule using UI
   //   casper.echo("######## Test Add Cell Rule ######## ");
@@ -70,11 +70,11 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     casper.echo("######## Test Add stim Source Rule ######## ");
     addStimSource(test);
   });
-  // 
-  // casper.then(function() { // test adding a stimulus target using UI
-  //   casper.echo("######## Test Add stimTarget Rule ######## ");
-  //   addStimTarget(test);
-  // });
+  
+  casper.then(function() { // test adding a stimulus target using UI
+    casper.echo("######## Test Add stimTarget Rule ######## ");
+    addStimTarget(test);
+  });
   // 
   // casper.then(function() { // test config 
   //   casper.echo("######## Test default simConfig ######## ");
@@ -161,29 +161,29 @@ function addPopulation(test) {
     create2rules(test, "Populations", "newPopulationButton", "Population")
   })
   
-  message("populate")
-  casper.then(function() { //populate rule 1
-    populatePopParams(test)
-  })
-  
-  message("check")
-  casper.then(function() { // focus on rule 2
-    this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "Population 2", "populationName")
-  })
-  casper.then(function() { // check rule 2 is empty
-    checkPopParamsValues(test, "Population 2", true)
-  })
-  
-  casper.then(function() { //focus on rule 1
-    this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "Population", "populationName")
-  })
-  
-  casper.then(function() { // check rule 1 is populated
-    checkPopParamsValues(test, "Population")
-  })
-  
+  // message("populate")
+  // casper.then(function() { //populate rule 1
+  //   populatePopParams(test)
+  // })
+  // 
+  // message("check")
+  // casper.then(function() { // focus on rule 2
+  //   this.echo("moved to second rule -> should be empty")
+  //   selectThumbRule(test, "Population 2", "populationName")
+  // })
+  // casper.then(function() { // check rule 2 is empty
+  //   checkPopParamsValues(test, "Population 2", true)
+  // })
+  // 
+  // casper.then(function() { //focus on rule 1
+  //   this.echo("moved to first rule -> should be populated")
+  //   selectThumbRule(test, "Population", "populationName")
+  // })
+  // 
+  // casper.then(function() { // check rule 1 is populated
+  //   checkPopParamsValues(test, "Population")
+  // })
+  // 
   message("rename")
   casper.then(function() { // delete rule 2
     delThumbnail(test, "Population 2")
@@ -196,10 +196,10 @@ function addPopulation(test) {
   casper.then(function() { //rename rule 1
     renameRule(test, "populationName", "newPop")
   })
-  
-  casper.then(function() { // check rule 1 is populated
-    checkPopParamsValues(test, "newPop")
-  })
+  // 
+  // casper.then(function() { // check rule 1 is populated
+  //   checkPopParamsValues(test, "newPop")
+  // })
   
   casper.then(function(){ // add rules to test other cards
     addTestPops(test)
@@ -560,33 +560,33 @@ function addConnection(test) {
 function addStimSource(test) {
   message("create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "SimulationSources", "newStimulationSourceButton", "stim_source")
+    create2rules(test, "StimulationSources", "newStimulationSourceButton", "stim_source")
   })
   
-  message("populate")
-  casper.then(function() { // populate rule 1
-    populateStimSourceRule(test)
-  })
-  
-  message("check")
-  casper.then(function() { // focus on rule 2
-    this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "stim_source 2", "sourceName")
-  })
-  
-  casper.then(function() { // check rule 2 is empty
-    checkStimSourceEmpty(test, "stim_source 2")
-  })
-  
-  casper.then(function() { //focus on rule 1
-    this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "stim_source", "sourceName")
-  })
-  
-  casper.then(function() { // check rule 1 is populated
-    checkStimSourceValues(test, "stim_source")
-  })
-  
+  // message("populate")
+  // casper.then(function() { // populate rule 1
+  //   populateStimSourceRule(test)
+  // })
+  // 
+  // message("check")
+  // casper.then(function() { // focus on rule 2
+  //   this.echo("moved to second rule -> should be empty")
+  //   selectThumbRule(test, "stim_source 2", "sourceName")
+  // })
+  // 
+  // casper.then(function() { // check rule 2 is empty
+  //   checkStimSourceEmpty(test, "stim_source 2")
+  // })
+  // 
+  // casper.then(function() { //focus on rule 1
+  //   this.echo("moved to first rule -> should be populated")
+  //   selectThumbRule(test, "stim_source", "sourceName")
+  // })
+  // 
+  // casper.then(function() { // check rule 1 is populated
+  //   checkStimSourceValues(test, "stim_source")
+  // })
+  // 
   message("rename")
   casper.then(function() { // delete rule 2
     delThumbnail(test, "stim_source 2")
@@ -599,13 +599,16 @@ function addStimSource(test) {
   casper.then(function() { //rename rule 1
     renameRule(test, "sourceName", "newStimSource")
   })
-  
-  casper.then(function() { // check rule 1 is populated
-    checkStimSourceValues(test, "newStimSource")
+  casper.then(function(){// delete delete delete delete 
+    this.wait(2000)
   })
   
+  // casper.then(function() { // check rule 1 is populated
+  //   checkStimSourceValues(test, "newStimSource")
+  // })
+  
   message("leave")
-  casper.thenClick('#SimulationSources', function() {
+  casper.thenClick('#StimulationSources', function() {
     assertDoesntExist(test, "newStimulationSourceButton", "collapse card")
   });
 }
@@ -613,60 +616,55 @@ function addStimSource(test) {
  * Create  StimTarget  rule  using  the  add  button *
  *****************************************************/
 function addStimTarget(test) {
-  message("add stimTarget rule")
-  casper.then(function() { //expand card
-    casper.click('#stimTargets');
-    casper.waitUntilVisible('button[id="newStimulationTargetButton"]', function() {
-      casper.click('#newStimulationTargetButton');
-    })
-  });
-  casper.then(function() { //check new stimTarget rule was created
-    assertExist(test, "stim_target", "button")
+  message("create")
+  casper.then(function() { // create 2 rules
+    create2rules(test, "StimulationTargets", "newStimulationTargetButton", "stim_target")
   })
-
-  message("explore stimTargetParams rule fields")
-  casper.then(function() { //check fields exist
-    test.assertExist("#targetName", "stimTarget name field exist")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'source\']", "div")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'sec\']")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'loc\']")
+  
+  message("populate")
+  casper.then(function() { // populate rule 1
+    populateStimTargetRule(test)
   })
-
-  message("explore stimTargeParams rule conditions")
-  casper.then(function() { // move to conds tab
-    casper.waitUntilVisible('button[id="stimTargetCondsTab"]', function() {
-      casper.click("#stimTargetCondsTab");
-    })
+  
+  message("check")
+  casper.then(function() { // focus on rule 2
+    this.echo("moved to second rule -> should be empty")
+    selectThumbRule(test, "stim_target 2", "targetName")
   })
-  casper.then(function() { // check conds fields exist
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'pop\']", "div")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellModel\']", "div")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellType\']", "div")
+  
+  casper.then(function() { // check rule 2 is empty
+    checkStimTargetValues(test, "stim_target 2", true)
   })
-  casper.then(function() { // test range component
-    exploreRangeComponent(test, "StimTarget");
-  });
-  casper.then(function() {
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']")
-    assertExist(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']AddButton", "button")
+  
+  casper.then(function() { //focus on rule 1
+    this.echo("moved to first rule -> should be populated")
+    selectThumbRule(test, "stim_target", "targetName")
   })
-
-  message("delete stimTargetParams rules")
-  casper.thenClick("#newStimulationTargetButton", function() { //add new stim target rule
-    assertExist(test, "stim_target 2", "button")
+  
+  casper.then(function() { // check rule 1 is populated
+    checkStimTargetValues(test, "stim_target")
   })
-  casper.then(function() { // delete target rule 1
-    delThumbnail(test, "stim_target")
-    assertDoesntExist(test, "stim_target", "button")
-  })
-  casper.then(function() { //delete target rule 2
+  
+  message("rename")
+  casper.then(function() { // delete rule 2
     delThumbnail(test, "stim_target 2")
-    assertDoesntExist(test, "stim_target 2", "button")
   })
-
-  message("collapse stimTargetParams rule")
-  casper.thenClick('#stimTargets', function() { //colapse stimTarget card
-    assertDoesntExist(test, "newStimulationTargetButton", "button")
+  
+  casper.then(function() { //focus on rule 1
+    selectThumbRule(test, "stim_target", "targetName")
+  })
+  
+  casper.then(function() { //rename rule 1
+    renameRule(test, "targetName", "newStimTarget")
+  })
+  
+  casper.then(function() { // check rule 1 is populated
+    checkStimTargetValues(test, "newStimTarget")
+  })
+  
+  message("leave")
+  casper.thenClick('#StimulationTargets', function() {
+    assertDoesntExist(test, "newStimulationTargetButton", "collapse card")
   });
 }
 
@@ -757,272 +755,18 @@ function checkSimConfigParams(test) {
   getInputValue(test, "netParams.rotateCellsRandomly", "false");
   getSelectFieldValue(test, "netParams.shape", "cuboid")
 }
-/*******************************************************************************
- *                                functions                                    *
- *******************************************************************************/
-function moveToTab(test, tabID, elementID, elementType){
-  casper.then(function(){
-    this.click('button[id="'+tabID+'"]', function(){
-      this.echo("changing tab...")
-    })
-  })
-  casper.then(function(){
-    this.waitUntilVisible(elementType+'[id="'+elementID+'"]', function(){
-      test.assertExist(elementType+'[id="'+elementID+'"]', "changed tab")
-    })
-  })
-  casper.then(function(){
-    this.wait(2000)
-  })
-}
-function leaveReEnterTab(test, mainTabID, mainTabElementID, secondTabID, SecondTabElementID, mainElementType="input") {
-  casper.thenClick('button[id="'+secondTabID+'"]', function() {
-    this.waitForSelector('input[id="'+SecondTabElementID+'"]')
-  });
-  casper.thenClick('button[id="'+mainTabID+'"]', function() {
-    this.wait(1500)//for python to re-populate fields
-  })
-  casper.then(function() {
-    this.waitForSelector(mainElementType+'[id="'+mainTabElementID+'"]', function() {
-      this.echo("leave and re-enter "+mainTabID+" tab")
-    })
-  })
-  casper.then(function(){
-    this.wait(2000)// for python to repopulate tab
-  })
-}
-//----------------------------------------------------------------------------//
-function leaveReEnterRule(test, mainThumbID, secondThumbID, elementID, type="input"){
-  casper.thenClick('button[id="'+secondThumbID+'"]', function() { //move to another Rule thumbnail
-    this.waitUntilVisible(type+'[id="'+elementID+'"]', function(){
-      this.wait(2000)
-    })
-  })
-  casper.thenClick('button[id="'+mainThumbID+'"]', function(){
-    this.waitUntilVisible(type+'[id="'+elementID+'"]', function(){
-      this.echo("moved to different Rule and came back")
-    })
-  })
-  casper.then(function(){
-    this.wait(2000)
-  })
-}
-//----------------------------------------------------------------------------//
-function renameRule(test, elementID, value){
-  casper.then(function(){
-    this.wait(2500)//let python populate all fields before rename
-  })
-  casper.then(function(){
-    this.waitUntilVisible('input[id="'+elementID+'"]')
-  })
-  casper.then(function(){
-    this.sendKeys('input[id="'+elementID+'"]', value, {reset: true})
-  })
-  casper.then(function(){//let python re-populate fields 
-    this.wait(3000)
-  })
-  casper.then(function(){
-    var currentValue = this.getElementAttribute('input[id="'+elementID+'"]', 'value');
-    test.assertEqual(currentValue, value, "Rule renamed to: " + value)
-  })
-}
 
-function selectThumbRule(test, thumbID, nameFieldID){ // select a thumbnailRule and wait to load data
-  casper.thenClick('button[id="'+thumbID+'"]', function(){// focus on rule 1
-    this.waitUntilVisible('input[id="'+nameFieldID+'"]')
-  })
-  casper.then(function(){
-    this.wait(2000)
-  })
-}
-
-function setInputValue(test, elementID, value){
-  casper.then(function(){
-    casper.waitUntilVisible('input[id="'+elementID+'"]')
-  })
-  casper.thenEvaluate(function(elementID, value){
-    var element = document.getElementById(elementID);
-    var ev = new Event('input', { bubbles: true});
-    ev.simulated = true;
-    element.value = value;
-    element.dispatchEvent(ev);
-  }, elementID, value);
-  casper.then(function(){
-    var newValue = this.getElementAttribute('input[id="'+elementID+'"]', 'value');
-    test.assertEqual(value, newValue, value + " set for: " + elementID)
-  })
-}
-
-function message(message) {
-  casper.then(function() {
-    this.echo("<"+message.toUpperCase()+">")
-  })
-}
-
-function assertExist(test, elementID, component = "input", message=false) {
-  casper.then(function() {
-    this.waitUntilVisible(component + '[id="' + elementID + '"]', function() {
-      test.assertExist(component + '[id="' + elementID + '"]', message?message:component+ ": "+ elementID + " exist")
-    })
-  })
-}
-
-function assertDoesntExist(test, elementID, component = "input", message=false) {
-  casper.then(function() {
-    this.waitWhileSelector(component + '[id="' + elementID + '"]', function() {
-      test.assertDoesntExist(component + '[id="' + elementID + '"]', message?message:component+ ": "+ elementID + " doesn't exist")
-    })
-  })
-}
-
-function setSelectFieldValue(test, selectFieldID, menuItemID){
-  casper.then(function(){// click selectField
-    this.waitUntilVisible('div[id="'+selectFieldID+'"]', function(){
-      var info = casper.getElementInfo('div[id="'+selectFieldID+'"]');
-      this.mouse.click(info.x + 1, info.y + 1)
-    })
-  })
-  casper.then(function(){
-    this.wait(500)//wait for the menuitem animation to finish
-  })
-  casper.then(function(){// click menuItem
-    this.waitUntilVisible('span[id="'+menuItemID+'"]', function(){
-      var info = this.getElementInfo('span[id="'+menuItemID+'"]');
-      this.mouse.click(info.x + 1, info.y + 1)
-    })
-  })
-  casper.then(function(){// click outside selectField
-    var info = this.getElementInfo('div[id="'+selectFieldID+'"]');
-    this.mouse.click(info.x - 10, info.y)
-  })
-  casper.then(function(){
-    this.wait(500)//wait for MenuItem animation to vanish 
-  })
-  casper.then(function(){//check value is ok
-    this.waitWhileVisible('span[id="'+menuItemID+'"]', function(){
-      getSelectFieldValue(test, selectFieldID, menuItemID.includes("MenuItem")?menuItemID.slice(0, -"menuItem".length):menuItemID)
-    })
-  })
-}
-
-function getSelectFieldValue(test, elementID, expected) {
-  casper.then(function() {
-    this.waitUntilVisible('div[id="' + elementID + '"]')
-  })
-  casper.then(function(){
-    var text = this.evaluate(function(elementID) {
-      return document.getElementById(elementID).getElementsByTagName("div")[0].textContent;
-    }, elementID)
-    test.assertEquals(text, expected, (expected?expected:"(empty)") + " found in: " + elementID);
-  });
-}
-
-function getInputValue(test, elementID, expectedName) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]')
-  })
-  casper.then(function(){
-    var name = casper.evaluate(function(elementID) {
-      return $('input[id="' + elementID + '"]').val();
-    }, elementID);
-    test.assertEquals(name, expectedName, (expectedName?expectedName:"(empty)") +" found in: "+elementID);
-  })  
-}
-
-function testCheckBoxValue(test, elementID, expectedName) {
-  casper.then(function(){
-    this.waitForSelector('input[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    var name = casper.evaluate(function(elementID) {
-      return $('input[id="' + elementID + '"]').prop('checked');
-    }, elementID);
-    test.assertEquals(name, expectedName, (expectedName?expectedName:"(empty)") + " found in element: "+elementID);
-  })
-}
-
-function delThumbnail(test, elementID) {
-  casper.then(function() {// click thumbnail
-    this.waitForSelector('button[id="' + elementID + '"]', function() {
-      this.mouse.click('button[id="' + elementID + '"]');
-    })
-  })
-  casper.then(function() {// move mouse into thumbnail
-    this.mouse.move('button[id="' + elementID + '"]')
-  })
-  casper.then(function() {//click thumbnail
-    this.mouse.click('button[id="' + elementID + '"]')
-  })
-  casper.then(function(){//confirm deletion
-    this.waitUntilVisible('button[id="confirmDeletion"]', function() {
-      this.click('button[id="confirmDeletion"]')
-    })
-  })
-  casper.then(function(){
-    this.waitWhileVisible('button[id="'+ elementID+'"]', function(){
-      test.assertDoesntExist('button[id="'+ elementID+'"]', elementID + " button deleted")
-    })
-  })
-}
-
-function click(elementID, type="div") {
-  casper.then(function(){
-    this.waitUntilVisible(type+'[id="'+elementID+'"]')
-  })
-  casper.then(function(){
-    this.evaluate(function(elementID) {
-      document.getElementById(elementID).scrollIntoView();
-    }, elementID);
-  })
-  casper.then(function(){
-    this.waitUntilVisible(type+'[id="'+elementID+'"]')
-  })
-  casper.then(function(){
-    this.wait(500) // wait for animation in dropDownMenu to complete
-  })
-  casper.then(function(){
-    var info = this.getElementInfo(type+'[id="'+elementID+'"]');
-    this.mouse.click(info.x + 1, info.y +1);//move a bit away from corner
-  })
-  casper.then(function(){
-    this.echo("Click on "+ elementID)
-    this.wait(300)
-  })
-}
-
-function create2rules(test, cardID, addButtonID, ruleThumbID){
-  casper.then(function(){
-    this.waitUntilVisible('div[id="'+cardID+'"]', function(){
-      this.click('div[id="'+cardID+'"]'); //open Card
-    })
-  })
-  
-  casper.then(function() { // check ADD button exist
-    this.waitUntilVisible('button[id="'+addButtonID+'"]', function() {
-      test.assertExist('button[id="'+addButtonID+'"]', "open card")
-    });
-  })
-  casper.thenClick('button[id="'+addButtonID+'"]', function() { //add new rule
-    this.waitUntilVisible('button[id="'+ruleThumbID+'"]', function(){
-      test.assertExist('button[id="'+ruleThumbID+'"]', "rule added");
-    })
-  })
-  casper.thenClick('button[id="'+addButtonID+'"]', function() { //add new rule
-    this.waitUntilVisible('button[id="'+ruleThumbID+' 2"]', function(){
-      test.assertExist('button[id="'+ruleThumbID+' 2"]', "rule added");
-    })
-  })
-  casper.thenClick('button[id="'+ruleThumbID+'"]', function(){// focus on first rule
-    this.wait(1000)
-  })
-}
 
 /************************************
  *    Tests    list    component    *
  ************************************/
-function addListItem(test, rute, value){
-  setInputValue(test, rute, value)
-  click(rute+"AddButton", "button")
+function addListItem(test, elementID, value){
+  casper.then(function(){
+    setInputValue(test, elementID, value)
+  })
+  casper.then(function(){
+    click(elementID+"AddButton", "button")  
+  })
 }
 function deleteListItem(test, rule){
   casper.then(function(){
@@ -2028,7 +1772,6 @@ function checkStimSourceEmpty(test, name){
 }
 
 //----------------------------------------------------------------------------//
-
 function checkStimSourceValues(test, name){
   casper.then(function (){
     getInputValue(test, "sourceName", name)
@@ -2036,5 +1779,355 @@ function checkStimSourceValues(test, name){
     setInputValue(test, "netParams.stimSourceParams[\'"+name+"\'][\'del\']", "1")
     setInputValue(test, "netParams.stimSourceParams[\'"+name+"\'][\'dur\']", "2")
     setInputValue(test, "netParams.stimSourceParams[\'"+name+"\'][\'amp\']", "3")
+  })
+}
+/*******************************************************************************
+* --------------------------- STIM-TARGET-PARAMS ----------------------------- *
+********************************************************************************/
+function populateStimTargetRule(test){
+  casper.then(function() { //
+    getInputValue(test, "targetName", "stim_target")
+    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'source\']", "newStimSourceMenuItem")
+    setInputValue(test, "netParams.stimTargetParams['stim_target']['sec']", "soma")
+    setInputValue(test, "netParams.stimTargetParams['stim_target']['loc']", "0.5")
+  })
+  casper.then(function(){
+    this.wait(1000)//for python to receive data
+  })
+  
+  casper.then(function(){
+    moveToTab(test, "stimTargetCondsTab", "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "input")
+  })
+  
+  casper.then(function(){
+    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'pop\']", "PopulationMenuItem")
+    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellModel\']", "IFMenuItem")
+    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellType\']", "GCMenuItem")
+  })
+  casper.then(function() { // test range component
+    populateRangeComponent(test, "StimTarget");
+  });
+  casper.then(function() {
+    addListItem(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "0")
+    addListItem(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "3")
+  })
+  casper.then(function(){
+    this.wait(2000)//for python to receibe data
+  })
+}
+
+//----------------------------------------------------------------------------//
+function checkStimTargetValues(test, name, empty=false){
+  casper.then(function() { //
+    getInputValue(test, "targetName", name)
+    getSelectFieldValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'source\']", !empty?"newStimSource":"")
+    getInputValue(test, "netParams.stimTargetParams['"+name+"']['sec']", !empty?"soma":"")
+    getInputValue(test, "netParams.stimTargetParams['"+name+"']['loc']", !empty?"0.5":"")
+  })
+  
+  casper.then(function(){
+    moveToTab(test, "stimTargetCondsTab", "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellList\']", "input")
+  })
+  
+  casper.then(function(){
+    getSelectFieldValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'pop\']", !empty?"Population":"")
+    getSelectFieldValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellModel\']", !empty?"IF":"")
+    getSelectFieldValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellType\']", !empty?"GC":"")
+  })
+  casper.then(function(){
+    if (empty){
+      checkRangeComponentIsEmpty(test, "StimTarget")
+    } else {
+      testRangeComponent(test, "StimTarget")// check data remained the same
+    }
+  })
+  casper.then(function(){
+    if (empty){
+      assertDoesntExist(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellList\']0")
+    } else {
+      getInputValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellList\']0", "0")
+      getInputValue(test, "netParams.stimTargetParams[\'"+name+"\'][\'conds\'][\'cellList\']1", "3")
+    }
+  })
+}
+/*******************************************************************************
+ *                                functions                                    *
+ *******************************************************************************/
+function moveToTab(test, tabID, elementID, elementType){
+  casper.then(function(){
+    this.click('button[id="'+tabID+'"]', function(){
+      this.echo("changing tab...")
+    })
+  })
+  casper.then(function(){
+    this.waitUntilVisible(elementType+'[id="'+elementID+'"]', function(){
+      test.assertExist(elementType+'[id="'+elementID+'"]', "changed tab")
+    })
+  })
+  casper.then(function(){
+    this.wait(2000)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function leaveReEnterTab(test, mainTabID, mainTabElementID, secondTabID, SecondTabElementID, mainElementType="input") {
+  casper.thenClick('button[id="'+secondTabID+'"]', function() {
+    this.waitForSelector('input[id="'+SecondTabElementID+'"]')
+  });
+  casper.thenClick('button[id="'+mainTabID+'"]', function() {
+    this.wait(1500)//for python to re-populate fields
+  })
+  casper.then(function() {
+    this.waitForSelector(mainElementType+'[id="'+mainTabElementID+'"]', function() {
+      this.echo("leave and re-enter "+mainTabID+" tab")
+    })
+  })
+  casper.then(function(){
+    this.wait(2000)// for python to repopulate tab
+  })
+}
+
+//----------------------------------------------------------------------------//
+function leaveReEnterRule(test, mainThumbID, secondThumbID, elementID, type="input"){
+  casper.thenClick('button[id="'+secondThumbID+'"]', function() { //move to another Rule thumbnail
+    this.waitUntilVisible(type+'[id="'+elementID+'"]', function(){
+      this.wait(2000)
+    })
+  })
+  casper.thenClick('button[id="'+mainThumbID+'"]', function(){
+    this.waitUntilVisible(type+'[id="'+elementID+'"]', function(){
+      this.echo("moved to different Rule and came back")
+    })
+  })
+  casper.then(function(){
+    this.wait(2000)
+  })
+}
+//----------------------------------------------------------------------------//
+function create2rules(test, cardID, addButtonID, ruleThumbID){
+  casper.then(function(){
+    this.waitUntilVisible('div[id="'+cardID+'"]', function(){
+      this.click('div[id="'+cardID+'"]'); //open Card
+    })
+  })
+  
+  casper.then(function() { // check ADD button exist
+    this.waitUntilVisible('button[id="'+addButtonID+'"]', function() {
+      test.assertExist('button[id="'+addButtonID+'"]', "open card")
+    });
+  })
+  casper.thenClick('button[id="'+addButtonID+'"]', function() { //add new rule
+    this.waitUntilVisible('button[id="'+ruleThumbID+'"]', function(){
+      test.assertExist('button[id="'+ruleThumbID+'"]', "rule added");
+    })
+  })
+  casper.thenClick('button[id="'+addButtonID+'"]', function() { //add new rule
+    this.waitUntilVisible('button[id="'+ruleThumbID+' 2"]', function(){
+      test.assertExist('button[id="'+ruleThumbID+' 2"]', "rule added");
+    })
+  })
+  casper.thenClick('button[id="'+ruleThumbID+'"]', function(){// focus on first rule
+    this.wait(1000)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function renameRule(test, elementID, value){
+  casper.then(function(){
+    this.wait(2500)//let python populate all fields before rename
+  })
+  casper.then(function(){
+    this.waitUntilVisible('input[id="'+elementID+'"]')
+  })
+  casper.then(function(){
+    this.sendKeys('input[id="'+elementID+'"]', value, {reset: true})
+  })
+  casper.then(function(){//let python re-populate fields 
+    this.wait(3000)
+  })
+  casper.then(function(){
+    var currentValue = this.getElementAttribute('input[id="'+elementID+'"]', 'value');
+    test.assertEqual(currentValue, value, "Rule renamed to: " + value)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function selectThumbRule(test, thumbID, nameFieldID){ // select a thumbnailRule and wait to load data
+  casper.thenClick('button[id="'+thumbID+'"]', function(){// focus on rule 1
+    this.waitUntilVisible('input[id="'+nameFieldID+'"]')
+  })
+  casper.then(function(){
+    this.wait(2000)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function delThumbnail(test, elementID) {
+  casper.then(function() {// click thumbnail
+    this.waitForSelector('button[id="' + elementID + '"]', function() {
+      this.mouse.click('button[id="' + elementID + '"]');
+    })
+  })
+  casper.then(function() {// move mouse into thumbnail
+    this.mouse.move('button[id="' + elementID + '"]')
+  })
+  casper.then(function() {//click thumbnail
+    this.mouse.click('button[id="' + elementID + '"]')
+  })
+  casper.then(function(){//confirm deletion
+    this.waitUntilVisible('button[id="confirmDeletion"]', function() {
+      this.click('button[id="confirmDeletion"]')
+    })
+  })
+  casper.then(function(){
+    this.waitWhileVisible('button[id="'+ elementID+'"]', function(){
+      test.assertDoesntExist('button[id="'+ elementID+'"]', elementID + " button deleted")
+    })
+  })
+}
+
+//----------------------------------------------------------------------------//
+function setInputValue(test, elementID, value){
+  casper.then(function(){
+    casper.waitUntilVisible('input[id="'+elementID+'"]')
+  })
+  casper.thenEvaluate(function(elementID, value){//this hack breaks for latest React!!!!!
+    var element = document.getElementById(elementID);
+    var ev = new Event('input', { bubbles: true});
+    ev.simulated = true;
+    element.value = value;
+    element.dispatchEvent(ev);
+  }, elementID, value);
+  casper.then(function(){
+    var newValue = this.getElementAttribute('input[id="'+elementID+'"]', 'value');
+    test.assertEqual(newValue, value, value + " set for: " + elementID)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function getInputValue(test, elementID, expectedName) {
+  casper.then(function() {
+    this.waitUntilVisible('input[id="' + elementID + '"]')
+  })
+  casper.then(function(){
+    var name = casper.evaluate(function(elementID) {
+      return $('input[id="' + elementID + '"]').val();
+    }, elementID);
+    test.assertEquals(name, expectedName, (expectedName?expectedName:"(empty)") +" found in: "+elementID);
+  })  
+}
+
+//----------------------------------------------------------------------------//
+function setSelectFieldValue(test, selectFieldID, menuItemID){
+  casper.then(function(){
+    this.evaluate(function(selectFieldID) {
+      document.getElementById(selectFieldID).scrollIntoView();
+    }, selectFieldID);
+  })
+  casper.then(function(){// click selectField
+    this.waitUntilVisible('div[id="'+selectFieldID+'"]', function(){
+      var info = casper.getElementInfo('div[id="'+selectFieldID+'"]');
+      this.mouse.click(info.x + 1, info.y + 1)
+    })
+  })
+  
+  casper.then(function(){
+    this.wait(500)//wait for the menuitem animation to finish
+  })
+  casper.then(function(){// click menuItem
+    this.waitUntilVisible('span[id="'+menuItemID+'"]', function(){
+      var info = this.getElementInfo('span[id="'+menuItemID+'"]');
+      this.mouse.click(info.x + 1, info.y + 1)
+    })
+  })
+  casper.then(function(){// click outside selectField
+    var info = this.getElementInfo('div[id="'+selectFieldID+'"]');
+    this.mouse.click(info.x - 10, info.y)
+  })
+  casper.then(function(){
+    this.wait(500)//wait for MenuItem animation to vanish 
+  })
+  casper.then(function(){//check value is ok
+    this.waitWhileVisible('span[id="'+menuItemID+'"]', function(){
+      getSelectFieldValue(test, selectFieldID, menuItemID.includes("MenuItem")?menuItemID.slice(0, -"menuItem".length):menuItemID)
+    })
+  })
+}
+
+//----------------------------------------------------------------------------//
+function getSelectFieldValue(test, elementID, expected) {
+  casper.then(function() {
+    this.waitUntilVisible('div[id="' + elementID + '"]')
+  })
+  
+  casper.then(function(){
+    var text = this.evaluate(function(elementID) {
+      return document.getElementById(elementID).getElementsByTagName("div")[0].textContent;
+    }, elementID)
+    test.assertEquals(text, expected, (expected?expected:"(empty)") + " found in: " + elementID);
+  });
+}
+
+//----------------------------------------------------------------------------//
+function assertExist(test, elementID, component = "input", message=false) {
+  casper.then(function() {
+    this.waitUntilVisible(component + '[id="' + elementID + '"]', function() {
+      test.assertExist(component + '[id="' + elementID + '"]', message?message:component+ ": "+ elementID + " exist")
+    })
+  })
+}
+
+//----------------------------------------------------------------------------//
+function assertDoesntExist(test, elementID, component = "input", message=false) {
+  casper.then(function() {
+    this.waitWhileSelector(component + '[id="' + elementID + '"]', function() {
+      test.assertDoesntExist(component + '[id="' + elementID + '"]', message?message:component+ ": "+ elementID + " doesn't exist")
+    })
+  })
+}
+
+//----------------------------------------------------------------------------//
+function testCheckBoxValue(test, elementID, expectedName) {
+  casper.then(function(){
+    this.waitForSelector('input[id="' + elementID + '"]')
+  })
+  casper.then(function() {
+    var name = casper.evaluate(function(elementID) {
+      return $('input[id="' + elementID + '"]').prop('checked');
+    }, elementID);
+    test.assertEquals(expectedName, name, (expectedName?expectedName:"(empty)") + " found in element: "+elementID);
+  })
+}
+
+//----------------------------------------------------------------------------//
+function message(message) {
+  casper.then(function() {
+    this.echo("<"+message.toUpperCase()+">")
+  })
+}
+
+//----------------------------------------------------------------------------//
+function click(elementID, type="div") {
+  casper.then(function(){
+    this.waitUntilVisible(type+'[id="'+elementID+'"]')
+  })
+  casper.then(function(){
+    this.evaluate(function(elementID) {
+      document.getElementById(elementID).scrollIntoView();
+    }, elementID);
+  })
+  casper.then(function(){
+    this.waitUntilVisible(type+'[id="'+elementID+'"]')
+  })
+  casper.then(function(){
+    this.wait(500) // wait for animation in dropDownMenu to complete
+  })
+  casper.then(function(){
+    var info = this.getElementInfo(type+'[id="'+elementID+'"]');
+    this.mouse.click(info.x + 1, info.y +1);//move a bit away from corner
+  })
+  casper.then(function(){
+    this.echo("Click on "+ elementID)
+    this.wait(300)
   })
 }

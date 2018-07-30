@@ -68,6 +68,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     };
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
@@ -78,6 +79,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   postProcessMenuItems4SynMech = (pythonData, selected) => {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
