@@ -41,12 +41,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
     testLandingPage(test);
   });
-  
+
   casper.then(function() { //test initial state of consoles
     this.echo("######## Test Consoles ######## ", "INFO");
     testConsoles(test);
   });
-  
+
   casper.then(function() { // test adding a population using UI  
     this.echo("######## Test Add Population ######## ", "INFO");
     addPopulation(test);
@@ -143,7 +143,7 @@ function testLandingPage(test) {
  * Load consoles and test they toggle
  */
 function testConsoles(test) {
-  casper.then(function() { //test existence and toggling of python console
+  casper.then(function() { //test existence and toggling of console
     loadConsole(test, 'pythonConsoleButton', "pythonConsole");
   });
   casper.then(function() { //test existence and toggling of console
@@ -155,18 +155,21 @@ function testConsoles(test) {
  * Load console, and test it hides/shows fine
  */
 function loadConsole(test, consoleButton, consoleContainer) {
-  casper.then(function() {
-    casper.click('#' + consoleButton);
-    casper.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
+  casper.thenClick('li[id="'+consoleButton+'"]', function(){
+    this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
       this.echo(consoleContainer + ' loaded.');
       test.assertExists('div[id="' + consoleContainer + '"]', consoleContainer + " exists");
-      casper.click('#consoleButton');
-      casper.waitWhileVisible('div[id="' + consoleContainer + '"]', function() {
-        this.echo(consoleContainer + ' hidden.');
-        test.assertNotVisible('div[id="' + consoleContainer + '"]', consoleContainer + " no longer visible");
-      }, 5000);
-    }, 5000);
+    })
   });
+  casper.thenClick('li[id="'+consoleButton+'"]', function() {
+    this.waitWhileVisible('div[id="' + consoleContainer + '"]', function() {
+      this.echo(consoleContainer + ' hidden.');
+      test.assertNotVisible('div[id="' + consoleContainer + '"]', consoleContainer + " no longer visible");
+    });
+  })
+  casper.then(function(){
+    this.wait(1000)
+  })
 }
 
 /*****************************************************
@@ -537,16 +540,17 @@ function checkSimConfigParams(test) {
 
 //----------------------------------------------------------------------------//
 function setSimConfigParams(test) {
-  casper.waitUntilVisible('div[id="Configuration"]', function() {
-    this.thenClick('#Configuration', function() { // expand configuration Card
+  casper.then(function() {
+    this.waitUntilVisible('div[id="Configuration"]', function() {
       active = {
         cardID: "Configuration",
         buttonID: "configGeneral",
         tabID: false
       }
-      this.wait(2500) //let python populate fields
-    });
+    })
   })
+  casper.thenClick('#Configuration')
+
   casper.then(function() {
     setInputValue(test, "simConfig.duration", "999");
     setInputValue(test, "simConfig.dt", "0.0249");
@@ -799,7 +803,7 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, e
     })
   })
   casper.then(function() { //give it some time to allow metadata to load
-    casper.wait(500, function() {
+    this.wait(1000, function() {
       this.echo("I've waited a second for metadata to be populated")
     });
   });
@@ -820,11 +824,11 @@ function loadModelUsingPython(test, demo) {
       kernel.execute(demo);
     }, demo);
   });
-  casper.then(function(){
+  casper.then(function() {
     this.waitUntilVisible('#Populations')
   })
 
-  casper.thenClick('#Populations', function(){
+  casper.thenClick('#Populations', function() {
     this.waitUntilVisible('button[id="newPopulationButton"]', function() {
       this.echo("Population view loaded");
     });
@@ -838,12 +842,12 @@ function loadModelUsingPython(test, demo) {
     testPopulation(test, "button#M", "M", "HH", "PYR", "20");
   });
 
-  casper.thenClick('#CellRules',function(){
+  casper.thenClick('#CellRules', function() {
     this.waitUntilVisible('button[id="newCellRuleButton"]', function() {
       this.echo("Cell Rule view loaded");
     });
   })
-    
+
   casper.then(function() { //test a cell rule exists after demo is loaded
     testCellRule(test, "button#PYRrule", "PYRrule", 'div[id="netParams.cellParams[\'PYRrule\'][\'conds\'][\'cellType\']"]', 'div[id="netParams.cellParams[\'PYRrule\'][\'conds\'][\'cellModel\']"]');
   });
@@ -852,76 +856,76 @@ function loadModelUsingPython(test, demo) {
 /******************************************************
  * Test functionality within the explore network view *
  ******************************************************/
- function exploreNetwork(test){
- 	casper.then(function(){
- 		this.echo("------Testing explore network");
- 		test.assertExists('button[id="exploreNetwork"]', "Explore network button exists");
- 		casper.click('#exploreNetwork');
- 		casper.waitUntilVisible('button[id="okInstantiateNetwork"]', function() {
- 			casper.then(function(){
- 				canvasComponentsTests(test);
- 			});
- 			casper.then(function(){ //switch to explore network tab
- 				casper.click('#okInstantiateNetwork');
- 				casper.waitWhileVisible('button[id="okInstantiateNetwork"]', function() {
- 					test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network dialog is gone");
- 					casper.waitWhileVisible('div[id="loading-spinner"]', function() {
- 						test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
- 						this.echo("Testing meshes for network exist and are visible");
- 						testMeshVisibility(test,true, "network.S[0]");
- 						testMeshVisibility(test,true, "network.S[1]");
- 						testMeshVisibility(test,true, "network.S[2]");
- 						testMeshVisibility(test,true, "network.S[18]");
- 						testMeshVisibility(test,true, "network.S[19]");
- 					});
- 				});
- 			});
+function exploreNetwork(test) {
+  casper.then(function() {
+    this.echo("------Testing explore network");
+    test.assertExists('button[id="exploreNetwork"]', "Explore network button exists");
+  })
+  casper.thenClick('#exploreNetwork', function() {
+    this.waitUntilVisible('button[id="okInstantiateNetwork"]', function() {
+      canvasComponentsTests(test);
+    })
+  });
+  casper.thenClick('#okInstantiateNetwork', function() {
+    this.waitWhileVisible('button[id="okInstantiateNetwork"]', function() {
+      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network dialog is gone");
+    })
+  })
+  casper.then(function() {
+    this.waitWhileVisible('div[id="loading-spinner"]', function() {
+      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
+    })
+  })
+  casper.then(function() {
+    this.echo("Testing meshes for network exist and are visible");
+    testMeshVisibility(test, true, "network.S[0]");
+    testMeshVisibility(test, true, "network.S[1]");
+    testMeshVisibility(test, true, "network.S[2]");
+    testMeshVisibility(test, true, "network.S[18]");
+    testMeshVisibility(test, true, "network.S[19]");
+  })
+  casper.thenClick('#PlotButton');
 
- 		});
- 	});
+  casper.then(function() { //wait for plot menu to become visible
+    this.waitUntilVisible('div[role="menu"]', function() {
+      test.assertExists('div[role="menu"]', "Drop down Plot Menu Exists");
+    })
+  })
+  casper.then(function() { // test connection plot comes up
+    testPlotButton(test, "connectionPlot", "Popup1");
+  });
+  
+  casper.then(function() {
+    testPlotButton(test, "2dNetPlot", "Popup1");
+  })
+  
+  casper.then(function(){ // test shape plot comes up
+    testPlotButton(test, "shapePlot", "Popup1");
+  });
+  
+  casper.then(function() {
+    var info = this.getElementInfo('button[id="PlotButton"]');
+    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+  })
+  
+  casper.then(function(){
+    this.wait(1000)
+  })
 
- 	casper.then(function(){ //open up plot menu 
- 		casper.click('#PlotButton');
- 	});
+  casper.then(function() {
+    this.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
+      test.assertDoesntExist('div[role="menu"]', "Drop down Plot Menu is gone");
+    });
+  })
 
- 	casper.then(function(){ //wait for plot menu to become visible
- 		casper.waitUntilVisible('div[role="menu"]', function() {
- 			test.assertExists('div[role="menu"]', "Drop down Plot Menu Exists");
- 			casper.then(function(){ // test 2d Net plot comes up
- 				testPlotButton(test, "2dNetPlot", "Popup1");
- 			});
- 			//FIXME: Broken test
- 			/*casper.then(function(){ // test shape plot comes up
- 				testPlotButton(test, "shapePlot", "Popup1");
- 			});*/	
- 			casper.then(function(){ // test connection plot comes up
- 				testPlotButton(test, "connectionPlot", "Popup1");
- 			});	
+  casper.thenClick('#ControlPanelButton');
 
- 		});
- 	});
+  casper.then(function() { //test initial load values in control panel
+    testControlPanelValues(test, 43);
+  });
 
- 	casper.then(function(){	// click on plot button again to close the menu	
- 		casper.evaluate(function() {
- 			$("#PlotButton").click();
- 		});
- 		casper.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
- 			test.assertDoesntExist('div[role="menu"]', "Drop down Plot Menu is gone");
- 		});
- 	});
-
- 	casper.then(function(){ //open up control panel
- 		casper.click('#ControlPanelButton');
- 	});
-
- 	casper.then(function(){ //test initial load values in control panel
- 		testControlPanelValues(test,43);
- 	});
-
- 	casper.then(function(){ //close control panel
- 		casper.click('#ControlPanelButton');
- 	});
- }
+  casper.thenClick('#ControlPanelButton');
+}
 /*******************************************************
  * Test functionality within the simulate network view *
  *******************************************************/
@@ -929,77 +933,78 @@ function simulateNetwork(test) {
   casper.then(function() {
     this.echo("------Testing explore network");
     test.assertExists('button[id="simulateNetwork"]', "Simulate network button exists");
-    casper.click('#simulateNetwork');
-    casper.waitUntilVisible('button[id="runSimulation"]', function() {
-      casper.then(function() {
-        casper.click('#runSimulation');
-        casper.waitWhileVisible('button[id="runSimulation"]', function() {
-          casper.echo("Dialog disappeared");
-          casper.waitWhileVisible('div[id="loading-spinner"]', function() {
-            casper.echo("Loading spinner disappeared");
-            this.echo("Testing meshes for network exist and are visible");
-            testMeshVisibility(test, true, "network.S[0]");
-            testMeshVisibility(test, true, "network.S[1]");
-            testMeshVisibility(test, true, "network.S[2]");
-            testMeshVisibility(test, true, "network.S[18]");
-            testMeshVisibility(test, true, "network.S[19]");
-          }, 150000);
-        }, 150000);
-      });
-
-    }, 15000);
+  })
+  casper.thenClick('#simulateNetwork', function(){
+    this.waitUntilVisible('button[id="runSimulation"]')
   });
+  
+  casper.thenClick('#runSimulation', function() {
+    this.waitWhileVisible('button[id="runSimulation"]', function() {
+      this.echo("Dialog disappeared");
+    })
+  });
+  casper.then(function() {
+    this.waitWhileVisible('div[id="loading-spinner"]', function() {
+      this.echo("Loading spinner disappeared");
+      this.echo("Testing meshes for network exist and are visible");
+      testMeshVisibility(test, true, "network.S[0]");
+      testMeshVisibility(test, true, "network.S[1]");
+      testMeshVisibility(test, true, "network.S[2]");
+      testMeshVisibility(test, true, "network.S[18]");
+      testMeshVisibility(test, true, "network.S[19]");
+    }, 150000);
+  })
+
+  casper.thenClick('#PlotButton');
 
   casper.then(function() {
-    casper.click('#PlotButton');
-  });
-
-  casper.then(function() {
-    casper.waitUntilVisible('div[role="menu"]', function() {
+    this.waitUntilVisible('div[role="menu"]', function() {
       test.assertExists('div[role="menu"]', "Drop down Plot Menu Exists");
-
-      casper.then(function() {
-        testPlotButton(test, "rasterPlot", "Popup1");
-      });
-
-      casper.then(function() {
-        testPlotButton(test, "spikePlot", "Popup1");
-      });
-
-      //FIXME: Broken test
-      /*casper.then(function(){
-      	testPlotButton(test, "spikeStatsPlot", "Popup1");
-      });*/
-
-      casper.then(function() {
-        testPlotButton(test, "ratePSDPlot", "Popup1");
-      });
-
-      casper.then(function() {
-        testPlotButton(test, "tracesPlot", "Popup1");
-      });
-
-      casper.then(function() {
-        testPlotButton(test, "grangerPlot", "Popup1");
-      });
-    });
+    })
+  })
+  casper.then(function() {
+    testPlotButton(test, "rasterPlot", "Popup1");
   });
 
   casper.then(function() {
-    casper.evaluate(function() {
-      $("#PlotButton").click();
-    });
-
-    casper.waitWhileVisible('div[role="menu"]', function() {
-      test.assertDoesntExist('div[role="menu"]', "Drop down Plot Menu is gone");
-
-    });
+    testPlotButton(test, "spikePlot", "Popup1");
   });
+
+  casper.then(function(){
+    testPlotButton(test, "spikeStatsPlot", "Popup1");
+  });
+
+  casper.then(function() {
+    testPlotButton(test, "ratePSDPlot", "Popup1");
+  });
+
+  casper.then(function() {
+    testPlotButton(test, "tracesPlot", "Popup1");
+  });
+
+  casper.then(function() {
+    testPlotButton(test, "grangerPlot", "Popup1");
+  });
+
+  casper.then(function() {
+    var info = this.getElementInfo('button[id="PlotButton"]');
+    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+  })
+  
+  casper.then(function(){
+    this.wait(1000)
+  })
+
+  casper.then(function() {
+    this.waitWhileVisible('div[role="menu"]', function() {
+      test.assertDoesntExist('div[role="menu"]', "Drop down Plot Menu is gone");
+    })
+  })
 }
 
 function testMeshVisibility(test, visible, variableName) {
   casper.then(function() {
-    var visibility = casper.evaluate(function(variableName) {
+    var visibility = this.evaluate(function(variableName) {
       var visibility = CanvasContainer.engine.getRealMeshesForInstancePath(variableName)[0].visible;
       return visibility;
     }, variableName);
@@ -1008,9 +1013,11 @@ function testMeshVisibility(test, visible, variableName) {
 }
 
 function waitForPlotGraphElement(test, elementID) {
-  casper.waitUntilVisible('g[id="' + elementID + '"]', function() {
-    test.assertExists('g[id="' + elementID + '"]', "Element " + elementID + " exists");
-  });
+  casper.then(function() {
+    this.waitUntilVisible('g[id="' + elementID + '"]', function() {
+      test.assertExists('g[id="' + elementID + '"]', "Element " + elementID + " exists");
+    });
+  })
 }
 /****************************************************
  * Test canvas controllers and other HTML elements  *
@@ -1034,28 +1041,30 @@ function canvasComponentsTests(test) {
 function testPlotButton(test, plotButton, expectedPlot) {
   casper.then(function() {
     test.assertExists('span[id="' + plotButton + '"]', "Menu option " + plotButton + "Exists");
-    casper.evaluate(function(plotButton, expectedPlot) {
-      document.getElementById(plotButton).click(); //Click on plot option
-    }, plotButton, expectedPlot);
-    casper.then(function() {
-      casper.waitUntilVisible('div[id="' + expectedPlot + '"]', function() {
-        test.assertExists('div[id="' + expectedPlot + '"]', expectedPlot + " (" + plotButton + ") exists");
-        casper.then(function() { //test plot has certain elements that are render if plot succeeded
-          waitForPlotGraphElement(test, "figure_1");
-          waitForPlotGraphElement(test, "axes_1");
-        });
-        casper.then(function() { //destroy the plot widget
-          casper.evaluate(function(expectedPlot) {
-            window[expectedPlot].destroy();
-          }, expectedPlot);
-          casper.waitWhileVisible('div[id="' + expectedPlot + '"]', function() {
-            test.assertDoesntExist('div[id="' + expectedPlot + '"]', expectedPlot + " (" + plotButton + ") no longer exists");
-          });
-        });
-      });
-    });
+  })
+  casper.thenEvaluate(function(plotButton, expectedPlot) {
+    document.getElementById(plotButton).click(); //Click on plot option
+  }, plotButton, expectedPlot);
+  
+  casper.then(function() {
+    this.waitUntilVisible('div[id="' + expectedPlot + '"]', function() {
+      test.assertExists('div[id="' + expectedPlot + '"]', expectedPlot + " (" + plotButton + ") exists");
+    })
+  })
+  casper.then(function() { //test plot has certain elements that are render if plot succeeded
+    waitForPlotGraphElement(test, "figure_1");
+    waitForPlotGraphElement(test, "axes_1");
   });
-
+  casper.thenEvaluate(function(expectedPlot) {
+    window[expectedPlot].destroy();
+  }, expectedPlot);
+  
+  casper.then(function(){
+    this.waitWhileVisible('div[id="' + expectedPlot + '"]', function() {
+      test.assertDoesntExist('div[id="' + expectedPlot + '"]', expectedPlot + " (" + plotButton + ") no longer exists");
+    });
+  })  
+  
   casper.then(function() {
     var plotError = test.assertEvalEquals(function() {
       var error = document.getElementById("netPyneDialog") == undefined;
@@ -1071,7 +1080,7 @@ function testPlotButton(test, plotButton, expectedPlot) {
  ****************************************************************/
 function testControlPanelValues(test, values) {
   casper.then(function() {
-    casper.waitUntilVisible('div#controlpanel', function() {
+    this.waitUntilVisible('div#controlpanel', function() {
       test.assertVisible('div#controlpanel', "The control panel is correctly open.");
       var rows = casper.evaluate(function() {
         return $(".standard-row").length;
@@ -1079,15 +1088,14 @@ function testControlPanelValues(test, values) {
       test.assertEquals(rows, values, "The control panel opened with right amount of rows");
     });
   });
-  casper.then(function() {
-    casper.evaluate(function() {
-      $("#controlpanel").remove();
-    });
-
-    casper.waitWhileVisible('div#controlpanel', function() {
+  casper.thenEvaluate(function() {
+    $("#controlpanel").remove();
+  });
+  casper.then(function(){
+    this.waitWhileVisible('div#controlpanel', function() {
       test.assertDoesntExist('div#controlpanel', "Control Panel went away");
     });
-  });
+  })
 }
 
 /*******************************************************************************
@@ -1342,7 +1350,7 @@ function testSectionAndMechanisms(test) {
 
   //----------- going to "Mechanism" page ----------
   casper.thenClick("#sectionGeneralTab", function() { //Go to Mechs page
-    casper.waitUntilVisible('button[id="cellParamsGoMechsButton"]', function() {
+    this.waitUntilVisible('button[id="cellParamsGoMechsButton"]', function() {
       message("going to mechanisms page...")
     })
   })
@@ -1367,7 +1375,7 @@ function testSectionAndMechanisms(test) {
     casper.click("#cellParamsGoMechsButton")
   })
   casper.then(function() { //go back to Mechs page
-    casper.waitUntilVisible('button[id="mechThumbhh"]', function() {
+    this.waitUntilVisible('button[id="mechThumbhh"]', function() {
       test.assertExist('button[id="mechThumbhh"]', "landed back to Mech page")
     })
   })
@@ -1664,7 +1672,7 @@ function exploreCellRuleAfterRenaming(test) {
   })
 
   casper.thenClick("#sectionGeneralTab", function() { //go to "general tab" in "section" page
-    casper.waitUntilVisible('button[id="cellParamsGoMechsButton"]')
+    this.waitUntilVisible('button[id="cellParamsGoMechsButton"]')
   })
   casper.then(function() { // go to mechs page 
     click("cellParamsGoMechsButton", "button")
@@ -1710,7 +1718,7 @@ function populateSynMech(test) {
       buttonID: "newSynapseButton",
       tabID: false
     }
-    casper.waitUntilVisible('input[id="synapseName"]', function() {
+    this.waitUntilVisible('input[id="synapseName"]', function() {
       test.assertExist('input[id="synapseName"]', "synapse Name exist");
     })
   })
@@ -1779,7 +1787,7 @@ function populateConnRule(test) {
     }
     assertExist(test, "ConnectivityName", "input", "conn name exist")
   })
-  casper.then(function(){
+  casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() { // check all fields exist
@@ -1797,7 +1805,7 @@ function populateConnRule(test) {
     setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'synMech\']", "SynapseMenuItem")
 
   })
-  casper.then(function(){
+  casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() {
@@ -1892,7 +1900,7 @@ function populateStimSourceRule(test) {
       tabID: false
     }
   })
-  casper.then(function(){
+  casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() { //check name and source type
@@ -1998,7 +2006,7 @@ function populateStimTargetRule(test) {
       tabID: false
     }
   })
-  casper.then(function(){
+  casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() {
@@ -2212,8 +2220,8 @@ function create2rules(test, cardID, addButtonID, ruleThumbID) {
       this.click('div[id="' + cardID + '"]'); //open Card
     })
   })
-  
-  casper.then(function(){
+
+  casper.then(function() {
     this.wait(1000)
   })
 
@@ -2222,27 +2230,27 @@ function create2rules(test, cardID, addButtonID, ruleThumbID) {
       test.assertExist('button[id="' + addButtonID + '"]', "open card")
     });
   })
-  
-  casper.then(function(){
+
+  casper.then(function() {
     this.wait(1000)
   })
-  
+
   casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
     this.waitUntilVisible('button[id="' + ruleThumbID + '"]', function() {
       test.assertExist('button[id="' + ruleThumbID + '"]', "rule added");
     })
   })
-  
-  casper.then(function(){
+
+  casper.then(function() {
     this.wait(1000)
   })
-  
+
   casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
     this.waitUntilVisible('button[id="' + ruleThumbID + ' 2"]', function() {
       test.assertExist('button[id="' + ruleThumbID + ' 2"]', "rule added");
     })
   })
-  
+
   casper.thenClick('button[id="' + ruleThumbID + '"]', function() { // focus on first rule
     this.wait(2500)
   })
@@ -2280,14 +2288,14 @@ function selectThumbRule(test, thumbID, nameFieldID) { // select a thumbnailRule
 //----------------------------------------------------------------------------//
 function delThumbnail(test, elementID) {
   casper.then(function() { // click thumbnail
-    this.waitForSelector('button[id="' + elementID + '"]', function() {
+    this.waitUntilVisible('button[id="' + elementID + '"]', function() {
       this.mouse.click('button[id="' + elementID + '"]');
     })
   })
   casper.then(function() { // move mouse into thumbnail
     this.mouse.move('button[id="' + elementID + '"]')
   })
-  casper.then(function(){
+  casper.then(function() {
     this.wait(500)
   })
   casper.then(function() { //click thumbnail
@@ -2308,7 +2316,7 @@ function delThumbnail(test, elementID) {
 //----------------------------------------------------------------------------//
 function setInputValue(test, elementID, value) {
   casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]', function(){})
+    this.waitUntilVisible('input[id="' + elementID + '"]', function() {})
   })
   casper.thenEvaluate(function(elementID, value) { //this hack breaks for latest React!!!!!
     var element = document.getElementById(elementID);
@@ -2330,7 +2338,7 @@ function getInputValue(test, elementID, expectedValue, times = 3) {
     this.waitUntilVisible('input[id="' + elementID + '"]')
   })
   casper.then(function() {
-    var value = casper.evaluate(function(elementID) {
+    var value = this.evaluate(function(elementID) {
       return $('input[id="' + elementID + '"]').val();
     }, elementID);
 
@@ -2341,14 +2349,13 @@ function getInputValue(test, elementID, expectedValue, times = 3) {
 
 //----------------------------------------------------------------------------//
 function setSelectFieldValue(test, selectFieldID, menuItemID) {
-  casper.then(function(){
-    this.waitUntilVisible('div[id="'+selectFieldID+'"]')
-  })
   casper.then(function() {
-    this.evaluate(function(selectFieldID) {
-      document.getElementById(selectFieldID).scrollIntoView();
-    }, selectFieldID);
+    this.waitUntilVisible('div[id="' + selectFieldID + '"]')
   })
+  casper.thenEvaluate(function(selectFieldID) {
+    document.getElementById(selectFieldID).scrollIntoView();
+  }, selectFieldID);
+
   casper.then(function() { // click selectField
     var info = casper.getElementInfo('div[id="' + selectFieldID + '"]');
     this.mouse.click(info.x + 1, info.y + 1)
@@ -2368,11 +2375,12 @@ function setSelectFieldValue(test, selectFieldID, menuItemID) {
     this.mouse.click(info.x - 10, info.y)
   })
   casper.then(function() {
-    this.wait(500) //wait for MenuItem animation to vanish 
+    this.wait(500) //wait for MenuItem animation to vanish
   })
   casper.then(function() { //check value is ok
     this.waitWhileVisible('span[id="' + menuItemID + '"]', function() {
-      getSelectFieldValue(test, selectFieldID, menuItemID.includes("MenuItem") ? menuItemID.slice(0, -"menuItem".length) : menuItemID)
+      this.echo("click on " + menuItemID)
+      //getSelectFieldValue(test, selectFieldID, menuItemID.includes("MenuItem") ? menuItemID.slice(0, -"menuItem".length) : menuItemID)
     })
   })
 }
@@ -2407,16 +2415,13 @@ function deleteListItem(test, elementID) {
   casper.then(function() {
     this.waitUntilVisible('button[id="' + elementID + 'RemoveButton"]')
   })
-  casper.then(function() {
-    this.click('button[id="' + elementID + 'RemoveButton"]')
-  })
+  casper.thenClick('button[id="' + elementID + 'RemoveButton"]')
+
   casper.then(function() {
     this.waitWhileVisible('input[id="' + elementID + '"]')
   })
   casper.then(function() {
     this.echo("item removed from list: " + elementID)
-  })
-  casper.then(function() {
     this.wait(2000)
   })
 }
@@ -2425,7 +2430,7 @@ function deleteListItem(test, elementID) {
 function getListItemValue(test, elementID, value, times = 3) {
   casper.then(function() {
     this.waitUntilVisible('input[id="' + elementID + '"]', function() {}, function() {
-      secondChance(test, "not-visible", value, elementID, getListItemValue, times)
+      secondChance(test, 'not-visible', value, elementID, getListItemValue, times)
     })
   })
   casper.thenBypassIf(function() {
@@ -2474,7 +2479,7 @@ function assertExist(test, elementID, component = "input", message = false) {
 //----------------------------------------------------------------------------//
 function assertDoesntExist(test, elementID, component = "input", message = false) {
   casper.then(function() {
-    this.waitWhileSelector(component + '[id="' + elementID + '"]', function() {
+    this.waitWhileVisible(component + '[id="' + elementID + '"]', function() {
       test.assertDoesntExist(component + '[id="' + elementID + '"]', message ? message : component + ": " + elementID + " doesn't exist")
     })
   })
