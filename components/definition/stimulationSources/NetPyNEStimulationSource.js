@@ -68,11 +68,13 @@ export default class NetPyNEStimulationSource extends React.Component {
     Utils
       .sendPythonMessage("[value == netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in "+JSON.stringify(opts)+"]")
       .then((responses) => {
-        responses.forEach( (response, index) => {
-          if (response) {
-            this.setState({ sourceType: opts[index] })
-          }
-        })
+        if (responses.constructor.name == "Array"){
+          responses.forEach( (response, index) => {
+            if (response && this.state.sourceType!=opts[index]) {
+              this.setState({ sourceType: opts[index] })
+            }
+          })
+        }
     });
   };
 
