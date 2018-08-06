@@ -610,7 +610,6 @@ function setSimConfigParams(test) {
   });
   casper.then(function() {
     assertExist(test, "simConfig.simLabel")
-    assertExist(test, "simConfig.saveFolder")
     assertExist(test, "simConfig.saveDataInclude")
     assertExist(test, "simConfig.backupCfgFile")
     getInputValue(test, "simConfig.filename", "model_output");
