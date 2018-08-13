@@ -75,18 +75,26 @@ define(function (require) {
         require('./css/material.less');
 
         window.customJupyterModelLoad = function (module, model) {
+            console.log("Loading custom Jupyter code...")
 
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
-            window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
+            GEPPETTO.trigger('kernel:ready', "Kernel started");
 
-                GEPPETTO.trigger('kernel:ready', "Kernel started");
+            var kernel = IPython.notebook.kernel;
+            kernel.execute('from netpyne_ui import netpyne_geppetto');
+            kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
+            kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
 
-                var kernel = IPython.notebook.kernel;
-                kernel.execute('from netpyne_ui import netpyne_geppetto');
-                kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
-                kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
-            });
+            // window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
+
+            //     GEPPETTO.trigger('kernel:ready', "Kernel started");
+
+            //     var kernel = IPython.notebook.kernel;
+            //     kernel.execute('from netpyne_ui import netpyne_geppetto');
+            //     kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
+            //     kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
+            // });
         }
 
         // Add geppetto jupyter connector
