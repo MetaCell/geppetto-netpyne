@@ -4,7 +4,9 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Tabs, Tab } from 'material-ui/Tabs';
+import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 import Utils from '../../Utils';
 import FileBrowser from '../general/FileBrowser';
@@ -30,7 +32,8 @@ const SettingsDialog = React.createClass({
             exploreOnlyDirs: false,
             errorMessage: undefined,
             errorDetails: undefined,
-            scriptName: 'script_output'
+            scriptName: 'script_output',
+            exportFormat: "json"
         };
     },
 
@@ -46,6 +49,10 @@ const SettingsDialog = React.createClass({
 
     onChangeTab(value) {
         this.setState({ currentTab: value });
+    },
+    
+    onChange(event, index, value) {
+        this.setState({exportFormat: value})
     },
 
     processError(parsedResponse) {
@@ -64,11 +71,12 @@ const SettingsDialog = React.createClass({
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
         }
         else if (this.state.currentTab == "export") {
-            var action = 'netpyne_geppetto.exportModel';
-            var message = GEPPETTO.Resources.EXPORTING_MODEL;
-        }
-        else {
-            var action = 'netpyne_geppetto.generateScript';
+            if (this.state.exportFormat== "json") {
+                var action = 'netpyne_geppetto.exportModel';
+            } 
+            else {
+                var action = 'netpyne_geppetto.generateScript';
+            }
             var message = GEPPETTO.Resources.EXPORTING_MODEL;
         }
 
@@ -139,7 +147,7 @@ const SettingsDialog = React.createClass({
                     cancelAction,
                     <RaisedButton
                         primary
-                        label={this.state.currentTab == "import" ? 'Import' : this.state.currentTab== 'Export'? 'Export': 'To script'}
+                        label={this.state.currentTab == "import" ? 'Import' : 'Export'}
                         onTouchTap={this.performAction}
                     />
                 ];
@@ -181,20 +189,29 @@ const SettingsDialog = React.createClass({
                     </Tab>
 
                     <Tab value="export" label={'Export'}>
-                        <div style={{ padding: 20 }}>
-                            Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
-                        </div>
-                    </Tab>
-                    
-                    <Tab value="script" label={'To script'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-                            <CardHeader
-                                title="Save your work as NetPyNE script."
-                                subtitle="The file will be saved in the current working directory (where you initialized NetPyNE-UI)"
-                            />
-                            <CardText>
-                                <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
-                            </CardText>
+                            <SelectField
+                                style={{marginLeft: 20}}
+                                floatingLabelText="format"
+                                value={this.state.exportFormat}
+                                onChange={this.onChange}
+                            >
+                                <MenuItem value={"json"} primaryText="JSON" />
+                                <MenuItem value={"netpyne script"} primaryText="NetPyNE script" />
+                            </SelectField>
+                            {this.state.exportFormat=='json'?
+                                <CardHeader
+                                    title="Click on export to download the model as a json fle."
+                                    subtitle="File will be stored in the path specified in Configuration > Save Configuration > File Name."
+                                />:<div>
+                                <CardHeader
+                                    title="Save your work as NetPyNE script."
+                                    subtitle="The file will be saved in the current working directory (where you initialized NetPyNE-UI)"
+                                />
+                                <CardText>
+                                    <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
+                                </CardText>
+                            </div>}
                         </Card>
                     </Tab>
                 </Tabs>
