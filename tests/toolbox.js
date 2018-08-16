@@ -1,10 +1,9 @@
-var require = patchRequire(require);
 /*******************************************************************************
  *                                functions                                    *
  *******************************************************************************/
 function moveToTab(casper, test, tabID, elementID, elementType) {
   casper.then(function() {
-    tb.active.tabID = tabID
+    toolbox.active.tabID = tabID
     this.click('button[id="' + tabID + '"]', function() {
       this.echo("changing tab...")
     })
@@ -183,7 +182,7 @@ function getInputValue(casper, test, elementID, expectedValue, times = 3) {
     }, elementID);
 
     // required in case python fails to update field
-    secondChance(casper, test, value, expectedValue, elementID, getInputValue, times)
+    secondChance(this, test, value, expectedValue, elementID, getInputValue, times)
   })
 }
 
@@ -332,6 +331,15 @@ function message(casper, message) {
 }
 
 //----------------------------------------------------------------------------//
+function header(casper, message) {
+  casper.then(function() {
+    this.echo("#".repeat(message.length+10), "INFO")
+    this.echo(" ".repeat(5) + message.toUpperCase() + " ".repeat(5), "INFO");
+    this.echo("#".repeat(message.length+10), "INFO")
+  })
+}
+
+//----------------------------------------------------------------------------//
 function click(casper, elementID, type = "div") {
   casper.then(function() {
     this.waitUntilVisible(type + '[id="' + elementID + '"]')
@@ -357,7 +365,6 @@ function click(casper, elementID, type = "div") {
   })
 }
 
-
 //------------------------------------------------------------------------------
 function refresh(casper, test, expected, got, times) {
   // "active" object points to the current: "Card", "Add-newRule-Button" and "Tab"
@@ -366,20 +373,20 @@ function refresh(casper, test, expected, got, times) {
     this.echo("WARNING-->  expected: " + expected + "   got: " + (got ? got : "empty") + "    trying again " + (3 - times) + "/3", "WARNING")
   })
   casper.then(function() {
-    this.click('div[id="' + tb.active.cardID + '"]')
+    this.click('div[id="' + toolbox.active.cardID + '"]')
   })
   casper.then(function() {
-    this.waitWhileVisible('div[id="' + tb.active.buttonID + '"]', function() {
-      this.click('div[id="' + tb.active.cardID + '"]')
+    this.waitWhileVisible('div[id="' + toolbox.active.buttonID + '"]', function() {
+      this.click('div[id="' + toolbox.active.cardID + '"]')
     })
   })
   casper.then(function() {
-    if (tb.active.tabID) {
-      this.waitUntilVisible('button[id="' + tb.active.tabID + '"]', function() {
-        this.click('button[id="' + tb.active.tabID + '"]')
+    if (toolbox.active.tabID) {
+      this.waitUntilVisible('button[id="' + toolbox.active.tabID + '"]', function() {
+        this.click('button[id="' + toolbox.active.tabID + '"]')
       })
     } else {
-      this.waitUntilVisible('button[id="' + tb.active.buttonID + '"]')
+      this.waitUntilVisible('button[id="' + toolbox.active.buttonID + '"]')
     }
   })
   casper.then(function() {
@@ -404,8 +411,9 @@ function secondChance(casper, test, value, expectedValue, elementID, callback, t
   })
 }
 
-var tb = module.exports = {
+var toolbox = module.exports = {
   click: click,
+  header: header,
   message: message,
   moveToTab: moveToTab,
   leaveReEnterTab: leaveReEnterTab,
