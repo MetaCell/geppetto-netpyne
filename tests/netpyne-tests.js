@@ -1,6 +1,12 @@
+var tb = require('./toolbox');
 var urlBase = casper.cli.get('host');
 if (urlBase == null || urlBase == undefined) {
   urlBase = "http://localhost:8888/";
+}
+tb.active = { // keeps track of current location (to refresh field if its value is not correct)
+  cardID: "Populations",
+  buttonID: "newPopulationButton",
+  tabID: false
 }
 
 casper.test.begin('NetPyNE projects tests', function suite(test) {
@@ -126,16 +132,16 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
  */
 function testLandingPage(test) {
   casper.then(function() {
-    assertExist(test, "Populations", "div")
-    assertExist(test, "CellRules", "div")
-    assertExist(test, "Synapses", "div")
-    assertExist(test, "Connections", "div")
-    assertExist(test, "StimulationSources", "div")
-    assertExist(test, "Configuration", "div")
-    assertExist(test, "defineNetwork", "button")
-    assertExist(test, "exploreNetwork", "button")
-    assertExist(test, "simulateNetwork", "button")
-    assertExist(test, "setupNetwork", "button")
+    tb.assertExist(this, test, "Populations", "div")
+    tb.assertExist(this, test, "CellRules", "div")
+    tb.assertExist(this, test, "Synapses", "div")
+    tb.assertExist(this, test, "Connections", "div")
+    tb.assertExist(this, test, "StimulationSources", "div")
+    tb.assertExist(this, test, "Configuration", "div")
+    tb.assertExist(this, test, "defineNetwork", "button")
+    tb.assertExist(this, test, "exploreNetwork", "button")
+    tb.assertExist(this, test, "simulateNetwork", "button")
+    tb.assertExist(this, test, "setupNetwork", "button")
   });
 }
 
@@ -176,20 +182,20 @@ function loadConsole(test, consoleButton, consoleContainer) {
  * Create  population  rule  using  the  add  button *
  *****************************************************/
 function addPopulation(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "Populations", "newPopulationButton", "Population")
+    tb.create2rules(this, test, "Populations", "newPopulationButton", "Population")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { //populate rule 1
     populatePopParams(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "Population 2", "populationName")
+    tb.selectThumbRule(this, test, "Population 2", "populationName")
   })
   casper.then(function() { // check rule 2 is empty
     checkPopParamsValues(test, "Population 2", true)
@@ -197,24 +203,24 @@ function addPopulation(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "Population", "populationName")
+    tb.selectThumbRule(this, test, "Population", "populationName")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkPopParamsValues(test, "Population")
   })
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "Population 2")
+    tb.delThumbnail(this, test, "Population 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "Population", "populationName")
+    tb.selectThumbRule(this, test, "Population", "populationName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "populationName", "newPop")
+    tb.renameRule(this, test, "populationName", "newPop")
   })
 
   casper.then(function() { // check rule 1 is populated
@@ -225,9 +231,9 @@ function addPopulation(test) {
     addTestPops(test)
   })
 
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#Populations', function() {
-    assertDoesntExist(test, "newPopulationButton", "button", "collapse card")
+    tb.assertDoesntExist(this, test, "newPopulationButton", "button", "collapse card")
   });
 }
 
@@ -235,20 +241,20 @@ function addPopulation(test) {
  * Create  cell  rule  using  the  add  button *
  ***********************************************/
 function addCellRule(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "CellRules", "newCellRuleButton", "CellRule")
+    tb.create2rules(this, test, "CellRules", "newCellRuleButton", "CellRule")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { //populate rule 1
     populateCellRule(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "CellRule 2", "cellRuleName")
+    tb.selectThumbRule(this, test, "CellRule 2", "cellRuleName")
   })
 
   casper.then(function() { // check fields are not copy to rule 2
@@ -257,7 +263,7 @@ function addCellRule(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "CellRule", "cellRuleName")
+    tb.selectThumbRule(this, test, "CellRule", "cellRuleName")
   })
 
   casper.then(function() { // check fields remain the same
@@ -270,26 +276,26 @@ function addCellRule(test) {
   })
   //-------------------------------
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "CellRule 2")
+    tb.delThumbnail(this, test, "CellRule 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "CellRule", "cellRuleName")
+    tb.selectThumbRule(this, test, "CellRule", "cellRuleName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "cellRuleName", "newCellRule")
+    tb.renameRule(this, test, "cellRuleName", "newCellRule")
   })
 
   casper.then(function() {
     exploreCellRuleAfterRenaming(test) // re-explore whole rule
   })
 
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#CellRules', function() {
-    assertDoesntExist(test, "newCellRuleButton", "collapse card")
+    tb.assertDoesntExist(this, test, "newCellRuleButton", "collapse card")
   });
 }
 
@@ -297,20 +303,20 @@ function addCellRule(test) {
  * Create  Synapse  rule  using  the  add  button *
  **************************************************/
 function addSynapse(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "Synapses", "newSynapseButton", "Synapse")
+    tb.create2rules(this, test, "Synapses", "newSynapseButton", "Synapse")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { //populate rule 1
     populateSynMech(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "Synapse 2", "synapseName")
+    tb.selectThumbRule(this, test, "Synapse 2", "synapseName")
   })
 
   casper.then(function() { // check rule 2 is empty
@@ -319,24 +325,24 @@ function addSynapse(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "Synapse", "synapseName")
+    tb.selectThumbRule(this, test, "Synapse", "synapseName")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkSynMechValues(test, "Synapse")
   })
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "Synapse 2")
+    tb.delThumbnail(this, test, "Synapse 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "Synapse", "synapseName")
+    tb.selectThumbRule(this, test, "Synapse", "synapseName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "synapseName", "newSyn")
+    tb.renameRule(this, test, "synapseName", "newSyn")
   })
 
   casper.then(function() { // check rule 1 is populated
@@ -348,9 +354,9 @@ function addSynapse(test) {
   })
 
 
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#Synapses', function() {
-    assertDoesntExist(test, "newSynapseButton", "collapse card")
+    tb.assertDoesntExist(this, test, "newSynapseButton", "collapse card")
   });
 }
 
@@ -358,20 +364,20 @@ function addSynapse(test) {
  * Create  connectivity  rule  using  the  add  button *
  *******************************************************/
 function addConnection(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "Connections", "newConnectivityRuleButton", "ConnectivityRule")
+    tb.create2rules(this, test, "Connections", "newConnectivityRuleButton", "ConnectivityRule")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { //populate rule 1
     populateConnRule(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { //focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "ConnectivityRule 2", "ConnectivityName")
+    tb.selectThumbRule(this, test, "ConnectivityRule 2", "ConnectivityName")
   })
 
   casper.then(function() { // check rule 2 is empty
@@ -380,52 +386,52 @@ function addConnection(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "ConnectivityRule", "ConnectivityName")
+    tb.selectThumbRule(this, test, "ConnectivityRule", "ConnectivityName")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkConnRuleValues(test, "ConnectivityRule")
   })
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "ConnectivityRule 2")
+    tb.delThumbnail(this, test, "ConnectivityRule 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "ConnectivityRule", "ConnectivityName")
+    tb.selectThumbRule(this, test, "ConnectivityRule", "ConnectivityName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "ConnectivityName", "newRule")
+    tb.renameRule(this, test, "ConnectivityName", "newRule")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkConnRuleValues(test, "newRule")
   })
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#Connections', function() {
-    assertDoesntExist(test, "newConnectivityRuleButton", "colapse card")
+    tb.assertDoesntExist(this, test, "newConnectivityRuleButton", "colapse card")
   });
 }
 /*****************************************************
  * Create  StimSource  rule  using  the  add  button *
  *****************************************************/
 function addStimSource(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "StimulationSources", "newStimulationSourceButton", "stim_source")
+    tb.create2rules(this, test, "StimulationSources", "newStimulationSourceButton", "stim_source")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { // populate rule 1
     populateStimSourceRule(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "stim_source 2", "sourceName")
+    tb.selectThumbRule(this, test, "stim_source 2", "sourceName")
   })
 
   casper.then(function() { // check rule 2 is empty
@@ -434,24 +440,24 @@ function addStimSource(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "stim_source", "sourceName")
+    tb.selectThumbRule(this, test, "stim_source", "sourceName")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkStimSourceValues(test, "stim_source")
   })
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "stim_source 2")
+    tb.delThumbnail(this, test, "stim_source 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "stim_source", "sourceName")
+    tb.selectThumbRule(this, test, "stim_source", "sourceName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "sourceName", "newStimSource")
+    tb.renameRule(this, test, "sourceName", "newStimSource")
   })
   casper.then(function() { // delete delete delete delete 
     this.wait(2000)
@@ -461,29 +467,29 @@ function addStimSource(test) {
     checkStimSourceValues(test, "newStimSource")
   })
 
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#StimulationSources', function() {
-    assertDoesntExist(test, "newStimulationSourceButton", "collapse card")
+    tb.assertDoesntExist(this, test, "newStimulationSourceButton", "collapse card")
   });
 }
 /*****************************************************
  * Create  StimTarget  rule  using  the  add  button *
  *****************************************************/
 function addStimTarget(test) {
-  message("create")
+  tb.message(casper, "create")
   casper.then(function() { // create 2 rules
-    create2rules(test, "StimulationTargets", "newStimulationTargetButton", "stim_target")
+    tb.create2rules(this, test, "StimulationTargets", "newStimulationTargetButton", "stim_target")
   })
 
-  message("populate")
+  tb.message(casper, "populate")
   casper.then(function() { // populate rule 1
     populateStimTargetRule(test)
   })
 
-  message("check")
+  tb.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    selectThumbRule(test, "stim_target 2", "targetName")
+    tb.selectThumbRule(this, test, "stim_target 2", "targetName")
   })
 
   casper.then(function() { // check rule 2 is empty
@@ -492,33 +498,33 @@ function addStimTarget(test) {
 
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
-    selectThumbRule(test, "stim_target", "targetName")
+    tb.selectThumbRule(this, test, "stim_target", "targetName")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkStimTargetValues(test, "stim_target")
   })
 
-  message("rename")
+  tb.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    delThumbnail(test, "stim_target 2")
+    tb.delThumbnail(this, test, "stim_target 2")
   })
 
   casper.then(function() { //focus on rule 1
-    selectThumbRule(test, "stim_target", "targetName")
+    tb.selectThumbRule(this, test, "stim_target", "targetName")
   })
 
   casper.then(function() { //rename rule 1
-    renameRule(test, "targetName", "newStimTarget")
+    tb.renameRule(this, test, "targetName", "newStimTarget")
   })
 
   casper.then(function() { // check rule 1 is populated
     checkStimTargetValues(test, "newStimTarget")
   })
 
-  message("leave")
+  tb.message(casper, "leave")
   casper.thenClick('#StimulationTargets', function() {
-    assertDoesntExist(test, "newStimulationTargetButton", "collapse card")
+    tb.assertDoesntExist(this, test, "newStimulationTargetButton", "collapse card")
   });
 }
 
@@ -542,7 +548,7 @@ function checkSimConfigParams(test) {
 function setSimConfigParams(test) {
   casper.then(function() {
     this.waitUntilVisible('div[id="Configuration"]', function() {
-      active = {
+      tb.active = {
         cardID: "Configuration",
         buttonID: "configGeneral",
         tabID: false
@@ -552,36 +558,36 @@ function setSimConfigParams(test) {
   casper.thenClick('#Configuration')
 
   casper.then(function() {
-    setInputValue(test, "simConfig.duration", "999");
-    setInputValue(test, "simConfig.dt", "0.0249");
-    getInputValue(test, "simConfig.printRunTime", "false");
-    getInputValue(test, "simConfig.hParams0", "clamp_resist : 0.001");
-    getInputValue(test, "simConfig.hParams1", "celsius : 6.3");
-    deleteListItem(test, "simConfig.hParams2", "v_init : -65");
-    addListItem(test, "simConfig.hParams", "fake: 123456")
-    getInputValue(test, "simConfig.seeds0", "loc : 1");
-    getInputValue(test, "simConfig.seeds1", "stim : 1");
-    deleteListItem(test, "simConfig.seeds2", "conn : 1");
-    addListItem(test, "simConfig.seeds", "fakeII: 654321")
+    tb.setInputValue(this, test, "simConfig.duration", "999");
+    tb.setInputValue(this, test, "simConfig.dt", "0.0249");
+    tb.getInputValue(this, test, "simConfig.printRunTime", "false");
+    tb.getInputValue(this, test, "simConfig.hParams0", "clamp_resist : 0.001");
+    tb.getInputValue(this, test, "simConfig.hParams1", "celsius : 6.3");
+    tb.deleteListItem(this, test, "simConfig.hParams2", "v_init : -65");
+    tb.addListItem(this, test, "simConfig.hParams", "fake: 123456")
+    tb.getInputValue(this, test, "simConfig.seeds0", "loc : 1");
+    tb.getInputValue(this, test, "simConfig.seeds1", "stim : 1");
+    tb.deleteListItem(this, test, "simConfig.seeds2", "conn : 1");
+    tb.addListItem(this, test, "simConfig.seeds", "fakeII: 654321")
 
   })
   casper.then(function() {
     this.wait(500)
   })
   casper.then(function() {
-    clickCheckBox(test, "simConfig.createNEURONObj");
-    clickCheckBox(test, "simConfig.createPyStruct");
-    clickCheckBox(test, "simConfig.addSynMechs");
-    clickCheckBox(test, "simConfig.includeParamsLabel");
-    clickCheckBox(test, "simConfig.timing");
-    clickCheckBox(test, "simConfig.verbose");
-    clickCheckBox(test, "simConfig.compactConnFormat");
-    clickCheckBox(test, "simConfig.connRandomSecFromList");
-    clickCheckBox(test, "simConfig.printPopAvgRates");
-    clickCheckBox(test, "simConfig.printSynsAfterRule");
-    clickCheckBox(test, "simConfig.gatherOnlySimData");
-    clickCheckBox(test, "simConfig.cache_efficient");
-    clickCheckBox(test, "simConfig.cvode_active");
+    tb.clickCheckBox(this, test, "simConfig.createNEURONObj");
+    tb.clickCheckBox(this, test, "simConfig.createPyStruct");
+    tb.clickCheckBox(this, test, "simConfig.addSynMechs");
+    tb.clickCheckBox(this, test, "simConfig.includeParamsLabel");
+    tb.clickCheckBox(this, test, "simConfig.timing");
+    tb.clickCheckBox(this, test, "simConfig.verbose");
+    tb.clickCheckBox(this, test, "simConfig.compactConnFormat");
+    tb.clickCheckBox(this, test, "simConfig.connRandomSecFromList");
+    tb.clickCheckBox(this, test, "simConfig.printPopAvgRates");
+    tb.clickCheckBox(this, test, "simConfig.printSynsAfterRule");
+    tb.clickCheckBox(this, test, "simConfig.gatherOnlySimData");
+    tb.clickCheckBox(this, test, "simConfig.cache_efficient");
+    tb.clickCheckBox(this, test, "simConfig.cvode_active");
   })
 
   casper.then(function() {
@@ -589,15 +595,15 @@ function setSimConfigParams(test) {
   })
   casper.thenClick("#configRecord", function() { //go to record tab
     this.wait(2500); //let python populate fields
-    active.tabID = "configRecord"
+    tb.active.tabID = "configRecord"
   });
   casper.then(function() {
-    addListItem(test, "simConfig.recordCells", "22")
-    addListItem(test, "simConfig.recordLFP", "1,2,3")
-    addListItem(test, "simConfig.recordTraces", "Vsoma: {sec: soma, loc: 0.5, var: v}")
-    setInputValue(test, "simConfig.recordStep", "10");
-    clickCheckBox(test, "simConfig.saveLFPCells");
-    clickCheckBox(test, "simConfig.recordStim");
+    tb.addListItem(this, test, "simConfig.recordCells", "22")
+    tb.addListItem(this, test, "simConfig.recordLFP", "1,2,3")
+    tb.addListItem(this, test, "simConfig.recordTraces", "Vsoma: {sec: soma, loc: 0.5, var: v}")
+    tb.setInputValue(this, test, "simConfig.recordStep", "10");
+    tb.clickCheckBox(this, test, "simConfig.saveLFPCells");
+    tb.clickCheckBox(this, test, "simConfig.recordStim");
   })
 
   casper.then(function() {
@@ -606,31 +612,31 @@ function setSimConfigParams(test) {
 
   casper.thenClick("#configSaveConfiguration", function() { //go to saveConfig tab
     this.wait(2500) //let python populate fields
-    active.tabID = "configSaveConfiguration"
+    tb.active.tabID = "configSaveConfiguration"
   });
   casper.then(function() {
-    assertExist(test, "simConfig.simLabel")
-    assertExist(test, "simConfig.saveDataInclude")
-    assertExist(test, "simConfig.backupCfgFile")
-    getInputValue(test, "simConfig.filename", "model_output");
-    getInputValue(test, "simConfig.saveDataInclude0", "netParams");
-    getInputValue(test, "simConfig.saveDataInclude1", "netCells");
-    getInputValue(test, "simConfig.saveDataInclude2", "netPops");
-    getInputValue(test, "simConfig.saveDataInclude3", "simConfig");
-    getInputValue(test, "simConfig.saveDataInclude4", "simData");
+    tb.assertExist(this, test, "simConfig.simLabel")
+    tb.assertExist(this, test, "simConfig.saveDataInclude")
+    tb.assertExist(this, test, "simConfig.backupCfgFile")
+    tb.getInputValue(this, test, "simConfig.filename", "model_output");
+    tb.getInputValue(this, test, "simConfig.saveDataInclude0", "netParams");
+    tb.getInputValue(this, test, "simConfig.saveDataInclude1", "netCells");
+    tb.getInputValue(this, test, "simConfig.saveDataInclude2", "netPops");
+    tb.getInputValue(this, test, "simConfig.saveDataInclude3", "simConfig");
+    tb.getInputValue(this, test, "simConfig.saveDataInclude4", "simData");
   })
   casper.then(function() {
-    clickCheckBox(test, "simConfig.saveCellSecs");
-    clickCheckBox(test, "simConfig.saveCellConns");
-    clickCheckBox(test, "simConfig.timestampFilename");
-    clickCheckBox(test, "simConfig.savePickle");
-    clickCheckBox(test, "simConfig.saveJson");
-    clickCheckBox(test, "simConfig.saveMat");
-    clickCheckBox(test, "simConfig.saveHDF5");
-    clickCheckBox(test, "simConfig.saveDpk");
-    clickCheckBox(test, "simConfig.saveDat");
-    clickCheckBox(test, "simConfig.saveCSV");
-    clickCheckBox(test, "simConfig.saveTiming");
+    tb.clickCheckBox(this, test, "simConfig.saveCellSecs");
+    tb.clickCheckBox(this, test, "simConfig.saveCellConns");
+    tb.clickCheckBox(this, test, "simConfig.timestampFilename");
+    tb.clickCheckBox(this, test, "simConfig.savePickle");
+    tb.clickCheckBox(this, test, "simConfig.saveJson");
+    tb.clickCheckBox(this, test, "simConfig.saveMat");
+    tb.clickCheckBox(this, test, "simConfig.saveHDF5");
+    tb.clickCheckBox(this, test, "simConfig.saveDpk");
+    tb.clickCheckBox(this, test, "simConfig.saveDat");
+    tb.clickCheckBox(this, test, "simConfig.saveCSV");
+    tb.clickCheckBox(this, test, "simConfig.saveTiming");
   })
 
   casper.then(function() {
@@ -639,11 +645,11 @@ function setSimConfigParams(test) {
 
   casper.thenClick("#configErrorChecking", function() { //go to checkError tab
     this.wait(2500) //let python populate fields
-    active.tabID = "configErrorChecking"
+    tb.active.tabID = "configErrorChecking"
   });
   casper.then(function() {
-    clickCheckBox(test, "simConfig.checkErrors");
-    clickCheckBox(test, "simConfig.checkErrorsVerbose");
+    tb.clickCheckBox(this, test, "simConfig.checkErrors");
+    tb.clickCheckBox(this, test, "simConfig.checkErrorsVerbose");
   })
   casper.then(function() {
     this.wait(2500)
@@ -651,22 +657,22 @@ function setSimConfigParams(test) {
 
   casper.thenClick("#confignetParams", function() { //go to network configuration tab
     this.wait(2500) //let python populate fields
-    active.tabID = "confignetParams"
+    tb.active.tabID = "confignetParams"
   });
   casper.then(function() {
-    assertExist(test, "netParams.scaleConnWeightModels")
-    setInputValue(test, "netParams.scale", "2");
-    setInputValue(test, "netParams.defaultWeight", "3");
-    setInputValue(test, "netParams.defaultDelay", "4");
-    setInputValue(test, "netParams.scaleConnWeight", "5");
-    setInputValue(test, "netParams.scaleConnWeightNetStims", "6");
-    setInputValue(test, "netParams.sizeX", "200");
-    setInputValue(test, "netParams.sizeY", "300");
-    setInputValue(test, "netParams.sizeZ", "400");
-    setInputValue(test, "netParams.propVelocity", "1000");
-    getInputValue(test, "netParams.rotateCellsRandomly", "false");
-    getSelectFieldValue(test, "netParams.shape", "cuboid")
-    addListItem(test, "netParams.scaleConnWeightModels", "0: 0.001")
+    tb.assertExist(this, test, "netParams.scaleConnWeightModels")
+    tb.setInputValue(this, test, "netParams.scale", "2");
+    tb.setInputValue(this, test, "netParams.defaultWeight", "3");
+    tb.setInputValue(this, test, "netParams.defaultDelay", "4");
+    tb.setInputValue(this, test, "netParams.scaleConnWeight", "5");
+    tb.setInputValue(this, test, "netParams.scaleConnWeightNetStims", "6");
+    tb.setInputValue(this, test, "netParams.sizeX", "200");
+    tb.setInputValue(this, test, "netParams.sizeY", "300");
+    tb.setInputValue(this, test, "netParams.sizeZ", "400");
+    tb.setInputValue(this, test, "netParams.propVelocity", "1000");
+    tb.getInputValue(this, test, "netParams.rotateCellsRandomly", "false");
+    tb.getSelectFieldValue(this, test, "netParams.shape", "cuboid")
+    tb.addListItem(this, test, "netParams.scaleConnWeightModels", "0: 0.001")
   })
   casper.then(function() {
     this.wait(2500)
@@ -677,83 +683,83 @@ function setSimConfigParams(test) {
 function getSimConfigParams(test) {
   casper.thenClick("#configGeneral", function() { //go to network configuration tab
     this.wait(2500) //let python populate fields
-    active.tabID = "configGeneral"
+    tb.active.tabID = "configGeneral"
   });
   casper.then(function() {
-    getInputValue(test, "simConfig.duration", "999");
-    getInputValue(test, "simConfig.dt", "0.0249");
-    getListItemValue(test, "simConfig.hParams2", "fake : 123456")
-    getListItemValue(test, "simConfig.seeds2", "fakeII : 654321")
-    testCheckBoxValue(test, "simConfig.createNEURONObj", false);
-    testCheckBoxValue(test, "simConfig.createPyStruct", false);
-    testCheckBoxValue(test, "simConfig.addSynMechs", false);
-    testCheckBoxValue(test, "simConfig.includeParamsLabel", false);
-    testCheckBoxValue(test, "simConfig.timing", false);
-    testCheckBoxValue(test, "simConfig.verbose", true);
-    testCheckBoxValue(test, "simConfig.compactConnFormat", true);
-    testCheckBoxValue(test, "simConfig.connRandomSecFromList", false);
-    testCheckBoxValue(test, "simConfig.printPopAvgRates", true);
-    testCheckBoxValue(test, "simConfig.printSynsAfterRule", true);
-    testCheckBoxValue(test, "simConfig.gatherOnlySimData", true);
-    testCheckBoxValue(test, "simConfig.cache_efficient", true);
-    testCheckBoxValue(test, "simConfig.cvode_active", true);
+    tb.getInputValue(this, test, "simConfig.duration", "999");
+    tb.getInputValue(this, test, "simConfig.dt", "0.0249");
+    tb.getListItemValue(this, test, "simConfig.hParams2", "fake : 123456")
+    tb.getListItemValue(this, test, "simConfig.seeds2", "fakeII : 654321")
+    tb.testCheckBoxValue(this, test, "simConfig.createNEURONObj", false);
+    tb.testCheckBoxValue(this, test, "simConfig.createPyStruct", false);
+    tb.testCheckBoxValue(this, test, "simConfig.addSynMechs", false);
+    tb.testCheckBoxValue(this, test, "simConfig.includeParamsLabel", false);
+    tb.testCheckBoxValue(this, test, "simConfig.timing", false);
+    tb.testCheckBoxValue(this, test, "simConfig.verbose", true);
+    tb.testCheckBoxValue(this, test, "simConfig.compactConnFormat", true);
+    tb.testCheckBoxValue(this, test, "simConfig.connRandomSecFromList", false);
+    tb.testCheckBoxValue(this, test, "simConfig.printPopAvgRates", true);
+    tb.testCheckBoxValue(this, test, "simConfig.printSynsAfterRule", true);
+    tb.testCheckBoxValue(this, test, "simConfig.gatherOnlySimData", true);
+    tb.testCheckBoxValue(this, test, "simConfig.cache_efficient", true);
+    tb.testCheckBoxValue(this, test, "simConfig.cvode_active", true);
   })
 
   casper.thenClick("#configRecord", function() { //go to record tab
     this.wait(3500); //let python populate fields
-    active.tabID = "configRecord"
+    tb.active.tabID = "configRecord"
   });
   casper.then(function() {
-    getListItemValue(test, "simConfig.recordCells0", "22")
-    getListItemValue(test, "simConfig.recordLFP0", "[1,2,3]")
-    getListItemValue(test, "simConfig.recordTraces0", "Vsoma:   {var: v, loc: 0.5, sec: soma}")
-    getInputValue(test, "simConfig.recordStep", "10");
-    testCheckBoxValue(test, "simConfig.saveLFPCells", true);
-    testCheckBoxValue(test, "simConfig.recordStim", true);
+    tb.getListItemValue(this, test, "simConfig.recordCells0", "22")
+    tb.getListItemValue(this, test, "simConfig.recordLFP0", "[1,2,3]")
+    tb.getListItemValue(this, test, "simConfig.recordTraces0", "Vsoma:   {var: v, loc: 0.5, sec: soma}")
+    tb.getInputValue(this, test, "simConfig.recordStep", "10");
+    tb.testCheckBoxValue(this, test, "simConfig.saveLFPCells", true);
+    tb.testCheckBoxValue(this, test, "simConfig.recordStim", true);
   })
 
   casper.thenClick("#configSaveConfiguration", function() { //go to saveConfig tab
     this.wait(2500) //let python populate fields
-    active.tabID = "configSaveConfiguration"
+    tb.active.tabID = "configSaveConfiguration"
   });
   casper.then(function() {
-    testCheckBoxValue(test, "simConfig.saveCellSecs", false);
-    testCheckBoxValue(test, "simConfig.saveCellConns", false);
-    testCheckBoxValue(test, "simConfig.timestampFilename", true);
-    testCheckBoxValue(test, "simConfig.savePickle", true);
-    testCheckBoxValue(test, "simConfig.saveJson", true);
-    testCheckBoxValue(test, "simConfig.saveMat", true);
-    testCheckBoxValue(test, "simConfig.saveHDF5", true);
-    testCheckBoxValue(test, "simConfig.saveDpk", true);
-    testCheckBoxValue(test, "simConfig.saveDat", true);
-    testCheckBoxValue(test, "simConfig.saveCSV", true);
-    testCheckBoxValue(test, "simConfig.saveTiming", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveCellSecs", false);
+    tb.testCheckBoxValue(this, test, "simConfig.saveCellConns", false);
+    tb.testCheckBoxValue(this, test, "simConfig.timestampFilename", true);
+    tb.testCheckBoxValue(this, test, "simConfig.savePickle", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveJson", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveMat", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveHDF5", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveDpk", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveDat", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveCSV", true);
+    tb.testCheckBoxValue(this, test, "simConfig.saveTiming", true);
   })
 
   casper.thenClick("#configErrorChecking", function() { //go to checkError tab
     this.wait(2500) //let python populate fields
-    active.tabID = "configErrorChecking"
+    tb.active.tabID = "configErrorChecking"
   });
   casper.then(function() {
-    testCheckBoxValue(test, "simConfig.checkErrors", true);
-    testCheckBoxValue(test, "simConfig.checkErrorsVerbose", true);
+    tb.testCheckBoxValue(this, test, "simConfig.checkErrors", true);
+    tb.testCheckBoxValue(this, test, "simConfig.checkErrorsVerbose", true);
   })
 
   casper.thenClick("#confignetParams", function() { //go to network configuration tab
     this.wait(2500) //let python populate fields
-    active.tabID = "confignetParams"
+    tb.active.tabID = "confignetParams"
   });
   casper.then(function() {
-    getInputValue(test, "netParams.scale", "2");
-    getInputValue(test, "netParams.defaultWeight", "3");
-    getInputValue(test, "netParams.defaultDelay", "4");
-    getInputValue(test, "netParams.scaleConnWeight", "5");
-    getInputValue(test, "netParams.scaleConnWeightNetStims", "6");
-    getInputValue(test, "netParams.sizeX", "200");
-    getInputValue(test, "netParams.sizeY", "300");
-    getInputValue(test, "netParams.sizeZ", "400");
-    getInputValue(test, "netParams.propVelocity", "1000");
-    getListItemValue(test, "netParams.scaleConnWeightModels0", "0 : 0.001")
+    tb.getInputValue(this, test, "netParams.scale", "2");
+    tb.getInputValue(this, test, "netParams.defaultWeight", "3");
+    tb.getInputValue(this, test, "netParams.defaultDelay", "4");
+    tb.getInputValue(this, test, "netParams.scaleConnWeight", "5");
+    tb.getInputValue(this, test, "netParams.scaleConnWeightNetStims", "6");
+    tb.getInputValue(this, test, "netParams.sizeX", "200");
+    tb.getInputValue(this, test, "netParams.sizeY", "300");
+    tb.getInputValue(this, test, "netParams.sizeZ", "400");
+    tb.getInputValue(this, test, "netParams.propVelocity", "1000");
+    tb.getListItemValue(this, test, "netParams.scaleConnWeightModels0", "0 : 0.001")
   })
 }
 
@@ -762,7 +768,7 @@ function getSimConfigParams(test) {
  **************************************************/
 function testPopulation(test, buttonSelector, expectedName, expectedCellModel, expectedCellType, expectedDimensions) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "Populations",
       buttonID: "newPopulationButton",
       tabID: false
@@ -779,10 +785,10 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
     });
   });
   casper.then(function() { //test metadata contents
-    getInputValue(test, "populationName", expectedName);
-    getInputValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellModel\']", expectedCellModel);
-    getInputValue(test, "netParams.popParams[\'" + expectedName + "\'][\'cellType\']", expectedCellType);
-    getInputValue(test, "popParamsDimensions", expectedDimensions);
+    tb.getInputValue(this, test, "populationName", expectedName);
+    tb.getInputValue(this, test, "netParams.popParams[\'" + expectedName + "\'][\'cellModel\']", expectedCellModel);
+    tb.getInputValue(this, test, "netParams.popParams[\'" + expectedName + "\'][\'cellType\']", expectedCellType);
+    tb.getInputValue(this, test, "popParamsDimensions", expectedDimensions);
   });
 }
 /*******************************************************************************
@@ -790,7 +796,7 @@ function testPopulation(test, buttonSelector, expectedName, expectedCellModel, e
  *******************************************************************************/
 function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, expectedCellTypeId) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "CellRules",
       buttonID: "newCellRuleButton",
       tabID: false
@@ -807,7 +813,7 @@ function testCellRule(test, buttonSelector, expectedName, expectedCellModelId, e
     });
   });
   casper.then(function() { //test contents of metadata
-    getInputValue(test, "cellRuleName", expectedName);
+    tb.getInputValue(this, test, "cellRuleName", expectedName);
     test.assertExists(expectedCellModelId, "cellRullCellModel exists");
     test.assertExists(expectedCellTypeId, "cellRullCellType exists");
   });
@@ -1102,7 +1108,7 @@ function testControlPanelValues(test, values) {
  *******************************************************************************/
 function populatePopParams(test) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "Populations",
       buttonID: "newPopulationButton",
       tabID: false
@@ -1110,15 +1116,15 @@ function populatePopParams(test) {
   })
   casper.then(function() { //populate fields
     test.assertExists("#populationName", "Pop name Exists");
-    setInputValue(test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
-    setInputValue(test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
   })
   casper.then(function() { // populate dimension component
     populatePopDimension(test)
   })
   casper.then(function() {
     this.wait(2500) //let python receive data
-    active.tabID = "spatialDistPopTab"
+    tb.active.tabID = "spatialDistPopTab"
   })
   casper.thenClick('#spatialDistPopTab', function() { //go to second tab (spatial distribution)
     this.echo("changed tab")
@@ -1130,26 +1136,26 @@ function populatePopParams(test) {
 
 function checkPopParamsValues(test, ruleName, empty = false) {
   casper.then(function() {
-    active.tabID = false
+    tb.active.tabID = false
   })
 
   casper.then(function() { // check fields remained the same after renaiming and closing card
-    getInputValue(test, "populationName", ruleName);
-    getInputValue(test, "netParams.popParams[\'" + ruleName + "\'][\'cellType\']", !empty ? "PYR" : "");
-    getInputValue(test, "netParams.popParams[\'" + ruleName + "\'][\'cellModel\']", !empty ? "HH" : "");
+    tb.getInputValue(this, test, "populationName", ruleName);
+    tb.getInputValue(this, test, "netParams.popParams[\'" + ruleName + "\'][\'cellType\']", !empty ? "PYR" : "");
+    tb.getInputValue(this, test, "netParams.popParams[\'" + ruleName + "\'][\'cellModel\']", !empty ? "HH" : "");
   })
 
   casper.then(function() { //check dimension
     if (empty) {
-      assertDoesntExist(test, "popParamsDimensions");
+      tb.assertDoesntExist(this, test, "popParamsDimensions");
     } else {
-      getInputValue(test, "popParamsDimensions", "20");
+      tb.getInputValue(this, test, "popParamsDimensions", "20");
     }
   })
 
   casper.thenClick('#spatialDistPopTab', function() { //go to second tab (spatial distribution)
     this.wait(2500) // wait for python to populate fields
-    active.tabID = "spatialDistPopTab"
+    tb.active.tabID = "spatialDistPopTab"
   })
 
   casper.then(function() {
@@ -1164,16 +1170,16 @@ function checkPopParamsValues(test, ruleName, empty = false) {
 //----------------------------------------------------------------------------//
 function populatePopDimension(test) {
   casper.then(function() {
-    click("popParamsDimensionsSelect", "div"); //click dimension SelectList
+    tb.click(this, "popParamsDimensionsSelect", "div"); //click dimension SelectList
   })
   casper.then(function() { // check all menuItems exist
-    assertExist(test, "popParamSnumCells", "span");
-    assertExist(test, "popParamSdensity", "span");
-    assertExist(test, "popParamSgridSpacing", "span");
+    tb.assertExist(this, test, "popParamSnumCells", "span");
+    tb.assertExist(this, test, "popParamSdensity", "span");
+    tb.assertExist(this, test, "popParamSgridSpacing", "span");
   });
 
   casper.thenClick("#popParamSnumCells", function() { //check 1st menuItem displays input field
-    setInputValue(test, "popParamsDimensions", "20")
+    tb.setInputValue(this, test, "popParamsDimensions", "20")
   })
   casper.then(function() { // let python receive changes
     casper.wait(2500)
@@ -1184,18 +1190,18 @@ function populatePopDimension(test) {
 //----------------------------------------------------------------------------//
 function addTestPops(test) {
   casper.then(function() {
-    active.tabID = false
+    tb.active.tabID = false
   })
 
-  message("extra pops to test other cards")
+  tb.message(casper, "extra pops to test other cards")
   casper.thenClick('button[id="newPopulationButton"]', function() { //add new population
     this.waitUntilVisible('input[id="populationName"]', function() {
       test.assertExists('input[id="populationName"]', "rule added");
     })
   })
   casper.then(function() { //populate fields
-    setInputValue(test, "netParams.popParams[\'Population\'][\'cellType\']", "GC")
-    setInputValue(test, "netParams.popParams[\'Population\'][\'cellModel\']", "IF")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellType\']", "GC")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellModel\']", "IF")
   })
   casper.then(function() {
     this.wait(2500)
@@ -1206,8 +1212,8 @@ function addTestPops(test) {
     })
   })
   casper.then(function() { //populate fields
-    setInputValue(test, "netParams.popParams[\'Population 2\'][\'cellType\']", "BC")
-    setInputValue(test, "netParams.popParams[\'Population 2\'][\'cellModel\']", "Izi")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population 2\'][\'cellType\']", "BC")
+    tb.setInputValue(this, test, "netParams.popParams[\'Population 2\'][\'cellModel\']", "Izi")
   })
   casper.then(function() {
     this.wait(2500)
@@ -1219,7 +1225,7 @@ function addTestPops(test) {
  ********************************************************************************/
 function populateCellRule(test) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "CellRules",
       buttonID: "newCellRuleButton",
       tabID: false
@@ -1227,10 +1233,10 @@ function populateCellRule(test) {
   })
 
   casper.then(function() { // populate cellRule
-    assertExist(test, "cellRuleName")
-    setSelectFieldValue(test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']", "PYRMenuItem")
-    setSelectFieldValue(test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']", "HHMenuItem")
-    setSelectFieldValue(test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'pop\']", "newPopMenuItem")
+    tb.assertExist(this, test, "cellRuleName")
+    tb.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']", "PYRMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']", "HHMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'pop\']", "newPopMenuItem")
   })
   casper.then(function() {
     this.wait(2500)
@@ -1243,10 +1249,10 @@ function populateCellRule(test) {
 //----------------------------------------------------------------------------//
 function checkCellParamsValues(test, name, cellType, cellModel, pop, rangeEmpty = false) {
   casper.then(function() {
-    getInputValue(test, "cellRuleName", name)
-    getSelectFieldValue(test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'cellType\']", cellType)
-    getSelectFieldValue(test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'cellModel\']", cellModel)
-    getSelectFieldValue(test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'pop\']", pop)
+    tb.getInputValue(this, test, "cellRuleName", name)
+    tb.getSelectFieldValue(this, test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'cellType\']", cellType)
+    tb.getSelectFieldValue(this, test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'cellModel\']", cellModel)
+    tb.getSelectFieldValue(this, test, "netParams.cellParams[\'" + name + "\'][\'conds\'][\'pop\']", pop)
   })
   casper.then(function() {
     if (rangeEmpty) {
@@ -1259,23 +1265,23 @@ function checkCellParamsValues(test, name, cellType, cellModel, pop, rangeEmpty 
 
 //----------- going to section page ----------
 function testSectionAndMechanisms(test) {
-  message("going to section page")
+  tb.message(casper, "going to section page")
   casper.thenClick('button[id="cellParamsGoSectionButton"]', function() { //go to "section" page
     test.assertExist('button[id="newCellRuleSectionButton"]', "landed in section page")
   })
   casper.thenClick('#newCellRuleSectionButton', function() { //create section 1
     this.echo("creating 2 sections")
-    getInputValue(test, "cellParamsSectionName", "Section")
+    tb.getInputValue(this, test, "cellParamsSectionName", "Section")
   });
   casper.thenClick('#newCellRuleSectionButton', function() { //create section 2
-    getInputValue(test, "cellParamsSectionName", "Section 2")
+    tb.getInputValue(this, test, "cellParamsSectionName", "Section 2")
   });
   casper.thenClick('button[id="Section"]') //focus on section 1
 
   //----------- going to "Geometry" tab in "section" page ----------
   casper.then(function() {
-    active.buttonID = "newCellRuleSectionButton"
-    active.tabID = "sectionGeomTab"
+    tb.active.buttonID = "newCellRuleSectionButton"
+    tb.active.tabID = "sectionGeomTab"
   })
 
   casper.thenClick("#sectionGeomTab", function() { //go to "geometry" tab in "section" page
@@ -1286,14 +1292,14 @@ function testSectionAndMechanisms(test) {
   })
 
   casper.then(function() { // go to general tab and come back to geometry tab
-    leaveReEnterTab(test, "sectionGeomTab", "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'diam\']", "sectionGeneralTab", "cellParamsSectionName")
+    tb.leaveReEnterTab(this, test, "sectionGeomTab", "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'diam\']", "sectionGeneralTab", "cellParamsSectionName")
   })
 
   casper.then(function() { // check values remain the same
     checkSectionGeomTabValues(test, "CellRule", "Section")
   })
   casper.then(function() { // try to delete an item from pt3d component
-    deleteListItem(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']1")
+    tb.deleteListItem(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']1")
   })
 
   casper.thenClick('button[id="Section 2"]', function() { // change to rule 2
@@ -1316,14 +1322,14 @@ function testSectionAndMechanisms(test) {
   //----------- going to "Topology" tab in "section" page ----------
   casper.thenClick("#sectionTopoTab", function() { // go to "Topology" tab in "section" page
     this.wait(2500) //let python populate fields
-    active.tabID = "sectionTopoTab"
+    tb.active.tabID = "sectionTopoTab"
   })
   casper.then(function() { // populate "topology" tab in "section" page
     populateSectionTopoTab(test)
   })
 
   casper.then(function() { // move to another tab and comeback
-    leaveReEnterTab(test, "sectionTopoTab", "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentSec\']", "sectionGeneralTab", "cellParamsSectionName", "div")
+    tb.leaveReEnterTab(this, test, "sectionTopoTab", "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentSec\']", "sectionGeneralTab", "cellParamsSectionName", "div")
   })
 
   casper.then(function() { // check fields remain the same
@@ -1350,7 +1356,7 @@ function testSectionAndMechanisms(test) {
   //----------- going to "Mechanism" page ----------
   casper.thenClick("#sectionGeneralTab", function() { //Go to Mechs page
     this.waitUntilVisible('button[id="cellParamsGoMechsButton"]', function() {
-      message("going to mechanisms page...")
+      tb.message(this, "going to mechanisms page...")
     })
   })
   casper.thenClick("#cellParamsGoMechsButton", function() { // check landing in Mech page
@@ -1358,8 +1364,8 @@ function testSectionAndMechanisms(test) {
   })
 
   casper.then(function() {
-    active.buttonID = "addNewMechButton"
-    active.tabID = false
+    tb.active.buttonID = "addNewMechButton"
+    tb.active.tabID = false
   })
 
   casper.then(function() { //fill mech values
@@ -1371,7 +1377,7 @@ function testSectionAndMechanisms(test) {
   })
 
   casper.thenClick('#fromMech2SectionButton', function() { // leave Mech page and go to Section page
-    casper.click("#cellParamsGoMechsButton")
+    this.click("#cellParamsGoMechsButton")
   })
   casper.then(function() { //go back to Mechs page
     this.waitUntilVisible('button[id="mechThumbhh"]', function() {
@@ -1387,10 +1393,10 @@ function testSectionAndMechanisms(test) {
     this.echo("delete mechanisms:")
   })
   casper.then(function() { // del pas mech
-    delThumbnail(test, "mechThumbpas")
+    tb.delThumbnail(this, test, "mechThumbpas")
   })
   casper.then(function() { // del fastpas mech
-    delThumbnail(test, "mechThumbfastpas")
+    tb.delThumbnail(this, test, "mechThumbfastpas")
   })
 
   casper.thenClick('button[id="fromMech2SectionButton"]', function() { // go back to --sections--
@@ -1401,11 +1407,11 @@ function testSectionAndMechanisms(test) {
 
   casper.then(function() { //delete section 2 
     this.echo("delete section 2:")
-    delThumbnail(test, "Section 2")
+    tb.delThumbnail(this, test, "Section 2")
   })
 
   casper.thenClick('button[id="Section"]', function() {
-    renameRule(test, "cellParamsSectionName", "newSec") // rename section 
+    tb.renameRule(this, test, "cellParamsSectionName", "newSec") // rename section 
   })
 
   casper.thenClick('button[id="fromSection2CellRuleButton"]', function() { // go back to cellRule
@@ -1421,12 +1427,12 @@ function testSectionAndMechanisms(test) {
  ********************************************************************************/
 function populateSectionGeomTab(test) {
   casper.then(function() {
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'diam\']", "20")
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'L\']", "30")
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'Ra\']", "100")
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'cm\']", "1")
-    addListItem(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']", "10,0,0")
-    addListItem(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']", "20,0,0")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'diam\']", "20")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'L\']", "30")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'Ra\']", "100")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'cm\']", "1")
+    tb.addListItem(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']", "10,0,0")
+    tb.addListItem(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']", "20,0,0")
   })
   casper.then(function() {
     casper.wait(2500) //let python receive values
@@ -1437,19 +1443,19 @@ function populateSectionGeomTab(test) {
 
 function checkSectionGeomTabValues(test, ruleName, sectionName, p2 = "[20,0,0]", p1 = "[10,0,0]", d = "20", l = "30", r = "100", c = "1") {
   casper.then(function() {
-    getInputValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'diam\']", d)
-    getInputValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'L\']", l)
-    getInputValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'Ra\']", r)
-    getInputValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'cm\']", c)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'diam\']", d)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'L\']", l)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'Ra\']", r)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'cm\']", c)
   })
   casper.then(function() {
     if (p2) {
-      getListItemValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'pt3d\']1", p2)
+      tb.getListItemValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'pt3d\']1", p2)
     }
   })
   casper.then(function() {
     if (p1) {
-      getListItemValue(test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'pt3d\']0", p1)
+      tb.getListItemValue(this, test, "netParams.cellParams[\'" + ruleName + "\'][\'secs\'][\'" + sectionName + "\'][\'geom\'][\'pt3d\']0", p1)
     }
   })
 }
@@ -1458,9 +1464,9 @@ function checkSectionGeomTabValues(test, ruleName, sectionName, p2 = "[20,0,0]",
 
 function populateSectionTopoTab(test) {
   casper.then(function() { //populate "topology" tab in "section" page
-    setSelectFieldValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentSec\']", "SectionMenuItem")
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentX\']", "1")
-    setInputValue(test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'childX\']", "0")
+    tb.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentSec\']", "SectionMenuItem")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'parentX\']", "1")
+    tb.setInputValue(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'topol\'][\'childX\']", "0")
   })
   casper.then(function() {
     casper.wait(2500) //let python receive values
@@ -1471,9 +1477,9 @@ function populateSectionTopoTab(test) {
 
 function checkSectionTopoTabValues(test, cellRuleName, sectionName, parentSec, pX, cX) {
   casper.then(function() {
-    getSelectFieldValue(test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'parentSec\']", parentSec)
-    getInputValue(test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'parentX\']", pX)
-    getInputValue(test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'childX\']", cX)
+    tb.getSelectFieldValue(this, test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'parentSec\']", parentSec)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'parentX\']", pX)
+    tb.getInputValue(this, test, "netParams.cellParams[\'" + cellRuleName + "\'][\'secs\'][\'" + sectionName + "\'][\'topol\'][\'childX\']", cX)
   })
 }
 
@@ -1594,11 +1600,11 @@ function populateMech(test, mechName, v1, v2, v3, v4) {
     this.waitUntilVisible('span[id="' + mechName + '"]')
   })
   casper.thenClick("#" + mechName, function() { // click add mech and populate fields
-    getInputValue(test, "singleMechName", mechName)
-    setInputValue(test, v1.n, v1.v);
-    setInputValue(test, v2.n, v2.v);
-    v3.v ? setInputValue(test, v3.n, v3.v) : {};
-    v4.v ? setInputValue(test, v4.n, v4.v) : {};
+    tb.getInputValue(this, test, "singleMechName", mechName)
+    tb.setInputValue(this, test, v1.n, v1.v);
+    tb.setInputValue(this, test, v2.n, v2.v);
+    v3.v ? tb.setInputValue(this, test, v3.n, v3.v) : {};
+    v4.v ? tb.setInputValue(this, test, v4.n, v4.v) : {};
   })
   casper.then(function() {
     casper.wait(2500) // for python to receive data
@@ -1613,11 +1619,11 @@ function checkMechValues(test, mechThumb, mech, v1, v2, v3, v4) {
     casper.wait(2500) // for python to populate fields
   })
   casper.then(function() { // check Fields
-    getInputValue(test, "singleMechName", mech)
-    getInputValue(test, v1.n, v1.v);
-    getInputValue(test, v2.n, v2.v);
-    v3.v ? getInputValue(test, v3.n, v3.v) : {};
-    v4.v ? getInputValue(test, v4.n, v4.v) : {};
+    tb.getInputValue(this, test, "singleMechName", mech)
+    tb.getInputValue(this, test, v1.n, v1.v);
+    tb.getInputValue(this, test, v2.n, v2.v);
+    v3.v ? tb.getInputValue(this, test, v3.n, v3.v) : {};
+    v4.v ? tb.getInputValue(this, test, v4.n, v4.v) : {};
   });
 }
 
@@ -1626,8 +1632,8 @@ function checkMechValues(test, mechThumb, mech, v1, v2, v3, v4) {
  ********************************************************************************/
 function exploreCellRuleAfterRenaming(test) {
   casper.then(function() {
-    active.buttonID = "newCellRuleButton"
-    active.tabID = false
+    tb.active.buttonID = "newCellRuleButton"
+    tb.active.tabID = false
   })
   casper.then(function() {
     checkCellParamsValues(test, "newCellRule", "PYR", "HH", "newPop")
@@ -1646,16 +1652,16 @@ function exploreCellRuleAfterRenaming(test) {
   })
   casper.then(function() {
     this.wait(2500) //wait  for python to populate fields
-    active.buttonID = "newCellRuleSectionButton"
+    tb.active.buttonID = "newCellRuleSectionButton"
   })
 
   casper.then(function() { // check section name
-    getInputValue(test, "cellParamsSectionName", "newSec")
+    tb.getInputValue(this, test, "cellParamsSectionName", "newSec")
   })
 
   casper.thenClick("#sectionGeomTab", function() { // go to Geometry tab 
     this.wait(2500) //wait  for python to populate fields
-    active.tabID = "sectionGeomTab"
+    tb.active.tabID = "sectionGeomTab"
   })
   casper.then(function() {
     checkSectionGeomTabValues(test, "newCellRule", "newSec", "")
@@ -1663,7 +1669,7 @@ function exploreCellRuleAfterRenaming(test) {
 
   casper.thenClick("#sectionTopoTab", function() { // go to Topology tab
     casper.wait(2500) //wait  for python to populate fields
-    active.tabID = "sectionTopoTab"
+    tb.active.tabID = "sectionTopoTab"
   })
 
   casper.then(function() {
@@ -1674,15 +1680,15 @@ function exploreCellRuleAfterRenaming(test) {
     this.waitUntilVisible('button[id="cellParamsGoMechsButton"]')
   })
   casper.then(function() { // go to mechs page 
-    click("cellParamsGoMechsButton", "button")
+    tb.click(this, "cellParamsGoMechsButton", "button")
   })
   casper.then(function() { // wait for button to appear
     this.waitUntilVisible('button[id="mechThumbhh"]')
   })
   casper.then(function() { // select HH thumbnail
     this.click('button[id="mechThumbhh"]')
-    active.buttonID = "addNewMechButton"
-    active.tabID = false
+    tb.active.buttonID = "addNewMechButton"
+    tb.active.tabID = false
   })
   casper.then(function() { // check values
     checkMechValues(test, "mechThumbhh", "hh", {
@@ -1701,8 +1707,8 @@ function exploreCellRuleAfterRenaming(test) {
   })
 
   casper.then(function() { // check pas and fastpas Thumbnails don't exist
-    assertDoesntExist(test, "mechThumbpas", "button")
-    assertDoesntExist(test, "mechThumbpasfast", "button")
+    tb.assertDoesntExist(this, test, "mechThumbpas", "button")
+    tb.assertDoesntExist(this, test, "mechThumbpasfast", "button")
   })
 }
 
@@ -1712,7 +1718,7 @@ function exploreCellRuleAfterRenaming(test) {
  ********************************************************************************/
 function populateSynMech(test) {
   casper.then(function() { //check rule name exist
-    active = {
+    tb.active = {
       cardID: "Synapses",
       buttonID: "newSynapseButton",
       tabID: false
@@ -1723,13 +1729,13 @@ function populateSynMech(test) {
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "synapseModSelect", "Exp2Syn")
+    tb.setSelectFieldValue(this, test, "synapseModSelect", "Exp2Syn")
   })
 
   casper.then(function() {
-    setInputValue(test, "netParams.synMechParams[\'Synapse\'][\'tau1\']", "0.1");
-    setInputValue(test, "netParams.synMechParams[\'Synapse\'][\'tau2\']", "10");
-    setInputValue(test, "netParams.synMechParams[\'Synapse\'][\'e\']", "-70");
+    tb.setInputValue(this, test, "netParams.synMechParams[\'Synapse\'][\'tau1\']", "0.1");
+    tb.setInputValue(this, test, "netParams.synMechParams[\'Synapse\'][\'tau2\']", "10");
+    tb.setInputValue(this, test, "netParams.synMechParams[\'Synapse\'][\'e\']", "-70");
   })
   casper.then(function() {
     this.wait(2500) // for python to receive data
@@ -1740,11 +1746,11 @@ function populateSynMech(test) {
 
 function checkSynMechValues(test, name = "Synapse", mod = "Exp2Syn", tau2 = "10", tau1 = "0.1", e = "-70") {
   casper.then(function() {
-    getInputValue(test, "synapseName", name)
-    getSelectFieldValue(test, "synapseModSelect", mod)
-    getInputValue(test, "netParams.synMechParams[\'" + name + "\'][\'e\']", e)
-    getInputValue(test, "netParams.synMechParams[\'" + name + "\'][\'tau1\']", tau1)
-    getInputValue(test, "netParams.synMechParams[\'" + name + "\'][\'tau2\']", tau2)
+    tb.getInputValue(this, test, "synapseName", name)
+    tb.getSelectFieldValue(this, test, "synapseModSelect", mod)
+    tb.getInputValue(this, test, "netParams.synMechParams[\'" + name + "\'][\'e\']", e)
+    tb.getInputValue(this, test, "netParams.synMechParams[\'" + name + "\'][\'tau1\']", tau1)
+    tb.getInputValue(this, test, "netParams.synMechParams[\'" + name + "\'][\'tau2\']", tau2)
   })
 }
 
@@ -1753,16 +1759,16 @@ function checkSynMechValues(test, name = "Synapse", mod = "Exp2Syn", tau2 = "10"
 function checkSynMechEmpty(test, name) {
   casper.then(function() { //assert new Synapse rule does not displays params before selectiong a "mod"
     this.waitUntilVisible("#synapseName", function() {
-      getSelectFieldValue(test, "synapseModSelect", "")
-      assertDoesntExist(test, "netParams.synMechParams[\'" + name + "\'][\'e\']");
-      assertDoesntExist(test, "netParams.synMechParams[\'" + name + "\'][\'tau1\']");
-      assertDoesntExist(test, "netParams.synMechParams[\'" + name + "\'][\'tau2\']");
+      tb.getSelectFieldValue(this, test, "synapseModSelect", "")
+      tb.assertDoesntExist(this, test, "netParams.synMechParams[\'" + name + "\'][\'e\']");
+      tb.assertDoesntExist(this, test, "netParams.synMechParams[\'" + name + "\'][\'tau1\']");
+      tb.assertDoesntExist(this, test, "netParams.synMechParams[\'" + name + "\'][\'tau2\']");
     })
   })
 }
 //----------------------------------------------------------------------------//
 function addTestSynMech(test) {
-  message("extra synMech to test other cards")
+  tb.message(casper, "extra synMech to test other cards")
   casper.thenClick('button[id="newSynapseButton"]', function() { //add new population
     this.waitUntilVisible('input[id="synapseName"]', function() {
       test.assertExists('input[id="synapseName"]', "rule added");
@@ -1779,63 +1785,63 @@ function addTestSynMech(test) {
  ********************************************************************************/
 function populateConnRule(test) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "Connections",
       buttonID: "newConnectivityRuleButton",
       tabID: false
     }
-    assertExist(test, "ConnectivityName", "input", "conn name exist")
+    tb.assertExist(this, test, "ConnectivityName", "input", "conn name exist")
   })
   casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() { // check all fields exist
-    addListItem(test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "soma")
-    addListItem(test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']", "0.5")
-    addListItem(test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "dend")
-    addListItem(test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']", "1")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'delay\']", "5")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'weight\']", "0.03")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'plasticity\']", "0.0001")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'convergence\']", "1")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'divergence\']", "2")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'probability\']", "3")
-    setInputValue(test, "netParams.connParams[\'ConnectivityRule\'][\'synsPerConn\']", "4")
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'synMech\']", "SynapseMenuItem")
+    tb.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "soma")
+    tb.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']", "0.5")
+    tb.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "dend")
+    tb.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']", "1")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'delay\']", "5")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'weight\']", "0.03")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'plasticity\']", "0.0001")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'convergence\']", "1")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'divergence\']", "2")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'probability\']", "3")
+    tb.setInputValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'synsPerConn\']", "4")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'synMech\']", "SynapseMenuItem")
 
   })
   casper.then(function() {
     this.wait(2500)
   })
   casper.then(function() {
-    moveToTab(test, "preCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "div")
+    tb.moveToTab(this, test, "preCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "div")
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "PopulationMenuItem")
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellModel\']", "IFMenuItem")
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellType\']", "GCMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "PopulationMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellModel\']", "IFMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellType\']", "GCMenuItem")
     populateRangeComponent(test, "PreConn")
   })
   casper.then(function() {
-    moveToTab(test, "postCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "div")
+    tb.moveToTab(this, test, "postCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "div")
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "Population 2MenuItem")
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellModel\']", "IziMenuItem")
-    setSelectFieldValue(test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellType\']", "BCMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "Population 2MenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellModel\']", "IziMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellType\']", "BCMenuItem")
   })
   casper.then(function() {
     this.wait(2500) //let python receive values
   })
   casper.then(function() {
-    moveToTab(test, "generalConnTab", "ConnectivityName", "input")
+    tb.moveToTab(this, test, "generalConnTab", "ConnectivityName", "input")
   })
 }
 //----------------------------------------------------------------------------//
 function checkConnRuleValues(test, name = "ConnectivityRule", empty = false) {
-  active = {
+  tb.active = {
     cardID: "Connections",
     buttonID: "newConnectivityRuleButton",
     tabID: false
@@ -1845,28 +1851,28 @@ function checkConnRuleValues(test, name = "ConnectivityRule", empty = false) {
       test.assertDoesntExist('input[id="netParams.connParams[\'"' + name + '"\'][\'sec\']0"]', "sec list is empty")
       test.assertDoesntExist('input[id="netParams.connParams[\'"' + name + '"\'][\'loc\']0"]', "loc list is empty")
     } else {
-      getListItemValue(test, "netParams.connParams[\'" + name + "\'][\'sec\']0", "soma")
-      getListItemValue(test, "netParams.connParams[\'" + name + "\'][\'sec\']1", "dend")
-      getListItemValue(test, "netParams.connParams[\'" + name + "\'][\'loc\']0", "0.5")
-      getListItemValue(test, "netParams.connParams[\'" + name + "\'][\'loc\']1", "1")
+      tb.getListItemValue(this, test, "netParams.connParams[\'" + name + "\'][\'sec\']0", "soma")
+      tb.getListItemValue(this, test, "netParams.connParams[\'" + name + "\'][\'sec\']1", "dend")
+      tb.getListItemValue(this, test, "netParams.connParams[\'" + name + "\'][\'loc\']0", "0.5")
+      tb.getListItemValue(this, test, "netParams.connParams[\'" + name + "\'][\'loc\']1", "1")
     }
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'delay\']", !empty ? "5" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'weight\']", !empty ? "0.03" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'plasticity\']", !empty ? "0.0001" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'convergence\']", !empty ? "1" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'divergence\']", !empty ? "2" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'probability\']", !empty ? "3" : "")
-    getInputValue(test, "netParams.connParams[\'" + name + "\'][\'synsPerConn\']", !empty ? "4" : "")
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'synMech\']", !empty ? "Synapse" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'delay\']", !empty ? "5" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'weight\']", !empty ? "0.03" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'plasticity\']", !empty ? "0.0001" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'convergence\']", !empty ? "1" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'divergence\']", !empty ? "2" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'probability\']", !empty ? "3" : "")
+    tb.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'synsPerConn\']", !empty ? "4" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'synMech\']", !empty ? "Synapse" : "")
   })
   casper.then(function() {
-    moveToTab(test, "preCondsConnTab", "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", "div")
+    tb.moveToTab(this, test, "preCondsConnTab", "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", "div")
   })
 
   casper.then(function() {
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", !empty ? "Population" : "")
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellModel\']", !empty ? "IF" : "")
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellType\']", !empty ? "GC" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", !empty ? "Population" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellModel\']", !empty ? "IF" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellType\']", !empty ? "GC" : "")
     if (empty) {
       checkRangeComponentIsEmpty(test, "PreConn")
     } else {
@@ -1874,17 +1880,17 @@ function checkConnRuleValues(test, name = "ConnectivityRule", empty = false) {
     }
   })
   casper.then(function() {
-    moveToTab(test, "postCondsConnTab", "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", "div")
+    tb.moveToTab(this, test, "postCondsConnTab", "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", "div")
   })
 
   casper.then(function() {
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", !empty ? "Population 2" : "")
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellModel\']", !empty ? "Izi" : "")
-    getSelectFieldValue(test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellType\']", !empty ? "BC" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", !empty ? "Population 2" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellModel\']", !empty ? "Izi" : "")
+    tb.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellType\']", !empty ? "BC" : "")
     checkRangeComponentIsEmpty(test, "PostConn")
   })
   casper.then(function() {
-    moveToTab(test, "generalConnTab", "ConnectivityName", "input")
+    tb.moveToTab(this, test, "generalConnTab", "ConnectivityName", "input")
   })
 }
 
@@ -1893,7 +1899,7 @@ function checkConnRuleValues(test, name = "ConnectivityRule", empty = false) {
  ********************************************************************************/
 function populateStimSourceRule(test) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "StimulationSources",
       buttonID: "newStimulationSourceButton",
       tabID: false
@@ -1903,8 +1909,8 @@ function populateStimSourceRule(test) {
     this.wait(2500)
   })
   casper.then(function() { //check name and source type
-    getInputValue(test, "sourceName", "stim_source")
-    getSelectFieldValue(test, "stimSourceSelect", "")
+    tb.getInputValue(this, test, "sourceName", "stim_source")
+    tb.getSelectFieldValue(this, test, "stimSourceSelect", "")
   })
 
   casper.then(function() {
@@ -1913,16 +1919,16 @@ function populateStimSourceRule(test) {
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "stimSourceSelect", "VClampMenuItem")
+    tb.setSelectFieldValue(this, test, "stimSourceSelect", "VClampMenuItem")
   })
 
   casper.then(function() { // select VClamp source
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'tau1\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'tau2\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'gain\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'rstim\']", "")
-    assertDoesntExist(test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']0")
-    assertDoesntExist(test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']0")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'tau1\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'tau2\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'gain\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'rstim\']", "")
+    tb.assertDoesntExist(this, test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']0")
+    tb.assertDoesntExist(this, test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']0")
   })
 
   casper.then(function() {
@@ -1930,15 +1936,15 @@ function populateStimSourceRule(test) {
     this.wait(500)
   })
   casper.then(function() {
-    setSelectFieldValue(test, "stimSourceSelect", "NetStimMenuItem")
+    tb.setSelectFieldValue(this, test, "stimSourceSelect", "NetStimMenuItem")
   })
 
   casper.then(function() { // select NetStim source and check correct params
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'rate\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'interval\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'number\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'start\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'noise\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'rate\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'interval\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'number\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'start\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'noise\']", "")
   })
 
   casper.then(function() {
@@ -1946,14 +1952,14 @@ function populateStimSourceRule(test) {
     casper.wait(500)
   })
   casper.then(function() {
-    setSelectFieldValue(test, "stimSourceSelect", "AlphaSynapseMenuItem")
+    tb.setSelectFieldValue(this, test, "stimSourceSelect", "AlphaSynapseMenuItem")
   })
 
   casper.then(function() { // select AlphaSynapseMenuItem source and check correct params
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'onset\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'tau\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'gmax\']", "")
-    getInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'e\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'onset\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'tau\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'gmax\']", "")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'e\']", "")
   })
 
   casper.then(function() {
@@ -1962,13 +1968,13 @@ function populateStimSourceRule(test) {
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "stimSourceSelect", "IClampMenuItem")
+    tb.setSelectFieldValue(this, test, "stimSourceSelect", "IClampMenuItem")
   })
 
   casper.then(function() { // select ICLamp source and check correct params
-    setInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'del\']", "1")
-    setInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']", "2")
-    setInputValue(test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']", "3")
+    tb.setInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'del\']", "1")
+    tb.setInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'dur\']", "2")
+    tb.setInputValue(this, test, "netParams.stimSourceParams[\'stim_source\'][\'amp\']", "3")
   })
 
   casper.then(function() {
@@ -1979,19 +1985,19 @@ function populateStimSourceRule(test) {
 //----------------------------------------------------------------------------//
 function checkStimSourceEmpty(test, name) {
   casper.then(function() { //check name and source type
-    getInputValue(test, "sourceName", name)
-    getSelectFieldValue(test, "stimSourceSelect", "")
+    tb.getInputValue(this, test, "sourceName", name)
+    tb.getSelectFieldValue(this, test, "stimSourceSelect", "")
   })
 }
 
 //----------------------------------------------------------------------------//
 function checkStimSourceValues(test, name) {
   casper.then(function() {
-    getInputValue(test, "sourceName", name)
-    getSelectFieldValue(test, "stimSourceSelect", "IClamp")
-    getInputValue(test, "netParams.stimSourceParams[\'" + name + "\'][\'del\']", "1")
-    getInputValue(test, "netParams.stimSourceParams[\'" + name + "\'][\'dur\']", "2")
-    getInputValue(test, "netParams.stimSourceParams[\'" + name + "\'][\'amp\']", "3")
+    tb.getInputValue(this, test, "sourceName", name)
+    tb.getSelectFieldValue(this, test, "stimSourceSelect", "IClamp")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'" + name + "\'][\'del\']", "1")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'" + name + "\'][\'dur\']", "2")
+    tb.getInputValue(this, test, "netParams.stimSourceParams[\'" + name + "\'][\'amp\']", "3")
   })
 }
 /*******************************************************************************
@@ -1999,7 +2005,7 @@ function checkStimSourceValues(test, name) {
  ********************************************************************************/
 function populateStimTargetRule(test) {
   casper.then(function() {
-    active = {
+    tb.active = {
       cardID: "StimulationTargets",
       buttonID: "newStimulationTargetButton",
       tabID: false
@@ -2009,30 +2015,30 @@ function populateStimTargetRule(test) {
     this.wait(2500)
   })
   casper.then(function() {
-    getInputValue(test, "targetName", "stim_target")
-    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'source\']", "newStimSourceMenuItem")
-    setInputValue(test, "netParams.stimTargetParams['stim_target']['sec']", "soma")
-    setInputValue(test, "netParams.stimTargetParams['stim_target']['loc']", "0.5")
+    tb.getInputValue(this, test, "targetName", "stim_target")
+    tb.setSelectFieldValue(this, test, "netParams.stimTargetParams[\'stim_target\'][\'source\']", "newStimSourceMenuItem")
+    tb.setInputValue(this, test, "netParams.stimTargetParams['stim_target']['sec']", "soma")
+    tb.setInputValue(this, test, "netParams.stimTargetParams['stim_target']['loc']", "0.5")
   })
   casper.then(function() {
     this.wait(2500) //for python to receive data
   })
 
   casper.then(function() {
-    moveToTab(test, "stimTargetCondsTab", "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "input")
+    tb.moveToTab(this, test, "stimTargetCondsTab", "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "input")
   })
 
   casper.then(function() {
-    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'pop\']", "PopulationMenuItem")
-    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellModel\']", "IFMenuItem")
-    setSelectFieldValue(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellType\']", "GCMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'pop\']", "PopulationMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellModel\']", "IFMenuItem")
+    tb.setSelectFieldValue(this, test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellType\']", "GCMenuItem")
   })
   casper.then(function() { // test range component
     populateRangeComponent(test, "StimTarget");
   });
   casper.then(function() {
-    addListItem(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "0")
-    addListItem(test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "3")
+    tb.addListItem(this, test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "0")
+    tb.addListItem(this, test, "netParams.stimTargetParams[\'stim_target\'][\'conds\'][\'cellList\']", "3")
   })
   casper.then(function() {
     this.wait(2500) //for python to receibe data
@@ -2042,23 +2048,23 @@ function populateStimTargetRule(test) {
 //----------------------------------------------------------------------------//
 function checkStimTargetValues(test, name, empty = false) {
   casper.then(function() {
-    active.tabID = false
+    tb.active.tabID = false
   })
   casper.then(function() { //
-    getInputValue(test, "targetName", name)
-    getSelectFieldValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'source\']", !empty ? "newStimSource" : "")
-    getInputValue(test, "netParams.stimTargetParams['" + name + "']['sec']", !empty ? "soma" : "")
-    getInputValue(test, "netParams.stimTargetParams['" + name + "']['loc']", !empty ? "0.5" : "")
+    tb.getInputValue(this, test, "targetName", name)
+    tb.getSelectFieldValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'source\']", !empty ? "newStimSource" : "")
+    tb.getInputValue(this, test, "netParams.stimTargetParams['" + name + "']['sec']", !empty ? "soma" : "")
+    tb.getInputValue(this, test, "netParams.stimTargetParams['" + name + "']['loc']", !empty ? "0.5" : "")
   })
 
   casper.then(function() {
-    moveToTab(test, "stimTargetCondsTab", "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']", "input")
+    tb.moveToTab(this, test, "stimTargetCondsTab", "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']", "input")
   })
 
   casper.then(function() {
-    getSelectFieldValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'pop\']", !empty ? "Population" : "")
-    getSelectFieldValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellModel\']", !empty ? "IF" : "")
-    getSelectFieldValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellType\']", !empty ? "GC" : "")
+    tb.getSelectFieldValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'pop\']", !empty ? "Population" : "")
+    tb.getSelectFieldValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellModel\']", !empty ? "IF" : "")
+    tb.getSelectFieldValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellType\']", !empty ? "GC" : "")
   })
   casper.then(function() {
     if (empty) {
@@ -2069,10 +2075,10 @@ function checkStimTargetValues(test, name, empty = false) {
   })
   casper.then(function() {
     if (empty) {
-      assertDoesntExist(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']0")
+      tb.assertDoesntExist(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']0")
     } else {
-      getListItemValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']0", "0")
-      getListItemValue(test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']1", "3")
+      tb.getListItemValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']0", "0")
+      tb.getListItemValue(this, test, "netParams.stimTargetParams[\'" + name + "\'][\'conds\'][\'cellList\']1", "3")
     }
   })
 }
@@ -2086,12 +2092,12 @@ function populateRangeComponent(test, model) {
   })
   casper.then(function() { // populate fields with correct and wrong values
     this.echo("set values on range component")
-    setInputValue(test, "xRange" + model + "MinRange", "0.1")
-    setInputValue(test, "xRange" + model + "MaxRange", "0.9")
-    setInputValue(test, "yRange" + model + "MinRange", "100")
-    setInputValue(test, "yRange" + model + "MaxRange", "900")
-    setInputValue(test, "zRange" + model + "MinRange", "0.2")
-    setInputValue(test, "zRange" + model + "MaxRange", "A")
+    tb.setInputValue(this, test, "xRange" + model + "MinRange", "0.1")
+    tb.setInputValue(this, test, "xRange" + model + "MaxRange", "0.9")
+    tb.setInputValue(this, test, "yRange" + model + "MinRange", "100")
+    tb.setInputValue(this, test, "yRange" + model + "MaxRange", "900")
+    tb.setInputValue(this, test, "zRange" + model + "MinRange", "0.2")
+    tb.setInputValue(this, test, "zRange" + model + "MaxRange", "A")
   })
   casper.then(function() { //let python receive data
     this.wait(2000)
@@ -2114,20 +2120,20 @@ function exploreRangeAxis(test, model, axis, norm) {
   var elementID = axis + "Range" + model + "Select"
   var secondElementID = axis + "Range" + model + norm + "MenuItem"
   casper.then(function() {
-    click(elementID)
+    tb.click(this, elementID)
   })
   casper.then(function() {
     this.waitUntilVisible('span[id="' + secondElementID + '"]') //wait for dropDownMenu animation
   })
   casper.then(function() {
-    click(secondElementID, "span")
+    tb.click(this, secondElementID, "span")
   })
   casper.then(function() {
     this.waitWhileVisible('span[id="' + secondElementID + '"]')
   })
   casper.then(function() {
-    assertExist(test, elementID.replace("Select", "") + "MinRange", "input", "min limit in range " + axis + " Exist")
-    assertExist(test, elementID.replace("Select", "") + "MaxRange", "input", "max limit in range " + axis + " Exist")
+    tb.assertExist(this, test, elementID.replace("Select", "") + "MinRange", "input", "min limit in range " + axis + " Exist")
+    tb.assertExist(this, test, elementID.replace("Select", "") + "MaxRange", "input", "max limit in range " + axis + " Exist")
   })
 }
 
@@ -2135,13 +2141,13 @@ function exploreRangeAxis(test, model, axis, norm) {
 
 function testRangeComponent(test, model) {
   casper.then(function() {
-    casper.wait(1500, function() { // let pyhton populate fields
-      getInputValue(test, "xRange" + model + "MinRange", "0.1");
-      getInputValue(test, "xRange" + model + "MaxRange", "0.9");
-      getInputValue(test, "yRange" + model + "MinRange", "100");
-      getInputValue(test, "yRange" + model + "MaxRange", "900");
-      assertDoesntExist(test, "zRange" + model + "MaxRange")
-      assertDoesntExist(test, "zRange" + model + "MaxRange")
+    this.wait(1500, function() { // let pyhton populate fields
+      tb.getInputValue(this, test, "xRange" + model + "MinRange", "0.1");
+      tb.getInputValue(this, test, "xRange" + model + "MaxRange", "0.9");
+      tb.getInputValue(this, test, "yRange" + model + "MinRange", "100");
+      tb.getInputValue(this, test, "yRange" + model + "MaxRange", "900");
+      tb.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
+      tb.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
     })
   })
 }
@@ -2150,416 +2156,11 @@ function testRangeComponent(test, model) {
 
 function checkRangeComponentIsEmpty(test, model) {
   casper.wait(1000, function() { //wait for python to populate fields
-    assertDoesntExist(test, "xRange" + model + "MinRange");
-    assertDoesntExist(test, "xRange" + model + "MaxRange");
-    assertDoesntExist(test, "yRange" + model + "MinRange");
-    assertDoesntExist(test, "yRange" + model + "MaxRange");
-    assertDoesntExist(test, "zRange" + model + "MaxRange")
-    assertDoesntExist(test, "zRange" + model + "MaxRange")
-  })
-}
-/*******************************************************************************
- *                                functions                                    *
- *******************************************************************************/
-function moveToTab(test, tabID, elementID, elementType) {
-  casper.then(function() {
-    active.tabID = tabID
-    this.click('button[id="' + tabID + '"]', function() {
-      this.echo("changing tab...")
-    })
-  })
-  casper.then(function() {
-    this.waitUntilVisible(elementType + '[id="' + elementID + '"]', function() {
-      test.assertExist(elementType + '[id="' + elementID + '"]', "changed tab")
-    })
-  })
-  casper.then(function() {
-    this.wait(2000)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function leaveReEnterTab(test, mainTabID, mainTabElementID, secondTabID, SecondTabElementID, mainElementType = "input") {
-  casper.thenClick('button[id="' + secondTabID + '"]', function() {
-    this.waitUntilVisible('input[id="' + SecondTabElementID + '"]')
-  });
-  casper.thenClick('button[id="' + mainTabID + '"]', function() {
-    this.wait(1500) //for python to re-populate fields
-  })
-  casper.then(function() {
-    this.waitUntilVisible(mainElementType + '[id="' + mainTabElementID + '"]', function() {
-      this.echo("leave and re-enter " + mainTabID + " tab")
-    })
-  })
-  casper.then(function() {
-    this.wait(2000) // for python to repopulate tab
-  })
-}
-
-//----------------------------------------------------------------------------//
-function leaveReEnterRule(test, mainThumbID, secondThumbID, elementID, type = "input") {
-  casper.thenClick('button[id="' + secondThumbID + '"]', function() { //move to another Rule thumbnail
-    this.waitUntilVisible(type + '[id="' + elementID + '"]', function() {
-      this.wait(2000)
-    })
-  })
-  casper.thenClick('button[id="' + mainThumbID + '"]', function() {
-    this.waitUntilVisible(type + '[id="' + elementID + '"]', function() {
-      this.echo("moved to different Rule and came back")
-    })
-  })
-  casper.then(function() {
-    this.wait(2000)
-  })
-}
-//----------------------------------------------------------------------------//
-function create2rules(test, cardID, addButtonID, ruleThumbID) {
-  casper.then(function() {
-    this.waitUntilVisible('div[id="' + cardID + '"]', function() {
-      this.click('div[id="' + cardID + '"]'); //open Card
-    })
-  })
-
-  casper.then(function() {
-    this.wait(1000)
-  })
-
-  casper.then(function() { // check ADD button exist
-    this.waitUntilVisible('button[id="' + addButtonID + '"]', function() {
-      test.assertExist('button[id="' + addButtonID + '"]', "open card")
-    });
-  })
-
-  casper.then(function() {
-    this.wait(1000)
-  })
-
-  casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
-    this.waitUntilVisible('button[id="' + ruleThumbID + '"]', function() {
-      test.assertExist('button[id="' + ruleThumbID + '"]', "rule added");
-    })
-  })
-
-  casper.then(function() {
-    this.wait(1000)
-  })
-
-  casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
-    this.waitUntilVisible('button[id="' + ruleThumbID + ' 2"]', function() {
-      test.assertExist('button[id="' + ruleThumbID + ' 2"]', "rule added");
-    })
-  })
-
-  casper.thenClick('button[id="' + ruleThumbID + '"]', function() { // focus on first rule
-    this.wait(2500)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function renameRule(test, elementID, value) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    this.sendKeys('input[id="' + elementID + '"]', value, {
-      reset: true
-    })
-  })
-  casper.then(function() { //let python re-populate fields 
-    this.wait(2000)
-  })
-  casper.then(function() {
-    var currentValue = this.getElementAttribute('input[id="' + elementID + '"]', 'value');
-    test.assertEqual(currentValue, value, "Rule renamed to: " + value)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function selectThumbRule(test, thumbID, nameFieldID) { // select a thumbnailRule and wait to load data
-  casper.thenClick('button[id="' + thumbID + '"]', function() { // focus on rule 1
-    this.waitUntilVisible('input[id="' + nameFieldID + '"]')
-  })
-  casper.then(function() {
-    this.wait(2000)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function delThumbnail(test, elementID) {
-  casper.then(function() { // click thumbnail
-    this.waitUntilVisible('button[id="' + elementID + '"]', function() {
-      this.mouse.click('button[id="' + elementID + '"]');
-    })
-  })
-  casper.then(function() { // move mouse into thumbnail
-    this.mouse.move('button[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    this.wait(500)
-  })
-  casper.then(function() { //click thumbnail
-    this.mouse.click('button[id="' + elementID + '"]')
-  })
-  casper.then(function() { //confirm deletion
-    this.waitUntilVisible('button[id="confirmDeletion"]', function() {
-      this.click('button[id="confirmDeletion"]')
-    })
-  })
-  casper.then(function() {
-    this.waitWhileVisible('button[id="' + elementID + '"]', function() {
-      test.assertDoesntExist('button[id="' + elementID + '"]', elementID + " button deleted")
-    })
-  })
-}
-
-//----------------------------------------------------------------------------//
-function setInputValue(test, elementID, value) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]', function() {})
-  })
-  casper.thenEvaluate(function(elementID, value) { //this hack breaks for latest React!!!!!
-    var element = document.getElementById(elementID);
-    var ev = new Event('input', {
-      bubbles: true
-    });
-    ev.simulated = true;
-    element.value = value;
-    element.dispatchEvent(ev);
-  }, elementID, value);
-  casper.then(function() {
-    test.assert(true, value + " set for: " + elementID)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function getInputValue(test, elementID, expectedValue, times = 3) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    var value = this.evaluate(function(elementID) {
-      return $('input[id="' + elementID + '"]').val();
-    }, elementID);
-
-    // required in case python fails to update field
-    secondChance(test, value, expectedValue, elementID, getInputValue, times)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function setSelectFieldValue(test, selectFieldID, menuItemID) {
-  casper.then(function() {
-    this.waitUntilVisible('div[id="' + selectFieldID + '"]')
-  })
-  casper.thenEvaluate(function(selectFieldID) {
-    document.getElementById(selectFieldID).scrollIntoView();
-  }, selectFieldID);
-
-  casper.then(function() { // click selectField
-    var info = casper.getElementInfo('div[id="' + selectFieldID + '"]');
-    this.mouse.click(info.x + 1, info.y + 1)
-  })
-
-  casper.then(function() {
-    this.wait(500) //wait for the menuitem animation to finish
-  })
-  casper.then(function() { // click menuItem
-    this.waitUntilVisible('span[id="' + menuItemID + '"]', function() {
-      var info = this.getElementInfo('span[id="' + menuItemID + '"]');
-      this.mouse.click(info.x + 1, info.y + 1)
-    })
-  })
-  casper.then(function() { // click outside selectField
-    var info = this.getElementInfo('div[id="' + selectFieldID + '"]');
-    this.mouse.click(info.x - 10, info.y)
-  })
-  casper.then(function() {
-    this.wait(500) //wait for MenuItem animation to vanish
-  })
-  casper.then(function() { //check value is ok
-    this.waitWhileVisible('span[id="' + menuItemID + '"]', function() {
-      this.echo("click on " + menuItemID)
-      //getSelectFieldValue(test, selectFieldID, menuItemID.includes("MenuItem") ? menuItemID.slice(0, -"menuItem".length) : menuItemID)
-    })
-  })
-}
-
-//----------------------------------------------------------------------------//
-function getSelectFieldValue(test, elementID, expected, times = 3) {
-  casper.then(function() {
-    this.waitUntilVisible('div[id="' + elementID + '"]')
-  })
-
-  casper.then(function() {
-    var value = this.evaluate(function(elementID) {
-      return document.getElementById(elementID).getElementsByTagName("div")[0].textContent;
-    }, elementID)
-
-    secondChance(test, value, expected, elementID, getSelectFieldValue, times)
-  });
-}
-
-//----------------------------------------------------------------------------//
-function addListItem(test, elementID, value) {
-  casper.then(function() {
-    setInputValue(test, elementID, value)
-  })
-  casper.then(function() {
-    click(elementID + "AddButton", "button")
-  })
-}
-
-//----------------------------------------------------------------------------//
-function deleteListItem(test, elementID) {
-  casper.then(function() {
-    this.waitUntilVisible('button[id="' + elementID + 'RemoveButton"]')
-  })
-  casper.thenClick('button[id="' + elementID + 'RemoveButton"]')
-
-  casper.then(function() {
-    this.waitWhileVisible('input[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    this.echo("item removed from list: " + elementID)
-    this.wait(2000)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function getListItemValue(test, elementID, value, times = 3) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]', function() {}, function() {
-      secondChance(test, 'not-visible', value, elementID, getListItemValue, times)
-    })
-  })
-  casper.thenBypassIf(function() {
-    return (!this.visible('input[id="' + elementID + '"]') && times > 0)
-  })
-  casper.then(function() {
-    var newValue = this.evaluate(function(elementID) {
-      return $('input[id="' + elementID + '"]').val();
-    }, elementID);
-    // required in case python fails to update field
-    secondChance(test, newValue, value, elementID, getListItemValue, times)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function testCheckBoxValue(test, elementID, expectedName, times = 3) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    var name = casper.evaluate(function(elementID) {
-      return $('input[id="' + elementID + '"]').prop('checked');
-    }, elementID);
-    secondChance(test, name, expectedName, elementID, testCheckBoxValue, times)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function clickCheckBox(test, elementID) {
-  casper.then(function() {
-    this.waitUntilVisible('input[id="' + elementID + '"]', function() {
-      this.click('input[id="' + elementID + '"]');
-    });
-  })
-}
-
-//----------------------------------------------------------------------------//
-function assertExist(test, elementID, component = "input", message = false) {
-  casper.then(function() {
-    this.waitUntilVisible(component + '[id="' + elementID + '"]', function() {
-      test.assertExist(component + '[id="' + elementID + '"]', message ? message : component + ": " + elementID + " exist")
-    })
-  })
-}
-
-//----------------------------------------------------------------------------//
-function assertDoesntExist(test, elementID, component = "input", message = false) {
-  casper.then(function() {
-    this.waitWhileVisible(component + '[id="' + elementID + '"]', function() {
-      test.assertDoesntExist(component + '[id="' + elementID + '"]', message ? message : component + ": " + elementID + " doesn't exist")
-    })
-  })
-}
-
-//----------------------------------------------------------------------------//
-function message(message) {
-  casper.then(function() {
-    this.echo("<" + message.toUpperCase() + ">", "INFO")
-  })
-}
-
-//----------------------------------------------------------------------------//
-function click(elementID, type = "div") {
-  casper.then(function() {
-    this.waitUntilVisible(type + '[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    this.evaluate(function(elementID) {
-      document.getElementById(elementID).scrollIntoView();
-    }, elementID);
-  })
-  casper.then(function() {
-    this.waitUntilVisible(type + '[id="' + elementID + '"]')
-  })
-  casper.then(function() {
-    this.wait(500) // wait for animation in dropDownMenu to complete
-  })
-  casper.then(function() {
-    var info = this.getElementInfo(type + '[id="' + elementID + '"]');
-    this.mouse.click(info.x + 1, info.y + 1); //move a bit away from corner
-  })
-  casper.then(function() {
-    this.echo("Click on " + elementID)
-    this.wait(300)
-  })
-}
-
-
-//------------------------------------------------------------------------------
-function refresh(test, expected, got, times) {
-  // "active" object points to the current: "Card", "Add-newRule-Button" and "Tab"
-  // to allow refreshing in case a field did not get the correct value 
-  casper.then(function() {
-    this.echo("WARNING-->  expected: " + expected + "   got: " + (got ? got : "empty") + "    trying again " + (3 - times) + "/3", "WARNING")
-  })
-  casper.then(function() {
-    this.click('div[id="' + active.cardID + '"]')
-  })
-  casper.then(function() {
-    this.waitWhileVisible('div[id="' + active.buttonID + '"]', function() {
-      this.click('div[id="' + active.cardID + '"]')
-    })
-  })
-  casper.then(function() {
-    if (active.tabID) {
-      this.waitUntilVisible('button[id="' + active.tabID + '"]', function() {
-        this.click('button[id="' + active.tabID + '"]')
-      })
-    } else {
-      this.waitUntilVisible('button[id="' + active.buttonID + '"]')
-    }
-  })
-  casper.then(function() {
-    this.wait(2000)
-  })
-}
-
-//----------------------------------------------------------------------------//
-function secondChance(test, value, expectedValue, elementID, callback, times) {
-  casper.then(function() {
-    if (value != expectedValue && times > 0) {
-      --times
-      this.then(function() {
-        refresh(test, expectedValue, value, times)
-      })
-      this.then(function() {
-        callback(test, elementID, expectedValue, times)
-      })
-    } else {
-      test.assertEquals(value, expectedValue, (expectedValue ? expectedValue : "(empty)") + " found in: " + elementID);
-    }
+    tb.assertDoesntExist(this, test, "xRange" + model + "MinRange");
+    tb.assertDoesntExist(this, test, "xRange" + model + "MaxRange");
+    tb.assertDoesntExist(this, test, "yRange" + model + "MinRange");
+    tb.assertDoesntExist(this, test, "yRange" + model + "MaxRange");
+    tb.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
+    tb.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
   })
 }

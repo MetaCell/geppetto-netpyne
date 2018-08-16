@@ -15,19 +15,6 @@ import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
-/*
-//field value blinks until it disappears - unstable for casperTest
-<NetPyNEField id="netParams.popParams.cellModel" > 
-  <PythonControlledText
-    dataSource={[]}
-    model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
-    searchText={this.state.cellModel}
-    onChange={(value) => this.setPopulationDimension(value)}
-    openOnFocus={true}
-  />
-</NetPyNEField>
-*/
-
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledControl(AutoComplete);
