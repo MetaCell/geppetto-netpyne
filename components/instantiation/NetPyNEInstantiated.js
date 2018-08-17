@@ -78,8 +78,8 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
-    plotFigure(pythonFigureMethod, plotName) {
-        Utils.sendPythonMessage(pythonFigureMethod, [])
+    plotFigure(pythonFigureMethod, plotName, plotMethod, flavour=false) {
+        Utils.sendPythonMessage(pythonFigureMethod, [plotMethod, flavour])
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){
@@ -144,9 +144,9 @@ export default class NetPyNEInstantiated extends React.Component {
         if (this.props.page == 'explore') {
             controls = (
                 <Menu>
-                    <MenuItem id={"connectionPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connectivity" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEConnectionsPlot', 'Connections Plot') }} />
-                    <MenuItem id={"2dNetPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D network" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNE2DNetPlot', '2D Net Plot') }} />
-                    <MenuItem id={"shapePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell shape" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEShapePlot', 'Shape Plot') }} />
+                    <MenuItem id={"connectionPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connectivity" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Connections Plot', 'plotConn') }} />
+                    <MenuItem id={"2dNetPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D network" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', '2D Net Plot', 'plot2Dnet') }} />
+                    <MenuItem id={"shapePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell shape" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Shape Plot', 'plotShape') }} />
                 </Menu>
             );
 
@@ -154,17 +154,17 @@ export default class NetPyNEInstantiated extends React.Component {
         else if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell traces" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
-                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
-                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike histogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
-                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike stats" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
-                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
-                    <MenuItem id={"LFPTimeSeriesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP time-series" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPTimeSeriesPlot', 'LFP Time Series Plot') }} />
-                    <MenuItem id={"LFPPSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPPSDPlot', 'LFP PSD Plot') }} />
-                    <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPSpectrogramPlot', 'LFP Spectrogram Plot') }} />
-                    <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPLocationsPlot', 'LFP Locations Plot') }} />
-                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
-                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERxDConcentrationPlot', 'RxD concentration plot') }} />
+                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell traces" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Traces Plot', 'plotTraces') }} />
+                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster plot" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Raster Plot', 'plotRaster') }} />
+                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike histogram" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Spike Hist Plot', 'plotSpikeHist') }} />
+                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike stats" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Spike Stats Plot', 'plotSpikeStats') }} />
+                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Rate PSD Plot', 'plotRatePSD') }} />
+                    <MenuItem id={"LFPTimeSeriesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP time-series" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'LFP Time Series Plot', 'plotLFP', 'timeSeries') }} />
+                    <MenuItem id={"LFPPSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'LFP PSD Plot', 'plotLFP', 'PSD') }} />
+                    <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'LFP Spectrogram Plot', 'plotLFP', 'spectrogram') }} />
+                    <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'LFP Locations Plot', 'plotLFP', 'locations') }} />
+                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'Granger Plot', 'granger') }} />
+                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getPlot', 'RxD concentration plot', 'plotRxDConcentration') }} />
                 </Menu>
 
 
