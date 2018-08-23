@@ -3,14 +3,13 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import TimeRange from '../TimeRange'
-import ListComponent from '../../../general/List';
+import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotSpikeHist extends React.Component {
 
@@ -23,9 +22,12 @@ export default class PlotSpikeHist extends React.Component {
   render() {
     var tag = "simConfig.analysis['plotSpikeHist']"
     return <div >
-      <NetPyNEField id="simConfig.analysis.plotSpikeHist.include" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['include']"} />
-      </NetPyNEField>
+      <NetPyNEInclude
+        id={"simConfig.analysis.plotSpikeHist.include"}
+        model={tag+"['include']"} 
+        defaultOptions={['all', 'allCells', 'allNetStims']}
+        initialValue={'all'}
+      />
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.timeRange" >
         <TimeRange model={tag + "['timeRange']"} />

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import NetPyNEInclude from '../NetPyNEInclude';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -22,14 +23,20 @@ export default class PlotShape extends React.Component {
   render() {
     var tag = "simConfig.analysis['plotShape']"
     return <div>
-      <NetPyNEField id="simConfig.analysis.plotShape.includePre" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePre']"} />
-      </NetPyNEField>
-
-      <NetPyNEField id="simConfig.analysis.plotShape.includePost" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePost']"} />
-      </NetPyNEField>
-
+      <NetPyNEInclude
+        id={"simConfig.analysis.plotShape.includePre"}
+        model={tag+"['includePre']"} 
+        defaultOptions={['all', 'allCells', 'allNetStims']}
+        initialValue={'all'}
+      />
+      
+      <NetPyNEInclude
+        id={"simConfig.analysis.plotShape.includePost"}
+        model={tag+"['includePost']"} 
+        defaultOptions={['all', 'allCells', 'allNetStims']}
+        initialValue={'all'}
+      />
+      
       <NetPyNEField id="simConfig.analysis.plotShape.synStyle" >
         <PythonControlledTextField model={tag + "['synStyle']"} />
       </NetPyNEField>

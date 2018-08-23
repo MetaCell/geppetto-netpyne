@@ -86,7 +86,7 @@ export default class NetPyNEField extends Component {
         const childWithProp = React.Children.map(this.props.children, (child) => {
             var extraProps = {}
             
-            if (child.type.name != "SelectField" && child.type.name != 'PythonControlledControlWithPythonDataFetch') {
+            if (child.type.name != "SelectField" && child.type.name!="TextField" && child.type.name != 'PythonControlledControlWithPythonDataFetch') {
                 extraProps['validate'] = this.setErrorMessage;
                 extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 
