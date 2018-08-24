@@ -63,13 +63,14 @@ export default class DimensionsComponent extends Component {
         return (
             <div>
                 <NetPyNEField id="netParams.popParams.numCells" className={"netpyneFieldNoWidth"} noStyle>
-                    <SelectField 
+                    <SelectField
+                        id={"popParamsDimensionsSelect"}
                         value={this.state.dimension}
                         onChange={(event, index, value) => this.setState({ dimension: value })}
                     >
                         {(this.popDimensionsOptions != undefined) ?
                             this.popDimensionsOptions.map(function (popDimensionsOption) {
-                                return (<MenuItem key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
+                                return (<MenuItem id={"popParamS"+popDimensionsOption.value} key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
                             }) : null}
                     </SelectField>
                 </NetPyNEField>
@@ -77,6 +78,7 @@ export default class DimensionsComponent extends Component {
                     this.state.dimension != undefined && this.state.dimension != "" ?
                         <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
                             <PythonControlledTextField
+                                id={"popParamsDimensions"}
                                 handleChange={function (event, value) {
                                     var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
                                     // Update State
@@ -95,7 +97,6 @@ export default class DimensionsComponent extends Component {
                                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                                 modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
-                                id={"dimensions"}
                             />
                         </NetPyNEField>
                         : null

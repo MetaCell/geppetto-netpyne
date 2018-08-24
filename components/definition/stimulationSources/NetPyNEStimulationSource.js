@@ -64,12 +64,18 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   updateLayout() {
-    const getType = (value) => {
-      Utils
-        .sendPythonMessage("'" + value + "' in netParams.stimSourceParams['" + this.state.currentName + "']['type']")
-        .then((response) => { if (response == true) { this.setState({ sourceType: value }) } });
-    };
-    this.stimSourceTypeOptions.forEach((option) => { getType(option.type) });
+    var opts = this.stimSourceTypeOptions.map((option) => { return option.type });
+    Utils
+      .sendPythonMessage("[value == netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in "+JSON.stringify(opts)+"]")
+      .then((responses) => {
+        if (responses.constructor.name == "Array"){
+          responses.forEach( (response, index) => {
+            if (response && this.state.sourceType!=opts[index]) {
+              this.setState({ sourceType: opts[index] })
+            }
+          })
+        }
+    });
   };
 
   handleStimSourceTypeChange(event, index, value) {
@@ -138,12 +144,6 @@ export default class NetPyNEStimulationSource extends React.Component {
           <NetPyNEField id="netParams.stimSourceParams.rstim">
             <PythonControlledTextField
               model={"netParams.stimSourceParams['" + this.props.name + "']['rstim']"}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.stimSourceParams.i">
-            <PythonControlledTextField
-              model={"netParams.stimSourceParams['" + this.props.name + "']['i']"}
             />
           </NetPyNEField>
         </div>
@@ -266,13 +266,14 @@ export default class NetPyNEStimulationSource extends React.Component {
 
           <NetPyNEField id="netParams.stimSourceParams.type" className={"netpyneFieldNoWidth"} noStyle>
             <SelectField
+              id={"stimSourceSelect"}
               floatingLabelText="stimulation type"
               value={this.state.sourceType}
               onChange={this.handleStimSourceTypeChange}
             >
               {(this.stimSourceTypeOptions != undefined) ?
                 this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
-                  return (<MenuItem key={stimSourceTypeOption.type} value={stimSourceTypeOption.type} primaryText={stimSourceTypeOption.type} />)
+                  return (<MenuItem id={stimSourceTypeOption.type+"MenuItem"} key={stimSourceTypeOption.type} value={stimSourceTypeOption.type} primaryText={stimSourceTypeOption.type} />)
                 }) : null
               }
             </SelectField>

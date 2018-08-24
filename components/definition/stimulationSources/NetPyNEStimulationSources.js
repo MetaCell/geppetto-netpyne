@@ -25,7 +25,7 @@ export default class NetPyNEStimulationSources extends React.Component {
   };
 
   handleNewStimulationSource() {
-    var defaultStimulationSources = { 'stim_source ': { 'type': ''}};
+    var defaultStimulationSources = { 'stim_source': { 'type': ''}};
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
     var model = this.state.value;
@@ -133,7 +133,7 @@ export default class NetPyNEStimulationSources extends React.Component {
           subtitle="Define here the sources of stimulation in your network"
           actAsExpander={true}
           showExpandableButton={true}
-          id={"SimulationSources"}
+          id={"StimulationSources"}
         />
         {content}
       </Card>

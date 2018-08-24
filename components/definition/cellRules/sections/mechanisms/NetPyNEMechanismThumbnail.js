@@ -53,6 +53,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     return (
       <div style={{float: "left"}}>
       <IconButton
+        id={"mechThumb"+this.props.name}
         onMouseEnter={this.handleHoverIn}
         onMouseLeave={this.handleHoverOut}
         className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
