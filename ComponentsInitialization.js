@@ -8,7 +8,6 @@ define(function (require) {
         var Console = require('../../js/components/interface/console/Console');
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
-        var pythonNotebookPath = "http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb";
         injectTapEventPlugin();
 
         function App() {
@@ -22,7 +21,7 @@ define(function (require) {
                         <div id="footerHeader">
                             <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
                                 <Console />
-                                <PythonConsole pythonNotebookPath={pythonNotebookPath} />
+                                <PythonConsole pythonNotebookPath={"http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb"} />
                             </TabbedDrawer>
                         </div>
                     </div>
@@ -30,10 +29,6 @@ define(function (require) {
             );
         }
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
-
-        // Old declaration for TabbedDrawer plus children using the component factory.
-        // Children's props have to be declared into the array childrenProps
-        //GEPPETTO.ComponentFactory.addComponent('DRAWER', {children: [Console, PythonConsole], childrenProps: [null, { pythonNotebookPath: pythonNotebookPath }], labels: ["Console", "Python"], iconClass: ["fa fa-terminal", "fa fa-flask"]}, document.getElementById("footerHeader"));
 
         GEPPETTO.G.setIdleTimeOut(-1);
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
