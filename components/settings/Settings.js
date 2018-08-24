@@ -2,10 +2,11 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import Card from 'material-ui/Card/Card';
-import CardText from 'material-ui/Card/CardText';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Tabs, Tab } from 'material-ui/Tabs';
+import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 import Utils from '../../Utils';
 import FileBrowser from '../general/FileBrowser';
@@ -30,22 +31,18 @@ const SettingsDialog = React.createClass({
             explorerParameter: "",
             exploreOnlyDirs: false,
             errorMessage: undefined,
-            errorDetails: undefined
+            errorDetails: undefined,
+            scriptName: 'script_output',
+            exportFormat: "json"
         };
     },
 
     componentWillReceiveProps(nextProps) {
-        // switch (nextProps.tab) {
-        //TODO: we need to define the rules here
         if (this.props.open != nextProps.open) {
             this.setState({
                 open: true
             });
         }
-    },
-
-    onChangeTab(value) {
-        this.setState({ currentTab: value });
     },
 
     processError(parsedResponse) {
@@ -63,12 +60,18 @@ const SettingsDialog = React.createClass({
             var action = 'netpyne_geppetto.importModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
         }
-        else {
-            var action = 'netpyne_geppetto.exportModel';
+        else if (this.state.currentTab == "export") {
+            if (this.state.exportFormat== "json") {
+                var action = 'netpyne_geppetto.exportModel';
+            } 
+            else {
+                var action = 'netpyne_geppetto.generateScript';
+            }
             var message = GEPPETTO.Resources.EXPORTING_MODEL;
         }
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
 
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+        
         // Import/Export model python side
         this.closeDialog();
         Utils
@@ -141,7 +144,7 @@ const SettingsDialog = React.createClass({
                 var children = <Tabs
                     style={{ paddingTop: 10 }}
                     value={this.state.currentTab}
-                    onChange={this.onChangeTab}
+                    onChange={(value) => this.setState({ currentTab: value })}
                     tabTemplateStyle={{ float: 'left', height: '100%' }}
                 >
                     <Tab value="import" label={'Import'}>
@@ -176,9 +179,26 @@ const SettingsDialog = React.createClass({
                     </Tab>
 
                     <Tab value="export" label={'Export'}>
-                        <div style={{ padding: 20 }}>
-                            Click on export to download the model as a json fle. File will be stored in the path specified in Configuration > Save Configuration > File Name.
-                        </div>
+                        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+                            <SelectField
+                                style={{marginLeft: 20}}
+                                floatingLabelText="Format"
+                                value={this.state.exportFormat}
+                                onChange={(event, index, value) => this.setState({exportFormat: value})}
+                            >
+                                <MenuItem value={"json"} primaryText="JSON" />
+                                <MenuItem value={"netpyne script"} primaryText="NetPyNE script" />
+                            </SelectField>
+                            <div style={{marginLeft: 20, float: 'left', color: 'rgba(0, 0, 0, 0.6)', marginBottom: 10}}>
+                            {this.state.exportFormat=='json'?
+                                <span style={{marginTop: 20, float: 'left'}}>* File will be stored in the path specified in Configuration > Save Configuration > File Name.</span>
+                                :
+                                <div>
+                                    <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
+                                    <span style={{marginTop: 20, float: 'left'}}>* File will be saved in the current working directory (where you initialized NetPyNE-UI)</span>
+                                </div>}
+                            </div>
+                        </Card>
                     </Tab>
                 </Tabs>
             }
