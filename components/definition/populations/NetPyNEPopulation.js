@@ -1,15 +1,8 @@
-import React, { Component } from 'react';
-import MenuItem from 'material-ui/MenuItem';
+import React from 'react';
 import TextField from 'material-ui/TextField';
-import Tooltip from 'material-ui/internal/Tooltip';
-import Toggle from 'material-ui/Toggle';
-import Slider from '../../general/Slider';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import { CardText } from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import AutoComplete from 'material-ui/AutoComplete';
 import FontIcon from 'material-ui/FontIcon';
-import clone from 'lodash.clone';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
@@ -17,7 +10,6 @@ import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledAutoComplete = PythonControlledCapability.createPythonControlledControl(AutoComplete);
 
 
 export default class NetPyNEPopulation extends React.Component {
