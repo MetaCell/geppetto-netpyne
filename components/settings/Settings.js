@@ -38,21 +38,11 @@ const SettingsDialog = React.createClass({
     },
 
     componentWillReceiveProps(nextProps) {
-        // switch (nextProps.tab) {
-        //TODO: we need to define the rules here
         if (this.props.open != nextProps.open) {
             this.setState({
                 open: true
             });
         }
-    },
-
-    onChangeTab(value) {
-        this.setState({ currentTab: value });
-    },
-    
-    onChange(event, index, value) {
-        this.setState({exportFormat: value})
     },
 
     processError(parsedResponse) {
@@ -154,7 +144,7 @@ const SettingsDialog = React.createClass({
                 var children = <Tabs
                     style={{ paddingTop: 10 }}
                     value={this.state.currentTab}
-                    onChange={this.onChangeTab}
+                    onChange={(value) => this.setState({ currentTab: value })}
                     tabTemplateStyle={{ float: 'left', height: '100%' }}
                 >
                     <Tab value="import" label={'Import'}>
@@ -192,26 +182,22 @@ const SettingsDialog = React.createClass({
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
                             <SelectField
                                 style={{marginLeft: 20}}
-                                floatingLabelText="format"
+                                floatingLabelText="Format"
                                 value={this.state.exportFormat}
-                                onChange={this.onChange}
+                                onChange={(event, index, value) => this.setState({exportFormat: value})}
                             >
                                 <MenuItem value={"json"} primaryText="JSON" />
                                 <MenuItem value={"netpyne script"} primaryText="NetPyNE script" />
                             </SelectField>
+                            <div style={{marginLeft: 20, float: 'left', color: 'rgba(0, 0, 0, 0.6)', marginBottom: 10}}>
                             {this.state.exportFormat=='json'?
-                                <CardHeader
-                                    title="Click on export to download the model as a json fle."
-                                    subtitle="File will be stored in the path specified in Configuration > Save Configuration > File Name."
-                                />:<div>
-                                <CardHeader
-                                    title="Save your work as NetPyNE script."
-                                    subtitle="The file will be saved in the current working directory (where you initialized NetPyNE-UI)"
-                                />
-                                <CardText>
+                                <span style={{marginTop: 20, float: 'left'}}>* File will be stored in the path specified in Configuration > Save Configuration > File Name.</span>
+                                :
+                                <div>
                                     <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
-                                </CardText>
-                            </div>}
+                                    <span style={{marginTop: 20, float: 'left'}}>* File will be saved in the current working directory (where you initialized NetPyNE-UI)</span>
+                                </div>}
+                            </div>
                         </Card>
                     </Tab>
                 </Tabs>
