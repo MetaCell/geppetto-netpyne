@@ -228,7 +228,7 @@ export default class ListComponent extends Component {
                 <TextField
                     value={value}
                     id={this.props.id+index}
-                    style={{ width: this.props.realType=='dict(dict())'?400:100}}
+                    style={{ width: value.length*8}}
                     inputStyle={{color:'rgb(2, 188, 212)'}}
                     disabled
                 />
