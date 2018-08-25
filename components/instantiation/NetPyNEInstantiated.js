@@ -78,18 +78,26 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
+    processError(response, plotName) {
+        var parsedResponse = JSON.parse(response);
+        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+            this.setState({
+                dialogTitle: "NetPyNE returned an error plotting " + plotName,
+                dialogMessage: parsedResponse['message'] + "\n " + parsedResponse['details'],
+                openDialog: true
+            });
+            return true;
+        }
+        return false;
+    }
+
     plotFigure(plotName, plotMethod, flavour=false) {
         Utils.sendPythonMessage('netpyne_geppetto.getPlot', [plotMethod, flavour])
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){
                     if (response.startsWith("{") && response.endsWith("}")) {
-                        var parsedResponse = JSON.parse(response);
-                        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-                            this.setState({
-                                dialogMessage: "NetPyNE returned an error plotting " + plotName,
-                                openDialog: true
-                            });
+                        if (this.processError(response, plotName)){
                             return;
                         }
                     }
@@ -101,10 +109,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
                 }
                 else if (response == -1) {
-                    this.setState({
-                        dialogMessage: "NetPyNE returned an error plotting " + plotName,
-                        openDialog: true
-                    });
+                    this.processError(response, plotName)
                 }
                 else {
                     this.newPlotWidget(plotName, response, response, 0, 0);
@@ -208,15 +213,17 @@ export default class NetPyNEInstantiated extends React.Component {
                     </Popover>
                 </div>
                 <Dialog
-                    title="NetPyNE"
+                    title={this.state.dialogTitle}
                     modal={true}
                     actions={<FlatButton
+                        id="netPyneDialog"
                         label="Ok"
                         primary={true}
                         keyboardFocused={true}
                         onClick={this.handleCloseDialog}
-                        id="netPyneDialog"
-                    />}
+                        />}
+                    bodyStyle={{ overflow: 'auto' }}
+                    style={{ whiteSpace: "pre-wrap" }}
                     open={this.state.openDialog}
                     onRequestClose={this.handleCloseDialog}
                 >
