@@ -250,6 +250,7 @@ export default class ListComponent extends Component {
                     id={this.props.id}
                     floatingLabelText={this.props.floatingLabelText ? 'Add new ' + this.props.floatingLabelText : 'Add new item'}
                     onChange={this.handleNewItemChange}
+                    onKeyPress={(e) => e.key==='Enter'?this.addChild():()=>{} }
                     value={this.state.newItemValue}
                     style={{ width: '100%' }}
                     errorText={this.state.newItemErrorText}
