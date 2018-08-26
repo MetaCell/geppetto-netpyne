@@ -148,11 +148,11 @@ const SettingsDialog = React.createClass({
 
           <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
           <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-          {this.compileMods()}
+          {this.modRender()}
       </CardText>
     },
     
-    compileMods(){
+    modRender(){
       return <div>
           <SelectField
               className="netpyneField"
@@ -160,7 +160,7 @@ const SettingsDialog = React.createClass({
               errorStyle={{color: orange500}}
               floatingLabelText="Are custom mod files required for this model?"
               value={this.state.allowImport}
-              onChange={(event, index, value) => this.setState({allowImport: true, alertUser:false})}
+              onChange={(event, index, value) => this.setState({allowImport: value, alertUser:false})}
           >
               <MenuItem value={true} primaryText="yes, this model requires custom mods." />
               <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
@@ -169,7 +169,7 @@ const SettingsDialog = React.createClass({
             className="netpyneFieldNoWidth" 
             style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
             floatingLabelText="Mod path folder"
-            disabled={this.state.allowImport==undefined?true:!this.state.allowImport} 
+            disabled={this.state.allowImport==''?true:!this.state.allowImport} 
             value={this.state.modFolder} 
             onClick={() => this.showExplorerDialog('modFolder', true)} 
             readOnly 
@@ -227,7 +227,7 @@ const SettingsDialog = React.createClass({
                           </SelectField>
                           {this.state.importFormat=='py'?this.importPy(): <CardText>
                             <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
-                            {this.compileMods()}
+                            {this.modRender()}
                           </CardText>}
                         </Card>
                     </Tab>
