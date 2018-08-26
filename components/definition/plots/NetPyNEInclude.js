@@ -1,20 +1,11 @@
 import React, { Component } from 'react';
 import Menu from 'material-ui/Menu';
-import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover/Popover';
-import SelectField from 'material-ui/SelectField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
-
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-
 
 export default class NetPyNEInclude extends Component {
  
