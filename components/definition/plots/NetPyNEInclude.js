@@ -20,12 +20,9 @@ export default class NetPyNEInclude extends Component {
  
   componentDidMount() {
     this.collectInfo();
-    // this.updateLayout();
   };
  
-  XOR = (a, b) => {
-    return ( a || b ) && !( a && b );
-  }
+  
   
   getDataTemplate = () => {
     return {
@@ -52,6 +49,8 @@ export default class NetPyNEInclude extends Component {
   }
   
   whoIsIncluded = (include, data) => {
+    // display some information in the selectfield 
+    // about how many pops and cells have been selected
     var pops = 0
     var cells = 0
     var answer = ""
@@ -162,7 +161,7 @@ export default class NetPyNEInclude extends Component {
     var clone = Object.assign({}, this.state.secondPopoverOpen)
     Object.keys(clone).forEach((key) => {clone[key] = false})
     
-    if (this.XOR(open, this.state.mainPopoverOpen)) {
+    if (( open || this.state.mainPopoverOpen  ) && !( open && this.state.mainPopoverOpen )){
       this.setState({
         mainPopoverOpen: open, 
         secondPopoverOpen: clone, 
@@ -200,28 +199,27 @@ export default class NetPyNEInclude extends Component {
         secondPopoverOpen: clone,
       });
     }
-    this.setState
   }
   
-  defaultMenues = () => {
+  defaultMenus = () => {
     // [all, allCells,  allNetStims]
-    var mainMenues = this.props.defaultOptions.map(name => {
+    var mainMenus = this.props.defaultOptions.map(name => {
       return <MenuItem  
         key={name}
         value={name} 
         primaryText={name}
         insetChildren={true}
-        onClick={(e)=>this.handleItemClick(name, name=='all'?'exclusive':'groups')}
+        onClick={(e)=>this.handleMainMenusClick(name, name=='all'?'exclusive':'groups')}
         checked={this.state.include.exclusive==name||this.state.include.groups.indexOf(name)>-1?true:false}
         onMouseEnter={(e) => this.closeSecondPopover()}
       />
     })
     return <Menu>
-      {mainMenues}
+      {mainMenus}
     </Menu>
   }
   
-  variableMenues = (name, size) => {
+  variableMenus = (name, size) => {
     // size: how many sub-menuItems does the menuItem has
     var menuItems = Array.from(Array(size).keys()).map(index => {
       return <MenuItem 
@@ -229,8 +227,8 @@ export default class NetPyNEInclude extends Component {
         value={index}
         insetChildren={true}
         primaryText={"cell "+index}
-        onClick={e => this.handleSubItemClick(name=='gids'?'gids':'popids', name, index)}
-        checked={this.subMenuItemChecked(name=='gids'?'gids':'popids', name, index)}
+        onClick={e => this.handleSecondaryMenusClick(name=='gids'?'gids':'popids', name, index)}
+        checked={this.IsSecondaryMenuChecked(name=='gids'?'gids':'popids', name, index)}
       />
     })
     return <div key={name+"div"}>
@@ -240,7 +238,7 @@ export default class NetPyNEInclude extends Component {
         primaryText={name}
         insetChildren={true}
         checked={name!='gids'?this.state.include['groups'].indexOf(name)>-1?true:false:false}
-        onClick={name!='gids'?(e) => this.handleItemClick(name, 'groups'):(e)=>{}}
+        onClick={name!='gids'?(e) => this.handleMainMenusClick(name, 'groups'):(e)=>{}}
         onMouseEnter={(e) => this.handleSecondPopoverOpen(name, true, e.preventDefault(), e.currentTarget)}
       />
       <Popover
@@ -257,7 +255,7 @@ export default class NetPyNEInclude extends Component {
     </div>
   }
   
-  handleItemClick = (name, group) => {
+  handleMainMenusClick = (name, group) => {
     var clone = this.getDataTemplate()
     if (name=='all'){ // remove everything else, when 'all' is selected
       clone.exclusive = 'all'
@@ -282,7 +280,7 @@ export default class NetPyNEInclude extends Component {
     this.setState({include: clone})
   }
   
-  handleSubItemClick = (group, name, item) => {
+  handleSecondaryMenusClick = (group, name, item) => {
     var clone = Object.assign({}, this.state.include)
     if (group=='gids') {
       clone[group].indexOf(item)==-1?clone[group].push(item):clone[group].splice( clone[group].indexOf(item), 1 );
@@ -307,7 +305,7 @@ export default class NetPyNEInclude extends Component {
     this.setState({include: clone})
   }
   
-  subMenuItemChecked = (group, name, index) => {
+  IsSecondaryMenuChecked = (group, name, index) => {
     if (group=='gids') {
       return this.state.include[group].indexOf(index)>-1?true:false
     }
@@ -321,11 +319,11 @@ export default class NetPyNEInclude extends Component {
     }
   }
   
-  otherMenues = () => {
+  otherMenus = () => {
     var menuItems = []
     for (var key in this.state.data) {
       if (key!='gids'){
-        menuItems.push(this.variableMenues(key, this.state.data[key]))
+        menuItems.push(this.variableMenus(key, this.state.data[key]))
       }
     }
     return menuItems
@@ -347,11 +345,11 @@ export default class NetPyNEInclude extends Component {
         anchorOrigin={{"horizontal":"left","vertical":"bottom"}}
         targetOrigin={{"horizontal":"left","vertical":"top"}}
       >
-        {this.defaultMenues()}
+        {this.defaultMenus()}
         <Divider/>
-        {this.variableMenues('gids', this.state.data?this.state.data.gids:0, true)}
+        {this.variableMenus('gids', this.state.data?this.state.data.gids:0, true)}
         <Divider/>
-        {this.otherMenues()}
+        {this.otherMenus()}
       </Popover>
     </div>
   };
