@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import TimeRange from '../TimeRange'
+import NetPyNEInclude from '../NetPyNEInclude';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -21,9 +22,12 @@ export default class PlotSpikeStats extends React.Component {
   render() {
     var tag = "simConfig.analysis['plotSpikeStats']"
     return <div>
-      <NetPyNEField id="simConfig.analysis.plotSpikeStats.include" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['include']"} />
-      </NetPyNEField>
+      <NetPyNEInclude
+        id={"simConfig.analysis.plotSpikeStats.include"}
+        model={tag+"['include']"} 
+        defaultOptions={['all', 'allCells', 'allNetStims']}
+        initialValue={'all'}
+      />
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.timeRange" >
         <TimeRange model={tag + "['timeRange']"} />

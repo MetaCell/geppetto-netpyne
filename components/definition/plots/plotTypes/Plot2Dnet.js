@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
-import ListComponent from '../../../general/List';
+import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class Plot2Dnet extends React.Component {
 
@@ -20,9 +19,12 @@ export default class Plot2Dnet extends React.Component {
   render() {
     var tag = "simConfig.analysis['plot2Dnet']"
     return <div>
-      <NetPyNEField id="simConfig.analysis.plot2Dnet.include" className="listStyle" >
-        <PythonControlledListComponent model={tag+"['include']"} />
-      </NetPyNEField>
+      <NetPyNEInclude
+        id={"simConfig.analysis.plot2Dnet.include"}
+        model={tag+"['include']"} 
+        defaultOptions={['all', 'allCells', 'allNetStims']}
+        initialValue={'all'}
+      />
       
       <NetPyNEField id="simConfig.analysis.plot2Dnet.view" className="listStyle" >
         <PythonControlledSelectField model={tag+"['view']"} />
