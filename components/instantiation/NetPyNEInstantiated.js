@@ -78,8 +78,8 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
-    plotFigure(pythonFigureMethod, plotName, plotMethod, flavour=false) {
-        Utils.sendPythonMessage(pythonFigureMethod, [plotMethod, flavour])
+    plotFigure(pythonFigureMethod, plotName, plotMethod, plotType=false) {
+        Utils.sendPythonMessage(pythonFigureMethod, [plotMethod, plotType])
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){
