@@ -240,7 +240,7 @@ const SettingsDialog = React.createClass({
                                 onChange={(event, index, value) => this.setState({ exportFormat: value })}
                             >
                                 <MenuItem value={"data"} primaryText="Data files" />
-                                <MenuItem value={"netpyne"} primaryText="NetPyNE code" />
+                                <MenuItem value={"py"} primaryText="Python files" />
                             </SelectField>
                             <div style={{ marginLeft: 20, float: 'left', color: 'rgba(0, 0, 0, 0.6)', marginBottom: 10 }}>
                                 {this.state.exportFormat == 'data' ?
