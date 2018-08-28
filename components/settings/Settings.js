@@ -3,9 +3,9 @@ import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {orange500} from 'material-ui/styles/colors';
-import {Tabs, Tab } from 'material-ui/Tabs';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { orange500 } from 'material-ui/styles/colors';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
@@ -61,37 +61,37 @@ const SettingsDialog = React.createClass({
 
     performAction() {
         // Show spinner
-        if (this.state.currentTab=='import' && this.state.allowImport===''){
-          this.setState({alertUser: true})
+        if (this.state.currentTab == 'import' && this.state.allowImport === '') {
+            this.setState({ alertUser: true })
         }
         else {
-          if (this.state.currentTab == "import") {
-              var action = 'netpyne_geppetto.importModel';
-              var message = GEPPETTO.Resources.IMPORTING_MODEL;
-          }
-          else if (this.state.currentTab == "export") {
-              if (this.state.exportFormat== "data") {
-                  var action = 'netpyne_geppetto.exportModel';
-              } 
-              else {
-                  var action = 'netpyne_geppetto.generateScript';
-              }
-              var message = GEPPETTO.Resources.EXPORTING_MODEL;
-          }
+            if (this.state.currentTab == "import") {
+                var action = 'netpyne_geppetto.importModel';
+                var message = GEPPETTO.Resources.IMPORTING_MODEL;
+            }
+            else if (this.state.currentTab == "export") {
+                if (this.state.exportFormat == "data") {
+                    var action = 'netpyne_geppetto.exportModel';
+                }
+                else {
+                    var action = 'netpyne_geppetto.generateScript';
+                }
+                var message = GEPPETTO.Resources.EXPORTING_MODEL;
+            }
 
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
-          
-          // Import/Export model python side
-          this.closeDialog();
-          Utils
-              .sendPythonMessage(action, [this.state])
-              .then(response => {
-                  var parsedResponse = JSON.parse(response);
-                  if (!this.processError(parsedResponse)) {
-                      this.props.onRequestClose();
-                      GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                  }
-              });
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+
+            // Import/Export model python side
+            this.closeDialog();
+            Utils
+                .sendPythonMessage(action, [this.state])
+                .then(response => {
+                    var parsedResponse = JSON.parse(response);
+                    if (!this.processError(parsedResponse)) {
+                        this.props.onRequestClose();
+                        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                    }
+                });
         }
     },
 
@@ -135,60 +135,60 @@ const SettingsDialog = React.createClass({
     cancelDialog() {
         this.closeDialog();
         this.props.onRequestClose();
-        this.setState({allowImport: '', alertUser: undefined, modFolder: "", compileMod: false})
+        this.setState({ allowImport: '', alertUser: undefined, modFolder: "", compileMod: false })
     },
-    
-    importPy(){
-      return <CardText>
-          <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
-          <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
-          <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
-          <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+    importPy() {
+        return <CardText>
+            <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+            <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
-          <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
-          <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-          {this.modRender()}
-      </CardText>
+            <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+            <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+
+            <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+            <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
+            {this.modRender()}
+        </CardText>
     },
-    
-    modRender(){
-      return <div>
-          <SelectField
-              className="netpyneField"
-              errorText={this.state.alertUser?"This field is required.":false}
-              errorStyle={{color: orange500}}
-              floatingLabelText="Are custom mod files required for this model?"
-              value={this.state.allowImport}
-              onChange={(event, index, value) => this.setState({allowImport: value, alertUser:false})}
-          >
-              <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-              <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
-          </SelectField>
-          <TextField 
-            className="netpyneFieldNoWidth" 
-            style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
-            floatingLabelText="Mod path folder"
-            disabled={this.state.allowImport==''?true:!this.state.allowImport} 
-            value={this.state.modFolder} 
-            onClick={() => this.showExplorerDialog('modFolder', true)} 
-            readOnly 
-          />
-          <div style={{ float: 'right', width: '49%', marginTop:25}}>
-            <Checkbox
-                disabled={this.state.allowImport==undefined?true:!this.state.allowImport}
-                className="netpyneCheckbox"
-                label="Compile mod files"
-                checked={this.state.compileMod}
-                onCheck={() => this.setState((oldState) => {
-                    return {
-                        compileMod: !oldState.compileMod,
-                    };
-                })}
+
+    modRender() {
+        return <div>
+            <SelectField
+                className="netpyneField"
+                errorText={this.state.alertUser ? "This field is required." : false}
+                errorStyle={{ color: orange500 }}
+                floatingLabelText="Are custom mod files required for this model?"
+                value={this.state.allowImport}
+                onChange={(event, index, value) => this.setState({ allowImport: value, alertUser: false })}
+            >
+                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
+                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
+            </SelectField>
+            <TextField
+                className="netpyneFieldNoWidth"
+                style={{ float: 'left', width: '48%', cursor: 'pointer' }}
+                floatingLabelText="Mod path folder"
+                disabled={this.state.allowImport == '' ? true : !this.state.allowImport}
+                value={this.state.modFolder}
+                onClick={() => this.showExplorerDialog('modFolder', true)}
+                readOnly
             />
-          </div>
-          <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-      </div>
+            <div style={{ float: 'right', width: '49%', marginTop: 25 }}>
+                <Checkbox
+                    disabled={this.state.allowImport == undefined ? true : !this.state.allowImport}
+                    className="netpyneCheckbox"
+                    label="Compile mod files"
+                    checked={this.state.compileMod}
+                    onCheck={() => this.setState((oldState) => {
+                        return {
+                            compileMod: !oldState.compileMod,
+                        };
+                    })}
+                />
+            </div>
+            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+        </div>
     },
 
     render() {
@@ -216,40 +216,40 @@ const SettingsDialog = React.createClass({
                 >
                     <Tab value="import" label={'Import'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-                          <SelectField
-                              style={{marginLeft: 20}}
-                              floatingLabelText="Select import data type"
-                              value={this.state.importFormat}
-                              onChange={(event, index, value) => this.setState({importFormat: value})}
-                          >
-                              <MenuItem value={"py"} primaryText="Python files" />
-                              <MenuItem value={"json"} primaryText="JSON file" />
-                          </SelectField>
-                          {this.state.importFormat=='py'?this.importPy(): <CardText>
-                            <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
-                            {this.modRender()}
-                          </CardText>}
+                            <SelectField
+                                style={{ marginLeft: 20 }}
+                                floatingLabelText="Select import data type"
+                                value={this.state.importFormat}
+                                onChange={(event, index, value) => this.setState({ importFormat: value })}
+                            >
+                                <MenuItem value={"py"} primaryText="Python files" />
+                                <MenuItem value={"json"} primaryText="JSON file" />
+                            </SelectField>
+                            {this.state.importFormat == 'py' ? this.importPy() : <CardText>
+                                <TextField className="netpyneField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
+                                {this.modRender()}
+                            </CardText>}
                         </Card>
                     </Tab>
 
                     <Tab value="export" label={'Export'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
                             <SelectField
-                                style={{marginLeft: 20}}
+                                style={{ marginLeft: 20 }}
                                 floatingLabelText="Select export method"
                                 value={this.state.exportFormat}
-                                onChange={(event, index, value) => this.setState({exportFormat: value})}
+                                onChange={(event, index, value) => this.setState({ exportFormat: value })}
                             >
                                 <MenuItem value={"data"} primaryText="Data files" />
                                 <MenuItem value={"netpyne"} primaryText="NetPyNE code" />
                             </SelectField>
-                            <div style={{marginLeft: 20, float: 'left', color: 'rgba(0, 0, 0, 0.6)', marginBottom: 10}}>
-                            {this.state.exportFormat=='data'?
-                                <span style={{marginTop: 20, float: 'left'}}>* Go to:  - Configuration Tab > Save Configuration -  to select data and formats to be exported.</span>:
-                                <div>
-                                    <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
-                                    <span style={{marginTop: 20, float: 'left'}}>* File will be saved in the current working directory (where you initialized NetPyNE-UI)}</span>
-                                </div>}
+                            <div style={{ marginLeft: 20, float: 'left', color: 'rgba(0, 0, 0, 0.6)', marginBottom: 10 }}>
+                                {this.state.exportFormat == 'data' ?
+                                    <span style={{ marginTop: 20, float: 'left' }}>* Go to:  - Configuration Tab > Save Configuration -  to select data and formats to be exported.</span> :
+                                    <div>
+                                        <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
+                                        <span style={{ marginTop: 20, float: 'left' }}>* File will be saved in the current working directory (where you initialized NetPyNE-UI)}</span>
+                                    </div>}
                             </div>
                         </Card>
                     </Tab>
