@@ -222,7 +222,7 @@ const SettingsDialog = React.createClass({
                               value={this.state.importFormat}
                               onChange={(event, index, value) => this.setState({importFormat: value})}
                           >
-                              <MenuItem value={"py"} primaryText="NetPyNE code" />
+                              <MenuItem value={"py"} primaryText="Python files" />
                               <MenuItem value={"json"} primaryText="JSON file" />
                           </SelectField>
                           {this.state.importFormat=='py'?this.importPy(): <CardText>
