@@ -1,9 +1,8 @@
 import React from 'react';
-import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardText } from 'material-ui/Card';
 import { orange500 } from 'material-ui/styles/colors';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
