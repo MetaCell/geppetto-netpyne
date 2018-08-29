@@ -38,10 +38,10 @@ const SettingsDialog = React.createClass({
             scriptName: 'script_output',
             exportFormat: "data",
             importFormat: "py",
-            allowImport: ''
+            areModFieldsRequired: ''
         };
     },
-
+    
     componentWillReceiveProps(nextProps) {
         if (this.props.open != nextProps.open) {
             this.setState({
@@ -60,9 +60,9 @@ const SettingsDialog = React.createClass({
     },
 
     performAction() {
-        // Show spinner
-        if (this.state.currentTab=='import' && this.state.allowImport===''){
-          this.setState({alertUser: true})
+        //Show spinner
+        if (this.state.currentTab=='import' && this.state.areModFieldsRequired==''){
+          this.setState({areModFieldsRequired: undefined})
         }
         else {
           if (this.state.currentTab == "import") {
@@ -135,11 +135,49 @@ const SettingsDialog = React.createClass({
     cancelDialog() {
         this.closeDialog();
         this.props.onRequestClose();
-        this.setState({allowImport: '', alertUser: undefined, modFolder: "", compileMod: false})
     },
     
-    importPy(){
-      return <CardText>
+    render() {
+        var renderMod = (
+          <div>
+            <SelectField
+                className="netpyneField"
+                errorText={this.state.areModFieldsRequired==undefined?"This field is required.":false}
+                errorStyle={{color: orange500}}
+                floatingLabelText="Are custom mod files required for this model?"
+                value={this.state.areModFieldsRequired}
+                onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
+            >
+                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
+                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
+            </SelectField>
+            <TextField 
+              className="netpyneFieldNoWidth" 
+              style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
+              floatingLabelText="Mod path folder"
+              disabled={this.state.areModFieldsRequired==''?true:!this.state.areModFieldsRequired} 
+              value={this.state.modFolder} 
+              onClick={() => this.showExplorerDialog('modFolder', true)} 
+              readOnly 
+            />
+            <div style={{ float: 'right', width: '49%', marginTop:25}}>
+              <Checkbox
+                  disabled={this.state.areModFieldsRequired==''?true:!this.state.areModFieldsRequired}
+                  className="netpyneCheckbox"
+                  label="Compile mod files"
+                  checked={this.state.compileMod}
+                  onCheck={() => this.setState((oldState) => {
+                      return {
+                          compileMod: !oldState.compileMod,
+                      };
+                  })}
+              />
+            </div>
+            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+          </div>
+        )
+      var renderPy =  (
+        <CardText>
           <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
           <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
@@ -148,50 +186,17 @@ const SettingsDialog = React.createClass({
 
           <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
           <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-          {this.modRender()}
-      </CardText>
-    },
-    
-    modRender(){
-      return <div>
-          <SelectField
-              className="netpyneField"
-              errorText={this.state.alertUser?"This field is required.":false}
-              errorStyle={{color: orange500}}
-              floatingLabelText="Are custom mod files required for this model?"
-              value={this.state.allowImport}
-              onChange={(event, index, value) => this.setState({allowImport: value, alertUser:false})}
-          >
-              <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-              <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
-          </SelectField>
-          <TextField 
-            className="netpyneFieldNoWidth" 
-            style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
-            floatingLabelText="Mod path folder"
-            disabled={this.state.allowImport==''?true:!this.state.allowImport} 
-            value={this.state.modFolder} 
-            onClick={() => this.showExplorerDialog('modFolder', true)} 
-            readOnly 
-          />
-          <div style={{ float: 'right', width: '49%', marginTop:25}}>
-            <Checkbox
-                disabled={this.state.allowImport==undefined?true:!this.state.allowImport}
-                className="netpyneCheckbox"
-                label="Compile mod files"
-                checked={this.state.compileMod}
-                onCheck={() => this.setState((oldState) => {
-                    return {
-                        compileMod: !oldState.compileMod,
-                    };
-                })}
-            />
-          </div>
-          <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-      </div>
-    },
-
-    render() {
+          {renderMod}
+        </CardText>
+      )
+      
+      var renderJson = (
+        <CardText>
+          <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
+          {renderMod}
+        </CardText>
+      )
+      
         if (this.state.open) {
             var cancelAction = (<FlatButton
                 label="CANCEL"
@@ -220,15 +225,12 @@ const SettingsDialog = React.createClass({
                               style={{marginLeft: 20}}
                               floatingLabelText="Select import data type"
                               value={this.state.importFormat}
-                              onChange={(event, index, value) => this.setState({importFormat: value})}
+                              onChange={(event, index, value)=>this.setState({importFormat: value})}
                           >
                               <MenuItem value={"py"} primaryText="NetPyNE code" />
                               <MenuItem value={"json"} primaryText="JSON file" />
                           </SelectField>
-                          {this.state.importFormat=='py'?this.importPy(): <CardText>
-                            <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
-                            {this.modRender()}
-                          </CardText>}
+                          {this.state.importFormat=='py'?renderPy:renderJson}
                         </Card>
                     </Tab>
 
