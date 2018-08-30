@@ -60,7 +60,7 @@ const SettingsDialog = React.createClass({
 
     performAction() {
         //Show spinner
-        if (this.state.currentTab=='import' && this.state.areModFieldsRequired==''){
+        if (this.state.currentTab=='import' && this.state.areModFieldsRequired===''){
           this.setState({areModFieldsRequired: undefined})
         }
         else {
