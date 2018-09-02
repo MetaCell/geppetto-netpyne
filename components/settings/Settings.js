@@ -37,7 +37,9 @@ const SettingsDialog = React.createClass({
             scriptName: 'script_output',
             exportFormat: "data",
             importFormat: "py",
-            areModFieldsRequired: ''
+            areModFieldsRequired: '',
+            errorModFieldsRequired: '',
+            errorJSONPath: ''
         };
     },
     
@@ -59,11 +61,18 @@ const SettingsDialog = React.createClass({
     },
 
     performAction() {
-        //Show spinner
-        if (this.state.currentTab=='import' && this.state.areModFieldsRequired===''){
-          this.setState({areModFieldsRequired: undefined})
+        //Validation
+        var errors = {}
+        if (this.state.currentTab=='import' && this.state.importFormat=='json'){
+            if (this.state.areModFieldsRequired===''){
+                errors['errorModFieldsRequired']= "This field is required.";
+            }
+            if (this.state.jsonModelFolder === ''){
+                errors['errorJSONPath']= "This field is required.";
+            }
         }
-        else {
+
+        if (Object.keys(errors).length === 0){
             if (this.state.currentTab == "import") {
                 var action = 'netpyne_geppetto.importModel';
                 var message = GEPPETTO.Resources.IMPORTING_MODEL;
@@ -78,6 +87,7 @@ const SettingsDialog = React.createClass({
                 var message = GEPPETTO.Resources.EXPORTING_MODEL;
             }
 
+            //Show spinner
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
 
             // Import/Export model python side
@@ -92,6 +102,11 @@ const SettingsDialog = React.createClass({
                     }
                 });
         }
+        else{
+            this.setState(errors)
+        }
+
+        
     },
 
     showExplorerDialog(explorerParameter, exploreOnlyDirs) {
@@ -118,6 +133,7 @@ const SettingsDialog = React.createClass({
                     break;
                 case "jsonModelFolder":
                     newState["jsonModelFolder"] = fieldValue.path;
+                    newState["errorJSONPath"] = '';
                     break;
                 default:
                     throw ("Not a valid parameter!");
@@ -141,12 +157,21 @@ const SettingsDialog = React.createClass({
           <div>
             <SelectField
                 className="netpyneField"
-                errorText={this.state.areModFieldsRequired==undefined?"This field is required.":false}
+                errorText={this.state.errorModFieldsRequired}
                 errorStyle={{color: orange500}}
                 floatingLabelText="Are custom mod files required for this model?"
                 value={this.state.areModFieldsRequired}
-                onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
-            >
+                onChange={(event, index, value) => {
+                        if (value === ''){
+                            var errorModFieldsRequired = "This field is required."    
+                        }
+                        else{
+                            errorModFieldsRequired = ""
+                        }
+                        this.setState({areModFieldsRequired: value, errorModFieldsRequired: errorModFieldsRequired})
+                    }
+                }
+                >
                 <MenuItem value={true} primaryText="yes, this model requires custom mods." />
                 <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
             </SelectField>
@@ -154,14 +179,14 @@ const SettingsDialog = React.createClass({
               className="netpyneFieldNoWidth" 
               style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
               floatingLabelText="Mod path folder"
-              disabled={this.state.areModFieldsRequired==''?true:!this.state.areModFieldsRequired} 
+              disabled={!this.state.areModFieldsRequired} 
               value={this.state.modFolder} 
               onClick={() => this.showExplorerDialog('modFolder', true)} 
               readOnly 
             />
             <div style={{ float: 'right', width: '49%', marginTop:25}}>
               <Checkbox
-                  disabled={this.state.areModFieldsRequired==''?true:!this.state.areModFieldsRequired}
+                  disabled={!this.state.areModFieldsRequired}
                   className="netpyneCheckbox"
                   label="Compile mod files"
                   checked={this.state.compileMod}
@@ -187,7 +212,16 @@ const SettingsDialog = React.createClass({
       
       var renderJson = (
         <CardText>
-          <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
+          <TextField
+            className="netpyneField"
+            style={{width: '48%', cursor: 'pointer' }}
+            floatingLabelText="JSON model path"
+            value={this.state.jsonModelFolder}
+            errorText={this.state.errorJSONPath}
+            errorStyle={{color: orange500}}
+            onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
+            readOnly
+          />
           {renderMod}
         </CardText>
       )
