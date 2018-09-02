@@ -42,7 +42,7 @@ const SettingsDialog = React.createClass({
             errorJSONPath: ''
         };
     },
-    
+
     componentWillReceiveProps(nextProps) {
         if (this.props.open != nextProps.open) {
             this.setState({
@@ -63,16 +63,16 @@ const SettingsDialog = React.createClass({
     performAction() {
         //Validation
         var errors = {}
-        if (this.state.currentTab=='import' && this.state.importFormat=='json'){
-            if (this.state.areModFieldsRequired===''){
-                errors['errorModFieldsRequired']= "This field is required.";
+        if (this.state.currentTab == 'import' && this.state.importFormat == 'json') {
+            if (this.state.areModFieldsRequired === '') {
+                errors['errorModFieldsRequired'] = "This field is required.";
             }
-            if (this.state.jsonModelFolder === ''){
-                errors['errorJSONPath']= "This field is required.";
+            if (this.state.jsonModelFolder === '') {
+                errors['errorJSONPath'] = "This field is required.";
             }
         }
 
-        if (Object.keys(errors).length === 0){
+        if (Object.keys(errors).length === 0) {
             if (this.state.currentTab == "import") {
                 var action = 'netpyne_geppetto.importModel';
                 var message = GEPPETTO.Resources.IMPORTING_MODEL;
@@ -102,11 +102,11 @@ const SettingsDialog = React.createClass({
                     }
                 });
         }
-        else{
+        else {
             this.setState(errors)
         }
 
-        
+
     },
 
     showExplorerDialog(explorerParameter, exploreOnlyDirs) {
@@ -151,81 +151,81 @@ const SettingsDialog = React.createClass({
         this.closeDialog();
         this.props.onRequestClose();
     },
-    
+
     render() {
         var renderMod = (
-          <div>
-            <SelectField
-                className="netpyneField"
-                errorText={this.state.errorModFieldsRequired}
-                errorStyle={{color: orange500}}
-                floatingLabelText="Are custom mod files required for this model?"
-                value={this.state.areModFieldsRequired}
-                onChange={(event, index, value) => {
-                        if (value === ''){
-                            var errorModFieldsRequired = "This field is required."    
+            <div>
+                <SelectField
+                    className="netpyneField"
+                    errorText={this.state.errorModFieldsRequired}
+                    errorStyle={{ color: orange500 }}
+                    floatingLabelText="Are custom mod files required for this model?"
+                    value={this.state.areModFieldsRequired}
+                    onChange={(event, index, value) => {
+                        if (value === '') {
+                            var errorModFieldsRequired = "This field is required."
                         }
-                        else{
+                        else {
                             errorModFieldsRequired = ""
                         }
-                        this.setState({areModFieldsRequired: value, errorModFieldsRequired: errorModFieldsRequired})
+                        this.setState({ areModFieldsRequired: value, errorModFieldsRequired: errorModFieldsRequired })
                     }
-                }
+                    }
                 >
-                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
-            </SelectField>
-            <TextField 
-              className="netpyneFieldNoWidth" 
-              style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
-              floatingLabelText="Mod path folder"
-              disabled={!this.state.areModFieldsRequired} 
-              value={this.state.modFolder} 
-              onClick={() => this.showExplorerDialog('modFolder', true)} 
-              readOnly 
-            />
-            <div style={{ float: 'right', width: '49%', marginTop:25}}>
-              <Checkbox
-                  disabled={!this.state.areModFieldsRequired}
-                  className="netpyneCheckbox"
-                  label="Compile mod files"
-                  checked={this.state.compileMod}
-                  onCheck={() => this.setState((oldState) => {
-                      return {
-                          compileMod: !oldState.compileMod,
-                      };
-                  })}
-              />
+                    <MenuItem value={true} primaryText="yes, this model requires custom mods." />
+                    <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
+                </SelectField>
+                <TextField
+                    className="netpyneFieldNoWidth"
+                    style={{ float: 'left', width: '48%', cursor: 'pointer' }}
+                    floatingLabelText="Mod path folder"
+                    disabled={!this.state.areModFieldsRequired}
+                    value={this.state.modFolder}
+                    onClick={() => this.showExplorerDialog('modFolder', true)}
+                    readOnly
+                />
+                <div style={{ float: 'right', width: '49%', marginTop: 25 }}>
+                    <Checkbox
+                        disabled={!this.state.areModFieldsRequired}
+                        className="netpyneCheckbox"
+                        label="Compile mod files"
+                        checked={this.state.compileMod}
+                        onCheck={() => this.setState((oldState) => {
+                            return {
+                                compileMod: !oldState.compileMod,
+                            };
+                        })}
+                    />
+                </div>
+                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
             </div>
-            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-          </div>
         )
-      var renderPy =  (
-        <CardText>
-          <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
-          <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
-          <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
-          <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-          {renderMod}
-        </CardText>
-      )
-      
-      var renderJson = (
-        <CardText>
-          <TextField
-            className="netpyneField"
-            style={{width: '48%', cursor: 'pointer' }}
-            floatingLabelText="JSON model path"
-            value={this.state.jsonModelFolder}
-            errorText={this.state.errorJSONPath}
-            errorStyle={{color: orange500}}
-            onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
-            readOnly
-          />
-          {renderMod}
-        </CardText>
-      )
-      
+        var renderPy = (
+            <CardText>
+                <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+                <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+                <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
+                {renderMod}
+            </CardText>
+        )
+
+        var renderJson = (
+            <CardText>
+                <TextField
+                    className="netpyneField"
+                    style={{ width: '48%', cursor: 'pointer' }}
+                    floatingLabelText="JSON model path"
+                    value={this.state.jsonModelFolder}
+                    errorText={this.state.errorJSONPath}
+                    errorStyle={{ color: orange500 }}
+                    onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
+                    readOnly
+                />
+                {renderMod}
+            </CardText>
+        )
+
         if (this.state.open) {
             var cancelAction = (<FlatButton
                 label="CANCEL"
@@ -250,16 +250,16 @@ const SettingsDialog = React.createClass({
                 >
                     <Tab value="import" label={'Import'}>
                         <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-                          <SelectField
-                              style={{marginLeft: 20}}
-                              floatingLabelText="Select import data type"
-                              value={this.state.importFormat}
-                              onChange={(event, index, value)=>this.setState({importFormat: value})}
-                          >
-                              <MenuItem value={"py"} primaryText="NetPyNE code" />
-                              <MenuItem value={"json"} primaryText="JSON file" />
-                          </SelectField>
-                          {this.state.importFormat=='py'?renderPy:renderJson}
+                            <SelectField
+                                style={{ marginLeft: 20 }}
+                                floatingLabelText="Select import data type"
+                                value={this.state.importFormat}
+                                onChange={(event, index, value) => this.setState({ importFormat: value })}
+                            >
+                                <MenuItem value={"py"} primaryText="NetPyNE code" />
+                                <MenuItem value={"json"} primaryText="JSON file" />
+                            </SelectField>
+                            {this.state.importFormat == 'py' ? renderPy : renderJson}
                         </Card>
                     </Tab>
 
