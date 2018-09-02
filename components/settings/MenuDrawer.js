@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon  from 'material-ui/svg-icons/navigation/menu';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 
-export default class NetPyNEMenu extends React.Component {
+export default class MenuDrawer extends React.Component {
 
     constructor(props) {
         super(props);
@@ -36,23 +36,13 @@ export default class NetPyNEMenu extends React.Component {
     // is on focus. That way, if we click diferent popovers, a click in one popover won't close the other ones 
     _onBlur = () => {
         this._timeoutID = setTimeout(() => {
-            if (this.state.anyOnFocus) {
-              this.setState({
-                anyOnFocus: false,
-              });
-            }
+            if (this.state.anyOnFocus) this.setState({anyOnFocus: false});
           }, 0);
     }
-
     _onFocus = () => {
         clearTimeout(this._timeoutID);
-        if (!this.state.anyOnFocus) {
-            this.setState({
-                anyOnFocus: true,
-            });
-        }
+        if (!this.state.anyOnFocus) this.setState({anyOnFocus: true});
     }
-
     handleMouseOverMenuItem = (name, preventDefault, target, skipFocus=false) => {
         preventDefault
         var clone = Object.assign({}, this.state.open)
@@ -71,12 +61,10 @@ export default class NetPyNEMenu extends React.Component {
         if (!this.checkEqual(clone, this.state.open)) { this.setState({open: clone})}
         if (!skipFocus) this._onFocus()
     }
-
     checkEqual = (d1, d2) => {
         for (var k in d1) {if (d1[k].access!=d2.access || d1[k].open!=d2[k].open || d1[k].anchor!=d2[k].anchor || d1[k].color!=d2[k].color) {return false} }
         return true
     }
-
     createMenus = (elem, count, icon=false) => {
         count++
         if (elem.constructor.name==='String') {
@@ -113,7 +101,6 @@ export default class NetPyNEMenu extends React.Component {
             </Popover>}
         </div>
     }
-
     closeMenu = (name) => {
         if (name!='main') this.props.onClick(name)
         if (!this.state.anyOnFocus) {
@@ -122,14 +109,11 @@ export default class NetPyNEMenu extends React.Component {
             this.setState({mainPopoverOpen: false, open: clone})
         }
     }
-
     handleOpenAppBarMenu = (e) => {
         var topLimit = document.getElementById(this.props.confineBetweenElementIds[1]).getBoundingClientRect().top
         var bottomLimit = document.getElementById(this.props.confineBetweenElementIds[0]).getBoundingClientRect().bottom
-        console.log(topLimit-bottomLimit)
         this.setState({mainPopoverOpen: true, mainAnchorEl: e.currentTarget, popOverHeight:topLimit-bottomLimit})
     }
-
     render() {
         let icon = React.Children.map(this.props.icons, (ch, i)=>{return React.cloneElement(ch, {color: this.state.open[this.name[i]].color})})
         return <div>
