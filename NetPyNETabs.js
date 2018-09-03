@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -12,9 +12,7 @@ import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import IconButton from 'material-ui/IconButton';
-import SettingsDialog from './components/settings/Settings';
 import TransitionDialog from './components/transition/Transition';
-import FontIcon from 'material-ui/FontIcon';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar'
 
 
@@ -178,12 +176,6 @@ export default class NetPyNETabs extends React.Component {
 						iconElementLeft={<NetPyNEToolBar/>}
 					/>
 					{content}
-					<div id="settingsIcon" style={{ float: 'left', width: '48px', backgroundColor: 'rgb(0, 188, 212)' }}>
-						<IconButton id="setupNetwork"onClick={this.openSettings}>
-							<FontIcon className={"fa fa-cog"} />
-						</IconButton>
-					</div>
-					<SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
 					{transitionDialog}
 				</div>
 			)

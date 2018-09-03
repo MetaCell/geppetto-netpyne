@@ -13,23 +13,56 @@ export default class MenuDrawer extends React.Component {
             popOverHeight: 100,
             anyOnFocus: false,
             open: this._constructPopoverOpenStates(props.tree),    // {menu1: {open: false, access: 3, anchor: someElement}, menu2: {open: false, access:0, anchor: someOtherElement}, ...} "access" controls to whom a "MouseOver" event in the menuitem, can close Popovers. access 3 can close Popovers for menus with access 4, 5, 6  but not for 0, 1 or 2
+            tree: this._giveUniqueIdsToTree(props.tree)
         };
         this.name = this.props.tree.map(el=> {return el.constructor.name=='Object'?Object.keys(el)[0]:el})
     }
 
-    _constructPopoverOpenStates = (_array, output={}, lvl=0) => {
-        _array.forEach(el => {
-            switch(el.constructor.name) {
-                case 'Object':
-                    output[Object.keys(el)[0]] = {open: false, anchor: null, access: lvl, color: this.props.baseColor}
-                    this._constructPopoverOpenStates(Object.values(el)[0], output, lvl+1)
-                    break
-                case 'String': 
-                    output[el] = {open: false, anchor: null, access: lvl, color: this.props.baseColor}
-                    break
-                default:
-                    break
-            }})
+    _giveUniqueIdsToTree = (tree) => {
+        function renameProp(oldProp, newProp, { [oldProp]: old, ...others }) {return {[newProp]: old, ...others}}
+        function changeName(tree) {
+            tree.forEach((el, index) => {
+                if (el.constructor.name==='Object'){
+                    tree[index] = renameProp(Object.keys(el)[0], id, el)
+                    id++
+                    changeName(Object.values(el)[0])
+                }
+                else {
+                    tree[index] = id
+                    id++
+                }
+            })
+        }
+        var id = 0
+        changeName(tree)
+        return tree
+    }
+    _constructPopoverOpenStates = (tree) => {
+        var id = 0
+        var gid = 0
+        var output = {}
+        var color = this.props.baseColor
+
+        function exploreTree(_array, lvl=0) {
+            _array.forEach((el, index) => {
+                switch(el.constructor.name) {
+                    case 'Object':
+                        output[id] = {label: Object.keys(el)[0], open: false, anchor: null, access: lvl, color: color}
+                        id++
+                        exploreTree(Object.values(el)[0], lvl+1)
+                        break
+                    case 'String': 
+                        output[id] = {label: el, open: false, anchor: null, access: lvl, color: color, gid: gid}
+                        id++
+                        gid++
+                        break
+                    default:
+                        break
+                }}
+            )
+        }
+        exploreTree(tree)
+
         return output
     }
     // the behavior of this two is to keep the state anyOnFocus equal to true as long as any of the popovers
@@ -65,9 +98,8 @@ export default class MenuDrawer extends React.Component {
         for (var k in d1) {if (d1[k].access!=d2.access || d1[k].open!=d2[k].open || d1[k].anchor!=d2[k].anchor || d1[k].color!=d2[k].color) {return false} }
         return true
     }
-    createMenus = (elem, count, icon=false) => {
-        count++
-        if (elem.constructor.name==='String') {
+    createMenus = (elem, icon=false) => {
+        if (elem.constructor.name==='Number') {
             var key = elem;
             var value = undefined;
         }
@@ -75,8 +107,8 @@ export default class MenuDrawer extends React.Component {
             var key = Object.keys(elem)[0];
             var value = Object.values(elem)[0];
         }
-        return <div key={key+count+"div"}>
-            <MenuItem key={key+count} value={key} primaryText={key}
+        return <div key={key+"div"}>
+            <MenuItem key={key} value={key} primaryText={this.state.open[key].label}
                 insetChildren={this.state.open[key].access==0?true:false}
                 rightIcon={value!=undefined?<ArrowDropRight />:null}
                 leftIcon={icon?icon:null}
@@ -84,18 +116,18 @@ export default class MenuDrawer extends React.Component {
                 onClick={value!=undefined?()=>{}:()=>{this.closeMenu(key)}}
                 onMouseEnter={(e) => this.handleMouseOverMenuItem(key, e.preventDefault(), e.currentTarget, value==undefined?true:false)}
             />
-            {value==undefined?null:<Popover key={key+count+"Popover"} 
+            {value==undefined?null:<Popover key={key+"Popover"} 
                 useLayerForClickAway={false} open={this.state.open[key].open} anchorEl={this.state.open[key].anchor}
                 anchorOrigin={{"horizontal":"right", "vertical":"top"}} targetOrigin={{"horizontal":"left", "vertical":"top"}}
             >
                 {value.map(el=>{
                     switch(el.constructor.name) {
-                        case 'String':
-                            return <MenuItem key={el+count} value={el} primaryText={el} onClick={()=>{this.closeMenu(el)}}/>
+                        case 'Number':
+                            return <MenuItem key={el} value={el} primaryText={this.state.open[el].label} onClick={()=>{this.closeMenu(this.state.open[el].gid)}}/>
                         case 'Array':
-                            return el.map(el2=>{return <MenuItem key={el2+count} value={el2} primaryText={el2} onClick={()=>{this.closeMenu(el2)}}/>})
+                            return el.map(el2=>{return <MenuItem key={el2} value={el2} primaryText={this.state.open[el2].label} onClick={()=>{this.closeMenu(this.state.open[el2].gid)}}/>})
                         default:
-                            return this.createMenus(el, count) 
+                            return this.createMenus(el) 
                     }})
                 }
             </Popover>}
@@ -134,7 +166,7 @@ export default class MenuDrawer extends React.Component {
                 targetOrigin={{horizontal: 'left', vertical: 'top'}}
                 onRequestClose={()=>{this.closeMenu('main')}}
             >
-                {this.props.tree.map((el, i)=>{return this.createMenus(el, 0, icon[i])})}
+                {this.state.tree.map((el, i)=>{return this.createMenus(el, icon[i])})}
             </Popover>
         </div>
     }

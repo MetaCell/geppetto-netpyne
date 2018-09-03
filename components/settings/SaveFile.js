@@ -35,7 +35,7 @@ export default class SaveFile extends React.Component {
 
     render() {
         switch(this.props.requestID) {
-            case 5:
+            case 4:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = (
                     <CardText style={{marginTop: -30}}>
@@ -44,7 +44,7 @@ export default class SaveFile extends React.Component {
                     </CardText>
                 )
                 break;
-            case 6:
+            case 5:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="JSON file" />
                 var content = (
                     <CardText style={{marginTop: -30}}> 

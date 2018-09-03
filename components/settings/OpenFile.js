@@ -26,35 +26,25 @@ export default class OpenFile extends React.Component {
             exploreOnlyDirs: false,
             areModFieldsRequired: ''
         }
-        console.log(7)
     }
 
     componentDidUpdate() {
-        console.log(0)
-
         if (this.props.actionRequired && !this.state.actionExecuted) {
-            console.log(1)
             this.performAction()
         }
         else if (!this.props.actionRequired && this.state.actionExecuted) {
-            console.log(2)
             this.setState({actionExecuted: false})
         }
     }
 
     performAction() {
-        console.log("are mod requiered: "+ this.state.areModFieldsRequired)
         if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
-            console.log(6)
         }
         else if (this.state.areModFieldsRequired==='') {
-            console.log(3)
             this.setState({areModFieldsRequired: undefined, actionExecuted: true})
             this.props.performAction('abort')
-            console.log(4)
         }
         else {
-            console.log(5)
             var action = 'netpyne_geppetto.importModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
             this.props.performAction(action, message, {...this.state, importFormat: this.props.requestID==1?'py':'json'})
@@ -135,7 +125,7 @@ export default class OpenFile extends React.Component {
         )
 
         switch(this.props.requestID) {
-            case 1:
+            case 0:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = (
                     <CardText style={{marginTop: -30}}>
@@ -149,7 +139,7 @@ export default class OpenFile extends React.Component {
                     </CardText>
                 )
                 break;
-            case 2:
+            case 1:
                 var header = <CardHeader title="High Level Specification" titleColor={blue500} subtitle="JSON file" />
                 var content = (
                     <CardText style={{marginTop: -30}}>

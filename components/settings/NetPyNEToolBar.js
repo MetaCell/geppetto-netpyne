@@ -16,65 +16,65 @@ export default class NetPyNEToolBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            requestID: 0,
+            requestID: -1,
             openDialogBox: false,
             buttonLabel: '',
             title: ''
         }
     }
     handleMenuItemClick = (menuItemSelected) => {
-        var requestID = 0
+        console.log(menuItemSelected)
         var buttonLabel = ''
         var title = ''
         switch (menuItemSelected) {
-            case 'from .py':
-                requestID = 1
+            case 0:
                 buttonLabel = 'Load'
-                title = 'Load'
+                title = 'Load HLS'
                 break;
-            case 'from .json ':
-                requestID = 2
+            case 1:
                 buttonLabel = 'Load'
-                title = 'Load'
+                title = 'Load HLS'
                 break;
-            case 'from .json':
-                requestID = 3
+            case 2:
                 buttonLabel = 'Load'
-                title = 'Load'
+                title = 'Load Model'
                 break;
-            case 'from .pkl':
-                requestID = 4
+            case 3:
                 buttonLabel = 'Load'
-                title = 'Load'
+                title = 'Load Model'
                 break;
-            case 'as .py':                
-                requestID = 5
+            case 4:                
                 buttonLabel = 'Save'
-                title = 'Save'
+                title = 'Save HLS'
                 break;
-            case 'as .json ':
-                requestID = 6
+            case 5:
                 buttonLabel = 'Save'
-                title = 'Save'
+                title = 'Save HLS'
                 break;
-            case 'as .json':                
-                requestID = 7
+            case 6:                
                 buttonLabel = 'Save'
-                title = 'Save'
+                title = 'Save Model'
                 break;
-            case 'as .pkl':                
-                requestID = 8
+            case 7:                
                 buttonLabel = 'Save'
-                title = 'Save'
+                title = 'Save Model'
                 break;
             default:
                 break
         }
-        this.setState({requestID: requestID, openDialogBox:true, buttonLabel: buttonLabel, title: title})
+        this.setState({requestID:menuItemSelected, openDialogBox:true, buttonLabel: buttonLabel, title: title})
+
     }
-    
     render() {
-        let requestEl = [<div/>, <OpenFile/>, <OpenFile/>, <OpenFile/>, <OpenFile/>, <SaveFile/>, <SaveFile/>, <SaveFile/>, <SaveFile/>]
+        if (this.state.requestID==-1){
+            var requestEl = <div/>
+        }
+        else if(this.state.requestID<4){
+            var requestEl = <OpenFile/>
+        }
+        else if(this.state.requestID<8){
+            var requestEl = <SaveFile/>
+        }
         return  <div>
             <MenuDrawer 
                 tooltip={'File options'} 
@@ -84,8 +84,8 @@ export default class NetPyNEToolBar extends React.Component {
                 onClick={this.handleMenuItemClick}
                 icons={[<LoadIcon/>, <SaveIcon/>, <ImportIcon/>, <ExportIcon/>, <DeleteIcon/>]}
                 tree={[
-                    {Open: [{'High Level Specification ': ['from .py', 'from .json ']}, {'data ': ['from .json', 'from .pkl']}]}, 
-                    {Save: [{'High Level Specification': ['as .py', 'as .json ']}, {'data': ['as .json', 'as .pkl']}]},
+                    {Open: [{'High Level Specification': ['from .py', 'from .json']}, {'Instanciated Network': ['from .json', 'from .pkl']}, {'All': ['from .json']}]}, 
+                    {Save: [{'High Level Specification': ['as .py', 'as .json']}, {'Instanciated Network': ['as .json', 'as .pkl']}, {'All': ['as .json', 'as .pkl']}] },
                     {Import: ['from NeuroML', 'from Sonata']},
                     {Export: ['to NeuroML', 'to Sonata']},
                     'Clear'
@@ -98,7 +98,7 @@ export default class NetPyNEToolBar extends React.Component {
                 buttonLabel={this.state.buttonLabel}
                 title = {this.state.title}
             >
-                {requestEl[this.state.requestID]}
+                {requestEl}
             </RequestHandler>
         </div>
     }

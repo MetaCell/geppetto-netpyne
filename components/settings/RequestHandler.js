@@ -12,11 +12,12 @@ export default class RequestHandler extends React.Component {
             actionRequired: false,
             errorMessage: undefined,
             errorDetails: undefined,
+            spinning: false
         }
     }
     
     componentDidUpdate = () => {
-        if (this.props.open != this.state.open) {
+        if (this.props.open != this.state.open && this.state.spinning==false) {
             this.setState({
                 open: this.props.open
             });
@@ -37,25 +38,25 @@ export default class RequestHandler extends React.Component {
                     if (!this.processError(parsedResponse)) {
                         this.props.onRequestClose();
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                        this.setState({spinning: false})
                     }
             });
         }
     }
 
     closeDialog = () => {
-        console.log(10)
-        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
+        this.setState({ open: false, spinning: true, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
     }
 
     cancelDialog = () => {
-        this.closeDialog();
+        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
         this.props.onRequestClose();
     }
 
     processError = (parsedResponse) => {
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
+            this.setState({ open: true, spinning: false, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
             return true;
         }
         return false;
