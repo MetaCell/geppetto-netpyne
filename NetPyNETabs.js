@@ -147,33 +147,37 @@ export default class NetPyNETabs extends React.Component {
 			var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
 			
 			return (
-				<div >
-					<AppBar 
-						id="appBar"
-						style={{flexWrap: 'wrap', height: 40}}
-						title={
-							<Tabs
-								value={this.state.value}
-								style={{ width: 'calc(100% - 48px)', float: 'left' , height:40}}
-								tabTemplateStyle={{ height: '100%' }}
-								inkBarStyle={{backgroundColor:"#00BCD4"}}
-								contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
-								onChange={this.handleChange}
-							>
-								<Tab style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
-								<Tab style={{height:40, marginTop: -4}} label="Explore your network" value="explore" id={"exploreNetwork"}/>
-								<Tab style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
-							</Tabs>
-						}
-						iconElementRight={
-							<IconButton href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}>
-								<GitHubIcon color="#ffffff"/>
-							</IconButton>
+				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
+					<div>
+						<AppBar 
+							id="appBar"
+							style={{flexWrap: 'wrap', height: 40, width: '100%'}}
+							title={
+								<Tabs
+									value={this.state.value}
+									style={{ width: 'calc(100% - 48px)', float: 'left' , height:40}}
+									tabTemplateStyle={{ height: '100%' }}
+									inkBarStyle={{backgroundColor:"#00BCD4"}}
+									contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
+									onChange={this.handleChange}
+								>
+									<Tab style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
+									<Tab style={{height:40, marginTop: -4}} label="Explore your network" value="explore" id={"exploreNetwork"}/>
+									<Tab style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
+								</Tabs>
+							}
+							iconElementRight={
+								<IconButton href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}>
+									<GitHubIcon color="#ffffff"/>
+								</IconButton>
 						}
 						iconElementLeft={<NetPyNEToolBar/>}
-					/>
-					{content}
-					{transitionDialog}
+						/>
+					</div>
+					<div style={{flex: 1}}>
+						{content}
+						{transitionDialog}
+					</div>
 				</div>
 			)
 		}
