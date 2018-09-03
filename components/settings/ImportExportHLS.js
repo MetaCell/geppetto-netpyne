@@ -7,14 +7,20 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import FileBrowser from '../general/FileBrowser';
 
-export default class OpenFile extends React.Component {
+export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             actionExecuted: false,
-            jsonModelFolder: "",
+            netParamsPath: "",
+            netParamsModuleName: "",
+            netParamsVariable: "netParams",
+            simConfigPath: "",
+            simConfigModuleName: "",
+            simConfigVariable: "simConfig",
             modFolder: "",
             compileMod: false,
+            jsonModelFolder: "",
             explorerDialogOpen: false,
             explorerParameter: "",
             exploreOnlyDirs: false,
@@ -32,7 +38,12 @@ export default class OpenFile extends React.Component {
     }
 
     performAction() {
-        if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
+        if (this.props.requestID==5) {
+            var action = 'netpyne_geppetto.generateScript';
+            var message = GEPPETTO.Resources.EXPORTING_MODEL;
+            this.props.performAction(action, message, this.state)
+        }
+        else if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
         }
         else if (this.state.areModFieldsRequired==='') {
             this.setState({areModFieldsRequired: undefined, actionExecuted: true})
@@ -41,11 +52,12 @@ export default class OpenFile extends React.Component {
         else {
             var action = 'netpyne_geppetto.importModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
-            this.props.performAction(action, message, {...this.state, importFormat: 'json'})
+            this.props.performAction(action, message, {...this.state, importFormat: 'py'})
             this.setState({actionExecuted: true})
         }
     }
 
+    
     showExplorerDialog(explorerParameter, exploreOnlyDirs) {
         this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs })
     }
@@ -53,12 +65,20 @@ export default class OpenFile extends React.Component {
     closeExplorerDialog(fieldValue) {
         var newState = { explorerDialogOpen: false };
         if (fieldValue) {
+            var fileName = fieldValue.path.replace(/^.*[\\\/]/, '');
+            var fileNameNoExtension = fileName.replace(/\.[^/.]+$/, "");
+            var path = fieldValue.path.split(fileName).slice(0, -1).join('');
             switch (this.state.explorerParameter) {
+                case "netParamsPath":
+                    newState["netParamsPath"] = path;
+                    newState["netParamsModuleName"] = fileNameNoExtension;
+                    break;
+                case "simConfigPath":
+                    newState["simConfigPath"] = path;
+                    newState["simConfigModuleName"] = fileNameNoExtension;
+                    break;
                 case "modFolder":
                     newState["modFolder"] = fieldValue.path;
-                    break;
-                case "jsonModelFolder":
-                    newState["jsonModelFolder"] = fieldValue.path;
                     break;
                 default:
                     throw ("Not a valid parameter!");
@@ -106,21 +126,30 @@ export default class OpenFile extends React.Component {
             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </div>
         )
-
         switch(this.props.requestID) {
-            case 0:
-                var header = <CardHeader title="Open a model" subtitle="JSON file" titleColor={blue500} />
-                var content = (
+            case 2:
+                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
+                var content = 
                     <CardText style={{marginTop: -30}}>
-                        <TextField className="netpyneField" style={{width: '48%', cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
+                        <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+                        <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+
+                        <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams module name" value={this.state.netParamsModuleName} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
+                        <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig module name" value={this.state.simConfigModuleName} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
+
+                        <TextField className="netpyneFieldNoWidth" style={{ width: '48%' }} floatingLabelText="NetParams variable" value={this.state.netParamsVariable} onChange={(event) => this.setState({ netParamsVariable: event.target.value })} />
+                        <TextField className="netpyneRightField" style={{ width: '48%' }} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
                         {importModFiles}
                     </CardText>
-                )
                 break;
+            case 5:
+                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="JSON file" />
+                var content = <CardText style={{marginTop: -30}}> <span style={{ marginTop: 20, float: 'left' }}>* Go to:  - Configuration Tab > Save Configuration -  to select data and formats to be saved.</span></CardText>
+                break
             default:
-                var content = <div></div>
+                var header = <CardHeader title="" subtitle="" titleColor={blue500} />
+                var content = <CardText style={{marginTop: -30}}></CardText>
         }
-        
         return (
             <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
                 {header}

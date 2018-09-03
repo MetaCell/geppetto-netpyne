@@ -114,9 +114,6 @@ export default class NetPyNETabs extends React.Component {
 		});
 	}
 
-	closeSettings = () => {
-		this.setState({ settingsOpen: false });
-	}
 
 	render() {
 		if (this.state.model == null) {

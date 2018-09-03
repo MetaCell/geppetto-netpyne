@@ -3,6 +3,9 @@ import SvgIcon from 'material-ui/SvgIcon';
 import {blue500, grey900} from 'material-ui/styles/colors';
 import OpenFile from './OpenFile';
 import SaveFile from './SaveFile';
+import ImportExportHLS from './ImportExportHLS';
+import ImportExportSonata from './ImportExportSonata';
+import ImportExportNeuroML from './ImportExportNeuroML';
 import MenuDrawer from './MenuDrawer'
 import RequestHandler from './RequestHandler'
 
@@ -22,59 +25,58 @@ export default class NetPyNEToolBar extends React.Component {
             title: ''
         }
     }
-    handleMenuItemClick = (menuItemSelected) => {
-        console.log(menuItemSelected)
+    handleMenuItemClick = (id) => {
         var buttonLabel = ''
         var title = ''
-        switch (menuItemSelected) {
-            case 0:
-                buttonLabel = 'Load'
-                title = 'Load HLS'
-                break;
-            case 1:
-                buttonLabel = 'Load'
-                title = 'Load HLS'
-                break;
-            case 2:
-                buttonLabel = 'Load'
-                title = 'Load Model'
-                break;
-            case 3:
-                buttonLabel = 'Load'
-                title = 'Load Model'
-                break;
-            case 4:                
-                buttonLabel = 'Save'
-                title = 'Save HLS'
-                break;
-            case 5:
-                buttonLabel = 'Save'
-                title = 'Save HLS'
-                break;
-            case 6:                
-                buttonLabel = 'Save'
-                title = 'Save Model'
-                break;
-            case 7:                
-                buttonLabel = 'Save'
-                title = 'Save Model'
-                break;
-            default:
-                break
+        if (id==0) {
+            buttonLabel = 'Open'
+            title = 'Open file'
         }
-        this.setState({requestID:menuItemSelected, openDialogBox:true, buttonLabel: buttonLabel, title: title})
+        else if (id==1){
+            buttonLabel = 'Save'
+            title = 'Save file'
+        }
+        else if (id<5) {
+            buttonLabel = 'Import'
+            title = 'Import'
+        }
+        else if (id<8) {
+            buttonLabel = 'Export'
+            title = 'Export'
+        }
 
+        this.setState({requestID:id, openDialogBox:true, buttonLabel: buttonLabel, title: title})
     }
     render() {
-        if (this.state.requestID==-1){
-            var requestEl = <div/>
+        switch (this.state.requestID) {
+            case 0:
+                var requestEl = <OpenFile/>
+                break
+            case 1:
+                var requestEl = <SaveFile/>
+                break
+            case 2:
+                var requestEl = <ImportExportHLS/>
+                break
+            case 3:
+                var requestEl = <ImportExportNeuroML/>
+                break
+            case 4:
+                var requestEl = <ImportExportSonata/>
+                break
+            case 5:
+                var requestEl = <ImportExportHLS/>
+                break
+            case 6:
+                var requestEl = <ImportExportNeuroML/>
+                break
+            case 7:
+                var requestEl = <ImportExportSonata/>
+                break
+            default:
+                var requestEl = <div/>
         }
-        else if(this.state.requestID<4){
-            var requestEl = <OpenFile/>
-        }
-        else if(this.state.requestID<8){
-            var requestEl = <SaveFile/>
-        }
+
         return  <div>
             <MenuDrawer 
                 tooltip={'File options'} 
@@ -84,10 +86,10 @@ export default class NetPyNEToolBar extends React.Component {
                 onClick={this.handleMenuItemClick}
                 icons={[<LoadIcon/>, <SaveIcon/>, <ImportIcon/>, <ExportIcon/>, <DeleteIcon/>]}
                 tree={[
-                    {Open: [{'High Level Specification': ['from .py', 'from .json']}, {'Instanciated Network': ['from .json', 'from .pkl']}, {'All': ['from .json']}]}, 
-                    {Save: [{'High Level Specification': ['as .py', 'as .json']}, {'Instanciated Network': ['as .json', 'as .pkl']}, {'All': ['as .json', 'as .pkl']}] },
-                    {Import: ['from NeuroML', 'from Sonata']},
-                    {Export: ['to NeuroML', 'to Sonata']},
+                    'Open', 
+                    'Save',
+                    {'Import...': ['High Level Specifications', 'from NeuroML', 'from Sonata']},
+                    {'Export...': ['High Level Specifications', 'to NeuroML', 'to Sonata']},
                     'Clear'
                 ]}
             />
