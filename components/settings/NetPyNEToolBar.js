@@ -1,7 +1,7 @@
 import React from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import {blue500, grey900} from 'material-ui/styles/colors';
-import OpenFile from './OpenFile';
+import LoadFile from './LoadFile';
 import SaveFile from './SaveFile';
 import ImportExportHLS from './ImportExportHLS';
 import ImportExportSonata from './ImportExportSonata';
@@ -29,8 +29,8 @@ export default class NetPyNEToolBar extends React.Component {
         var buttonLabel = ''
         var title = ''
         if (id==0) {
-            buttonLabel = 'Open'
-            title = 'Open file'
+            buttonLabel = 'Load'
+            title = 'Load file'
         }
         else if (id==1){
             buttonLabel = 'Save'
@@ -50,7 +50,7 @@ export default class NetPyNEToolBar extends React.Component {
     render() {
         switch (this.state.requestID) {
             case 0:
-                var requestEl = <OpenFile/>
+                var requestEl = <LoadFile/>
                 break
             case 1:
                 var requestEl = <SaveFile/>
@@ -86,7 +86,7 @@ export default class NetPyNEToolBar extends React.Component {
                 onClick={this.handleMenuItemClick}
                 icons={[<LoadIcon/>, <SaveIcon/>, <ImportIcon/>, <ExportIcon/>, <DeleteIcon/>]}
                 tree={[
-                    'Open', 
+                    'Load', 
                     'Save',
                     {'Import...': ['High Level Specifications', 'from NeuroML', 'from Sonata']},
                     {'Export...': ['High Level Specifications', 'to NeuroML', 'to Sonata']},
