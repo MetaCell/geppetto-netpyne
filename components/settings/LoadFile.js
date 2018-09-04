@@ -1,8 +1,7 @@
 import React from 'react';
-import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import { grey400, orange500, blue500 } from 'material-ui/styles/colors';
+import { orange500, blue500 } from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -54,9 +53,9 @@ export default class LoadFile extends React.Component {
             this.props.performAction('abort')
         }
         else {
-            var action = 'netpyne_geppetto.importModel';
+            var action = 'netpyne_geppetto.loadModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
-            this.props.performAction(action, message, {...this.state, importFormat: 'json'})
+            this.props.performAction(action, message, this.state)
             this.setState({actionExecuted: true})
         }
     }
@@ -123,7 +122,8 @@ export default class LoadFile extends React.Component {
                 <div style={{width: '100%', marginTop: -30}}>
                     <div style={{width: '40%', float:'right'}}>
                         <List >
-                            {this.options.map(el => {return<ListItem  style={{height: 50}}
+                            {this.options.map((el, index) => {return<ListItem  style={{height: 50}}
+                                key={index}
                                 leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
                                 primaryText={el.label}
                                 secondaryText={el.label2}

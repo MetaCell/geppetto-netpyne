@@ -1,4 +1,7 @@
 import React from 'react';
+import matteo1 from './matt1.png';
+import matteo2 from './matt2.png';
+import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -12,7 +15,6 @@ import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import IconButton from 'material-ui/IconButton';
-import TransitionDialog from './components/transition/Transition';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar'
 
 
@@ -89,6 +91,7 @@ export default class NetPyNETabs extends React.Component {
   	}
 
   	handleChange = (value) => {
+		console.log("change to tab: "+ value)
 		this.hideWidgetsFor(this.state.value);
 		this.restoreWidgetsFor(value);
 
@@ -144,12 +147,11 @@ export default class NetPyNETabs extends React.Component {
 			}
 			 
 			var bottomValue = this.state.value == "define" ? 35 : 0;
-			var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
 			
 			return (
 				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
 					<div>
-						<AppBar 
+						<AppBar
 							id="appBar"
 							style={{flexWrap: 'wrap', height: 40, width: '100%'}}
 							title={
@@ -170,13 +172,13 @@ export default class NetPyNETabs extends React.Component {
 								<IconButton href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}>
 									<GitHubIcon color="#ffffff"/>
 								</IconButton>
-						}
-						iconElementLeft={<NetPyNEToolBar/>}
+							}
+							iconElementLeft={<NetPyNEToolBar changeTab={this.handleChange}/>}
 						/>
+						<Avatar style={{width:120, height: 120}} size={120} src={this.state.matteo?matteo2:matteo1} onMouseEnter={()=> this.setState({matteo: true})} onMouseLeave={()=>this.setState({matteo:false})}/>	
 					</div>
 					<div style={{flex: 1}}>
 						{content}
-						{transitionDialog}
 					</div>
 				</div>
 			)
