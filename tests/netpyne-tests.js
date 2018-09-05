@@ -133,9 +133,9 @@ function testLandingPage(test) {
  * Load consoles and test they toggle
  */
 function testConsoles(test) {
-  casper.then(function() { //test existence and toggling of console
-    loadConsole(test, 'Python', "notebook-container");
-  });
+  // casper.then(function() { //test existence and toggling of console
+  //   loadConsole(test, 'Python', "notebook-container");
+  // });
   // casper.then(function() { //test existence and toggling of console
   //   loadConsole(test, 'Console', "console");
   // });
