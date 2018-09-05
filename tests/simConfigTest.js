@@ -15,13 +15,13 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.setInputValue(this, test, "simConfig.duration", "999");
     toolbox.setInputValue(this, test, "simConfig.dt", "0.0249");
     toolbox.getInputValue(this, test, "simConfig.printRunTime", "false");
-    toolbox.getInputValue(this, test, "simConfig.hParams0", "clamp_resist : 0.001");
-    toolbox.getInputValue(this, test, "simConfig.hParams1", "celsius : 6.3");
-    toolbox.deleteListItem(this, test, "simConfig.hParams2", "v_init : -65");
+    toolbox.getInputValue(this, test, "simConfig.hParams0", "celsius : 6.3");
+    toolbox.deleteListItem(this, test, "simConfig.hParams1", "v_init : -65");
+    toolbox.getInputValue(this, test, "simConfig.hParams2", "clamp_resist : 0.001");
     toolbox.addListItem(this, test, "simConfig.hParams", "fake: 123456")
-    toolbox.getInputValue(this, test, "simConfig.seeds0", "loc : 1");
+    toolbox.deleteListItem(this, test, "simConfig.seeds0", "conn : 1");
     toolbox.getInputValue(this, test, "simConfig.seeds1", "stim : 1");
-    toolbox.deleteListItem(this, test, "simConfig.seeds2", "conn : 1");
+    toolbox.getInputValue(this, test, "simConfig.seeds2", "loc : 1");
     toolbox.addListItem(this, test, "simConfig.seeds", "fakeII: 654321")
 
   })
@@ -140,8 +140,8 @@ function getSimConfigParams(casper, test, toolbox) {
     toolbox.active.tabID = "configGeneral"
   });
   casper.then(function() {
-    toolbox.getInputValue(this, test, "simConfig.duration", "999");
-    toolbox.getInputValue(this, test, "simConfig.dt", "0.0249");
+    toolbox.getInputValue(this, test, "simConfig.duration", "1000");
+    toolbox.getInputValue(this, test, "simConfig.dt", "0.025");
     toolbox.getListItemValue(this, test, "simConfig.hParams2", "fake : 123456")
     toolbox.getListItemValue(this, test, "simConfig.seeds2", "fakeII : 654321")
     toolbox.testCheckBoxValue(this, test, "simConfig.createNEURONObj", false);
