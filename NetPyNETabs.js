@@ -155,7 +155,7 @@ export default class NetPyNETabs extends React.Component {
           </Tab>
         </Tabs>
         <div id="settingsIcon" style={{ float: 'left', width: '48px', backgroundColor: 'rgb(0, 188, 212)' }}>
-          <IconButton onClick={this.openSettings}>
+          <IconButton id="setupNetwork"onClick={this.openSettings}>
             <FontIcon className={"fa fa-cog"} />
           </IconButton>
         </div>

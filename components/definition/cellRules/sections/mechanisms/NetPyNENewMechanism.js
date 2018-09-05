@@ -24,7 +24,7 @@ export default class NetPyNENewMechanism extends React.Component {
       .then((response) => {
         var menuItems = []
         response.forEach((item) => 
-          menuItems.push(<MenuItem key={item} value={item} primaryText={item}/>)
+          menuItems.push(<MenuItem id={item} key={item} value={item} primaryText={item}/>)
         )
         this.setState({mechanisms: menuItems})
       })
@@ -52,7 +52,7 @@ export default class NetPyNENewMechanism extends React.Component {
 
   render() {
     return <div>
-      <FloatingActionButton mini={true} style={{ margin: 10, float: 'left'}} onClick={this.handleButtonClick}>
+      <FloatingActionButton id={"addNewMechButton"} mini={true} style={{ margin: 10, float: 'left'}} onClick={this.handleButtonClick}>
         <ContentAdd />
       </FloatingActionButton>
       <Popover

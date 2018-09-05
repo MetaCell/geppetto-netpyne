@@ -127,6 +127,7 @@ export default class NetPyNEField extends Component {
             if (options) {
                 extraProps['children'] = options.map((name) => (
                     <MenuItem
+                        id={name}
                         key={name}
                         value={name}
                         primaryText={name}

@@ -21,6 +21,7 @@ export default class StimulationConditions extends React.Component {
   postProcessMenuItems(pythonData, selected) {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -61,32 +62,35 @@ export default class StimulationConditions extends React.Component {
         </NetPyNEField>
         
         <NetPyNECoordsRange 
+          id="xRangeStimTarget"
           name={this.props.name} 
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'x', label:'absolute'}, 
-            {value: 'xnorm', label:'normalized'}
+            {value: 'x', label:'Absolute'}, 
+            {value: 'xnorm', label:'Normalized'}
           ]}
         />
         
         <NetPyNECoordsRange 
+          id="yRangeStimTarget"
           name={this.props.name} 
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'y', label:'absolute'}, 
-            {value: 'ynorm', label:'normalized'}
+            {value: 'y', label:'Absolute'}, 
+            {value: 'ynorm', label:'Normalized'}
           ]}
         />
 
-        <NetPyNECoordsRange 
+        <NetPyNECoordsRange
+          id="zRangeStimTarget"
           name={this.props.name} 
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'z', label:'absolute'}, 
-            {value: 'znorm', label:'normalized'}
+            {value: 'z', label:'Absolute'}, 
+            {value: 'znorm', label:'Normalized'}
           ]}
         />
         

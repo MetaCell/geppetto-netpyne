@@ -68,6 +68,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     };
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
@@ -78,6 +79,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   postProcessMenuItems4SynMech = (pythonData, selected) => {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
@@ -87,8 +89,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
   
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
   
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={icon}
@@ -169,8 +172,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions', <CondsIcon/>)); 
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />, 'stimTargetGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions',<CondsIcon/>, 'stimTargetCondsTab')); 
     
     return (
       <div>

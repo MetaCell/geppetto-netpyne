@@ -58,9 +58,10 @@ export default class NetPyNESection extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 500);
   }
 
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
 
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
@@ -75,6 +76,7 @@ export default class NetPyNESection extends React.Component {
     if (pythonData[this.props.cellRule]!= undefined) {
       return pythonData[this.props.cellRule].map((name) => (
         <MenuItem
+          id={name+"MenuItem"}
           key={name}
           value={name}
           primaryText={name}
@@ -91,14 +93,16 @@ export default class NetPyNESection extends React.Component {
       content = (
         <div>
       
-        <TextField
-          onChange={this.handleRenameChange}
-          value = {this.state.currentName}
-          floatingLabelText="The name of the section"
-          className={"netpyneField"}
-        />
+          <TextField
+            id={"cellParamsSectionName"}
+            onChange={this.handleRenameChange}
+            value = {this.state.currentName}
+            floatingLabelText="The name of the section"
+            className={"netpyneField"}
+          />
           <br /><br />
           <IconButton
+            id={"cellParamsGoMechsButton"}
             className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
             onClick={() => that.props.selectPage("mechanisms")}
           >
@@ -164,9 +168,9 @@ export default class NetPyNESection extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'sectionGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube', 'sectionGeomTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree', 'sectionTopoTab'));
     
     return (
       <div>

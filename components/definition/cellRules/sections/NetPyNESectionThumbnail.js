@@ -52,6 +52,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
     return (
       <div>
       <RaisedButton
+        id={this.props.name}
         onMouseEnter={this.handleHoverIn}
         onMouseLeave={this.handleHoverOut}
         primary={true} 

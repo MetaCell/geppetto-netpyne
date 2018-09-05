@@ -30,11 +30,13 @@ export default class DeleteDialogBox extends React.Component {
     render() {
         const actions = [
           <FlatButton
+            id="confirmCancel"
             label="Cancel"
             primary={true}
             onClick={() => this.props.onDialogResponse(false)}
           />,
           <FlatButton
+            id="confirmDeletion"
             label="Confirm"
             primary={true}
             keyboardFocused={true}
