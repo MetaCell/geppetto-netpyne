@@ -49,13 +49,17 @@ export default class LoadFile extends React.Component {
         if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
         }
         else if (this.state.areModFieldsRequired==='') {
-            this.setState({areModFieldsRequired: undefined, actionExecuted: true})
             this.props.performAction('abort')
+            this.setState({areModFieldsRequired: undefined, actionExecuted: true})
         }
         else {
+            if (this.state.loadAll || this.state.loadSimData) {var tab = 'simulate'}
+            else if (this.state.loadNet) {var tab = 'explore'}
+            else {var tab = 'define'}
+            
             var action = 'netpyne_geppetto.loadModel';
             var message = GEPPETTO.Resources.IMPORTING_MODEL;
-            this.props.performAction(action, message, this.state)
+            this.props.performAction(action, message, {...this.state, tab:tab})
             this.setState({actionExecuted: true})
         }
     }

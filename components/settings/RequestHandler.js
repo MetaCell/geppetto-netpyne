@@ -31,25 +31,26 @@ export default class RequestHandler extends React.Component {
         else {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
             this.closeDialog();
-            var tab = 'define'
-            if (Object.keys(args).indexOf('jsonModelFolder')>-1) {
-                if (args.loadAll) {
-                    var tab = 'simulate'
-                }
-                else if (args.loadNet) {
-                    var tab = 'explore'
-                }
-                else if (args.loadSimData) {
-                    var tab = 'simulate'
-                }
-            }
+            var tab = args.tab
+            console.log(tab)
+            // if (Object.keys(args).indexOf('jsonModelFolder')>-1) {
+            //     if (args.loadAll) {
+            //         var tab = 'simulate'
+            //     }
+            //     else if (args.loadNet) {
+            //         var tab = 'explore'
+            //     }
+            //     else if (args.loadSimData) {
+            //         var tab = 'simulate'
+            //     }
+            // }
             Utils
                 .sendPythonMessage(action, [args])
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
                         console.log(15)
-                        if (tab=='define') {
+                        if (tab=='define' || tab==undefined) {
                             console.log(16)
                             this.props.onRequestClose();
                             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);

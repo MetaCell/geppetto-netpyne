@@ -1,12 +1,19 @@
 import React from 'react';
+import TextField from 'material-ui/TextField'
 import { blue500 } from 'material-ui/styles/colors';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+import FileBrowser from '../general/FileBrowser';
 
 export default class ImportExportNeuroML extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             actionExecuted: false,
+            neuroMLFolder: '',
+            fileName: '',
+            explorerDialogOpen: false,
+            explorerParameter: "",
+            exploreOnlyDirs: false
         }
     }
 
@@ -20,21 +27,64 @@ export default class ImportExportNeuroML extends React.Component {
     }
 
     performAction() { // send here the message
-        // var action = 'netpyne_geppetto.importModel';
-        // var message = GEPPETTO.Resources.IMPORTING_MODEL;
-        // this.props.performAction(action, message, this.state)
+        console.log(1)
+        if (this.props.requestID==3){
+            var action = 'netpyne_geppetto.importNeuroML';
+        }
+        else if (this.props.request==6) {
+            var action = 'netpyne_geppetto.exportNeuroML';
+        }
+        var message = GEPPETTO.Resources.IMPORTING_MODEL;
+        this.props.performAction(action, message, this.state)
         this.setState({actionExecuted: true})
     }
 
-    render() { 
+    showExplorerDialog(explorerParameter, exploreOnlyDirs) {
+        this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs })
+    }
+
+    closeExplorerDialog(fieldValue) {
+        var newState = { explorerDialogOpen: false };
+        if (fieldValue) {
+            switch (this.state.explorerParameter) {
+                case "neuroMLFolder":
+                    newState["neuroMLFolder"] = fieldValue.path;
+                    break;
+                default:
+                    throw ("Not a valid parameter!");
+            }
+        }
+        this.setState(newState);
+    }
+    
+    render() {
+        console.log(10)
         switch(this.props.requestID) { // maybe use it for import/export option
             case 3: 
                 var header =  <CardHeader title="Import from NeuroML" subtitle="NeuroML file" titleColor={blue500}/>
-                var content = <CardText style={{marginTop: -30}}><h3>Under construction...</h3></CardText>
+                var content = <CardText style={{marginTop: -30}}>
+                    <TextField 
+                        className="netpyneField" 
+                        style={{ cursor: 'pointer', width: '100%'}} 
+                        floatingLabelText="Mod path folder"
+                        value={this.state.neuroMLFolder} 
+                        onClick={() => this.showExplorerDialog('neuroMLFolder', false)} 
+                        readOnly 
+                    />
+                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                </CardText>
                 break
             case 6:
                 var header = <CardHeader title="Export to NeuroML" subtitle="NeuroML file" titleColor={blue500} />
-                var content = <CardText style={{marginTop: -30}}><h3>Under construction...</h3></CardText>
+                var content = <CardText style={{marginTop: -30}}>
+                    <TextField
+                        className="netpyneField"
+                        hintText="File name"
+                        floatingLabelText="File name"
+                        value={this.state.fileName}
+                        onChange={(e, v) => {this.setState({fileName: v})}}
+                    />
+                </CardText>
                 break
             default:
                 var header = <CardHeader title="" subtitle="" titleColor={blue500} />

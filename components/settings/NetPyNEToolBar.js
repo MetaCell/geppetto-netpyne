@@ -86,10 +86,10 @@ export default class NetPyNEToolBar extends React.Component {
                 onClick={this.handleMenuItemClick}
                 icons={[<LoadIcon/>, <SaveIcon/>, <ImportIcon/>, <ExportIcon/>, <DeleteIcon/>]}
                 tree={[
-                    'Load', 
-                    'Save',
-                    {'Import...': ['High Level Specifications', 'from NeuroML', 'from Sonata']},
-                    {'Export...': ['High Level Specifications', 'to NeuroML', 'to Sonata']},
+                    'Load...', 
+                    'Save...',
+                    {'Import': ['High Level Specifications', 'from NeuroML', 'from Sonata']},
+                    {'Export': ['High Level Specifications', 'to NeuroML', 'to Sonata']},
                     'Clear'
                 ]}
             />
