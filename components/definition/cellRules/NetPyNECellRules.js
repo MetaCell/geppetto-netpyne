@@ -217,7 +217,7 @@ export default class NetPyNECellRules extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newCellRuleName = this.hasSelectedCellRuleBeenRenamed(prevState, this.state);
-    if (newCellRuleName) {
+    if (!(typeof(newCellRuleName) === "boolean")) {
       this.setState({ selectedCellRule: newCellRuleName });
     }
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
@@ -231,7 +231,7 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) != false || this.hasSelectedSectionBeenRenamed(this.state, nextState) != false || this.hasSelectedMechanismBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = !(typeof(this.hasSelectedCellRuleBeenRenamed(this.state, nextState)) === "boolean") || !(typeof(this.hasSelectedSectionBeenRenamed(this.state, nextState)) === "boolean") || !(typeof(this.hasSelectedMechanismBeenRenamed(this.state, nextState)) === "boolean");
     var newItemCreated = false;
     var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
     var pageChanged = this.state.page != nextState.page;
@@ -295,7 +295,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
-      if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
+      if ((this.state.selectedCellRule != undefined) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
         selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
       }
 

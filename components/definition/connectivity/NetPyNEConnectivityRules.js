@@ -90,13 +90,13 @@ export default class NetPyNEConnectivityRules extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(prevState, this.state);
-    if (newConnectivityRuleName) {
+    if (!(typeof(newConnectivityRuleName) === "boolean")) {
       this.setState({ selectedConnectivityRule: newConnectivityRuleName });
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = !(typeof(this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState)) === "boolean");
     var newItemCreated = false;
     var selectionChanged = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;
@@ -132,7 +132,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
           handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;
-      if (this.state.selectedConnectivityRule && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
+      if ((this.state.selectedConnectivityRule != undefined) && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} />;
       }
 
