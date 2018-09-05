@@ -32,43 +32,24 @@ export default class RequestHandler extends React.Component {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
             this.closeDialog();
             var tab = args.tab
-            console.log(tab)
-            // if (Object.keys(args).indexOf('jsonModelFolder')>-1) {
-            //     if (args.loadAll) {
-            //         var tab = 'simulate'
-            //     }
-            //     else if (args.loadNet) {
-            //         var tab = 'explore'
-            //     }
-            //     else if (args.loadSimData) {
-            //         var tab = 'simulate'
-            //     }
-            // }
             Utils
                 .sendPythonMessage(action, [args])
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        console.log(15)
-                        if (tab=='define' || tab==undefined) {
-                            console.log(16)
-                            this.props.onRequestClose();
+                        if (tab=='define' || tab==undefined || this.props.requestID==6) {
                             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                             this.setState({spinning: false})
+                            this.props.onRequestClose();
                         }
                         else {
-                            console.log(17)
                             this.props.changeTab(tab)
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
-                            console.log(18)
                             GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");
                             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                            console.log(19)
                             this.setState({spinning: false})
-                            console.log(20)
                             this.props.onRequestClose();
-                            console.log(21)
                         }
                     }
             });

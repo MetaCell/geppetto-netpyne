@@ -26,16 +26,19 @@ export default class ImportExportNeuroML extends React.Component {
         }
     }
 
-    performAction() { // send here the message
-        console.log(1)
+    performAction() { // send here the message+
         if (this.props.requestID==3){
+            var tab = 'define'
             var action = 'netpyne_geppetto.importNeuroML';
+            var message = GEPPETTO.Resources.IMPORTING_MODEL;
         }
-        else if (this.props.request==6) {
+        else if (this.props.requestID==6) {
+            var tab = 'simulate'
             var action = 'netpyne_geppetto.exportNeuroML';
+            var message = GEPPETTO.Resources.EXPORTING_MODEL;
         }
-        var message = GEPPETTO.Resources.IMPORTING_MODEL;
-        this.props.performAction(action, message, this.state)
+        
+        this.props.performAction(action, message, {...this.state, tab:tab})
         this.setState({actionExecuted: true})
     }
 
@@ -58,7 +61,6 @@ export default class ImportExportNeuroML extends React.Component {
     }
     
     render() {
-        console.log(10)
         switch(this.props.requestID) { // maybe use it for import/export option
             case 3: 
                 var header =  <CardHeader title="Import from NeuroML" subtitle="NeuroML file" titleColor={blue500}/>

@@ -122,23 +122,19 @@ export default class LoadFile extends React.Component {
         
         var header = <CardHeader title="Load previews work" subtitle="JSON file" titleColor={blue500} />
         var content = (
-            <CardText style={{}}>
+            <CardText style={{marginTop: -30}}>
                 <div style={{width: '100%', marginTop: -30}}>
-                    <div style={{width: '40%', float:'right'}}>
-                        <List >
-                            {this.options.map((el, index) => {return<ListItem  style={{height: 50}}
-                                key={index}
-                                leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
-                                primaryText={el.label}
-                                secondaryText={el.label2}
-                                />})
-                            }
-                        </List>
-                    </div>
-                    <div style={{width: '50%'}}>
-                        <TextField className="netpyneField" style={{cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
-                        {loadModFiles}
-                    </div>
+                    <TextField className="netpyneField" style={{cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
+                    <List > 
+                        {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
+                            key={index}
+                            leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
+                            primaryText={el.label}
+                            secondaryText={el.label2}
+                            />})
+                        }
+                    </List>
+                    {loadModFiles}
                 </div>
             </CardText>
         )

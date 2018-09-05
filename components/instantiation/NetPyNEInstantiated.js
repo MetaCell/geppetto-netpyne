@@ -1,7 +1,8 @@
-
-import React, { Component } from 'react';
+import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Canvas from '../../../../js/components/interface/3dCanvas/Canvas';
 import ControlPanel from '../../../../js/components/interface/controlPanel/controlpanel';
 import IconButton from '../../../../js/components/controls/iconButton/IconButton';
@@ -190,14 +191,14 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 10 }}
+                <IconButton style={{ position: 'absolute', left: 35, top: 55 }}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 35, top: 318 }}
+                        style={{ position: 'absolute', left: 34, top: 358 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
                         id="PlotButton"
@@ -212,6 +213,9 @@ export default class NetPyNEInstantiated extends React.Component {
                         {controls}
                     </Popover>
                 </div>
+                <FloatingActionButton onClick={()=>console.log("click")} style={{position: 'absolute', right: 35, top: 50}}>
+                    <NavigationRefresh />
+                </FloatingActionButton>
                 <Dialog
                     title={this.state.dialogTitle}
                     modal={true}

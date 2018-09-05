@@ -1,7 +1,10 @@
 import React from 'react';
+import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import {List, ListItem} from 'material-ui/List';
 import { blue500 } from 'material-ui/styles/colors';
 import Card, {CardHeader, CardText} from 'material-ui/Card';
+
 
 export default class SaveFile extends React.Component {
     constructor(props) {
@@ -11,6 +14,14 @@ export default class SaveFile extends React.Component {
             jsonModelFolder: "",
             scriptName: 'script_output',
         }
+        this.options = [
+            {label: 'High level specs.', label2: 'netParams and simConfig', state: 'netParams'},
+            {label: 'Configuration', label2: 'simConfig.py', state: 'simConfig'},
+            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'simData'},
+            {label: 'Cells', label2: 'Instanciated Network cells', state: 'netCells'},
+            {label: 'Pops', label2: 'Instanciated Network pops', state: 'netPops'},
+            {label: 'All', label2: 'Load everything', state: 'loadAll'}
+        ]
     }
 
     componentDidUpdate() {
@@ -23,11 +34,8 @@ export default class SaveFile extends React.Component {
     }
 
     performAction() {
-        if (this.props.requestID == 6) {
+        if (this.props.requestID == 1) {
             var action = 'netpyne_geppetto.exportModel';
-        }
-        else if (this.props.requestID == 5) {
-            var action = 'netpyne_geppetto.generateScript';
         }
         var message = GEPPETTO.Resources.EXPORTING_MODEL;
         this.props.performAction(action, message, this.state)
@@ -35,20 +43,20 @@ export default class SaveFile extends React.Component {
 
     render() {
         switch(this.props.requestID) {
-            case 4:
+            case 1:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = (
                     <CardText style={{marginTop: -30}}>
                         <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
-                        <span style={{ marginTop: 20, float: 'left' }}>* The file will be saved in the current working directory (where you initialized NetPyNE-UI)</span>
-                    </CardText>
-                )
-                break;
-            case 5:
-                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="JSON file" />
-                var content = (
-                    <CardText style={{marginTop: -30}}> 
-                        <span style={{ marginTop: 20, float: 'left' }}>* Go to:  - Configuration Tab > Save Configuration -  to select data and formats to be saved.</span>
+                        <List >
+                            {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
+                                key={index}
+                                leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
+                                primaryText={el.label}
+                                secondaryText={el.label2}
+                                />})
+                            }
+                        </List>
                     </CardText>
                 )
                 break;

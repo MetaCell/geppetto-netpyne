@@ -39,7 +39,7 @@ export default class ImportExportHLS extends React.Component {
 
     performAction() {
         if (this.props.requestID==5) {
-            var action = 'netpyne_geppetto.generateScript';
+            var action = 'netpyne_geppetto.exportHLS';
             var message = GEPPETTO.Resources.EXPORTING_MODEL;
             this.props.performAction(action, message, this.state)
         }
@@ -143,8 +143,16 @@ export default class ImportExportHLS extends React.Component {
                     </CardText>
                 break;
             case 5:
-                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="JSON file" />
-                var content = <CardText style={{marginTop: -30}}> <span style={{ marginTop: 20, float: 'left' }}>* Go to:  - Configuration Tab > Save Configuration -  to select data and formats to be saved.</span></CardText>
+                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
+                var content = <CardText style={{marginTop: -30}}>
+                    <TextField
+                        className="netpyneField"
+                        hintText="File name"
+                        floatingLabelText="File name"
+                        value={this.state.fileName}
+                        onChange={(e, v) => {this.setState({fileName: v})}}
+                    />
+                </CardText>
                 break
             default:
                 var header = <CardHeader title="" subtitle="" titleColor={blue500} />
