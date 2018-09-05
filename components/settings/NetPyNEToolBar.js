@@ -3,6 +3,7 @@ import SvgIcon from 'material-ui/SvgIcon';
 import {blue500, grey900} from 'material-ui/styles/colors';
 import LoadFile from './LoadFile';
 import SaveFile from './SaveFile';
+import DeleteWork from './DeleteWork';
 import ImportExportHLS from './ImportExportHLS';
 import ImportExportSonata from './ImportExportSonata';
 import ImportExportNeuroML from './ImportExportNeuroML';
@@ -44,7 +45,10 @@ export default class NetPyNEToolBar extends React.Component {
             buttonLabel = 'Export'
             title = 'Export'
         }
-
+        else if (id==8) {
+            buttonLabel = 'Delete'
+            title = 'Delete'
+        }
         this.setState({requestID:id, openDialogBox:true, buttonLabel: buttonLabel, title: title})
     }
     render() {
@@ -72,6 +76,9 @@ export default class NetPyNEToolBar extends React.Component {
                 break
             case 7:
                 var requestEl = <ImportExportSonata/>
+                break
+            case 8:
+                var requestEl = <DeleteWork/>
                 break
             default:
                 var requestEl = <div/>

@@ -62,7 +62,6 @@ export default class MenuDrawer extends React.Component {
             )
         }
         exploreTree(tree)
-
         return output
     }
     // the behavior of this two is to keep the state anyOnFocus equal to true as long as any of the popovers
@@ -113,7 +112,7 @@ export default class MenuDrawer extends React.Component {
                 rightIcon={value!=undefined?<ArrowDropRight />:null}
                 leftIcon={icon?icon:null}
                 onMouseLeave={this._onBlur}
-                onClick={value!=undefined?()=>{}:()=>{this.closeMenu(key)}}
+                onClick={value!=undefined?()=>{}:()=>{this.closeMenu(this.state.open[key].gid)}}
                 onMouseEnter={(e) => this.handleMouseOverMenuItem(key, e.preventDefault(), e.currentTarget, value==undefined?true:false)}
             />
             {value==undefined?null:<Popover key={key+"Popover"} 

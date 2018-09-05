@@ -88,6 +88,7 @@ export default class RequestHandler extends React.Component {
                     cancelAction, 
                     <RaisedButton primary label={this.props.buttonLabel} onTouchTap={this.requestActionToChild}/>
                 ];
+                console.log(this.props.requestID)
                 var content = React.Children.map(this.props.children, child => {
                     return React.cloneElement(child, {
                         requestID: this.props.requestID, 

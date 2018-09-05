@@ -88,7 +88,6 @@ export default class NetPyNETabs extends React.Component {
   	}
 
   	handleChange = (value) => {
-		console.log("change to tab: "+ value)
 		this.hideWidgetsFor(this.state.value);
 		this.restoreWidgetsFor(value);
 
