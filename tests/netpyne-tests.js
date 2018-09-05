@@ -134,29 +134,53 @@ function testLandingPage(test) {
  */
 function testConsoles(test) {
   casper.then(function() { //test existence and toggling of console
-    loadConsole(test, 'pythonConsoleButton', "pythonConsole");
+    loadConsole(test, 'Python', "notebook-container");
   });
-  casper.then(function() { //test existence and toggling of console
-    loadConsole(test, 'consoleButton', "console");
-  });
+  // casper.then(function() { //test existence and toggling of console
+  //   loadConsole(test, 'Console', "console");
+  // });
 }
 
 /**
  * Load console, and test it hides/shows fine
  */
 function loadConsole(test, consoleButton, consoleContainer) {
-  casper.thenClick('li[id="'+consoleButton+'"]', function(){
-    this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
-      this.echo(consoleContainer + ' loaded.');
-      test.assertExists('div[id="' + consoleContainer + '"]', consoleContainer + " exists");
-    })
+  casper.then(function () {
+		//buttonClick("#consoleButton");
+		casper.clickLabel(consoleButton, 'span');
   });
-  casper.thenClick('li[id="'+consoleButton+'"]', function() {
-    this.waitWhileVisible('div[id="' + consoleContainer + '"]', function() {
-      this.echo(consoleContainer + ' hidden.');
-      test.assertNotVisible('div[id="' + consoleContainer + '"]', consoleContainer + " no longer visible");
-    });
+  
+  casper.then(function () {
+  this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
+    this.echo(consoleContainer + ' loaded.');
+    test.assertExists('div[id="' + consoleContainer + '"]', consoleContainer + " exists");
   })
+});
+
+casper.then(function () {
+  //buttonClick("#consoleButton");
+  casper.clickLabel(consoleButton, 'span');
+});
+
+casper.then(function () {
+  this.waitWhileVisible('div[id="' + consoleContainer + '"]', function() {
+    this.echo(consoleContainer + ' hidden.');
+    test.assertNotVisible('div[id="' + consoleContainer + '"]', consoleContainer + " no longer visible");
+  });
+});
+
+  // casper.thenClick('li[id="'+consoleButton+'"]', function(){
+  //   this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
+  //     this.echo(consoleContainer + ' loaded.');
+  //     test.assertExists('div[id="' + consoleContainer + '"]', consoleContainer + " exists");
+  //   })
+  // });
+  // casper.thenClick('li[id="'+consoleButton+'"]', function() {
+  //   this.waitWhileVisible('div[id="' + consoleContainer + '"]', function() {
+  //     this.echo(consoleContainer + ' hidden.');
+  //     test.assertNotVisible('div[id="' + consoleContainer + '"]', consoleContainer + " no longer visible");
+  //   });
+  // })
   casper.then(function(){
     this.wait(1000)
   })
