@@ -22,17 +22,15 @@ export default class LoadFile extends React.Component {
             areModFieldsRequired: '',
 
             loadNetParams: true,
-            loadSimCfg: false,
-            loadSimData: false,
-            loadNet: false,
-            loadAll: false
+            loadSimCfg: true,
+            loadSimData: true,
+            loadNet: true,
         }
         this.options = [
-            {label: 'High level specs.', label2: 'netParams and simConfig', state: 'loadNetParams'},
-            {label: 'Configuration', label2: 'simConfig.py', state: 'loadSimCfg'},
-            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'loadSimData'},
+            {label: 'High level specs.', label2: 'netParams', state: 'loadNetParams'},
+            {label: 'High level specs.', label2: 'simConfig', state: 'loadSimCfg'},
             {label: 'Cells', label2: 'Instanciated Network', state: 'loadNet'},
-            {label: 'All', label2: 'Load everything', state: 'loadAll'}
+            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'loadSimData'}
         ]
     }
 

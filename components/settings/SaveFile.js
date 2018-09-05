@@ -15,15 +15,13 @@ export default class SaveFile extends React.Component {
             netParams: true,
             simConfig: true,
             simData: true,
-            netCells: true,
-            netPops: true,
+            netCells: true
         }
         this.options = [
-            {label: 'High level specs.', label2: 'netParams and simConfig', state: 'netParams'},
-            {label: 'Configuration', label2: 'simConfig.py', state: 'simConfig'},
-            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'simData'},
+            {label: 'High level specs.', label2: 'netParams', state: 'netParams'},
+            {label: 'High level specs.', label2: 'simConfig', state: 'simConfig'},
             {label: 'Cells', label2: 'Instanciated Network cells', state: 'netCells'},
-            {label: 'Pops', label2: 'Instanciated Network pops', state: 'netPops'},
+            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'simData'}
         ]
     }
 
