@@ -11,8 +11,12 @@ export default class SaveFile extends React.Component {
         super(props);
         this.state = {
             actionExecuted: false,
-            jsonModelFolder: "",
-            scriptName: 'script_output',
+            fileName: 'script_output',
+            netParams: true,
+            simConfig: true,
+            simData: true,
+            netCells: true,
+            netPops: true,
         }
         this.options = [
             {label: 'High level specs.', label2: 'netParams and simConfig', state: 'netParams'},
@@ -20,7 +24,6 @@ export default class SaveFile extends React.Component {
             {label: 'Data', label2: 'Spikes, traces, etc.', state: 'simData'},
             {label: 'Cells', label2: 'Instanciated Network cells', state: 'netCells'},
             {label: 'Pops', label2: 'Instanciated Network pops', state: 'netPops'},
-            {label: 'All', label2: 'Load everything', state: 'loadAll'}
         ]
     }
 
@@ -39,6 +42,7 @@ export default class SaveFile extends React.Component {
         }
         var message = GEPPETTO.Resources.EXPORTING_MODEL;
         this.props.performAction(action, message, this.state)
+        this.setState({actionExecuted: true})
     }
 
     render() {
@@ -47,7 +51,7 @@ export default class SaveFile extends React.Component {
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = (
                     <CardText style={{marginTop: -30}}>
-                        <TextField className="netpyneField" floatingLabelText="File name" value={this.state.scriptName} onChange={(event) => this.setState({ scriptName: event.target.value })} />
+                        <TextField className="netpyneField" floatingLabelText="File name" value={this.state.fileName} onChange={(event) => this.setState({ fileName: event.target.value })} />
                         <List >
                             {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
                                 key={index}
