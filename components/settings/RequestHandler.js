@@ -43,13 +43,14 @@ export default class RequestHandler extends React.Component {
                             this.props.onRequestClose();
                         }
                         else {
-                            this.props.changeTab(tab)
+                            this.props.changeTab(tab); //move to other tab
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
+                            console.log(parsedResponse)
                             GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");
                             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                             this.setState({spinning: false})
-                            this.props.onRequestClose();
+                            this.props.onRequestClose(); //close import dialogbox
                         }
                     }
             });
@@ -88,7 +89,6 @@ export default class RequestHandler extends React.Component {
                     cancelAction, 
                     <RaisedButton primary label={this.props.buttonLabel} onTouchTap={this.requestActionToChild}/>
                 ];
-                console.log(this.props.requestID)
                 var content = React.Children.map(this.props.children, child => {
                     return React.cloneElement(child, {
                         requestID: this.props.requestID, 

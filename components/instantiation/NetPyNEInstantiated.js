@@ -1,7 +1,7 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh'
+import {pink500} from 'material-ui/styles/colors';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Canvas from '../../../../js/components/interface/3dCanvas/Canvas';
 import ControlPanel from '../../../../js/components/interface/controlPanel/controlpanel';
@@ -191,7 +191,8 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 55 }}
+                <FloatingActionButton iconStyle={{color:pink500}} backgroundColor="#ffffff" iconClassName="fa fa-refresh" onClick={()=>console.log("click")} style={{position: 'absolute', right: 34, top: 50}}/>
+                <IconButton style={{ position: 'absolute', left: 34, top: 55 }}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
@@ -213,9 +214,6 @@ export default class NetPyNEInstantiated extends React.Component {
                         {controls}
                     </Popover>
                 </div>
-                <FloatingActionButton onClick={()=>console.log("click")} style={{position: 'absolute', right: 35, top: 50}}>
-                    <NavigationRefresh />
-                </FloatingActionButton>
                 <Dialog
                     title={this.state.dialogTitle}
                     modal={true}
