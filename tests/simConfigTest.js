@@ -16,12 +16,12 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.setInputValue(this, test, "simConfig.dt", "0.0249");
     toolbox.getInputValue(this, test, "simConfig.printRunTime", "false");
     toolbox.getInputValue(this, test, "simConfig.hParams0", "celsius : 6.3");
-    toolbox.deleteListItem(this, test, "simConfig.hParams1", "v_init : -65");
-    toolbox.getInputValue(this, test, "simConfig.hParams2", "clamp_resist : 0.001");
+    toolbox.getInputValue(this, test, "simConfig.hParams1", "v_init : -65");
+    toolbox.deleteListItem(this, test, "simConfig.hParams2", "clamp_resist : 0.001");
     toolbox.addListItem(this, test, "simConfig.hParams", "fake: 123456")
-    toolbox.deleteListItem(this, test, "simConfig.seeds0", "conn : 1");
+    toolbox.getInputValue(this, test, "simConfig.seeds0", "conn : 1");
     toolbox.getInputValue(this, test, "simConfig.seeds1", "stim : 1");
-    toolbox.getInputValue(this, test, "simConfig.seeds2", "loc : 1");
+    toolbox.deleteListItem(this, test, "simConfig.seeds2", "loc : 1");
     toolbox.addListItem(this, test, "simConfig.seeds", "fakeII: 654321")
 
   })
