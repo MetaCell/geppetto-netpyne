@@ -52,10 +52,10 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
 
-  casper.then(function() { //test initial state of consoles
-    this.echo("######## Test Consoles ######## ", "INFO");
-    testConsoles(test);
-  });
+  // casper.then(function() { //test initial state of consoles
+  //   this.echo("######## Test Consoles ######## ", "INFO");
+  //   testConsoles(test);
+  // });
 
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test popParams fields")
@@ -133,12 +133,12 @@ function testLandingPage(test) {
  * Load consoles and test they toggle
  */
 function testConsoles(test) {
-  // casper.then(function() { //test existence and toggling of console
-  //   loadConsole(test, 'pythonConsoleButton', "pythonConsole");
-  // });
-  // casper.then(function() { //test existence and toggling of console
-  //   loadConsole(test, 'consoleButton', "console");
-  // });
+  casper.then(function() { //test existence and toggling of console
+    loadConsole(test, 'pythonConsoleButton', "pythonConsole");
+  });
+  casper.then(function() { //test existence and toggling of console
+    loadConsole(test, 'consoleButton', "console");
+  });
 }
 
 /**
@@ -505,7 +505,7 @@ function testExploreNetwork(test) {
   casper.then(function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
-    })
+    }, 40000)
   })
   casper.then(function() {
     this.echo("Testing meshes for network exist and are visible");

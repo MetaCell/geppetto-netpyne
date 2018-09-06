@@ -187,6 +187,35 @@ function getInputValue(casper, test, elementID, expectedValue, times = 3) {
 }
 
 //----------------------------------------------------------------------------//
+function getlistItemValues(casper, test, elementID, expectedValues, times = 3) {
+  var elementIDs = expectedValues.map((elem, i)=>{return elementID+i})
+  var failed = false
+  casper.then(function(){
+    this.each(elementIDs, function(self, el) {
+      self.waitUntilVisible('input[id="' + el +'"]')
+    })
+  })
+  
+  casper.then(function() {
+    var values = elementIDs.map((el) => {
+      return this.evaluate(function(el) {
+        return $('input[id="' + el + '"]').val();
+      }, el);
+    })
+    expectedValues.forEach((el)=>{
+      if (values.indexOf(el)==-1) {
+        // required in case python fails to update field
+        secondChance(this, test, values, expectedValues, elementID, getlistItemValues, times)    
+        var failed = true
+      }
+    })
+    if (!failed) {
+      test.assert(true, expectedValues + " found in: " + elementID)
+    }
+  })
+}
+
+//----------------------------------------------------------------------------//
 function setSelectFieldValue(casper, test, selectFieldID, menuItemID) {
   casper.then(function() {
     this.waitUntilVisible('div[id="' + selectFieldID + '"]')
@@ -424,6 +453,7 @@ var toolbox = module.exports = {
   selectThumbRule: selectThumbRule,
   setInputValue: setInputValue,
   getInputValue: getInputValue,
+  getlistItemValues: getlistItemValues,
   setSelectFieldValue: setSelectFieldValue,
   getSelectFieldValue: getSelectFieldValue,
   addListItem: addListItem,
