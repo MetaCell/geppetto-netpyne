@@ -43,19 +43,19 @@ export default class NetPyNEPopulations extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newPopulationName = this.hasSelectedPopulationBeenRenamed(prevState, this.state);
-    if (!(typeof(newPopulationName) === "boolean")) {
+    if (newPopulationName !== undefined) {
       this.setState({ selectedPopulation: newPopulationName });
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = !(typeof(this.hasSelectedPopulationBeenRenamed(this.state, nextState)) === "boolean");
+    var itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
@@ -119,7 +119,7 @@ export default class NetPyNEPopulations extends React.Component {
           handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
-      if ((this.state.selectedPopulation != undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
+      if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
         selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
       }
     }

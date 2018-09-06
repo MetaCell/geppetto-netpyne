@@ -83,20 +83,20 @@ export default class NetPyNEConnectivityRules extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
 
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(prevState, this.state);
-    if (!(typeof(newConnectivityRuleName) === "boolean")) {
+    if (newConnectivityRuleName !== undefined) {
       this.setState({ selectedConnectivityRule: newConnectivityRuleName });
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = !(typeof(this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState)) === "boolean");
+    var itemRenamed = this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;

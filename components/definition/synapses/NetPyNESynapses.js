@@ -58,18 +58,18 @@ export default class NetPyNESynapses extends React.Component {
         };
       };
     };
-    return false;
+    return undefined;
   };
 
   componentDidUpdate(prevProps, prevState) {
     var newSynapseName = this.hasSelectedSynapseBeenRenamed(prevState, this.state);
-    if (!(typeof(newSynapseName) === "boolean")) {
+    if (newSynapseName !== undefined) {
       this.setState({ selectedSynapse: newSynapseName });
     };
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = !(typeof(this.hasSelectedSynapseBeenRenamed(this.state, nextState)) === "boolean");
+    var itemRenamed = this.hasSelectedSynapseBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;

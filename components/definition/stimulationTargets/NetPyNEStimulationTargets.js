@@ -59,18 +59,18 @@ export default class NetPyNEStimulationTargets extends React.Component {
         };
       };
     };
-    return false;
+    return undefined;
   };
  
   componentDidUpdate(prevProps, prevState) {
     var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(prevState, this.state);
-    if (!(typeof(newStimulationTargetName) === "boolean")) {
+    if (newStimulationTargetName !== undefined) {
       this.setState({ selectedStimulationTarget: newStimulationTargetName });
     };
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = !(typeof(this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState)) === "boolean");
+    var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;

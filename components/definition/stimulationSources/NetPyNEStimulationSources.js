@@ -57,18 +57,18 @@ export default class NetPyNEStimulationSources extends React.Component {
         };
       };
     };
-    return false;
+    return undefined;
   };
 
   componentDidUpdate(prevProps, prevState) {
     var newStimulationSourceName = this.hasSelectedStimulationSourceBeenRenamed(prevState, this.state);
-    if (!(typeof(newStimulationSourceName) === "boolean")) {
+    if (newStimulationSourceName !== undefined) {
       this.setState({ selectedStimulationSource: newStimulationSourceName });
     };
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = !(typeof(this.hasSelectedStimulationSourceBeenRenamed(this.state, nextState)) === "boolean");
+    var itemRenamed = this.hasSelectedStimulationSourceBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationSource != nextState.selectedStimulationSource;
     var pageChanged = this.state.page != nextState.page;
