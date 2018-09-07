@@ -72,12 +72,12 @@ function testRangeComponent(casper, test, toolbox, model) {
 
 function checkRangeComponentIsEmpty(casper, test, toolbox, model) {
   casper.wait(1000, function() { //wait for python to populate fields
-    toolbox.assertDoesntExist(this, test, "xRange" + model + "MinRange");
-    toolbox.assertDoesntExist(this, test, "xRange" + model + "MaxRange");
-    toolbox.assertDoesntExist(this, test, "yRange" + model + "MinRange");
-    toolbox.assertDoesntExist(this, test, "yRange" + model + "MaxRange");
-    toolbox.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
-    toolbox.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
+    // toolbox.assertDoesntExist(this, test, "xRange" + model + "MinRange");
+    // toolbox.assertDoesntExist(this, test, "xRange" + model + "MaxRange");
+    // toolbox.assertDoesntExist(this, test, "yRange" + model + "MinRange");
+    // toolbox.assertDoesntExist(this, test, "yRange" + model + "MaxRange");
+    // toolbox.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
+    // toolbox.assertDoesntExist(this, test, "zRange" + model + "MaxRange")
   })
 }
 
