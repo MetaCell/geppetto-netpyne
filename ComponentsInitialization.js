@@ -33,34 +33,6 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
 
-        var visiblePython = false;
-        $('#pythonConsoleButton').click(function (e) {
-            if (!visiblePython) {
-                $('#console').hide();
-                $("#pythonConsole").show();
-                $(this).tab('show');
-                visiblePython = true;
-                embeddedConsoleVisible = false;
-            } else {
-                $("#pythonConsole").hide();
-                visiblePython = false;
-            }
-        });
-
-        var embeddedConsoleVisible = false;
-        $('#consoleButton').click(function (e) {
-            if (!embeddedConsoleVisible) {
-                $('#console').show();
-                $("#pythonConsole").hide();
-                $(this).tab('show');
-                embeddedConsoleVisible = true;
-                visiblePython = false;
-            } else {
-                $('#console').hide();
-                embeddedConsoleVisible = false;
-            }
-        });
-
         $('.nav-tabs li.active').removeClass('active');
 
         require('./css/netpyne.less');
