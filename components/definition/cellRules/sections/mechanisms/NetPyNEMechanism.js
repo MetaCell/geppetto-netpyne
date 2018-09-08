@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 import Utils from '../../../../../Utils';
-import NetPyNEField from '../../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNEMechanism extends React.Component {
 
@@ -29,7 +26,7 @@ export default class NetPyNEMechanism extends React.Component {
     else {
       var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentName + "']"
       return this.state.mechFields.map((name, i) =>
-        <PythonControlledTextField name={name} key={name} model={tag + "['"+name+"']"} floatingLabelText={name} realType={"float"} style={{width:'100%'}}/>
+        <PythonControlledTextField id={"mechName"+name} name={name} key={name} model={tag + "['"+name+"']"} floatingLabelText={name} realType={"float"} style={{width:'100%'}}/>
       )
     }
   };
@@ -49,6 +46,7 @@ export default class NetPyNEMechanism extends React.Component {
     return (
       <div>
         <TextField
+          id={"singleMechName"}
           key="netpyneField"
           value={this.state.currentName}
           floatingLabelText="Mechanism"

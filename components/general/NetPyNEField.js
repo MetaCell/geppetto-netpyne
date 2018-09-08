@@ -21,7 +21,46 @@ export default class NetPyNEField extends Component {
         this.setState({ openHelp: false });
     };
 
+    setErrorMessage(value) {
+        return new Promise((resolve, reject) => {
+            if (this.realType == 'func') {
+                if (value != "" && value != undefined) {
+                    Utils.sendPythonMessage('netpyne_geppetto.validateFunction', [value]).then((response) => {
+                        if (!response) {
+                            resolve({ errorMsg: 'Not a valid function' })
+                        }
+                        else {
+                            resolve({ errorMsg: '' })
+                        }
+                    });
+                }
+                else {
+                    resolve({ errorMsg: '' })
+                }
+            }
+            else if (this.realType == 'float') {
+                if (isNaN(value)) {
+                    resolve({ errorMsg: 'Only float allowed' })
+                }
+                else {
+                    resolve({ errorMsg: '' })
+                }
+            }
+        }
+        );
+    };
 
+    prePythonSyncProcessing(value){
+        if (value == '') {
+            if (this.default != undefined) {
+                return this.default;
+            }
+            else if (!this.model.split(".")[0].startsWith('simConfig') || this.model.split(".")[1].startsWith('analysis')) {
+                Utils.execPythonCommand('del netpyne_geppetto.' + this.model)
+            }
+        }
+        return value;
+    }
 
     render() {
         var help = Utils.getMetadataField(this.props.id, "help");
@@ -46,19 +85,22 @@ export default class NetPyNEField extends Component {
 
         const childWithProp = React.Children.map(this.props.children, (child) => {
             var extraProps = {}
+            
+            if (child.type.name != "SelectField" && child.type.name != 'PythonControlledControlWithPythonDataFetch') {
+                extraProps['validate'] = this.setErrorMessage;
+                extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 
+                var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
+                if (dataSource != '') {
+                    extraProps['dataSource'] = dataSource;
+                }
+            }
+            
             var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
             extraProps['label'] = floatingLabelText;
 
             if (child.type.name != "Checkbox") {
                 extraProps['floatingLabelText'] = floatingLabelText;
-            }
-            
-            if (child.type.name != "SelectField") {
-              var dataSource = Utils.getMetadataField(this.props.id, "suggestions");
-              if (dataSource != '') {
-                  extraProps['dataSource'] = dataSource;
-              }
             }
 
             var type = Utils.getHTMLType(this.props.id);
@@ -76,10 +118,16 @@ export default class NetPyNEField extends Component {
                 extraProps['hintText'] = hintText;
             }
 
+            var default_value = Utils.getMetadataField(this.props.id, "default");
+            if (default_value != '') {
+                extraProps['default'] = default_value;
+            }
+
             var options = Utils.getMetadataField(this.props.id, "options");
             if (options) {
                 extraProps['children'] = options.map((name) => (
                     <MenuItem
+                        id={name}
                         key={name}
                         value={name}
                         primaryText={name}

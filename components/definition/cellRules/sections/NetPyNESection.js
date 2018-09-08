@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
-import SelectField from 'material-ui/SelectField';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/internal/Tooltip';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Toggle from 'material-ui/Toggle';
 import FontIcon from 'material-ui/FontIcon';
 import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
@@ -16,8 +12,8 @@ import Utils from '../../../../Utils';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
@@ -27,15 +23,13 @@ export default class NetPyNESection extends React.Component {
   constructor(props) {
     super(props);
 
-    var _this = this;
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
       sectionId: "General"
     };
-
-
     this.setPage = this.setPage.bind(this);
+    this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
   }
 
   setPage(page) {
@@ -64,9 +58,10 @@ export default class NetPyNESection extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 500);
   }
 
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
 
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
@@ -76,7 +71,20 @@ export default class NetPyNESection extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ currentName: nextProps.name});
   }
-
+  
+  postProcessMenuItems(pythonData, selected) {
+    if (pythonData[this.props.cellRule]!= undefined) {
+      return pythonData[this.props.cellRule].map((name) => (
+        <MenuItem
+          id={name+"MenuItem"}
+          key={name}
+          value={name}
+          primaryText={name}
+        />
+      ));
+    }
+  };
+      
   render() {
 
     var content;
@@ -85,14 +93,16 @@ export default class NetPyNESection extends React.Component {
       content = (
         <div>
       
-        <TextField
-          onChange={this.handleRenameChange}
-          value = {this.state.currentName}
-          floatingLabelText="The name of the section"
-          className={"netpyneField"}
-        />
+          <TextField
+            id={"cellParamsSectionName"}
+            onChange={this.handleRenameChange}
+            value = {this.state.currentName}
+            floatingLabelText="The name of the section"
+            className={"netpyneField"}
+          />
           <br /><br />
           <IconButton
+            id={"cellParamsGoMechsButton"}
             className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
             onClick={() => that.props.selectPage("mechanisms")}
           >
@@ -131,8 +141,10 @@ export default class NetPyNESection extends React.Component {
     else if (this.state.sectionId == "Topology") {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.topol.parentSec" >
-          <PythonControlledTextField
+          <PythonMethodControlledSelectField
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"}
+            method={"netpyne_geppetto.getAvailableSections"}
+            postProcessItems={this.postProcessMenuItems}
           />
         </NetPyNEField>
         <br />
@@ -156,9 +168,9 @@ export default class NetPyNESection extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'sectionGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube', 'sectionGeomTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree', 'sectionTopoTab'));
     
     return (
       <div>

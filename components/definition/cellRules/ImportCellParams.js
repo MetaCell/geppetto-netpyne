@@ -8,24 +8,29 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import FileBrowser from '../../general/FileBrowser';
+import ListComponent from '../../general/List';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 
 export default class ImportCellParams extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
       fileName: '',
       cellName: '',
       modFolder: '',
       compileMod: false,
       importSynMechs: false,
       explorerDialogOpen: false,
-      exploreOnlyDirs: false
+      exploreOnlyDirs: false,
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.updateCheck = this.updateCheck.bind(this);
     this.performAction = this.performAction.bind(this);
+    this.closeImportCellParams = this.closeImportCellParams.bind(this);
+    this.cancelImportCellParams = this.cancelImportCellParams.bind(this);
   };
 
   updateCheck(name) {
@@ -36,6 +41,25 @@ export default class ImportCellParams extends React.Component {
     });
   };
 
+  componentWillReceiveProps(nextProps) {
+    // switch (nextProps.tab) {
+    //TODO: we need to define the rules here
+    if (this.props.open != nextProps.open) {
+      this.setState({
+        open: true
+      });
+    }
+  };
+
+  processError(parsedResponse) {
+    if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+      GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+      this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
+      return true;
+    }
+    return false;
+  };
+
   performAction = () => {
     // Show spinner
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
@@ -44,21 +68,37 @@ export default class ImportCellParams extends React.Component {
       .sendPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
       .then((response) => {
         var data = {
-          conds : response,
-          label : this.props.name,
-          fileName : this.state.fileName,
-          cellName : this.state.cellName
+          conds: response,
+          label: this.props.name,
+          fileName: this.state.fileName,
+          cellName: this.state.cellName,
+          cellArgs: this.refs.cellArgs.state.children
         };
+
         // Import template
+        this.closeImportCellParams();
         Utils
           .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
-          .then(() => {
-            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+          .then(response => {
+            var parsedResponse = JSON.parse(response);
+            if (!this.processError(parsedResponse)) {
+              GEPPETTO.CommandController.log("The cell params were imported");
+              GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            }
           });
-    });
-    this.props.onRequestClose();
+      });
+
 
   };
+
+  closeImportCellParams() {
+    this.setState({ open: false, errorMessage: undefined, errorDetails: undefined });
+  }
+
+  cancelImportCellParams() {
+    this.closeImportCellParams();
+    this.props.onRequestClose();
+  }
 
   showExplorerDialog(explorerParameter, exploreOnlyDirs) {
     this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
@@ -78,32 +118,28 @@ export default class ImportCellParams extends React.Component {
           throw ("Not a valid parameter!");
       }
     }
+
     this.setState(newState);
   };
 
   render() {
-    const actions = [
-      <FlatButton
+    if (this.state.open) {
+      var cancelAction = <FlatButton
         label={'CANCEL'}
-        onTouchTap={this.props.onRequestClose}
+        onTouchTap={this.cancelImportCellParams}
         style={{ marginRight: 16 }}
-      />,
-      <RaisedButton
-        primary
-        label={"IMPORT"}
-        onTouchTap={this.performAction}
       />
-    ];
-
-    return (
-      <Dialog
-        open={this.props.open}
-        onRequestClose={this.props.onRequestClose}
-        bodyStyle={{ overflow: 'auto' }}
-        actions={actions}
-      >
-        <Card style={{ padding: 10, float: 'left', width: '100%' }}>
-          <CardTitle style={{paddingBottom: 0}} title="Import Cell Template" subtitle="Python or Hoc files" />
+      if (this.state.errorMessage == undefined) {
+        var actions = [
+          cancelAction,
+          <RaisedButton
+            primary
+            label={"IMPORT"}
+            onTouchTap={this.performAction}
+          />
+        ];
+        var children = <Card style={{ padding: 10, float: 'left', width: '100%' }}>
+          <CardTitle style={{ paddingBottom: 0 }} title={"Import Cell Template"} subtitle="Python or Hoc files" />
           <CardText>
             <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
               <TextField
@@ -126,11 +162,15 @@ export default class ImportCellParams extends React.Component {
               />
             </NetPyNEField>
 
+            <div className="listStyle netpyneField">
+              <ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+            </div>
+
             <div style={{ width: '100%', float: 'left', marginTop: '15px' }}>
               <div style={{ float: 'left', width: '50%' }}>
                 <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
                   <Checkbox
-                    style={{width: '90%'}}
+                    style={{ width: '90%' }}
                     checked={this.state.importSynMechs}
                     onCheck={(event) => this.updateCheck('importSynMechs')}
                   />
@@ -140,7 +180,7 @@ export default class ImportCellParams extends React.Component {
               <div style={{ float: 'right', width: '50%' }}>
                 <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
                   <Checkbox
-                    style={{width: '90%'}}
+                    style={{ width: '90%' }}
                     checked={this.state.compileMod}
                     onCheck={(event) => this.updateCheck('compileMod')}
                   />
@@ -151,7 +191,31 @@ export default class ImportCellParams extends React.Component {
             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
           </CardText>
         </Card>
-      </Dialog>
-    );
+      }
+      else {
+        var actions = [
+          cancelAction,
+          <RaisedButton
+            primary
+            label={"BACK"}
+            onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+          />
+        ];
+        var title = this.state.errorMessage;
+        var children = this.state.errorDetails;
+      }
+
+      return (
+        <Dialog
+          title={title}
+          open={this.props.open}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}
+        >
+          {children}
+        </Dialog>);
+    }
+    return null;
   };
 };
