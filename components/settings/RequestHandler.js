@@ -35,6 +35,7 @@ export default class RequestHandler extends React.Component {
             Utils
                 .sendPythonMessage(action, [args])
                 .then(response => {
+                    console.log("Execute: "+action)
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
                         if (tab=='define' || tab==undefined || this.props.requestID==6) {
@@ -46,7 +47,6 @@ export default class RequestHandler extends React.Component {
                             this.props.changeTab(tab); //move to other tab
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
-                            console.log(parsedResponse)
                             GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");
                             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                             this.setState({spinning: false})
@@ -116,6 +116,7 @@ export default class RequestHandler extends React.Component {
                     actions={actions}
                     bodyStyle={{ overflow: 'auto' }}
                     style={{ whiteSpace: "pre-wrap" }}
+                    onRequestClose={()=>this.closeDialog()}
                 >
                     {content}
                 </Dialog>

@@ -8,6 +8,9 @@ import Utils from '../../Utils';
 const TransitionDialog = React.createClass({
     getInitialState() {
         return {
+            usePrevSim: false,
+            usePrevInst: false,
+
             transitionOpen: true,
             parallelSimulation: false,
             previousTab: "define",
@@ -21,8 +24,10 @@ const TransitionDialog = React.createClass({
         //TODO: we need to define the rules here
         if (this.props.tab != nextProps.tab) {
             this.setState({
+                usePrevSim: false,
+                usePrevInst: false,
                 transitionOpen: true,
-                previousTab: this.props.tab
+                previousTab: this.props.tab,
             });
         }
     },
@@ -48,10 +53,11 @@ const TransitionDialog = React.createClass({
     },
 
     instantiate() {
+        this.closeTransition();
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
-        this.closeTransition();
-        Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
+        this.props.handleRefreshButtonVisibility({usePrevSim: this.state.usePrevSim, usePrevInst: this.state.usePrevInst})
+        Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [this.state])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
                 if (!this.processError(parsedResponse)) {
@@ -64,9 +70,10 @@ const TransitionDialog = React.createClass({
     },
 
     simulate() {
+        this.closeTransition();
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
-        this.closeTransition();
+        this.props.handleRefreshButtonVisibility({usePrevSim: this.state.usePrevSim, usePrevInst: this.state.usePrevInst})
         Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [this.state])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
@@ -100,40 +107,38 @@ const TransitionDialog = React.createClass({
                             keyboardFocused={true}
                             onClick={this.closeTransition}
                         />);
-                        actions = [confirmAction];
+                        actions = [cancelAction, confirmAction];
                         break;
                     case "explore":
-                        var children = "We are about to instantiate your network, this could take some time.";
+                        var children = <div>
+                            <div>"We are about to instantiate your network, this could take some time.";</div>
+                            <Checkbox label="Use previews Instance" onCheck={() => this.setState((oldState=>{return {usePrevInst: !oldState.usePrevInst}}))} checked={this.state.usePrevInst} />
+                        </div>
                         var confirmAction = (<FlatButton
                             label="Ok"
                             primary={true}
                             keyboardFocused={true}
-                            onClick={this.instantiate}
+                            onClick={()=>this.instantiate()}
                             id="okInstantiateNetwork"
                         />);
                         if (this.state.previousTab == 'define') {
                             actions = [cancelAction, confirmAction];
                         }
                         else {
-                            actions = [confirmAction];
+                            actions = [cancelAction, confirmAction];
                         }
                         break;
                     case "simulate":
                         var children = (
                             <div>
-                                <div >
-                                    We are about to simulate your network, this could take some time.
-                                    </div>
+                                <div >We are about to simulate your network, this could take some time.</div>
+                                <Checkbox label="Use previews simulation data" onCheck={() => this.setState((oldState=>{return {usePrevSim: !oldState.usePrevSim}}))} checked={this.state.usePrevSim} />
                                 <div style={{ marginTop: '35px' }}>
                                     <Checkbox
-                                        label="Run parallel simulation"
                                         id="runParallelSimulation"
+                                        label="Run parallel simulation"
                                         checked={this.state.parallelSimulation}
-                                        onCheck={() => this.setState((oldState) => {
-                                            return {
-                                                parallelSimulation: !oldState.parallelSimulation,
-                                            };
-                                        })}
+                                        onCheck={() => this.setState((oldState) => {return {parallelSimulation: !oldState.parallelSimulation};})}
                                     />
                                 </div>
                                 <div className="netpyneRightField">
@@ -149,14 +154,14 @@ const TransitionDialog = React.createClass({
                             label="Ok"
                             primary={true}
                             keyboardFocused={true}
-                            onClick={this.simulate}
+                            onClick={()=>this.simulate()}
                             id={"runSimulation"}
                         />);
                         if (this.state.previousTab == 'define') {
                             actions = [cancelAction, confirmAction];
                         }
                         else {
-                            actions = [confirmAction];
+                            actions = [cancelAction, confirmAction];
                         }
 
                         break;

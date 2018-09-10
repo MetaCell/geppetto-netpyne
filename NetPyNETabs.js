@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
-// import TransitionDialog from './components/transition/Transition';
+import TransitionDialog from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
@@ -34,7 +34,8 @@ export default class NetPyNETabs extends React.Component {
         this.state = {
             value: 'define',
             prevValue: 'define',
-      		model: null
+			model: null,
+			usePrevData: {usePrevInst: false, usePrevSim: false}
 		};
 
 		GEPPETTO.on('OriginalModelLoaded', (model) => {
@@ -45,6 +46,7 @@ export default class NetPyNETabs extends React.Component {
 			window.currentFolder = modelObject.currentFolder;
 			this.setState({ model: modelObject })
 		});
+		this.handleRefreshButtonVisibility = this.handleRefreshButtonVisibility.bind(this)
 
   	}
 
@@ -69,24 +71,24 @@ export default class NetPyNETabs extends React.Component {
 		}
   	}
 
-  	restoreWidgetsFor = (value) => {
+	restoreWidgetsFor = (value) => {
 		if (value != "define") {
-			var widgets = this.widgets[value];
-			if (widgets) {
+			if (this.widgets[value]) {
+				var widgets = this.widgets[value]
 				for (var w in widgets) {
 					widgets[w].show();
 				}
 			}
 		}
-  	}
+	}
 
-  	handleChange = (value) => {
+  	handleChange = (tab) => {
 		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(value);
+		this.restoreWidgetsFor(tab.props['value']);
 
 		this.setState({
 			prevValue: this.state.value,
-			value: value,
+			value: tab.props['value'],
 			transitionDialog: true
 		});
 	};
@@ -101,13 +103,19 @@ export default class NetPyNETabs extends React.Component {
 			transitionDialog: false
 		});
 	}
+	handleRefreshButtonVisibility = (usePrevData) => {
+		if (usePrevData.usePrevInst!=this.state.usePrevData.usePrevInst || usePrevData.usePrevSim!=this.state.usePrevData.usePrevSim) {
+			this.setState({usePrevData: usePrevData})
+		}
+	}
 	
 	render() {
 		if (this.state.model == null) {
 			return (<div></div>)
 		}
 		else {
-			// var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
+			var bottomValue = this.state.value == "define" ? 35 : 0;
+			var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} handleRefreshButtonVisibility={this.handleRefreshButtonVisibility} cancelTransition={this.cancelTransition}/>):(<div></div>);
 			switch(this.state.value) {
 				case 'define':
 					var content =  <div>
@@ -122,16 +130,14 @@ export default class NetPyNETabs extends React.Component {
 					</div>
 					break;
 				case 'explore':
-					var content =  <NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />
+					var content =  <NetPyNEInstantiated key={"exploringNetwork"} usePrevData={this.state.usePrevData} ref={"explore"} model={this.state.model} page={"explore"} />
 					break;
 				case 'simulate':
-					var content =  <NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />
+					var content =  <NetPyNEInstantiated key={"simulatingNetwork"} usePrevData={this.state.usePrevData} ref={"simulate"} model={this.state.model} page={"simulate"} />
 					break;
 				default:
 					var content =  <div></div>
 			}
-			 
-			var bottomValue = this.state.value == "define" ? 35 : 0;
 			
 			return (
 				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
@@ -146,20 +152,19 @@ export default class NetPyNETabs extends React.Component {
 									tabTemplateStyle={{ height: '100%' }}
 									inkBarStyle={{backgroundColor:"#00BCD4"}}
 									contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
-									onChange={this.handleChange}
 								>
-									<Tab style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
-									<Tab style={{height:40, marginTop: -4}} label="Explore your network" value="explore" id={"exploreNetwork"}/>
-									<Tab style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
+									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
+									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Explore your network" value="explore" id={"exploreNetwork"}/>
+									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
 								</Tabs>
 							}
 							iconElementRight={<IconButton iconClassName="fa fa-github" href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}/>}
-							iconElementLeft={<NetPyNEToolBar changeTab={this.handleChange}/>}
+							iconElementLeft={<NetPyNEToolBar changeTab={(v)=>this.setState({value: v})}/>}
 						/>
 					</div>
 					<div style={{flex: 1}}>
 						{content}
-						{/* {transitionDialog} */}
+						{transitionDialog}
 					</div>
 				</div>
 			)
