@@ -52,13 +52,13 @@ define(function (require) {
 
                 var kernel = IPython.notebook.kernel;
                 kernel.execute('from netpyne_ui import geppetto_init');
-                kernel.execute('from netpyne_ui import netpyneui_init');
+                // kernel.execute('from netpyne_ui import netpyneui_init');
+                // kernel.execute('netpyneui_init.netpyneui_init.init()');
 
                 GEPPETTO.on(GEPPETTO.Events.PythonChannelReady,function(){
-                    Utils.sendPythonMessage('netpyneui_init.netpyneui_init.init', [])
+                    Utils.sendPythonMessage('attribute.init', [], {'moduleName': 'netpyne_ui.netpyneui_init', 'attribute': 'netpyneui_init'})
                     .then(response => {
-                        var parsedResponse = JSON.parse(response);
-                        alert(parsedResponse);
+                        console.log(JSON.parse(response));
                 });
                 });
                 

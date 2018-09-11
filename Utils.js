@@ -2,8 +2,8 @@ import GeppettoJupyterUtils from '../../js/communication/geppettoJupyter/Geppett
 
 const Utils = {
 
-    sendPythonMessage: function (command, parameters) {
-        return GeppettoJupyterUtils.sendPythonMessage(command, parameters);
+    sendPythonMessage: function (command, parameters, importStatement) {
+        return GeppettoJupyterUtils.sendPythonMessage(command, parameters, importStatement);
     },
 
     execPythonCommand: function (command) {
