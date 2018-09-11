@@ -40,6 +40,15 @@ define(function (require) {
         require('./css/netpyne.less');
         require('./css/material.less');
 
+        function handle_output(data){
+            //data is the object passed to the callback from the kernel execution
+            if (data.msg_type == "error"){
+                console.log("Error on init")
+                console.log(data)
+            }
+            console.log(data)
+        };
+
         window.customJupyterModelLoad = function (module, model) {
             console.log("Loading custom Jupyter code...")
 
@@ -53,14 +62,12 @@ define(function (require) {
                 var kernel = IPython.notebook.kernel;
                 kernel.execute('from netpyne_ui import geppetto_init');
 
-                GEPPETTO.on(GEPPETTO.Events.PythonChannelReady,function(){
-                    Utils.sendPythonMessage(null, [], {'moduleName': 'netpyne_ui.netpyneui_init', 'attribute': 'netpyneui_init'})
-                    .then(response => {
-                        console.log(JSON.parse(response));
-                });
-                });
-                
-
+                var callbacks = {
+                        iopub : {
+                            output : handle_output,
+                    }
+                }
+                kernel.execute('from netpyne_ui.netpyneui_init import netpyne_geppetto', callbacks);
             });
         }
 
