@@ -38,20 +38,15 @@ export default class RequestHandler extends React.Component {
                     console.log("Execute: "+action)
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        if (tab=='define' || tab==undefined || this.props.requestID==6) {
-                            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                            this.setState({spinning: false})
-                            this.props.onRequestClose();
-                        }
-                        else {
-                            this.props.changeTab(tab); //move to other tab
+                        if (tab!='define' || tab!=undefined || this.props.requestID!=6) {
+                            this.props.changeTab(tab, args); //move to other tab
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
                             GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");
-                            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                            this.setState({spinning: false})
-                            this.props.onRequestClose(); //close import dialogbox
                         }
+                        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                        this.setState({spinning: false})
+                        this.props.onRequestClose();
                     }
             });
         }

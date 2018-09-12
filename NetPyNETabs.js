@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
-import TransitionDialog from './components/transition/Transition';
+import NewTransition from './components/transition/NewTransition'
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
@@ -35,9 +35,16 @@ export default class NetPyNETabs extends React.Component {
             value: 'define',
             prevValue: 'define',
 			model: null,
-			usePrevData: {usePrevInst: false, usePrevSim: false}
+			freezeInstance: false,
+			freezeSimulation: false,
+			openTransitionDialog: false,
+			tabClicked: false
 		};
-
+		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
+		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
+		this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
+		this.cancelTransition = this.cancelTransition.bind(this)
+		
 		GEPPETTO.on('OriginalModelLoaded', (model) => {
 			var modelObject = JSON.parse(model);
 			window.metadata = modelObject.metadata;
@@ -46,8 +53,6 @@ export default class NetPyNETabs extends React.Component {
 			window.currentFolder = modelObject.currentFolder;
 			this.setState({ model: modelObject })
 		});
-		this.handleRefreshButtonVisibility = this.handleRefreshButtonVisibility.bind(this)
-
   	}
 
   	hideWidgetsFor = (value) => {
@@ -84,38 +89,98 @@ export default class NetPyNETabs extends React.Component {
 
   	handleChange = (tab) => {
 		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(tab.props['value']);
-
-		this.setState({
-			prevValue: this.state.value,
-			value: tab.props['value'],
-			transitionDialog: true
-		});
+		this.restoreWidgetsFor(tab.props.value);
+		this.setState( ({value: pv, prevValue: xx, openTransitionDialog: otd, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
+			return {
+				value: tab.props.value,
+				prevValue: pv, 
+				openTransitionDialog: true,
+				freezeInstance: pv=='define'?false:fi,
+				freezeSimulation: pv=='define'?false:fs,
+				tabClicked: !tc,
+				...others	
+			}
+		})
+		
+		// var blizzard
+		// this.state.value=='define'?blizzard = {freezeInstance: false, freezeSimulation: false}:blizzard = {}
+		// this.setState({...blizzard,
+		// 	prevValue: this.state.value,
+		// 	value: tab.props['value'],
+		// 	openTransitionDialog: true
+		// });
+		// console.log({...blizzard,
+		// 	prevValue: this.state.value,
+		// 	value: tab.props['value'],
+		// 	openTransitionDialog: true
+		// })
 	};
 
-	cancelTransition = () => {
-		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(this.state.prevValue);
-
-		this.setState({
-			prevValue: this.state.value,
-			value: this.state.prevValue,
-			transitionDialog: false
+	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
+		this.setState(({prevValue: pv, value: v, openTransitionDialog: otd, ...others})=>{ 
+			this.hideWidgetsFor(v);
+			this.restoreWidgetsFor(pv);
+			return {
+				prevValue: v,
+				value: pv,
+				openTransitionDialog: false,
+				...others
+			}
 		});
 	}
-	handleRefreshButtonVisibility = (usePrevData) => {
-		if (usePrevData.usePrevInst!=this.state.usePrevData.usePrevInst || usePrevData.usePrevSim!=this.state.usePrevData.usePrevSim) {
-			this.setState({usePrevData: usePrevData})
+
+	handleDeactivateInstanceUpdate = (netInstanceWasUpdated) => {
+		if (netInstanceWasUpdated) {
+			if (!this.state.freezeInstance) {
+				this.setState({freezeInstance: true})
+			}
 		}
+	}
+
+	handleDeactivateSimulationUpdate = (netSimulationWasUpdated) => {
+		if (netSimulationWasUpdated) {
+			if (!this.state.freezeSimulation) {
+				this.setState({freezeSimulation: true, freezeInstance: true})
+			}
+		}
+	}
+	
+	handleTabChangedByToolBar = (tab, args) => {
+		this.setState(({value: x, prevValue: xx, openTransitionDialog: otd, freezeInstance: fi, freezeSimulation: fs, ...others})=>{ 
+			return {
+				value: tab,
+				prevValue: tab, 
+				openTransitionDialog: false,
+				freezeInstance: args.freezeInstance,
+				freezeSimulation: args.freezeSimulation,
+				...others
+			}
+		});
+		// this.setState({
+		// 	value: tab,
+		// 	prevValue:  this.state.value,
+		// 	openTransitionDialog: false,
+		// 	freezeInstance: args.freezeInstance,
+		// 	freezeSimulation: args.freezeSimulation
+		// })
 	}
 	
 	render() {
 		if (this.state.model == null) {
-			return (<div></div>)
+			return <div></div>
 		}
 		else {
 			var bottomValue = this.state.value == "define" ? 35 : 0;
-			var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} handleRefreshButtonVisibility={this.handleRefreshButtonVisibility} cancelTransition={this.cancelTransition}/>):(<div></div>);
+			var transitionDialog = <NewTransition 
+				tab={this.state.value} 
+				handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
+				freezeInstance={this.state.freezeInstance} 
+				handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
+				freezeSimulation={this.state.freezeSimulation} 
+				cancelTransition={this.cancelTransition}
+				openTransitionDialog={this.state.openTransitionDialog}
+				trackClicksOnTab={this.state.tabClicked}
+			/>;
 			switch(this.state.value) {
 				case 'define':
 					var content =  <div>
@@ -130,17 +195,18 @@ export default class NetPyNETabs extends React.Component {
 					</div>
 					break;
 				case 'explore':
-					var content =  <NetPyNEInstantiated key={"exploringNetwork"} usePrevData={this.state.usePrevData} ref={"explore"} model={this.state.model} page={"explore"} />
+					// var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} key={"exploringNetwork"} ref={"explore"} model={this.state.model} page={"explore"} />
+					var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"explore"} model={this.state.model} page={"explore"} />
 					break;
 				case 'simulate':
-					var content =  <NetPyNEInstantiated key={"simulatingNetwork"} usePrevData={this.state.usePrevData} ref={"simulate"} model={this.state.model} page={"simulate"} />
+					// var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} key={"simulatingNetwork"} ref={"simulate"} model={this.state.model} page={"simulate"} />
+					var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"simulate"} model={this.state.model} page={"simulate"} />
 					break;
 				default:
 					var content =  <div></div>
 			}
 			
-			return (
-				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
+			return ( <div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
 					<div>
 						<AppBar
 							id="appBar"
@@ -159,7 +225,7 @@ export default class NetPyNETabs extends React.Component {
 								</Tabs>
 							}
 							iconElementRight={<IconButton iconClassName="fa fa-github" href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}/>}
-							iconElementLeft={<NetPyNEToolBar changeTab={(v)=>this.setState({value: v})}/>}
+							iconElementLeft={<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />}
 						/>
 					</div>
 					<div style={{flex: 1}}>
