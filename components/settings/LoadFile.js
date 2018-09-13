@@ -51,11 +51,10 @@ export default class LoadFile extends React.Component {
             this.setState({areModFieldsRequired: undefined, actionExecuted: true})
         }
         else {
+            var tab = 'define'
             var freezeInstance = false
             var freezeSimulation = false
-            if (this.state.loadSimData) var tab = 'simulate'
-            else if (this.state.loadNet) var tab = 'explore'
-            else var tab = 'define'
+            if (this.state.loadSimData || this.state.loadNet) var tab = 'simulate'
             
             //use by NetPyNETabs.js to know if re-instantiation and re-simulation is necessary
             if (this.state.loadNet) {

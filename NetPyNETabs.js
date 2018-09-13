@@ -37,7 +37,6 @@ export default class NetPyNETabs extends React.Component {
 			model: null,
 			freezeInstance: false,
 			freezeSimulation: false,
-			openTransitionDialog: false,
 			tabClicked: false
 		};
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
@@ -87,47 +86,32 @@ export default class NetPyNETabs extends React.Component {
 		}
 	}
 
+	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
+		this.setState(({prevValue: pv, value: v, ...others})=>{ 
+			this.hideWidgetsFor(v);
+			this.restoreWidgetsFor(pv);
+			return {
+				prevValue: v,
+				value: pv,
+				...others
+			}
+		});
+	}
+
   	handleChange = (tab) => {
 		this.hideWidgetsFor(this.state.value);
 		this.restoreWidgetsFor(tab.props.value);
-		this.setState( ({value: pv, prevValue: xx, openTransitionDialog: otd, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
+		this.setState( ({value: pv, prevValue: xx, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
 			return {
 				value: tab.props.value,
 				prevValue: pv, 
-				openTransitionDialog: true,
 				freezeInstance: pv=='define'?false:fi,
 				freezeSimulation: pv=='define'?false:fs,
 				tabClicked: !tc,
 				...others	
 			}
 		})
-		
-		// var blizzard
-		// this.state.value=='define'?blizzard = {freezeInstance: false, freezeSimulation: false}:blizzard = {}
-		// this.setState({...blizzard,
-		// 	prevValue: this.state.value,
-		// 	value: tab.props['value'],
-		// 	openTransitionDialog: true
-		// });
-		// console.log({...blizzard,
-		// 	prevValue: this.state.value,
-		// 	value: tab.props['value'],
-		// 	openTransitionDialog: true
-		// })
 	};
-
-	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
-		this.setState(({prevValue: pv, value: v, openTransitionDialog: otd, ...others})=>{ 
-			this.hideWidgetsFor(v);
-			this.restoreWidgetsFor(pv);
-			return {
-				prevValue: v,
-				value: pv,
-				openTransitionDialog: false,
-				...others
-			}
-		});
-	}
 
 	handleDeactivateInstanceUpdate = (netInstanceWasUpdated) => {
 		if (netInstanceWasUpdated) {
@@ -146,23 +130,15 @@ export default class NetPyNETabs extends React.Component {
 	}
 	
 	handleTabChangedByToolBar = (tab, args) => {
-		this.setState(({value: x, prevValue: xx, openTransitionDialog: otd, freezeInstance: fi, freezeSimulation: fs, ...others})=>{ 
+		this.setState(({value: x, prevValue: xx, freezeInstance: fi, freezeSimulation: fs, ...others})=>{ 
 			return {
 				value: tab,
 				prevValue: tab, 
-				openTransitionDialog: false,
 				freezeInstance: args.freezeInstance,
 				freezeSimulation: args.freezeSimulation,
 				...others
 			}
 		});
-		// this.setState({
-		// 	value: tab,
-		// 	prevValue:  this.state.value,
-		// 	openTransitionDialog: false,
-		// 	freezeInstance: args.freezeInstance,
-		// 	freezeSimulation: args.freezeSimulation
-		// })
 	}
 	
 	render() {
@@ -173,13 +149,12 @@ export default class NetPyNETabs extends React.Component {
 			var bottomValue = this.state.value == "define" ? 35 : 0;
 			var transitionDialog = <NewTransition 
 				tab={this.state.value} 
+				clickOnTab={this.state.tabClicked}
 				handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
 				freezeInstance={this.state.freezeInstance} 
 				handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
 				freezeSimulation={this.state.freezeSimulation} 
 				cancelTransition={this.cancelTransition}
-				openTransitionDialog={this.state.openTransitionDialog}
-				trackClicksOnTab={this.state.tabClicked}
 			/>;
 			switch(this.state.value) {
 				case 'define':
@@ -194,12 +169,7 @@ export default class NetPyNETabs extends React.Component {
 						<PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
 					</div>
 					break;
-				case 'explore':
-					// var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} key={"exploringNetwork"} ref={"explore"} model={this.state.model} page={"explore"} />
-					var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"explore"} model={this.state.model} page={"explore"} />
-					break;
 				case 'simulate':
-					// var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} key={"simulatingNetwork"} ref={"simulate"} model={this.state.model} page={"simulate"} />
 					var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"simulate"} model={this.state.model} page={"simulate"} />
 					break;
 				default:
@@ -220,7 +190,6 @@ export default class NetPyNETabs extends React.Component {
 									contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
 								>
 									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
-									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Explore your network" value="explore" id={"exploreNetwork"}/>
 									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
 								</Tabs>
 							}
