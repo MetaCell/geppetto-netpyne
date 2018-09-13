@@ -41,42 +41,16 @@ define(function (require) {
         GEPPETTO.G.setIdleTimeOut(-1);
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
 
-        var visiblePython = false;
-        $('#pythonConsoleButton').click(function (e) {
-            if (!visiblePython) {
-                $('#console').hide();
-                $("#pythonConsole").show();
-                $(this).tab('show');
-                visiblePython = true;
-                embeddedConsoleVisible = false;
-            } else {
-                $("#pythonConsole").hide();
-                visiblePython = false;
-            }
-        });
-
-        var embeddedConsoleVisible = false;
-        $('#consoleButton').click(function (e) {
-            if (!embeddedConsoleVisible) {
-                $('#console').show();
-                $("#pythonConsole").hide();
-                $(this).tab('show');
-                embeddedConsoleVisible = true;
-                visiblePython = false;
-            } else {
-                $('#console').hide();
-                embeddedConsoleVisible = false;
-            }
-        });
-
         $('.nav-tabs li.active').removeClass('active');
 
         require('./css/netpyne.less');
         require('./css/material.less');
 
         window.customJupyterModelLoad = function (module, model) {
+            console.log("Loading custom Jupyter code...")
 
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
+            // Can we delete this line?
+            GEPPETTO.trigger('kernel:ready', "Kernel started");
 
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
 
@@ -93,9 +67,5 @@ define(function (require) {
         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
         GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
         GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
-
-        
     };
-
-
 });

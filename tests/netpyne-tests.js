@@ -52,10 +52,10 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
 
-  casper.then(function() { //test initial state of consoles
-    this.echo("######## Test Consoles ######## ", "INFO");
-    testConsoles(test);
-  });
+  // casper.then(function() { //test initial state of consoles
+  //   this.echo("######## Test Consoles ######## ", "INFO");
+  //   testConsoles(test);
+  // });
 
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test popParams fields")
@@ -145,6 +145,7 @@ function testConsoles(test) {
  * Load console, and test it hides/shows fine
  */
 function loadConsole(test, consoleButton, consoleContainer) {
+  // casper.clickLabel('Console', 'span');
   casper.thenClick('li[id="'+consoleButton+'"]', function(){
     this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
       this.echo(consoleContainer + ' loaded.');
@@ -504,7 +505,7 @@ function testExploreNetwork(test) {
   casper.then(function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
-    })
+    }, 40000)
   })
   casper.then(function() {
     this.echo("Testing meshes for network exist and are visible");
