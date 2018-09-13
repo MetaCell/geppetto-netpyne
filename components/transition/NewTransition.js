@@ -19,61 +19,66 @@ export default class NewTransition extends React.Component {
     }
 
     componentDidUpdate (prevProps, prevState) {
-        console.log(1)
         if (this.props.clickOnTab!=prevProps.clickOnTab) {
-            console.log(2)
             if (this.props.tab!=prevProps.tab && this.props.tab=='simulate') {
-                console.log(3)
                 if (!this.state.haveInstData) {
-                    console.log(4)
                     Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
-                        .then(response => {if (response.constructor.name=='Array') this.instantiate({usePrevInst: response[0]})})
+                        .then(response => {if (response.constructor.name=='Array') {
+                            this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}
+                            console.log(0)
+                        }
+                    )
+
+                        
                 }
                 else {
-                    console.log(5)
-                    console.log("Using prev Instance")
-                    this.instantiate({usePrevInst: true})
+                    if (this.props.fastForwardSimulation) {
+                        this.simulate({ffs: true})
+                        console.log(1)
+                    }
+                    else if (this.props.fastForwardInstantiation) {
+                        console.log(2)
+                        this.instantiate({usePrevInst: false})    
+                    }
+                    else {
+                        console.log(3)
+                        this.instantiate({usePrevInst: true})
+                    }
+                    
                 }
             }
         }
     }
 
     instantiate = (args) => {
-        console.log(1)
+        console.log(args)
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
-        console.log(2)
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [args])
             .then(response => {
-                console.log(3)
                 var parsedResponse = JSON.parse(response);
                 if (!this.processError(parsedResponse)) {
-                    console.log(4)
                     if (!args.usePrevInst) this.props.handleDeactivateInstanceUpdate(true)
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL); //keep this sequence has it is
-                    console.log(6)
                     this.setState({haveInstData: true})
-                    //this.refs.canvas.displayAllInstances();
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
                     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                    console.log(7)
                 }
         });
     }
 
-    simulate = () => {
+    simulate = (args) => {
         this.setState({openDialog: false})
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
-        Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [{usePrevInst: this.props.freezeInstance, parallelSimulation: this.state.parallelSimulation, cores:this.state.cores}])
+        Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [{usePrevInst: args.ffs?false:this.props.freezeInstance, parallelSimulation: this.state.parallelSimulation, cores:this.state.cores}])
             .then(response => {
                 var parsedResponse = JSON.parse(response)
                 if (!this.processError(parsedResponse)) {
                     this.props.handleDeactivateSimulationUpdate(true)
                     if (!this.props.freezeInstance) this.props.handleDeactivateInstanceUpdate(true)
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
-                    //this.refs.canvas.displayAllInstances();
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
                     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -109,12 +114,12 @@ export default class NewTransition extends React.Component {
             if (this.state.errorMessage==undefined) {
                 children = (
                     <div>
-                        <div>"We are about to instantiate and simulate your network, this could take some time."</div>)
+                        <div>"We are about to instantiate and simulate your network, this could take some time."</div>
                         <Checkbox label="Run parallel simulation" checked={this.state.parallelSimulation} onCheck={() => this.setState((oldState) => {return {parallelSimulation: !oldState.parallelSimulation}})} style={{ marginTop: '35px' }} id="runParallelSimulation" />
                         <TextField floatingLabelText="Number of cores" onChange={(event) => this.setState({ cores: event.target.value })} className="netpyneRightField"  type="number"/>
                     </div>
                 )
-                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.cancelTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate()} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
+                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.cancelTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate({ffs:false})} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
             }
             else var actions = <FlatButton label="CANCEL" onClick={()=>{this.cancelTransition()}} key={"cancelActionBtn"} primary={true} />
         }

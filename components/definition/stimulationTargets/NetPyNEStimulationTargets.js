@@ -75,8 +75,10 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value!=undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+    if(!newModel){
+      if (this.state.value && nextState.value) {
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      }    
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };

@@ -2,7 +2,8 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
-import NewTransition from './components/transition/NewTransition'
+import SettingsDialog from './components/settings/Settings';
+import NewTransition from './components/transition/NewTransition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
@@ -12,8 +13,7 @@ import NetPyNEStimulationTargets from './components/definition/stimulationTarget
 import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
-
-import NetPyNEToolBar from './components/settings/NetPyNEToolBar'
+import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -37,7 +37,13 @@ export default class NetPyNETabs extends React.Component {
 			model: null,
 			freezeInstance: false,
 			freezeSimulation: false,
-			tabClicked: false
+			tabClicked: false,
+			settings: {
+				openSettings: false,
+				fastForwardInstantiation: true,
+				fastForwardSimulation: false
+			},
+			holdGui: false
 		};
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
 		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
@@ -85,7 +91,7 @@ export default class NetPyNETabs extends React.Component {
 			}
 		}
 	}
-
+	// onMouseEnter={()=>{console.log("enter");this.setState({holdGui: true}) }} onMouseLeave={()=>{console.log("leave");this.setState({holdGui: false})}}
 	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
 		this.setState(({prevValue: pv, value: v, ...others})=>{ 
 			this.hideWidgetsFor(v);
@@ -140,6 +146,8 @@ export default class NetPyNETabs extends React.Component {
 			}
 		});
 	}
+
+	//!Object.keys(this.state.settings).map(el=>{return this.state.settings[el]!=nextState[el]}).some((el)=>{return el})
 	
 	render() {
 		if (this.state.model == null) {
@@ -155,7 +163,10 @@ export default class NetPyNETabs extends React.Component {
 				handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
 				freezeSimulation={this.state.freezeSimulation} 
 				cancelTransition={this.cancelTransition}
+				fastForwardInstantiation={this.state.settings.fastForwardInstantiation}
+				fastForwardSimulation={this.state.settings.fastForwardSimulation}
 			/>;
+
 			switch(this.state.value) {
 				case 'define':
 					var content =  <div>
@@ -193,13 +204,14 @@ export default class NetPyNETabs extends React.Component {
 									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
 								</Tabs>
 							}
-							iconElementRight={<IconButton iconClassName="fa fa-github" href="https://github.com/MetaCell/NetPyNE-UI" style={{marginTop: -10}}/>}
+							iconElementRight={<IconButton id="setupNetwork"iconClassName="fa fa-cog"  style={{marginTop: -13}} onClick={()=>this.setState((settings, ...others) => {return {settings: {...settings, openSettings: true}}})} />}
 							iconElementLeft={<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />}
 						/>
 					</div>
 					<div style={{flex: 1}}>
 						{content}
 						{transitionDialog}
+						{<SettingsDialog settings={this.state.settings} updateSettings={(args)=>this.setState({settings: args})} />}
 					</div>
 				</div>
 			)

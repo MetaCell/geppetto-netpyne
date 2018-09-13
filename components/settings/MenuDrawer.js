@@ -151,7 +151,7 @@ export default class MenuDrawer extends React.Component {
             <IconButton 
                 tooltip={this.props.tooltip} 
                 onClick={this.handleOpenAppBarMenu}
-                style={{marginTop: -10}}
+                style={{marginTop: -12}}
             >
                 <MenuIcon color={'#ffffff'}/>
             </IconButton>

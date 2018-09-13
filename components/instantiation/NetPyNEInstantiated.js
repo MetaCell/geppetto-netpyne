@@ -32,7 +32,7 @@ const styles = {
 const plots = [
     {id: 'connectionPlot',      primaryText: 'Connectivity',            plotName: 'Connections Plot',       plotMethod: 'plotConn',             plotType: false},
     {id: '2dNetPlot',           primaryText: '2D network',              plotName: '2D Net Plot',            plotMethod: 'plot2Dnet',            plotType: false},
-    {id: 'shapePlot',           primaryText: 'Cell shape',              plotName: 'Shape Plot',             plotMethod: 'plot2Dnet',            plotType: false},
+    {id: 'shapePlot',           primaryText: 'Cell shape',              plotName: 'Shape Plot',             plotMethod: 'plotShape',            plotType: false},
     {id: 'tracesPlot',          primaryText: 'Cell traces',             plotName: 'Traces Plot',            plotMethod: 'plotTraces',           plotType: false},
     {id: 'rasterPlot',          primaryText: 'Raster plot',             plotName: 'Raster Plot',            plotMethod: 'plotRaster',           plotType: false},
     {id: 'spikePlot',           primaryText: 'Spike histogram',         plotName: 'Spike Hist Plot',        plotMethod: 'plotSpikeHist',        plotType: false},
