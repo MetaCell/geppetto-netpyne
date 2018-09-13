@@ -139,25 +139,38 @@ export default class MenuDrawer extends React.Component {
             for (var key in clone) clone[key].open = false
             this.setState({mainPopoverOpen: false, open: clone})
         }
+        var dimmer = document.getElementById("dimmer")
+        dimmer.style.opacity = 0.0;
+  		dimmer.style.visibility = "hidden";
     }
+
     handleOpenAppBarMenu = (e) => {
-        var topLimit = document.getElementById(this.props.confineBetweenElementIds[1]).getBoundingClientRect().top
-        var bottomLimit = document.getElementById(this.props.confineBetweenElementIds[0]).getBoundingClientRect().bottom
-        this.setState({mainPopoverOpen: true, mainAnchorEl: e.currentTarget, popOverHeight:topLimit-bottomLimit})
+        var dimmer = document.getElementById("dimmer")
+        var ap = document.getElementById(this.props.confineBetweenElementIds[0]).getBoundingClientRect()
+        var cm = document.getElementById(this.props.confineBetweenElementIds[1]).getBoundingClientRect()
+        dimmer.style.opacity = 0.2;
+        dimmer.style.visibility = "visible";
+        dimmer.style.top = ap.bottom+"px"
+        dimmer.style.height = (cm.bottom - ap.bottom) + "px"
+        this.setState({mainPopoverOpen: true, mainAnchorEl: e.currentTarget, popOverHeight:cm.top})
     }
+    
     render() {
         let icon = React.Children.map(this.props.icons, (ch, i)=>{return React.cloneElement(ch, {color: this.state.open[this.name[i]].color})})
         return <div>
             <IconButton 
                 tooltip={this.props.tooltip} 
                 onClick={this.handleOpenAppBarMenu}
-                style={{marginTop: -10}}
+                style={{marginTop: -12}}
             >
                 <MenuIcon color={'#ffffff'}/>
             </IconButton>
             <Popover
                 style={{height:this.state.popOverHeight, width:225}} // There should be a better way
                 key={"mainPopover"}
+                id={"appBarPopOver"}
+                animated={false}
+                canAutoPosition={false}
                 useLayerForClickAway={false} 
                 open={this.state.mainPopoverOpen} 
                 anchorEl={document.getElementById('appBar')}

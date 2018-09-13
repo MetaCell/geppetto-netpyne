@@ -75,9 +75,11 @@ export default class NetPyNEPlots extends React.Component {
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value != undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-    };
+    if (!newModel) {
+      if (this.state.value && nextState.value) {
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      };
+    }
     return newModel || newItemCreated || selectionChanged || pageChanged;;
   };
 

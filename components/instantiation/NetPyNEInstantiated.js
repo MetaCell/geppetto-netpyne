@@ -1,8 +1,6 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import {pink500} from 'material-ui/styles/colors';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Canvas from '../../../../js/components/interface/3dCanvas/Canvas';
 import ControlPanel from '../../../../js/components/interface/controlPanel/controlpanel';
 import IconButton from '../../../../js/components/controls/iconButton/IconButton';
@@ -31,6 +29,22 @@ const styles = {
         minHeight: '28px'
     }
 };
+const plots = [
+    {id: 'connectionPlot',      primaryText: 'Connectivity',            plotName: 'Connections Plot',       plotMethod: 'plotConn',             plotType: false},
+    {id: '2dNetPlot',           primaryText: '2D network',              plotName: '2D Net Plot',            plotMethod: 'plot2Dnet',            plotType: false},
+    {id: 'shapePlot',           primaryText: 'Cell shape',              plotName: 'Shape Plot',             plotMethod: 'plotShape',            plotType: false},
+    {id: 'tracesPlot',          primaryText: 'Cell traces',             plotName: 'Traces Plot',            plotMethod: 'plotTraces',           plotType: false},
+    {id: 'rasterPlot',          primaryText: 'Raster plot',             plotName: 'Raster Plot',            plotMethod: 'plotRaster',           plotType: false},
+    {id: 'spikePlot',           primaryText: 'Spike histogram',         plotName: 'Spike Hist Plot',        plotMethod: 'plotSpikeHist',        plotType: false},
+    {id: 'spikeStatsPlot',      primaryText: 'Spike stats',             plotName: 'Spike Stats Plot',       plotMethod: 'plotSpikeStats',       plotType: false},
+    {id: 'ratePSDPlot',         primaryText: 'Rate PSD"',               plotName: 'Rate PSD Plot',          plotMethod: 'plotRatePSD',          plotType: false},
+    {id: 'LFPTimeSeriesPlot',   primaryText: 'LFP time-series',         plotName: 'LFP Time Series Plot',   plotMethod: 'plotLFP',              plotType: 'timeSeries'},
+    {id: 'LFPLocationsPlot',    primaryText: 'LFP PSD',                 plotName: 'LFP PSD Plot',           plotMethod: 'plotLFP',              plotType: 'PSD'},
+    {id: 'LFPSpectrogramPlot',  primaryText: 'LFP spectrogram',         plotName: 'LFP Spectrogram Plot',   plotMethod: 'plotLFP',              plotType: 'spectrogram'},
+    {id: 'LFPLocationsPlot',    primaryText: 'LFP locations',           plotName: 'LFP Locations Plot',     plotMethod: 'plotLFP',              plotType: 'locations'},
+    {id: 'grangerPlot',         primaryText: 'Granger causality plot',  plotName: 'Granger Plot',           plotMethod: 'granger',              plotType: false},
+    {id: 'rxdConcentrationPlot',primaryText: 'RxD concentration plot',  plotName: 'RxD concentration plot', plotMethod: 'plotRxDConcentration', plotType: false}
+];
 
 export default class NetPyNEInstantiated extends React.Component {
 
@@ -42,12 +56,25 @@ export default class NetPyNEInstantiated extends React.Component {
             plotButtonOpen: false,
             openDialog: false
         };
+        console.log("mounting Component")
         this.widgets = [];
         this.plotFigure = this.plotFigure.bind(this);
         this.newPlotWidget = this.newPlotWidget.bind(this);
         this.getOpenedWidgets = this.getOpenedWidgets.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
+    }
+    
+    componentDidMount() {
+        this.refs.canvas.engine.setLinesThreshold(10000);
+        this.refs.canvas.displayAllInstances();
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.frozenInstance!=prevProps.frozenInstance) {
+            this.refs.canvas.engine.setLinesThreshold(10000);
+            this.refs.canvas.displayAllInstances();
+        }
     }
 
     handleCloseDialog = () => {
@@ -122,11 +149,6 @@ export default class NetPyNEInstantiated extends React.Component {
         return this.widgets;
     }
 
-    componentDidMount() {
-        this.refs.canvas.engine.setLinesThreshold(10000);
-        this.refs.canvas.displayAllInstances();
-    }
-
     handleClick(event) {
         // This prevents ghost click.
         event.preventDefault();
@@ -143,34 +165,12 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
-
     render() {
-
         var controls;
-        if (this.props.page == 'explore') {
+        if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    <MenuItem id={"connectionPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connectivity" onClick={() => { this.plotFigure('Connections Plot', 'plotConn') }} />
-                    <MenuItem id={"2dNetPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D network" onClick={() => { this.plotFigure('2D Net Plot', 'plot2Dnet') }} />
-                    <MenuItem id={"shapePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell shape" onClick={() => { this.plotFigure('Shape Plot', 'plotShape') }} />
-                </Menu>
-            );
-
-        }
-        else if (this.props.page == 'simulate') {
-            controls = (
-                <Menu>
-                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell traces" onClick={() => { this.plotFigure('Traces Plot', 'plotTraces') }} />
-                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster plot" onClick={() => { this.plotFigure('Raster Plot', 'plotRaster') }} />
-                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike histogram" onClick={() => { this.plotFigure('Spike Hist Plot', 'plotSpikeHist') }} />
-                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike stats" onClick={() => { this.plotFigure('Spike Stats Plot', 'plotSpikeStats') }} />
-                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD" onClick={() => { this.plotFigure('Rate PSD Plot', 'plotRatePSD') }} />
-                    <MenuItem id={"LFPTimeSeriesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP time-series" onClick={() => { this.plotFigure('LFP Time Series Plot', 'plotLFP', 'timeSeries') }} />
-                    <MenuItem id={"LFPPSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP PSD" onClick={() => { this.plotFigure('LFP PSD Plot', 'plotLFP', 'PSD') }} />
-                    <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { this.plotFigure('LFP Spectrogram Plot', 'plotLFP', 'spectrogram') }} />
-                    <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { this.plotFigure('LFP Locations Plot', 'plotLFP', 'locations') }} />
-                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { this.plotFigure('Granger Plot', 'granger') }} />
-                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { this.plotFigure('RxD concentration plot', 'plotRxDConcentration') }} />
+                    {plots.map((el, index) => {return <MenuItem id={"el.id"} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText={el.primaryText} onClick={() => { this.plotFigure(el.plotName, el.plotMethod, el.plotType)}} />})}
                 </Menu>
             );
         }
@@ -178,28 +178,28 @@ export default class NetPyNEInstantiated extends React.Component {
         return (
             <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
                 <Canvas
+                    key={this.props.frozenInstance?"FronzenCanvas":"aliveCanvas"}
                     id="CanvasContainer"
                     name={"Canvas"}
                     componentType={'Canvas'}
                     ref={"canvas"}
                     style={{ height: '100%', width: '100%' }}
                 />
-                <div id="controlpanel" style={{ top: 0 }}>
+                <div id="controlpanel" style={{top: 10 }}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}
                     >
                     </ControlPanel>
                 </div>
-                <FloatingActionButton iconStyle={{color:pink500}} backgroundColor="#ffffff" iconClassName="fa fa-refresh" onClick={()=>console.log("click")} style={{position: 'absolute', right: 34, top: 50}}/>
-                <IconButton style={{ position: 'absolute', left: 34, top: 55 }}
+                <IconButton style={{ position: 'absolute', left: 35, top: 57 }}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 34, top: 358 }}
+                        style={{ position: 'absolute', left: 35, top: 358 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
                         id="PlotButton"

@@ -10,7 +10,7 @@ define(function (require) {
         function App() {
             return (
                 <div>
-                    <MuiThemeProvider>
+                    <MuiThemeProvider >
                         <NetPyNETabs></NetPyNETabs>
                     </MuiThemeProvider>
 

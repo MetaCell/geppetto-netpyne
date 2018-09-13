@@ -48,7 +48,7 @@ export default class NetPyNEToolBar extends React.Component {
             buttonLabel = 'Delete'
             title = 'Delete'
         }
-        this.setState({requestID:id, openDialogBox:true, buttonLabel: buttonLabel, title: title})
+        this.setState({requestID:id, openDialogBox:true, buttonLabel: buttonLabel, title: title})   
     }
     render() {
         switch (this.state.requestID) {
