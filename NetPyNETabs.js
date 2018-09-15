@@ -42,8 +42,7 @@ export default class NetPyNETabs extends React.Component {
 				openSettings: false,
 				fastForwardInstantiation: true,
 				fastForwardSimulation: false
-			},
-			holdGui: false
+			}
 		};
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
 		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
@@ -146,8 +145,6 @@ export default class NetPyNETabs extends React.Component {
 			}
 		});
 	}
-
-	//!Object.keys(this.state.settings).map(el=>{return this.state.settings[el]!=nextState[el]}).some((el)=>{return el})
 	
 	render() {
 		if (this.state.model == null) {

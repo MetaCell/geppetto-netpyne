@@ -4,14 +4,14 @@ import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
 import { blue500 } from 'material-ui/styles/colors';
 import Card, {CardHeader, CardText} from 'material-ui/Card';
-
+import Utils from '../../Utils';
 
 export default class SaveFile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             actionExecuted: false,
-            fileName: 'script_output',
+            fileName: 'output',
             netParams: true,
             simConfig: true,
             simData: true,
@@ -25,6 +25,15 @@ export default class SaveFile extends React.Component {
         ]
     }
 
+    componentDidMount () {
+        Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
+            .then(response => {
+                if (response.constructor.name=='Array') {
+                    this.setState({disableNetCells: !response[0], disableSimData: !response[1], netCells:response[0], simData: response[1]})}
+            }
+        )
+    }
+
     componentDidUpdate() {
         if (this.props.actionRequired && !this.state.actionExecuted) {
             this.performAction()
@@ -35,11 +44,11 @@ export default class SaveFile extends React.Component {
     }
 
     performAction() {
-        if (this.props.requestID == 1) {
+        if (this.props.requestID==1) {
             var action = 'netpyne_geppetto.exportModel';
         }
         var message = GEPPETTO.Resources.EXPORTING_MODEL;
-        this.props.performAction(action, message, this.state)
+        this.props.performAction(action, message,  this.state)
         this.setState({actionExecuted: true})
     }
 
@@ -53,11 +62,10 @@ export default class SaveFile extends React.Component {
                         <List >
                             {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
                                 key={index}
-                                leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
+                                leftCheckbox= {<Checkbox disabled={index==2?this.state.disableNetCells:index==3?this.state.disableNetCells:false} onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]}/>}
                                 primaryText={el.label}
                                 secondaryText={el.label2}
-                                />})
-                            }
+                            />})}
                         </List>
                     </CardText>
                 )

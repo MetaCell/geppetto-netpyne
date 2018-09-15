@@ -88,7 +88,7 @@ export default class NetPyNEToolBar extends React.Component {
                 tooltip={'File options'} 
                 baseColor={grey900}
                 hoverColor={blue500}
-                confineBetweenElementIds={['appBar', 'tabButton']}
+                confineBetweenElementIds={['appBar', 'footer']}
                 onClick={this.handleMenuItemClick}
                 icons={[<FontIcon className='fa fa-folder-open-o'/>, <FontIcon className='fa fa-download'/>, <ImportIcon/>, <ExportIcon/>, <FontIcon className='fa fa-trash-o'/>]}
                 tree={[

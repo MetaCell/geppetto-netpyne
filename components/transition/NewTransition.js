@@ -23,35 +23,24 @@ export default class NewTransition extends React.Component {
             if (this.props.tab!=prevProps.tab && this.props.tab=='simulate') {
                 if (!this.state.haveInstData) {
                     Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
-                        .then(response => {if (response.constructor.name=='Array') {
-                            this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}
-                            console.log(0)
-                        }
-                    )
-
-                        
+                        .then(response => {if (response.constructor.name=='Array') this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}) 
                 }
                 else {
                     if (this.props.fastForwardSimulation) {
                         this.simulate({ffs: true})
-                        console.log(1)
                     }
                     else if (this.props.fastForwardInstantiation) {
-                        console.log(2)
                         this.instantiate({usePrevInst: false})    
                     }
                     else {
-                        console.log(3)
                         this.instantiate({usePrevInst: true})
                     }
-                    
                 }
             }
         }
     }
 
     instantiate = (args) => {
-        console.log(args)
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [args])

@@ -35,10 +35,9 @@ export default class RequestHandler extends React.Component {
             Utils
                 .sendPythonMessage(action, [args])
                 .then(response => {
-                    console.log("Execute: "+action)
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        if (tab!='define' || tab!=undefined || this.props.requestID!=6) {
+                        if (tab!=undefined && this.props.requestID!=6) {
                             this.props.changeTab(tab, args); //move to other tab
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);

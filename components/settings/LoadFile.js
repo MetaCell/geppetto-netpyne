@@ -54,15 +54,15 @@ export default class LoadFile extends React.Component {
             var tab = 'define'
             var freezeInstance = false
             var freezeSimulation = false
-            if (this.state.loadSimData || this.state.loadNet) var tab = 'simulate'
+            var action = 'netpyne_geppetto.loadModel';
+            var message = GEPPETTO.Resources.IMPORTING_MODEL;
             
+            if (this.state.loadSimData || this.state.loadNet) tab = 'simulate'
             //use by NetPyNETabs.js to know if re-instantiation and re-simulation is necessary
             if (this.state.loadNet) {
                 freezeInstance = true
                 if (this.state.loadSimData) freezeSimulation = true
             }
-            var action = 'netpyne_geppetto.loadModel';
-            var message = GEPPETTO.Resources.IMPORTING_MODEL;
             this.props.performAction(action, message, {...this.state, tab:tab, freezeInstance: freezeInstance, freezeSimulation: freezeSimulation})
             this.setState({actionExecuted: true})
         }
