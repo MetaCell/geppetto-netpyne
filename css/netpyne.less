@@ -10,11 +10,16 @@ body {
   z-index: 2;
 }
 #dimmer {
-	POSITION: absolute; BACKGROUND-COLOR: #000000; WIDTH: 100%; HEIGHT: 100px; VISIBILITY: hidden; TOP: 0px; LEFT: 0px
+	z-index:5 !important; POSITION: absolute; BACKGROUND-COLOR: #000000; WIDTH: 100%; HEIGHT: 100px; VISIBILITY: hidden; TOP: 0px; LEFT: 0px
+}
+
+#appBar {
+  z-index:100 !important;
 }
 #appBarPopOver {
   left:-225px;
   transition-property: left;
+  z-index:10 !important;
 }
 #mainContainer {
   background-size: 100% 100%;
@@ -23,6 +28,23 @@ body {
 }
 #mainContainer>div {
   height: 100% !important;
+}
+#defineNetwork {
+  margin-top: 4px !important;
+  height: 40px !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+#defineNetwork>div>div {
+  height: 40px !important;
+}
+#simulateNetwork {
+  margin-top: 4px !important;
+  height: 40px !important;
+  border-radius: 12px;
+}
+#simulateNetwork>div>div {
+  height: 40px !important;
 }
 .fade-appear {
   opacity: 0;

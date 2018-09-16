@@ -42,7 +42,9 @@ export default class NetPyNETabs extends React.Component {
 				openSettings: false,
 				fastForwardInstantiation: true,
 				fastForwardSimulation: false
-			}
+			},
+			defBGC: '#00BCD4',
+			simBGC: '#00BCD4'
 		};
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
 		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
@@ -186,20 +188,20 @@ export default class NetPyNETabs extends React.Component {
 					<div>
 						<AppBar
 							id="appBar"
-							style={{flexWrap: 'wrap', height: 40, width: '100%'}}
-							title={
+							style={{flexWrap: 'wrap', height: 48, width: '100%'}}
+							title={<div style={{display: 'flex', flexFlow: 'rows'}}>
+								<h4 style={{flex:1, marginTop:15}}>NetPyNE-UI</h4>
 								<Tabs
+									key={'mainOptions'}
 									value={this.state.value}
-									style={{ width: 'calc(100% - 48px)', float: 'left' , height:40}}
-									tabTemplateStyle={{ height: '100%' }}
+									style={{flex: 4}}
 									inkBarStyle={{backgroundColor:"#00BCD4"}}
-									contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
 								>
-									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Define your network" value="define" id={"defineNetwork"}/>
-									<Tab onActive={this.handleChange} style={{height:40, marginTop: -4}} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
-								</Tabs>
+									<Tab onActive={this.handleChange} style={{backgroundColor: this.state.defBGC}} onMouseEnter={()=>this.setState({defBGC: '#26C6DA'})} onMouseLeave={()=>this.setState({defBGC: '#00BCD4'})} label="Define your network" value="define" id={"defineNetwork"}/>
+									<Tab onActive={this.handleChange} style={{backgroundColor: this.state.simBGC}} onMouseEnter={()=>this.setState({simBGC: '#26C6DA'})} onMouseLeave={()=>this.setState({simBGC: '#00BCD4'})} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
+								</Tabs></div>
 							}
-							iconElementRight={<IconButton id="setupNetwork"iconClassName="fa fa-cog"  style={{marginTop: -13}} onClick={()=>this.setState((settings, ...others) => {return {settings: {...settings, openSettings: true}}})} />}
+							iconElementRight={<IconButton id="setupNetwork" iconClassName="fa fa-cog" style={{width:40, height:40, borderRadius:25, overflow: 'hidden', marginTop:-5}} iconStyle={{color: '#ffffff', marginLeft: -2, marginTop: -4}} hoveredStyle={{backgroundColor: '#26C6DA', position:'relative'}} onClick={()=>this.setState((settings, ...others) => {return {settings: {...settings, openSettings: true}}})} />}
 							iconElementLeft={<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />}
 						/>
 					</div>

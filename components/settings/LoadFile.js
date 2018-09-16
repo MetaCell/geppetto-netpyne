@@ -119,15 +119,15 @@ export default class LoadFile extends React.Component {
                     disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired}
                     label="Compile mod files"
                     checked={this.state.compileMod}
-                    onCheck={() => this.setState((oldState) => {return {compileMod: !oldState.compileMod}})}
+                    onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
                 />
             </div>
         )
         
         var header = <CardHeader title="Load previews work" subtitle="JSON file" titleColor={blue500} />
         var content = (
-            <CardText style={{marginTop: -30}}>
-                <div style={{width: '100%', marginTop: -30}}>
+            <CardText style={{marginTop: -22}}>
+                <div style={{width: '100%', marginTop: -22}}>
                     <TextField className="netpyneField" style={{cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
                     <List > 
                         {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}

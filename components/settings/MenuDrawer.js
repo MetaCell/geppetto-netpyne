@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem }from 'material-ui/Menu'
 import Popover from 'material-ui/Popover';
 import IconButton from 'material-ui/IconButton';
-import MenuIcon  from 'material-ui/svg-icons/navigation/menu';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 
 export default class MenuDrawer extends React.Component {
@@ -159,14 +159,16 @@ export default class MenuDrawer extends React.Component {
         let icon = React.Children.map(this.props.icons, (ch, i)=>{return React.cloneElement(ch, {color: this.state.open[this.name[i]].color})})
         return <div>
             <IconButton 
-                tooltip={this.props.tooltip} 
+                tooltip={this.props.tooltip}
+                style={{width:40, height:40, borderRadius:25, overflow: 'hidden', marginTop:-4}} //controls the circle position
+                iconStyle={{color: '#ffffff', marginTop:-4, marginLeft: -4}}//controls icon position inside the circle
+                hoveredStyle={{backgroundColor: '#26C6DA'}}
                 onClick={this.handleOpenAppBarMenu}
-                style={{marginTop: -12}}
             >
-                <MenuIcon color={'#ffffff'}/>
+                <NavigationMenu/>
             </IconButton>
             <Popover
-                style={{height:this.state.popOverHeight, width:225}} // There should be a better way
+                style={{height:this.state.popOverHeight, width:280}} // There should be a better way
                 key={"mainPopover"}
                 id={"appBarPopOver"}
                 animated={false}
