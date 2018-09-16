@@ -90,15 +90,14 @@ export default class NetPyNETabs extends React.Component {
 			}
 		}
 	}
-	// onMouseEnter={()=>{console.log("enter");this.setState({holdGui: true}) }} onMouseLeave={()=>{console.log("leave");this.setState({holdGui: false})}}
+	
 	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
 		this.setState(({prevValue: pv, value: v, ...others})=>{ 
 			this.hideWidgetsFor(v);
 			this.restoreWidgetsFor(pv);
 			return {
 				prevValue: v,
-				value: pv,
-				...others
+				value: pv
 			}
 		});
 	}
@@ -113,7 +112,6 @@ export default class NetPyNETabs extends React.Component {
 				freezeInstance: pv=='define'?false:fi,
 				freezeSimulation: pv=='define'?false:fs,
 				tabClicked: !tc,
-				...others	
 			}
 		})
 	};
@@ -139,9 +137,8 @@ export default class NetPyNETabs extends React.Component {
 			return {
 				value: tab,
 				prevValue: tab, 
-				freezeInstance: args.freezeInstance,
-				freezeSimulation: args.freezeSimulation,
-				...others
+				freezeInstance: args.freezeInstance!=undefined?args.freezeInstance:fi,
+				freezeSimulation: args.freezeSimulation!=undefined?args.freezeSimulation:fs,
 			}
 		});
 	}

@@ -37,8 +37,8 @@ export default class RequestHandler extends React.Component {
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        if (tab!=undefined && this.props.requestID!=6) {
-                            this.props.changeTab(tab, args); //move to other tab
+                        if (tab!=undefined) this.props.changeTab(tab, args); //move to other tab
+                        if (tab=='simulate' && this.props.requestID!=6) {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
                             GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");

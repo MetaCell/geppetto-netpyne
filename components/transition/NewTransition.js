@@ -4,6 +4,7 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {pink400} from 'material-ui/styles/colors';
+import {CSSTransition} from 'react-transition-group';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Utils from '../../Utils';
 
@@ -14,7 +15,9 @@ export default class NewTransition extends React.Component {
         this.state = {
             openDialog: false,
             haveInstData: false,
-            parallelSimulation: false
+            parallelSimulation: false,
+            instantiateButtonHovered: false,
+            simulateButtonHovered: false
         };
     }
 
@@ -114,8 +117,51 @@ export default class NewTransition extends React.Component {
         }
 
         if (this.props.tab=='simulate' && this.state.haveInstData) {
-            if (!this.props.freezeInstance) {var refreshInstanceButton = <FloatingActionButton onClick={()=>this.instantiate({usePrevInst: false})} key={"refreshInstanceButton"} iconStyle={{color:pink400}} backgroundColor="#ffffff" iconClassName="fa fa-refresh" style={{position: 'absolute', right: 34, top: 50}}/>} else var refreshInstanceButton = <div></div>
-            if (!this.props.freezeSimulation) {var refreshSimulationButton = <FloatingActionButton onClick={()=>this.setState({openDialog: true})} key={"refreshSimulationButton"} iconStyle={{color:pink400}} backgroundColor="#ffffff" iconClassName="fa fa-refresh" style={{position: 'absolute', right: 34, top: this.props.freezeInstance?50:150}}/>} else var refreshSimulationButton = <div></div>    
+            if (!this.props.freezeInstance) {
+                var refreshInstanceButton = (
+                    <div style={{position: 'absolute', right: 23, top: 52, width: 56}}>
+                        <div style={{clear: 'both'}}>
+                            <FloatingActionButton 
+                                backgroundColor="#ffffff" 
+                                iconStyle={{color:pink400}} 
+                                iconClassName="fa fa-refresh" 
+                                key={"refreshInstanceButton"} 
+                                onClick={()=>this.instantiate({usePrevInst: false})} 
+                                onMouseEnter={()=> this.setState({instantiateButtonHovered: true})} 
+                                onMouseLeave={()=> this.setState({instantiateButtonHovered: false})} 
+                            />
+                            {this.state.instantiateButtonHovered?<div>
+                                <CSSTransition in={this.state.instantiateButtonHovered} appear={this.state.instantiateButtonHovered} timeout={500} classNames="fade">
+                                    <h6 style={{textAlign: 'center', marginTop: 4}}>Instantiate</h6>
+                                </CSSTransition>
+                            </div>:null}
+                        </div>
+                    </div>   
+                )
+            } else var refreshInstanceButton = <div></div>
+            if (!this.props.freezeSimulation) {
+                var refreshSimulationButton = (
+                    <div style={{position: 'absolute', right: 23, top: this.props.freezeInstance?52:138}}>
+                        <div style={{clear: 'both', verticalAlign: 'middle'}}>
+                            <FloatingActionButton 
+                                backgroundColor="#ffffff" 
+                                iconStyle={{color:pink400}}
+                                iconClassName="fa fa-refresh" 
+                                key={"refreshSimulationButton"}
+                                style={{verticalAlign: 'middle'}}
+                                onClick={()=>this.setState({openDialog: true})} 
+                                onMouseEnter={()=> this.setState({simulateButtonHovered: true})} 
+                                onMouseLeave={()=> this.setState({simulateButtonHovered: false})} 
+                            />
+                            {this.state.simulateButtonHovered?<div style={{verticalAlign: 'middle'}}>
+                                <CSSTransition in={this.state.simulateButtonHovered} appear={this.state.simulateButtonHovered} timeout={500} classNames="fade">
+                                    <h6 style={{textAlign: 'center', marginTop: 4}}> Simulate</h6>
+                                </CSSTransition>
+                            </div>:null}
+                        </div>
+                    </div>    
+                )
+            } else var refreshSimulationButton = <div></div>    
         }
         
         return (

@@ -51,11 +51,11 @@ export default class LoadFile extends React.Component {
             this.setState({areModFieldsRequired: undefined, actionExecuted: true})
         }
         else {
-            var tab = 'define'
+            var tab = undefined
             var freezeInstance = false
             var freezeSimulation = false
             var action = 'netpyne_geppetto.loadModel';
-            var message = GEPPETTO.Resources.IMPORTING_MODEL;
+            var message = 'LOADING FILE';
             
             if (this.state.loadSimData || this.state.loadNet) tab = 'simulate'
             //use by NetPyNETabs.js to know if re-instantiation and re-simulation is necessary

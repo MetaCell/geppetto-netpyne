@@ -21,8 +21,8 @@ export default class DeleteWork extends React.Component {
 
     performAction() { // send here the message
         var action = 'netpyne_geppetto.deleteModel';
-        var message = GEPPETTO.Resources.IMPORTING_MODEL;
-        this.props.performAction(action, message, this.state)
+        var message = "DELETING MODEL";
+        this.props.performAction(action, message, {tab:'define', ...this.state})
         this.setState({actionExecuted: true})
     }
 

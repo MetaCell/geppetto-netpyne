@@ -56,7 +56,7 @@ export default class NetPyNEInstantiated extends React.Component {
             plotButtonOpen: false,
             openDialog: false
         };
-        console.log("mounting Component")
+        
         this.widgets = [];
         this.plotFigure = this.plotFigure.bind(this);
         this.newPlotWidget = this.newPlotWidget.bind(this);

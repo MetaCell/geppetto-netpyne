@@ -104,7 +104,7 @@ export default class NetPyNEToolBar extends React.Component {
                 requestID={this.state.requestID}
                 onRequestClose={()=>this.setState({openDialogBox: false})}
                 buttonLabel={this.state.buttonLabel}
-                title = {this.state.title}
+                title={this.state.title}
                 changeTab={this.props.changeTab}
             >
                 {requestEl}

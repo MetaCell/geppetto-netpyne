@@ -40,7 +40,7 @@ export default class ImportExportHLS extends React.Component {
     performAction() {
         if (this.props.requestID==5) {
             var action = 'netpyne_geppetto.exportHLS';
-            var message = GEPPETTO.Resources.EXPORTING_MODEL;
+            var message = 'EXPORTING MODEL';
             this.props.performAction(action, message, this.state)
         }
         else if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
@@ -51,7 +51,7 @@ export default class ImportExportHLS extends React.Component {
         }
         else {
             var action = 'netpyne_geppetto.importModel';
-            var message = GEPPETTO.Resources.IMPORTING_MODEL;
+            var message = 'IMPORTING MODEL';
             this.props.performAction(action, message, {...this.state, importFormat: 'py'})
             this.setState({actionExecuted: true})
         }
