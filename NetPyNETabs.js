@@ -42,8 +42,10 @@ export default class NetPyNETabs extends React.Component {
 
     GEPPETTO.on('OriginalModelLoaded', (model) => {
       var modelObject = JSON.parse(model);
+      //FIXME: Abusing window object!
       window.metadata = modelObject.metadata;
       window.requirement = modelObject.requirement;
+      window.context = modelObject.context;
       window.isDocker = modelObject.isDocker;
       window.currentFolder = modelObject.currentFolder;
       this.setState({ model: modelObject })
