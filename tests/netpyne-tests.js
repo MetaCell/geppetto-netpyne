@@ -145,7 +145,6 @@ function testConsoles(test) {
  * Load console, and test it hides/shows fine
  */
 function loadConsole(test, consoleButton, consoleContainer) {
-  // casper.clickLabel('Console', 'span');
   casper.thenClick('li[id="'+consoleButton+'"]', function(){
     this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
       this.echo(consoleContainer + ' loaded.');
