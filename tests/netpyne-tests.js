@@ -52,11 +52,6 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
 
-  // casper.then(function() { //test initial state of consoles
-  //   this.echo("######## Test Consoles ######## ", "INFO");
-  //   testConsoles(test);
-  // });
-
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test popParams fields")
     testPopParamsFields(test);
