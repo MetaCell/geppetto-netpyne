@@ -39,8 +39,10 @@ define(function (require) {
         require('./css/material.less');
 
         window.customJupyterModelLoad = function (module, model) {
+            console.log("Loading custom Jupyter code...")
 
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
+            // Can we delete this line?
+            GEPPETTO.trigger('kernel:ready', "Kernel started");
 
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
 
@@ -57,9 +59,5 @@ define(function (require) {
         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
         GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
         GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
-
-        
     };
-
-
 });

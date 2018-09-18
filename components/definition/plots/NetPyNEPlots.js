@@ -53,8 +53,8 @@ export default class NetPyNEPlots extends React.Component {
             }
           } else if (plot == "granger") {
             var include = {
-              'cells1': ['all'],
-              'cells2': ['all']
+              'cells1': ['allCells'],
+              'cells2': ['allCells']
             }
           } else {
             var include = {

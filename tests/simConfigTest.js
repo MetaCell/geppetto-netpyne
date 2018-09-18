@@ -11,19 +11,20 @@ function setSimConfigParams(casper, test, toolbox) {
   })
   casper.thenClick('#Configuration')
 
+  casper.then(function (){
+    this.wait(1500)
+  })
+
   casper.then(function() {
     toolbox.setInputValue(this, test, "simConfig.duration", "999");
     toolbox.setInputValue(this, test, "simConfig.dt", "0.0249");
     toolbox.getInputValue(this, test, "simConfig.printRunTime", "false");
-    toolbox.getInputValue(this, test, "simConfig.hParams0", "clamp_resist : 0.001");
-    toolbox.getInputValue(this, test, "simConfig.hParams1", "celsius : 6.3");
-    toolbox.deleteListItem(this, test, "simConfig.hParams2", "v_init : -65");
+    toolbox.getlistItemValues(this, test, "simConfig.hParams", ['celsius : 6.3', 'v_init : -65', 'clamp_resist : 0.001'])
+    toolbox.deleteListItem(this, test, "simConfig.hParams2");
     toolbox.addListItem(this, test, "simConfig.hParams", "fake: 123456")
-    toolbox.getInputValue(this, test, "simConfig.seeds0", "loc : 1");
-    toolbox.getInputValue(this, test, "simConfig.seeds1", "stim : 1");
-    toolbox.deleteListItem(this, test, "simConfig.seeds2", "conn : 1");
+    toolbox.getlistItemValues(this, test, "simConfig.seeds", ['conn : 1', 'loc : 1', 'stim : 1'])
+    toolbox.deleteListItem(this, test, "simConfig.seeds2");
     toolbox.addListItem(this, test, "simConfig.seeds", "fakeII: 654321")
-
   })
   casper.then(function() {
     this.wait(1000)
@@ -73,11 +74,7 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.assertExist(this, test, "simConfig.saveDataInclude")
     toolbox.assertExist(this, test, "simConfig.backupCfgFile")
     toolbox.getInputValue(this, test, "simConfig.filename", "model_output");
-    toolbox.getInputValue(this, test, "simConfig.saveDataInclude0", "netParams");
-    toolbox.getInputValue(this, test, "simConfig.saveDataInclude1", "netCells");
-    toolbox.getInputValue(this, test, "simConfig.saveDataInclude2", "netPops");
-    toolbox.getInputValue(this, test, "simConfig.saveDataInclude3", "simConfig");
-    toolbox.getInputValue(this, test, "simConfig.saveDataInclude4", "simData");
+    toolbox.getlistItemValues(this, test, "simConfig.saveDataInclude", ['netParams', 'netCells', 'netPops', 'simConfig', 'simData'])
   })
   casper.then(function() {
     toolbox.clickCheckBox(this, test, "simConfig.saveCellSecs");
@@ -142,8 +139,8 @@ function getSimConfigParams(casper, test, toolbox) {
   casper.then(function() {
     toolbox.getInputValue(this, test, "simConfig.duration", "999");
     toolbox.getInputValue(this, test, "simConfig.dt", "0.0249");
-    toolbox.getListItemValue(this, test, "simConfig.hParams2", "fake : 123456")
-    toolbox.getListItemValue(this, test, "simConfig.seeds2", "fakeII : 654321")
+    toolbox.getlistItemValues(this, test, "simConfig.hParams", ['celsius : 6.3', 'v_init : -65', "fake : 123456"])
+    toolbox.getlistItemValues(this, test, "simConfig.seeds", ['conn : 1', 'fakeII : 654321', 'stim : 1'])
     toolbox.testCheckBoxValue(this, test, "simConfig.createNEURONObj", false);
     toolbox.testCheckBoxValue(this, test, "simConfig.createPyStruct", false);
     toolbox.testCheckBoxValue(this, test, "simConfig.addSynMechs", false);
@@ -166,7 +163,7 @@ function getSimConfigParams(casper, test, toolbox) {
   casper.then(function() {
     toolbox.getListItemValue(this, test, "simConfig.recordCells0", "22")
     toolbox.getListItemValue(this, test, "simConfig.recordLFP0", "[1,2,3]")
-    toolbox.getListItemValue(this, test, "simConfig.recordTraces0", "Vsoma:   {var: v, loc: 0.5, sec: soma}")
+    toolbox.getListItemValue(this, test, "simConfig.recordTraces0", "Vsoma:   {sec: soma, loc: 0.5, var: v}")
     toolbox.getInputValue(this, test, "simConfig.recordStep", "10");
     toolbox.testCheckBoxValue(this, test, "simConfig.saveLFPCells", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.recordStim", true);
