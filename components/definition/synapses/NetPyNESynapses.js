@@ -58,18 +58,18 @@ export default class NetPyNESynapses extends React.Component {
         };
       };
     };
-    return false;
+    return undefined;
   };
 
   componentDidUpdate(prevProps, prevState) {
     var newSynapseName = this.hasSelectedSynapseBeenRenamed(prevState, this.state);
-    if (newSynapseName) {
+    if (newSynapseName !== undefined) {
       this.setState({ selectedSynapse: newSynapseName });
     };
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedSynapseBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = this.hasSelectedSynapseBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;
@@ -101,7 +101,7 @@ export default class NetPyNESynapses extends React.Component {
         handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
-    if (this.state.selectedSynapse && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
+    if ((this.state.selectedSynapse != undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
       selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} />;
     };
 

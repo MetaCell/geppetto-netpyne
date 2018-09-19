@@ -147,7 +147,7 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   hasSelectedSectionBeenRenamed(prevState, currentState) {
@@ -177,7 +177,7 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   hasSelectedMechanismBeenRenamed(prevState, currentState) {
@@ -211,27 +211,27 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newCellRuleName = this.hasSelectedCellRuleBeenRenamed(prevState, this.state);
-    if (newCellRuleName) {
+    if (newCellRuleName !== undefined) {
       this.setState({ selectedCellRule: newCellRuleName });
     }
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
-    if (newSectionName) {
+    if (newSectionName !== undefined) {
       this.setState({ selectedSection: newSectionName });
     }
     var newMechanismName = this.hasSelectedMechanismBeenRenamed(prevState, this.state);
-    if (newMechanismName) {
+    if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) != false || this.hasSelectedSectionBeenRenamed(this.state, nextState) != false || this.hasSelectedMechanismBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedSectionBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedMechanismBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
     var pageChanged = this.state.page != nextState.page;
@@ -295,7 +295,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
-      if (this.state.selectedCellRule && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
+      if ((this.state.selectedCellRule != undefined) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
         selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
       }
 
@@ -332,7 +332,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
-      if (this.state.selectedSection && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
+      if ((this.state.selectedSection != undefined) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
         selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} />;
       }
 
@@ -380,7 +380,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
-      if (this.state.selectedMechanism && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
+      if ((this.state.selectedMechanism != undefined) && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
         selectedMechanism = <NetPyNEMechanism cellRule={this.state.selectedCellRule} section={this.state.selectedSection} name={this.state.selectedMechanism} model={mechanismsModel[this.state.selectedMechanism]} />;
       }
 
