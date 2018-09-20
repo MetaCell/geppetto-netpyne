@@ -106,7 +106,7 @@ export default class LoadFile extends React.Component {
                 <TextField 
                     className="netpyneField" 
                     style={{ cursor: 'pointer', width: '100%'}} 
-                    floatingLabelText="Mod path folder"
+                    floatingLabelText="Path to mod files"
                     disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
                     value={this.state.modFolder} 
                     onClick={() => this.showExplorerDialog('modFolder', true)} 

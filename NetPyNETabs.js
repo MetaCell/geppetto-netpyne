@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
+import Popover from 'material-ui/Popover'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
 import SettingsDialog from './components/settings/Settings';
@@ -162,35 +163,30 @@ export default class NetPyNETabs extends React.Component {
 				fastForwardInstantiation={this.state.settings.fastForwardInstantiation}
 				fastForwardSimulation={this.state.settings.fastForwardSimulation}
 			/>;
-
-			switch(this.state.value) {
-				case 'define':
-					var content =  <div>
-						<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
-						<PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
-						<PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
-						<PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
-						<PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
-						<PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
-						<NetPyNESimConfig model={this.state.model.simConfig} />
-						<PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
-					</div>
-					break;
-				case 'simulate':
-					var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"simulate"} model={this.state.model} page={"simulate"} />
-					break;
-				default:
-					var content =  <div></div>
+			if (this.state.value=='define'){
+				var content =  <div>
+					<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
+					<PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
+					<PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+					<PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+					<PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+					<PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
+					<NetPyNESimConfig model={this.state.model.simConfig} />
+					<PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
+				</div>
+			}
+			else {
+				var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"simulate"} model={this.state.model} page={"simulate"} />
 			}
 			
-			return ( <div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
-					<div id="dimmer" />
+			return (
+				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
+					<div id="dimmer" style={{zIndex:'5 !important', position: 'absolute', backgroundColor: '#000000', 'width': '100%', 'height': '100px', visibility: 'hidden', top: '0px', left: '0px'}} />
 					<div>
 						<AppBar
 							id="appBar"
-							style={{flexWrap: 'wrap', height: 48, width: '100%'}}
+							style={{flexWrap: 'wrap', height: 48, width: '100%', cursor: 'pointer'}}
 							title={<div style={{display: 'flex', flexFlow: 'rows'}}>
-								<h4 style={{flex:1, marginTop:15}}>NetPyNE-UI</h4>
 								<Tabs
 									key={'mainOptions'}
 									value={this.state.value}

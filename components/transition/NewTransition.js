@@ -1,12 +1,15 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
+import SvgIcon from 'material-ui/SvgIcon';
 import Checkbox from 'material-ui/Checkbox';
+import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import {pink400} from 'material-ui/styles/colors';
-import {CSSTransition} from 'react-transition-group';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Utils from '../../Utils';
+
+const RocketIcon = (props) => (<SvgIcon {...props}><svg viewBox="0 0 512 512"><path d="M505.1 19.1C503.8 13 499 8.2 492.9 6.9 460.7 0 435.5 0 410.4 0 307.2 0 245.3 55.2 199.1 128H94.9c-18.2 0-34.8 10.3-42.9 26.5L2.6 253.3c-8 16 3.6 34.7 21.5 34.7h95.1c-5.9 12.8-11.9 25.5-18 37.7-3.1 6.2-1.9 13.6 3 18.5l63.6 63.6c4.9 4.9 12.3 6.1 18.5 3 12.2-6.1 24.9-12 37.7-17.9V488c0 17.8 18.8 29.4 34.7 21.5l98.7-49.4c16.3-8.1 26.5-24.8 26.5-42.9V312.8c72.6-46.3 128-108.4 128-211.1.1-25.2.1-50.4-6.8-82.6zM400 160c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48z"></path></svg></SvgIcon>);
 
 export default class NewTransition extends React.Component {
 
@@ -45,17 +48,17 @@ export default class NewTransition extends React.Component {
 
     instantiate = (args) => {
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "INSTANTATING MODEL");
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [args])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
                 if (!this.processError(parsedResponse)) {
+                    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "PARSING MODEL"); //keep this sequence has it is
                     if (!args.usePrevInst) this.props.handleDeactivateInstanceUpdate(true)
-                    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL); //keep this sequence has it is
-                    this.setState({haveInstData: true})
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model instantiation was completed");
                     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                    this.setState({haveInstData: true})
                 }
         });
     }
@@ -86,20 +89,13 @@ export default class NewTransition extends React.Component {
         }
         return false;
     }
-
-    cancelTransition = () => {
-        this.closeTransition();
-        if (this.props.cancelTransition) {
-            this.props.cancelTransition();
-        }
-    }
     
     closeTransition = () => {
         this.setState({ openDialog: false });
     }
     
     render () {
-        var children = this.state.errorDetails
+        var children = this.state.errorDetails?this.state.errorDetails:null
         var title = this.state.errorMessage?this.state.errorMessage:"NetPyNE";
         
         if (this.state.openDialog) {
@@ -111,57 +107,22 @@ export default class NewTransition extends React.Component {
                         <TextField floatingLabelText="Number of cores" onChange={(event) => this.setState({ cores: event.target.value })} className="netpyneRightField"  type="number"/>
                     </div>
                 )
-                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.cancelTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate({ffs:false})} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
+                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate({ffs:false})} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
             }
-            else var actions = <FlatButton label="CANCEL" onClick={()=>{this.cancelTransition()}} key={"cancelActionBtn"} primary={true} />
+            else var actions = <FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} key={"cancelActionBtn"} primary={true} />
         }
 
         if (this.props.tab=='simulate' && this.state.haveInstData) {
-            if (!this.props.freezeInstance) {
-                var refreshInstanceButton = (
-                    <div style={{position: 'absolute', right: 23, top: 52, width: 56}}>
-                        <div style={{clear: 'both'}}>
-                            <FloatingActionButton 
-                                backgroundColor="#ffffff" 
-                                iconStyle={{color:pink400}} 
-                                iconClassName="fa fa-refresh" 
-                                key={"refreshInstanceButton"} 
-                                onClick={()=>this.instantiate({usePrevInst: false})} 
-                                onMouseEnter={()=> this.setState({instantiateButtonHovered: true})} 
-                                onMouseLeave={()=> this.setState({instantiateButtonHovered: false})} 
-                            />
-                            {this.state.instantiateButtonHovered?<div>
-                                <CSSTransition in={this.state.instantiateButtonHovered} appear={this.state.instantiateButtonHovered} timeout={500} classNames="fade">
-                                    <h6 style={{textAlign: 'center', marginTop: 4}}>Instantiate</h6>
-                                </CSSTransition>
-                            </div>:null}
-                        </div>
-                    </div>   
-                )
-            } else var refreshInstanceButton = <div></div>
-            if (!this.props.freezeSimulation) {
-                var refreshSimulationButton = (
-                    <div style={{position: 'absolute', right: 23, top: this.props.freezeInstance?52:138}}>
-                        <div style={{clear: 'both', verticalAlign: 'middle'}}>
-                            <FloatingActionButton 
-                                backgroundColor="#ffffff" 
-                                iconStyle={{color:pink400}}
-                                iconClassName="fa fa-refresh" 
-                                key={"refreshSimulationButton"}
-                                style={{verticalAlign: 'middle'}}
-                                onClick={()=>this.setState({openDialog: true})} 
-                                onMouseEnter={()=> this.setState({simulateButtonHovered: true})} 
-                                onMouseLeave={()=> this.setState({simulateButtonHovered: false})} 
-                            />
-                            {this.state.simulateButtonHovered?<div style={{verticalAlign: 'middle'}}>
-                                <CSSTransition in={this.state.simulateButtonHovered} appear={this.state.simulateButtonHovered} timeout={500} classNames="fade">
-                                    <h6 style={{textAlign: 'center', marginTop: 4}}> Simulate</h6>
-                                </CSSTransition>
-                            </div>:null}
-                        </div>
-                    </div>    
-                )
-            } else var refreshSimulationButton = <div></div>    
+            var refreshInstanceButton = (
+                <IconButton iconStyle={{color: pink400}} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 5, top: 50}} tooltip={this.props.freezeInstance?"Already instantiated":"Instantiate"} tooltipPosition="center-left" disabled={this.props.freezeInstance} tooltipStyles={{marginRight:'28px'}}>
+                    <FontIcon className="fa fa-refresh"/>
+                </IconButton>
+            )
+            var refreshSimulationButton = (
+                <IconButton iconStyle={{color: pink400}} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 5, top: 100}} tooltip={this.props.freezeSimulation?"Already simulated":"simulate"} tooltipPosition="center-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginRight:'28px'}}>
+                    <RocketIcon />
+                </IconButton>    
+            )
         }
         
         return (

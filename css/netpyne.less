@@ -7,20 +7,9 @@ body {
 }
 
 #footer {
-  z-index: 2;
-}
-#dimmer {
-	z-index:5 !important; POSITION: absolute; BACKGROUND-COLOR: #000000; WIDTH: 100%; HEIGHT: 100px; VISIBILITY: hidden; TOP: 0px; LEFT: 0px
+  z-index: 2 !important;
 }
 
-#appBar {
-  z-index:100 !important;
-}
-#appBarPopOver {
-  left:-225px;
-  transition-property: left;
-  z-index:10 !important;
-}
 #mainContainer {
   background-size: 100% 100%;
   overflow: auto;
@@ -45,30 +34,6 @@ body {
 }
 #simulateNetwork>div>div {
   height: 40px !important;
-}
-.fade-appear {
-  opacity: 0;
-}
-.fade-appear.fade-appear-active {
-  opacity: 1;
-  transition: opacity 500ms linear;
-}
-.fade-exit {
-  opacity:1;
-}
-.fade-exit.fade-exit-active{
-  opacity: 0;
-  transition: opacity 500ms linear;
-}
-.fade-exit-done {
-  opacity: 0;
-}
-.fade-enter {
-  opacity: 0;
-}
-.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity 500ms linear;
 }
 
 .actionButton {

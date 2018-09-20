@@ -1,6 +1,8 @@
 import React from 'react';
+import NetPyNElogo from '../../components/general/NetPyNElogo.png'
 import { MenuItem }from 'material-ui/Menu'
 import Popover from 'material-ui/Popover';
+import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
@@ -145,6 +147,7 @@ export default class MenuDrawer extends React.Component {
     }
 
     handleOpenAppBarMenu = (e) => {
+        // e.preventDefault();
         var dimmer = document.getElementById("dimmer")
         var ap = document.getElementById(this.props.confineBetweenElementIds[0]).getBoundingClientRect()
         var cm = document.getElementById(this.props.confineBetweenElementIds[1]).getBoundingClientRect()
@@ -152,7 +155,7 @@ export default class MenuDrawer extends React.Component {
         dimmer.style.visibility = "visible";
         dimmer.style.top = ap.bottom+"px"
         dimmer.style.height = (cm.bottom - ap.bottom) + "px"
-        this.setState({mainPopoverOpen: true, mainAnchorEl: e.currentTarget, popOverHeight:cm.top})
+        this.setState({mainPopoverOpen: true, popOverHeight:cm.top})
     }
     
     render() {
@@ -168,7 +171,7 @@ export default class MenuDrawer extends React.Component {
                 <NavigationMenu/>
             </IconButton>
             <Popover
-                style={{height:this.state.popOverHeight, width:280}} // There should be a better way
+                style={{height:this.state.popOverHeight, width:280, left:'-225px', transition: 'left 200ms', position: 'fixed', zIndex:'1100 !important'}}
                 key={"mainPopover"}
                 id={"appBarPopOver"}
                 animated={false}
@@ -180,6 +183,8 @@ export default class MenuDrawer extends React.Component {
                 targetOrigin={{horizontal: 'left', vertical: 'top'}}
                 onRequestClose={()=>{this.closeMenu('main')}}
             >
+                <img style={{marginLeft: 20, marginTop: 5, marginBottom: 8}} src={NetPyNElogo} />
+                <Divider/>
                 {this.state.tree.map((el, i)=>{return this.createMenus(el, icon[i])})}
             </Popover>
         </div>
