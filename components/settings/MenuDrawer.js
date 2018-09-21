@@ -153,17 +153,17 @@ export default class MenuDrawer extends React.Component {
         var cm = document.getElementById(this.props.confineBetweenElementIds[1]).getBoundingClientRect()
         dimmer.style.opacity = 0.2;
         dimmer.style.visibility = "visible";
-        dimmer.style.top = ap.bottom+"px"
-        dimmer.style.height = (cm.bottom - ap.bottom) + "px"
+        // dimmer.style.top = ap.bottom+"px"
+        // dimmer.style.height = (cm.bottom - ap.bottom) + "px"
         this.setState({mainPopoverOpen: true, popOverHeight:cm.top})
     }
     
     render() {
         let icon = React.Children.map(this.props.icons, (ch, i)=>{return React.cloneElement(ch, {color: this.state.open[this.name[i]].color})})
-        return <div>
+        return <div style={{position: 'fixed', zIndex:50}}>
             <IconButton 
                 tooltip={this.props.tooltip}
-                style={{width:40, height:40, borderRadius:25, overflow: 'hidden', marginTop:-4}} //controls the circle position
+                style={{width:40, height:40, borderRadius:25, overflow: 'hidden', marginTop:-20}} //controls the circle position
                 iconStyle={{color: '#ffffff', marginTop:-4, marginLeft: -4}}//controls icon position inside the circle
                 hoveredStyle={{backgroundColor: '#26C6DA'}}
                 onClick={this.handleOpenAppBarMenu}
@@ -171,7 +171,7 @@ export default class MenuDrawer extends React.Component {
                 <NavigationMenu/>
             </IconButton>
             <Popover
-                style={{height:this.state.popOverHeight, width:280, left:'-225px', transition: 'left 200ms', position: 'fixed', zIndex:'1100 !important'}}
+                style={{height:this.state.popOverHeight, width:280, left:'-225px', transition: 'left 200ms', position: 'fixed', zIndex:50}}
                 key={"mainPopover"}
                 id={"appBarPopOver"}
                 animated={false}

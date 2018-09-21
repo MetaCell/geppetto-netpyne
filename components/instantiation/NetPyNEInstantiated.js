@@ -183,7 +183,7 @@ export default class NetPyNEInstantiated extends React.Component {
         }
 
         return (
-            <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
+            <div id="instantiatedContainer" style={{ height: '100%', width: '100%', position: 'fixed' }}>
                 <Canvas
                     key={this.props.frozenInstance?"FronzenCanvas":"aliveCanvas"}
                     id="CanvasContainer"
@@ -199,14 +199,14 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 57 }}
+                <IconButton style={{ position: 'absolute', left: 34, top: 16 }}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 35, top: 358 }}
+                        style={{ position: 'absolute', left: 34, top: 317 }}
                         label="Plot"
                         icon={"fa-bar-chart"}
                         id="PlotButton"

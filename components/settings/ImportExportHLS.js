@@ -104,7 +104,7 @@ export default class ImportExportHLS extends React.Component {
             <TextField 
               className="netpyneFieldNoWidth" 
               style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
-              floatingLabelText="Mod path folder"
+              floatingLabelText="Path to mod files"
               disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
               value={this.state.modFolder} 
               onClick={() => this.showExplorerDialog('modFolder', true)} 
@@ -130,7 +130,7 @@ export default class ImportExportHLS extends React.Component {
             case 2:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = 
-                    <CardText style={{marginTop: -22}}>
+                    <CardText style={{marginTop: -33}}>
                         <TextField className="netpyneFieldNoWidth" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="NetParams path" value={this.state.netParamsPath} onClick={() => this.showExplorerDialog('netParamsPath', false)} readOnly />
                         <TextField className="netpyneRightField" style={{ width: '48%', cursor: 'pointer' }} floatingLabelText="SimConfig path" value={this.state.simConfigPath} onClick={() => this.showExplorerDialog('simConfigPath', false)} readOnly />
 
@@ -144,7 +144,7 @@ export default class ImportExportHLS extends React.Component {
                 break;
             case 5:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
-                var content = <CardText style={{marginTop: -30}}>
+                var content = <CardText style={{marginTop: -33}}>
                     <TextField
                         className="netpyneField"
                         hintText="File name"

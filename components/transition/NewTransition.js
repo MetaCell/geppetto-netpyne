@@ -114,12 +114,12 @@ export default class NewTransition extends React.Component {
 
         if (this.props.tab=='simulate' && this.state.haveInstData) {
             var refreshInstanceButton = (
-                <IconButton iconStyle={{color: pink400}} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 30, top: 50, width:'24px', height:'24px'}} tooltip={this.props.freezeInstance?"Your network is in sync":"Synchronise network"} tooltipPosition="center-left" disabled={this.props.freezeInstance} tooltipStyles={{marginRight:'15px', marginTop:'-8px'}}>
+                <IconButton iconStyle={{color: pink400}} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 30, top: 60, width:'24px', height:'24px'}} tooltip={this.props.freezeInstance?"Your network is in sync":"Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{marginTop: -37, marginRight:10}}>
                     <FontIcon className="fa fa-refresh"/>
                 </IconButton>
             )
             var refreshSimulationButton = (
-                <IconButton iconStyle={{color: pink400}} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 100, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"simulate"} tooltipPosition="center-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginRight:'15px', marginTop:'-10px'}}>
+                <IconButton iconStyle={{color: pink400}} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 110, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"simulate"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginTop: -38, marginRight:10}}>
                     <RocketIcon />
                 </IconButton>    
             )

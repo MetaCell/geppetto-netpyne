@@ -104,23 +104,24 @@ export default class LoadFile extends React.Component {
                     <MenuItem value={false} primaryText="no, only NEURON build-in mods." />
                 </SelectField>
                 <TextField 
-                    className="netpyneField" 
-                    style={{ cursor: 'pointer', width: '100%'}} 
+                    className="netpyneFieldNoWidth" 
+                    style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
                     floatingLabelText="Path to mod files"
                     disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
                     value={this.state.modFolder} 
                     onClick={() => this.showExplorerDialog('modFolder', true)} 
                     readOnly 
                 />
+                <div style={{ float: 'right', width: '47%', marginTop:25}}>
+                    <Checkbox
+                        className={"netpyneCheckbox"}
+                        disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired}
+                        label="Compile mod files"
+                        checked={this.state.compileMod}
+                        onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
+                    />
+                </div>
                 <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-                <Checkbox
-                    className={"netpyneCheckbox"}
-                    style={{ width: '100%', marginTop: 50}}
-                    disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired}
-                    label="Compile mod files"
-                    checked={this.state.compileMod}
-                    onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
-                />
             </div>
         )
         

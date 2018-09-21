@@ -106,8 +106,9 @@ export default class RequestHandler extends React.Component {
             return (
                 <Dialog
                     title={title}
-                    open={this.state.open}
+                    modal={true}
                     actions={actions}
+                    open={this.state.open}
                     bodyStyle={{ overflow: 'auto' }}
                     style={{ whiteSpace: "pre-wrap" }}
                     onRequestClose={()=>this.closeDialog()}

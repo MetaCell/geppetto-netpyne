@@ -1,14 +1,11 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
 import { MenuItem } from 'material-ui/Menu';
-import { cyan500, cyan400, grey300 } from 'material-ui/styles/colors';
 import IconMenu from 'material-ui/IconMenu';
-import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import SettingsDialog from './components/settings/Settings';
+import { cyan500, cyan400, grey300 } from 'material-ui/styles/colors';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import NewTransition from './components/transition/NewTransition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -43,17 +40,12 @@ export default class NetPyNETabs extends React.Component {
             value: 'define',
             prevValue: 'define',
 			model: null,
+			tabClicked: false,
+			tabLabel: 'Create network',
 			freezeInstance: false,
 			freezeSimulation: false,
-			tabClicked: false,
-			settings: {
-				openSettings: false,
-				fastForwardInstantiation: true,
-				fastForwardSimulation: false
-			},
-			tabLabel: 'Create network',
-			defBGC: '#00BCD4',
-			simBGC: '#00BCD4',
+			fastForwardInstantiation: true,
+			fastForwardSimulation: false,
 			transitionOptionsHovered: false
 		};
 		this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(this);
@@ -117,10 +109,10 @@ export default class NetPyNETabs extends React.Component {
 
   	handleChange = (tab) => {
 		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(tab.props.value);
+		this.restoreWidgetsFor(tab);
 		this.setState( ({value: pv, prevValue: xx, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
 			return {
-				value: tab.props.value,
+				value: tab,
 				prevValue: pv, 
 				freezeInstance: pv=='define'?false:fi,
 				freezeSimulation: pv=='define'?false:fs,
@@ -128,8 +120,21 @@ export default class NetPyNETabs extends React.Component {
 			}
 		})
 	};
+
 	handleTransitionOptionsChange = (e, v) => {
-		this.setState({tabLabel: v})
+		if (v!=this.state.tabLabel) {
+			var state = {fastForwardInstantiation: false, fastForwardSimulation: false}
+			if (v=='Create and Simulate network') {
+				state = {fastForwardInstantiation: true, fastForwardSimulation: true}
+			}
+			else if (v=='Create network') {
+				state = {fastForwardInstantiation: true, fastForwardSimulation: false}
+			}
+			else {
+				state = {fastForwardInstantiation: false, fastForwardSimulation: false}
+			}
+			this.setState({tabLabel: v, ...state})
+		}
 	}
 
 	handleDeactivateInstanceUpdate = (netInstanceWasUpdated) => {
@@ -164,7 +169,6 @@ export default class NetPyNETabs extends React.Component {
 			return <div></div>
 		}
 		else {
-			var bottomValue = this.state.value == "define" ? 35 : 0;
 			var transitionDialog = <NewTransition 
 				tab={this.state.value} 
 				clickOnTab={this.state.tabClicked}
@@ -173,8 +177,8 @@ export default class NetPyNETabs extends React.Component {
 				handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
 				freezeSimulation={this.state.freezeSimulation} 
 				cancelTransition={this.cancelTransition}
-				fastForwardInstantiation={this.state.settings.fastForwardInstantiation}
-				fastForwardSimulation={this.state.settings.fastForwardSimulation}
+				fastForwardInstantiation={this.state.fastForwardInstantiation}
+				fastForwardSimulation={this.state.fastForwardSimulation}
 			/>;
 			if (this.state.value=='define'){
 				var content =  <div>
@@ -193,55 +197,35 @@ export default class NetPyNETabs extends React.Component {
 			}
 			
 			return (
-				<div style={{height: '100%', width:'100%', display: 'flex', flexFlow: 'column'}}>
-					<div id="dimmer" style={{zIndex:'5 !important', position: 'absolute', backgroundColor: '#000000', 'width': '100%', 'height': '100px', visibility: 'hidden', top: '0px', left: '0px'}} />
-					<div>
-						<Toolbar style={{backgroundColor: cyan500, width:'100%'}}>
-							<ToolbarGroup firstChild={true} style={{marginLeft: -12}}>
+				<div style={{height: '100%', width:'100%'}}>
+					<div id="dimmer" style={{position: 'absolute', width: '100%', height:'100%', visibility: 'hidden', top: '0px', left: '0px', backgroundColor: '#000000', zIndex:5}} />
+					<div style={{position: 'relative', zIndex: '100'}}>
+						<Toolbar id="appBar" style={{backgroundColor: cyan500, width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
+							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
         					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%'}}>
-								<FlatButton style={{flex: 1}} backgroundColor={cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='define'?'#ffffff':grey300}} label="Define your Network" />
-								<FlatButton style={{flex: 1}} backgroundColor={this.state.transitionOptionsHovered?cyan400:cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='simulate'?'#ffffff':grey300}} label={this.state.tabLabel} />
+								<FlatButton onClick={()=>this.handleChange('define')} style={{flex: 1, borderRadius: 10}} backgroundColor={cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='define'?'#ffffff':grey300}} label="Define your Network" />
+								<FlatButton onClick={()=>this.handleChange('simulate')} style={{flex: 1, borderRadius: 10}} backgroundColor={this.state.transitionOptionsHovered?cyan400:cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='simulate'?'#ffffff':grey300}} label={this.state.tabLabel} />
 							</ToolbarGroup>
-							<IconMenu 
+							<IconMenu
 								value={this.state.tabLabel} 
 								iconStyle={{color: '#ffffff'}} 
-								style={{position: 'absolute', top:'4px', right: '28px'}} 
+								style={{position: 'absolute', top:'6px', right: '28px'}} 
 								iconButtonElement={<IconButton onMouseEnter={()=>this.setState({transitionOptionsHovered: true})} onMouseLeave={()=>this.setState({transitionOptionsHovered: false})}><NavigationExpandMoreIcon /></IconButton>} 
 								onChange={this.handleTransitionOptionsChange} 
 								useLayerForClickAway={true} 
-								anchorOrigin={{horizontal:"left", vertical: "bottom"}} 
 								targetOrigin={{horizontal: "right", vertical: "top"}}
+								anchorOrigin={{horizontal:"right", vertical: "bottom"}} 
 							>
 								<MenuItem primaryText="Create network" value="Create network" />
 								<MenuItem primaryText="Create and Simulate network" value="Create and Simulate network"/>
 								<MenuItem primaryText="Explore existing network" value="Explore existing network"/>
 							</IconMenu>
 						</Toolbar>
-						<AppBar
-							id="appBar"
-							style={{flexWrap: 'wrap', height: 48, width: '100%', cursor: 'pointer'}}
-							title={<div style={{display: 'flex', flexFlow: 'rows'}}>
-								<Tabs
-									key={'mainOptions'}
-									value={this.state.value}
-									style={{flex: 4}}
-									inkBarStyle={{backgroundColor:"#00BCD4"}}
-								>
-									<Tab onActive={this.handleChange} style={{backgroundColor: this.state.defBGC}} onMouseEnter={()=>this.setState({defBGC: '#26C6DA'})} onMouseLeave={()=>this.setState({defBGC: '#00BCD4'})} label="Define your network" value="define" id={"defineNetwork"}/>
-									<Tab onActive={this.handleChange} style={{backgroundColor: this.state.simBGC}} onMouseEnter={()=>this.setState({simBGC: '#26C6DA'})} onMouseLeave={()=>this.setState({simBGC: '#00BCD4'})} label="Simulate and analyse" value="simulate" id={"simulateNetwork"}/>
-								</Tabs></div>
-							}
-							iconElementRight={<IconButton id="setupNetwork" iconClassName="fa fa-cog" style={{width:40, height:40, borderRadius:25, overflow: 'hidden', marginTop:-5}} iconStyle={{color: '#ffffff', marginLeft: -2, marginTop: -4}} hoveredStyle={{backgroundColor: '#26C6DA', position:'relative'}} onClick={()=>this.setState((settings, ...others) => {return {settings: {...settings, openSettings: true}}})} />}
-							iconElementLeft={<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />}
-						/>
 					</div>
-					<div style={{flex: 1}}>
-						{content}
-						{transitionDialog}
-						{<SettingsDialog settings={this.state.settings} updateSettings={(args)=>this.setState({settings: args})} />}
-					</div>
+					{content}
+					{transitionDialog}
 				</div>
 			)
 		}
