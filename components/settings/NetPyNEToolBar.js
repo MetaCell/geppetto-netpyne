@@ -2,13 +2,13 @@ import React from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import FontIcon from 'material-ui/FontIcon';
 import {blue500, grey900} from 'material-ui/styles/colors';
-import LoadFile from './LoadFile';
-import SaveFile from './SaveFile';
-import DeleteWork from './DeleteWork';
-import ExportToDocker from './ExportToDocker';
-import ImportExportHLS from './ImportExportHLS';
-import ImportExportSonata from './ImportExportSonata';
-import ImportExportNeuroML from './ImportExportNeuroML';
+import LoadFile from './actions/LoadFile';
+import SaveFile from './actions/SaveFile';
+import DeleteWork from './actions/DeleteWork';
+import ExportToDocker from './actions/ExportToDocker';
+import ImportExportHLS from './actions/ImportExportHLS';
+import ImportExportSonata from './actions/ImportExportSonata';
+import ImportExportNeuroML from './actions/ImportExportNeuroML';
 import MenuDrawer from './MenuDrawer'
 import RequestHandler from './RequestHandler'
 

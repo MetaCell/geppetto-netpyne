@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom'
 import { MenuItem } from 'material-ui/Menu';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -31,10 +32,8 @@ var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonContro
 
 
 export default class NetPyNETabs extends React.Component {
-
     constructor(props) {
         super(props);
-
         this.widgets = {};
         this.state = {
             value: 'define',
@@ -62,8 +61,8 @@ export default class NetPyNETabs extends React.Component {
 			window.currentFolder = modelObject.currentFolder;
 			this.setState({ model: modelObject })
 		});
-  	}
-
+	}
+	
   	hideWidgetsFor = (value) => {
 		if (value != "define") {
 			var page = this.refs[value];
@@ -124,14 +123,11 @@ export default class NetPyNETabs extends React.Component {
 	handleTransitionOptionsChange = (e, v) => {
 		if (v!=this.state.tabLabel) {
 			var state = {fastForwardInstantiation: false, fastForwardSimulation: false}
-			if (v=='Create and Simulate network') {
+			if (v=='Create and Simulate Network') {
 				state = {fastForwardInstantiation: true, fastForwardSimulation: true}
 			}
-			else if (v=='Create network') {
+			else if (v=='Create Network') {
 				state = {fastForwardInstantiation: true, fastForwardSimulation: false}
-			}
-			else {
-				state = {fastForwardInstantiation: false, fastForwardSimulation: false}
 			}
 			this.setState({tabLabel: v, ...state})
 		}
@@ -197,7 +193,7 @@ export default class NetPyNETabs extends React.Component {
 			}
 			
 			return (
-				<div style={{height: '100%', width:'100%'}}>
+				<div style={{height: '100%', width:'100%'}} >
 					<div id="dimmer" style={{position: 'absolute', width: '100%', height:'100%', visibility: 'hidden', top: '0px', left: '0px', backgroundColor: '#000000', zIndex:5}} />
 					<div style={{position: 'relative', zIndex: '100'}}>
 						<Toolbar id="appBar" style={{backgroundColor: cyan500, width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
@@ -218,9 +214,9 @@ export default class NetPyNETabs extends React.Component {
 								targetOrigin={{horizontal: "right", vertical: "top"}}
 								anchorOrigin={{horizontal:"right", vertical: "bottom"}} 
 							>
-								<MenuItem primaryText="Create network" value="Create network" />
-								<MenuItem primaryText="Create and Simulate network" value="Create and Simulate network"/>
-								<MenuItem primaryText="Explore existing network" value="Explore existing network"/>
+								<MenuItem primaryText="Create Network" value="Create Network" />
+								<MenuItem primaryText="Create and Simulate Network" value="Create and Simulate Network"/>
+								<MenuItem primaryText="Explore Existing Network" value="Explore Existing Network"/>
 							</IconMenu>
 						</Toolbar>
 					</div>

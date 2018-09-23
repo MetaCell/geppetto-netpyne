@@ -1,12 +1,12 @@
 import React from 'react';
 import {List, ListItem} from 'material-ui/List';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import { orange500, blue500 } from 'material-ui/styles/colors';
+import { orange500, blue500, grey400} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-import FileBrowser from '../general/FileBrowser';
+import FileBrowser from '../../general/FileBrowser';
 
 export default class LoadFile extends React.Component {
     constructor(props) {
@@ -20,7 +20,8 @@ export default class LoadFile extends React.Component {
             explorerParameter: "",
             exploreOnlyDirs: false,
             areModFieldsRequired: '',
-
+            jsonPath: '',
+            modPath: '',
             loadNetParams: true,
             loadSimCfg: true,
             loadSimData: true,
@@ -75,12 +76,16 @@ export default class LoadFile extends React.Component {
     closeExplorerDialog(fieldValue) {
         var newState = { explorerDialogOpen: false };
         if (fieldValue) {
+            let fileName = fieldValue.path.replace(/^.*[\\\/]/, '');
+            let path = fieldValue.path.split(fileName).slice(0, -1).join('');     
             switch (this.state.explorerParameter) {
                 case "modFolder":
                     newState["modFolder"] = fieldValue.path;
+                    newState["modPath"] = path;
                     break;
                 case "jsonModelFolder":
                     newState["jsonModelFolder"] = fieldValue.path;
+                    newState["jsonPath"] = path;
                     break;
                 default:
                     throw ("Not a valid parameter!");
@@ -95,7 +100,7 @@ export default class LoadFile extends React.Component {
                 <SelectField
                     className="netpyneField"
                     errorText={this.state.areModFieldsRequired===undefined?"This field is required.":false}
-                    errorStyle={{color: orange500}}
+                    errorStyle={{color: orange500, marginBottom:-40}}
                     floatingLabelText="Are custom mod files required for this model?"
                     value={this.state.areModFieldsRequired}
                     onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
@@ -104,13 +109,16 @@ export default class LoadFile extends React.Component {
                     <MenuItem value={false} primaryText="no, only NEURON build-in mods." />
                 </SelectField>
                 <TextField 
+                    readOnly
                     className="netpyneFieldNoWidth" 
-                    style={{ float: 'left', width: '48%', cursor: 'pointer' }} 
-                    floatingLabelText="Path to mod files"
+                    style={{ float: 'left', width: '48%', cursor: 'pointer' , marginBottom: 15, marginTop:-10}} 
+                    floatingLabelText="Mod folder:"
                     disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
                     value={this.state.modFolder} 
                     onClick={() => this.showExplorerDialog('modFolder', true)} 
-                    readOnly 
+                    underlineStyle={{borderWidth:'1px'}}
+                    errorText={this.state.modPath!=''?'path: '+this.state.modPath:''} 
+                    errorStyle={{color: grey400}}
                 />
                 <div style={{ float: 'right', width: '47%', marginTop:25}}>
                     <Checkbox
@@ -121,16 +129,26 @@ export default class LoadFile extends React.Component {
                         onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
                     />
                 </div>
-                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onlyFiles={'.json'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
             </div>
         )
         
         var header = <CardHeader title="Load previews work" subtitle="JSON file" titleColor={blue500} />
         var content = (
             <CardText style={{marginTop: -22}}>
-                <div style={{width: '100%', marginTop: -22}}>
-                    <TextField className="netpyneField" style={{cursor: 'pointer' }} floatingLabelText="json model path" value={this.state.jsonModelFolder} onClick={() => this.showExplorerDialog('jsonModelFolder', false)} readOnly />
-                    <List > 
+                <div style={{width: '100%', marginTop: -22}}>   
+                    <TextField 
+                        readOnly
+                        className="netpyneField" 
+                        style={{cursor: 'pointer', marginBottom:15 }} 
+                        floatingLabelText="Json file:" 
+                        value={this.state.jsonModelFolder} 
+                        onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
+                        underlineStyle={{borderWidth:'1px'}}
+                        errorText={this.state.jsonPath!=''?'path: '+this.state.jsonPath:''} 
+                        errorStyle={{color: grey400}}
+                    />
+                    <List> 
                         {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
                             key={index}
                             leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}

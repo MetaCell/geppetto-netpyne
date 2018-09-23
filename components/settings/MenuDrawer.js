@@ -183,7 +183,7 @@ export default class MenuDrawer extends React.Component {
                 targetOrigin={{horizontal: 'left', vertical: 'top'}}
                 onRequestClose={()=>{this.closeMenu('main')}}
             >
-                <img style={{marginLeft: 20, marginTop: 5, marginBottom: 8}} src={NetPyNElogo} />
+                <img style={{marginLeft: 10, marginTop: 5, marginBottom: 8}} src={NetPyNElogo} />
                 <Divider/>
                 {this.state.tree.map((el, i)=>{return this.createMenus(el, icon[i])})}
             </Popover>

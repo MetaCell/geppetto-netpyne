@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import {blue500} from 'material-ui/styles/colors';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FileBrowser from '../general/FileBrowser';
+import FileBrowser from '../../general/FileBrowser';
 
 export default class ExportToDocker extends React.Component {
     constructor(props) {
@@ -54,7 +54,7 @@ export default class ExportToDocker extends React.Component {
         var header =  <CardHeader title="Docker" titleColor={blue500} subtitle="Create a Docker container for your model" />
         var content = (
             <CardText style={{marginTop: -22}}>
-                <TextField className="netpyneField" floatingLabelText="Container name" value={this.state.label} onClick={(e, v) => this.setState({label: v})}/>
+                <TextField className="netpyneField" floatingLabelText="Container name" value={this.state.label} onChange={(e, v) => {console.log(v); this.setState({label: v.toLowerCase()})}}/>
                 <TextField 
                     className="netpyneField" 
                     style={{ cursor: 'pointer', width: '100%'}} 

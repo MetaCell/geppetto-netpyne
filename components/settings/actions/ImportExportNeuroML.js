@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField'
 import { blue500 } from 'material-ui/styles/colors';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FileBrowser from '../general/FileBrowser';
+import FileBrowser from '../../general/FileBrowser';
 
 export default class ImportExportNeuroML extends React.Component {
     constructor(props) {
@@ -73,7 +73,7 @@ export default class ImportExportNeuroML extends React.Component {
                         onClick={() => this.showExplorerDialog('neuroMLFolder', false)} 
                         readOnly 
                     />
-                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onlyFiles={'.nml'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                 </CardText>
                 break
             case 6:

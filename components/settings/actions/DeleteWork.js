@@ -28,7 +28,7 @@ export default class DeleteWork extends React.Component {
 
     render() { 
         switch(this.props.requestID) { // maybe use it for import/export option
-            case 8: 
+            case 9: 
                 var header =  <CardHeader title="Clear" subtitle="Delete model" titleColor={blue500}/>
                 var content = <CardText style={{marginTop: -30}}><h4>The model will be deleted</h4></CardText>
                 break

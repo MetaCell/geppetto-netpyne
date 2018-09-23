@@ -19,7 +19,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     height: 768
   };
   casper.options.waitTimeout = 10000
-
+  // casper.options.verbose = false    // analize this option
   casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
   });
