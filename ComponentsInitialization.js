@@ -39,14 +39,18 @@ define(function (require) {
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
         GEPPETTO.G.setIdleTimeOut(-1);
-        GEPPETTO.G.debug(false); //Change this to true to see messages on the Geppetto console while loading
+        GEPPETTO.G.debug(true); //Change this to true to see messages on the Geppetto console while loading
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
         window.customJupyterModelLoad = function (module, model) {
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
+                //initialize the Geppetto Python connector
                 Utils.execPythonCommand('from netpyne_ui import geppetto_init');
+                //initialize NetPyNE-UI
                 Utils.execPythonCommand('from netpyne_ui.netpyneui_init import netpyne_geppetto');
+                //import the GUI sync to use the Python Controlled Capabilities
+                Utils.execPythonCommand('from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync');
             });
         }
 

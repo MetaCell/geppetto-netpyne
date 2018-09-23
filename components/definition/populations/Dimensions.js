@@ -41,8 +41,9 @@ export default class DimensionsComponent extends Component {
 
     updateLayout() {
         let requests = this.popDimensionsOptions.map((popDimensionsOption) => {
+            //FIXME Better to wrap calls rather than directly accessing objects
             return Utils
-                .sendPythonMessage("'" + popDimensionsOption.value + "' in netParams.popParams['" + this.state.modelName + "']");
+                .sendPythonMessage("'" + popDimensionsOption.value + "' in netpyne_geppetto.netParams.popParams['" + this.state.modelName + "']");
 
         });
 
