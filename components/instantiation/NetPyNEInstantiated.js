@@ -66,7 +66,6 @@ export default class NetPyNEInstantiated extends React.Component {
     }
     
     componentDidMount() {
-        console.log("mounted")
         this.refs.canvas.engine.setLinesThreshold(10000);
         this.refs.canvas.displayAllInstances();
     }
@@ -75,6 +74,15 @@ export default class NetPyNEInstantiated extends React.Component {
         GEPPETTO.on(GEPPETTO.Events.Instance_deleted, function (instance) {
             that.remove([instance]);
         });
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (this.props.frozenInstance!=nextProps.frozenInstance) {
+            var that = this.refs.canvas
+            GEPPETTO.on(GEPPETTO.Events.Instance_deleted, function (instance) {
+                that.remove([instance]);
+            });
+        }
     }
 
     componentDidUpdate = (prevProps) => {
