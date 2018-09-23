@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom'
 import { MenuItem } from 'material-ui/Menu';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -84,18 +83,19 @@ export default class NetPyNETabs extends React.Component {
 		}
   	}
 
-	restoreWidgetsFor = (value) => {
+	restoreWidgetsFor = (value, rename=false) => {
 		if (value != "define") {
 			if (this.widgets[value]) {
-				var widgets = this.widgets[value]
+				let widgets = this.widgets[value]
 				for (var w in widgets) {
+					if (rename && !widgets[w].getName().endsWith('(OLD)')) widgets[w].setName(widgets[w].getName()+' (OLD)')
 					widgets[w].show();
 				}
 			}
 		}
 	}
 	
-	cancelTransition = () => { //we don't know how much time passed between switching tabs and cancel, so better wait for the last setState
+	cancelTransition = () => { 
 		this.setState(({prevValue: pv, value: v, ...others})=>{ 
 			this.hideWidgetsFor(v);
 			this.restoreWidgetsFor(pv);
@@ -108,7 +108,7 @@ export default class NetPyNETabs extends React.Component {
 
   	handleChange = (tab) => {
 		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(tab);
+		this.restoreWidgetsFor(tab, true);
 		this.setState( ({value: pv, prevValue: xx, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
 			return {
 				value: tab,

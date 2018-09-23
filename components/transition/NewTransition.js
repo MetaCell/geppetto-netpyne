@@ -27,18 +27,19 @@ export default class NewTransition extends React.Component {
     componentDidUpdate (prevProps, prevState) {
         if (this.props.clickOnTab!=prevProps.clickOnTab) {
             if (this.props.tab!=prevProps.tab && this.props.tab=='simulate') {
-                if (!this.state.haveInstData) {
-                    Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
-                        .then(response => {if (response.constructor.name=='Array') this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}) 
+                if (this.props.fastForwardSimulation) { // re instantiate and re simulate network
+                    // this.simulate({ffs: true})
+                    this.setState({openDialog: true})
+                }
+                else if (this.props.fastForwardInstantiation) { // re instantiate network but do not simulate
+                    this.instantiate({usePrevInst: false})    
                 }
                 else {
-                    if (this.props.fastForwardSimulation) {
-                        this.simulate({ffs: true})
+                    if (!this.state.haveInstData) { // if there is no previous instance data
+                        Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
+                            .then(response => {if (response.constructor.name=='Array') this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}) 
                     }
-                    else if (this.props.fastForwardInstantiation) {
-                        this.instantiate({usePrevInst: false})    
-                    }
-                    else {
+                    else { // if has prev instance data
                         this.instantiate({usePrevInst: true})
                     }
                 }
@@ -77,6 +78,7 @@ export default class NewTransition extends React.Component {
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
                     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+                    this.setState({haveInstData: true})
             }
         });    
     }
