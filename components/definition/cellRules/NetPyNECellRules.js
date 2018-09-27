@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
@@ -237,7 +237,6 @@ export default class NetPyNECellRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      if (this.state.value && nextState.value) {
         newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
         if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
           var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
@@ -247,7 +246,6 @@ export default class NetPyNECellRules extends React.Component {
           var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
           newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
         }
-      }
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }

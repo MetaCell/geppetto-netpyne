@@ -1,11 +1,6 @@
 import React from 'react';
-import { MenuItem } from 'material-ui/Menu';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
 import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import { cyan500, cyan400, grey300 } from 'material-ui/styles/colors';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import { cyan500 } from 'material-ui/styles/colors';
 import NewTransition from './components/transition/NewTransition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -17,6 +12,7 @@ import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
+import NetPyNETabs2 from './components/settings/NetPyNETabs';
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -39,14 +35,11 @@ export default class NetPyNETabs extends React.Component {
             prevValue: 'define',
 			model: null,
 			tabClicked: false,
-			tabLabel: 'Create network',
 			freezeInstance: false,
 			freezeSimulation: false,
 			fastForwardInstantiation: true,
-			fastForwardSimulation: false,
-			transitionOptionsHovered: false
+			fastForwardSimulation: false
 		};
-		this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(this);
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
 		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
 		this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
@@ -121,16 +114,14 @@ export default class NetPyNETabs extends React.Component {
 	};
 
 	handleTransitionOptionsChange = (e, v) => {
-		if (v!=this.state.tabLabel) {
-			var state = {fastForwardInstantiation: false, fastForwardSimulation: false}
-			if (v=='Create and Simulate Network') {
-				state = {fastForwardInstantiation: true, fastForwardSimulation: true}
-			}
-			else if (v=='Create Network') {
-				state = {fastForwardInstantiation: true, fastForwardSimulation: false}
-			}
-			this.setState({tabLabel: v, ...state})
+		var state = {fastForwardInstantiation: false, fastForwardSimulation: false}
+		if (v=='Create and Simulate Network') {
+			state = {fastForwardInstantiation: true, fastForwardSimulation: true}
 		}
+		else if (v=='Create Network') {
+			state = {fastForwardInstantiation: true, fastForwardSimulation: false}
+		}
+		this.setState(state)
 	}
 
 	handleDeactivateInstanceUpdate = (netInstanceWasUpdated) => {
@@ -165,17 +156,6 @@ export default class NetPyNETabs extends React.Component {
 			return <div></div>
 		}
 		else {
-			var transitionDialog = <NewTransition 
-				tab={this.state.value} 
-				clickOnTab={this.state.tabClicked}
-				handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
-				freezeInstance={this.state.freezeInstance} 
-				handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
-				freezeSimulation={this.state.freezeSimulation} 
-				cancelTransition={this.cancelTransition}
-				fastForwardInstantiation={this.state.fastForwardInstantiation}
-				fastForwardSimulation={this.state.fastForwardSimulation}
-			/>;
 			if (this.state.value=='define'){
 				var content =  <div>
 					<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
@@ -200,27 +180,25 @@ export default class NetPyNETabs extends React.Component {
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
         					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%'}}>
-								<FlatButton onClick={()=>this.handleChange('define')} style={{flex: 1, borderRadius: 10}} backgroundColor={cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='define'?'#ffffff':grey300}} label="Define your Network" />
-								<FlatButton onClick={()=>this.handleChange('simulate')} style={{flex: 1, borderRadius: 10}} backgroundColor={this.state.transitionOptionsHovered?cyan400:cyan500} hoverColor={cyan400} labelStyle={{color: this.state.value=='simulate'?'#ffffff':grey300}} label={this.state.tabLabel} />
+								<NetPyNETabs2 handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
 							</ToolbarGroup>
-							<IconMenu
-								value={this.state.tabLabel} 
-								iconStyle={{color: '#ffffff'}} 
-								style={{position: 'absolute', top:'6px', right: '28px'}} 
-								iconButtonElement={<IconButton onMouseEnter={()=>this.setState({transitionOptionsHovered: true})} onMouseLeave={()=>this.setState({transitionOptionsHovered: false})}><NavigationExpandMoreIcon /></IconButton>} 
-								onChange={this.handleTransitionOptionsChange} 
-								useLayerForClickAway={true} 
-								targetOrigin={{horizontal: "right", vertical: "top"}}
-								anchorOrigin={{horizontal:"right", vertical: "bottom"}} 
-							>
-								<MenuItem primaryText="Create Network" value="Create Network" />
-								<MenuItem primaryText="Create and Simulate Network" value="Create and Simulate Network"/>
-								<MenuItem primaryText="Explore Existing Network" value="Explore Existing Network"/>
-							</IconMenu>
+							
 						</Toolbar>
 					</div>
+					
+					<NewTransition 
+						tab={this.state.value} 
+						clickOnTab={this.state.tabClicked}
+						handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
+						freezeInstance={this.state.freezeInstance} 
+						handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
+						freezeSimulation={this.state.freezeSimulation} 
+						cancelTransition={this.cancelTransition}
+						fastForwardInstantiation={this.state.fastForwardInstantiation}
+						fastForwardSimulation={this.state.fastForwardSimulation}
+					/>
+
 					{content}
-					{transitionDialog}
 				</div>
 			)
 		}

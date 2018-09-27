@@ -102,9 +102,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      if (this.state.value && nextState.value) {
         newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-      }
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
