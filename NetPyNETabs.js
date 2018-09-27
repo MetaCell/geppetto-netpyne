@@ -194,7 +194,6 @@ export default class NetPyNETabs extends React.Component {
 			
 			return (
 				<div style={{height: '100%', width:'100%'}} >
-					<div id="dimmer" style={{position: 'absolute', width: '100%', height:'100%', visibility: 'hidden', top: '0px', left: '0px', backgroundColor: '#000000', zIndex:5}} />
 					<div style={{position: 'relative', zIndex: '100'}}>
 						<Toolbar id="appBar" style={{backgroundColor: cyan500, width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
 							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >

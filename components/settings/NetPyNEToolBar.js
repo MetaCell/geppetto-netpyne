@@ -1,7 +1,7 @@
 import React from 'react';
 import SvgIcon from 'material-ui/SvgIcon';
 import FontIcon from 'material-ui/FontIcon';
-import { blue500, grey900 } from 'material-ui/styles/colors';
+// import { blue500, grey900 } from 'material-ui/styles/colors';
 import LoadFile from './actions/LoadFile';
 import SaveFile from './actions/SaveFile';
 import DeleteWork from './actions/DeleteWork';
@@ -16,7 +16,6 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Divider from 'material-ui/Divider';
 import NetPyNElogo from '../../components/general/NetPyNElogo.png'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
-import MenuDrawer from './MenuDrawer'
 import RequestHandler from './RequestHandler'
 
 // couldn't find good icons for import/export in FontAwesome
