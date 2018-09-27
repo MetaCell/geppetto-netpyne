@@ -105,8 +105,8 @@ export default class NetPyNEToolBar extends React.Component {
         return <div>
             <IconButton
                 tooltip={'File options'}
-                style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden', marginTop: -20 }} //controls the circle position
-                iconStyle={{ color: '#ffffff', marginTop: -4, marginLeft: -4 }}//controls icon position inside the circle
+                style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden' }}
+                iconStyle={{ color: '#ffffff', marginTop: -4, marginLeft: -4 }}
                 hoveredStyle={{ backgroundColor: '#26C6DA' }}
                 onClick={() => this.setState({ open: !this.state.open })}
             >
