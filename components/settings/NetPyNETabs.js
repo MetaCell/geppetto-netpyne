@@ -3,7 +3,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import FlatButton from 'material-ui/FlatButton';
-import { cyan500, cyan400, grey300 } from 'material-ui/styles/colors';
+import { cyan500, cyan400 } from 'material-ui/styles/colors';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 
 
@@ -32,11 +32,19 @@ export default class NetPyNETabs2 extends React.Component {
         this.props.handleTransitionOptionsChange(e,v)
     }
 
+    getLabelStyle(label){
+        var style = {color: 'white', fontWeight: 400}
+        if (label == this.state.label){
+            style['fontWeight'] = 600;
+        }
+        return style;
+    }
+
     render() {
 
         return <div style={{width: '100%', alignItems: 'center', display: 'flex'}}>
-            <FlatButton onClick={()=>this.handleChange('define')} style={{flex: 1, borderRadius: 10}} backgroundColor={cyan500} hoverColor={cyan400} labelStyle={{color: this.state.label=='define'?'#ffffff':grey300}} label="Define your Network" />
-            <FlatButton onClick={()=>this.handleChange('simulate')} style={{flex: 1, borderRadius: 10}} backgroundColor={this.state.transitionOptionsHovered?cyan400:cyan500} hoverColor={cyan400} labelStyle={{color: this.state.label=='simulate'?'#ffffff':grey300}} label={this.state.simulateTabLabel} />
+            <FlatButton onClick={()=>this.handleChange('define')} style={{flex: 1, borderRadius: 10}} backgroundColor={cyan500} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
+            <FlatButton onClick={()=>this.handleChange('simulate')} style={{flex: 1, borderRadius: 10}} backgroundColor={this.state.transitionOptionsHovered?cyan400:cyan500} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
                 value={this.state.simulateTabLabel} 
                 iconStyle={{color: '#ffffff'}} 
