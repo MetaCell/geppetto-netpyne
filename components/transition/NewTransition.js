@@ -49,7 +49,7 @@ export default class NewTransition extends React.Component {
 
     instantiate = (args) => {
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "INSTANTATING MODEL");
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "INSTANTIATING MODEL");
         Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [args])
             .then(response => {
                 var parsedResponse = JSON.parse(response);
