@@ -8,7 +8,7 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 
 
 
-export default class NetPyNETabs2 extends React.Component {
+export default class NetPyNETabs extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

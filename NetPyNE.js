@@ -1,7 +1,7 @@
 import React from 'react';
 import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import { cyan500 } from 'material-ui/styles/colors';
-import NewTransition from './components/transition/NewTransition';
+import Transition from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
@@ -12,7 +12,7 @@ import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
-import NetPyNETabs2 from './components/settings/NetPyNETabs';
+import NetPyNETabs from './components/settings/NetPyNETabs';
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -26,7 +26,7 @@ var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonContro
 
 
 
-export default class NetPyNETabs extends React.Component {
+export default class NetPyNE extends React.Component {
     constructor(props) {
         super(props);
         this.widgets = {};
@@ -180,13 +180,13 @@ export default class NetPyNETabs extends React.Component {
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
         					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
-								<NetPyNETabs2 handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
+								<NetPyNETabs handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
 							</ToolbarGroup>
 							
 						</Toolbar>
 					</div>
 					
-					<NewTransition 
+					<Transition 
 						tab={this.state.value} 
 						clickOnTab={this.state.tabClicked}
 						handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
