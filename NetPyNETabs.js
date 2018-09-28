@@ -179,7 +179,7 @@ export default class NetPyNETabs extends React.Component {
 							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
-        					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%'}}>
+        					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
 								<NetPyNETabs2 handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
 							</ToolbarGroup>
 							
