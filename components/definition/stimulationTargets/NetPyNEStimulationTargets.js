@@ -101,7 +101,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
         handleClick={this.selectStimulationTarget} />);
     };
     var selectedStimulationTarget = undefined;
-    if ((this.state.selectedStimulationTarget != undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
+    if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
       selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget}/>;
     };
 

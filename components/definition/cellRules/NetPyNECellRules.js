@@ -295,7 +295,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectCellRule} />);
       }
       var selectedCellRule = undefined;
-      if ((this.state.selectedCellRule != undefined) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
+      if ((this.state.selectedCellRule !== undefined) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
         selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
       }
 
@@ -332,7 +332,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectSection} />);
       }
       var selectedSection = undefined;
-      if ((this.state.selectedSection != undefined) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
+      if ((this.state.selectedSection !== undefined) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
         selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} />;
       }
 
@@ -380,7 +380,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectMechanism} />);
       }
       var selectedMechanism = undefined;
-      if ((this.state.selectedMechanism != undefined) && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
+      if ((this.state.selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(this.state.selectedMechanism) > -1) {
         selectedMechanism = <NetPyNEMechanism cellRule={this.state.selectedCellRule} section={this.state.selectedSection} name={this.state.selectedMechanism} model={mechanismsModel[this.state.selectedMechanism]} />;
       }
 

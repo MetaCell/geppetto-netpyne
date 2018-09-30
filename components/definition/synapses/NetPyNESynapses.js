@@ -101,7 +101,7 @@ export default class NetPyNESynapses extends React.Component {
         handleClick={this.selectSynapse} />);
     };
     var selectedSynapse = undefined;
-    if ((this.state.selectedSynapse != undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
+    if ((this.state.selectedSynapse !== undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
       selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} />;
     };
 
