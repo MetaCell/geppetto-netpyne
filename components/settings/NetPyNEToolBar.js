@@ -13,7 +13,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Divider from 'material-ui/Divider';
-import NetPyNElogo from '../../components/general/NetPyNElogo.png'
+import NetPyNElogo from '../../components/general/NetPyNe_logo.png'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import RequestHandler from './RequestHandler'
 
@@ -112,11 +112,11 @@ export default class NetPyNEToolBar extends React.Component {
             </IconButton>
             <Drawer
                 docked={false}
-                width={280}
+                width={265}
                 open={this.state.open}
                 onRequestChange={(open) => this.setState({ open })}
             >
-                <img style={{ marginLeft: 10, marginTop: 5, marginBottom: 8 }} src={NetPyNElogo} />
+                <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 8, width: 205 }} src={NetPyNElogo} />
                 <Divider />
                 <MenuItem primaryText="Open..." onClick={() => this.handleMenuItemClick(0)} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
                 <MenuItem primaryText="Save..." onClick={() => this.handleMenuItemClick(1)} leftIcon={<FontIcon className='fa fa-download' />} />
