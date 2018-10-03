@@ -31,17 +31,18 @@ export default class RequestHandler extends React.Component {
         else {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
             this.closeDialog();
-            var tab = args.tab
             Utils
                 .sendPythonMessage(action, [args])
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        if (tab!=undefined) this.props.changeTab(tab, args); //move to other tab
-                        if (tab=='simulate' && this.props.requestID!=6) {
+                        if (args.tab!=undefined) {
+                            this.props.changeTab(args.tab, args); //move to other tab
+                        }
+                        if (args.tab=='simulate' && this.props.requestID!=6) {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
-                            GEPPETTO.CommandController.log("The NetPyNE model "+tab+" was completed");
+                            GEPPETTO.CommandController.log("The NetPyNE model " + args.tab + " was completed");
                         }
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                         this.setState({spinning: false})
@@ -50,7 +51,7 @@ export default class RequestHandler extends React.Component {
             });
         }
     }
-
+    
     closeDialog = () => {
         this.setState({ open: false, spinning: true, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
     }

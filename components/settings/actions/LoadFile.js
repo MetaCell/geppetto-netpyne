@@ -8,6 +8,13 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import FileBrowser from '../../general/FileBrowser';
 
+const loadOptions = [
+    {label: 'High level specs.', label2: 'netParams', state: 'loadNetParams'},
+    {label: 'High level specs.', label2: 'simConfig', state: 'loadSimCfg'},
+    {label: 'Cells', label2: 'Instanciated Network', state: 'loadNet'},
+    {label: 'Data', label2: 'Spikes, traces, etc.', state: 'loadSimData'}
+]
+
 export default class LoadFile extends React.Component {
     constructor(props) {
         super(props);
@@ -27,12 +34,6 @@ export default class LoadFile extends React.Component {
             loadSimData: true,
             loadNet: true,
         }
-        this.options = [
-            {label: 'High level specs.', label2: 'netParams', state: 'loadNetParams'},
-            {label: 'High level specs.', label2: 'simConfig', state: 'loadSimCfg'},
-            {label: 'Cells', label2: 'Instanciated Network', state: 'loadNet'},
-            {label: 'Data', label2: 'Spikes, traces, etc.', state: 'loadSimData'}
-        ]
     }
 
     componentDidUpdate() {
@@ -45,26 +46,20 @@ export default class LoadFile extends React.Component {
     }
 
     performAction() {
-        if (this.state.areModFieldsRequired===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
+        if (this.state.areModFieldsRequired===undefined) { 
         }
         else if (this.state.areModFieldsRequired==='') {
             this.props.performAction('abort')
             this.setState({areModFieldsRequired: undefined, actionExecuted: true})
         }
         else {
-            var tab = undefined
-            var freezeInstance = false
-            var freezeSimulation = false
-            var action = 'netpyne_geppetto.loadModel';
-            var message = 'LOADING FILE';
-            
-            if (this.state.loadSimData || this.state.loadNet) tab = 'simulate'
-            //use by NetPyNETabs.js to know if re-instantiation and re-simulation is necessary
-            if (this.state.loadNet) {
-                freezeInstance = true
-                if (this.state.loadSimData) freezeSimulation = true
-            }
-            this.props.performAction(action, message, {...this.state, tab:tab, freezeInstance: freezeInstance, freezeSimulation: freezeSimulation})
+            // freeze instance means we will get the latest instance, so it will not be required an update of the instance in the future.
+            // similar for simulation
+            // tab controls whether we want to move to a different tab or to stay where we are. undefined == 'I dont want to move to other tab'
+            let freezeInstance = this.state.loadNet ? true : false
+            let freezeSimulation = freezeInstance && this.state.loadSimData ? true : false
+            let tab = this.state.loadSimData || this.state.loadNet ? true : undefined
+            this.props.performAction('netpyne_geppetto.loadModel', 'LOADING FILE', {...this.state, tab:tab, freezeInstance: freezeInstance, freezeSimulation: freezeSimulation})
             this.setState({actionExecuted: true})
         }
     }
@@ -95,77 +90,69 @@ export default class LoadFile extends React.Component {
     }
 
     render() {
-        var loadModFiles = (
-            <div>
-                <SelectField
-                    className="netpyneField"
-                    errorText={this.state.areModFieldsRequired===undefined?"This field is required.":false}
-                    errorStyle={{color: orange500, marginBottom:-40}}
-                    floatingLabelText="Are custom mod files required for this model?"
-                    value={this.state.areModFieldsRequired}
-                    onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
-                >
-                    <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                    <MenuItem value={false} primaryText="no, only NEURON build-in mods." />
-                </SelectField>
-                <TextField 
-                    readOnly
-                    className="netpyneFieldNoWidth" 
-                    style={{ float: 'left', width: '48%', cursor: 'pointer' , marginBottom: 15, marginTop:-10}} 
-                    floatingLabelText="Mod folder:"
-                    disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
-                    value={this.state.modFolder} 
-                    onClick={() => this.showExplorerDialog('modFolder', true)} 
-                    underlineStyle={{borderWidth:'1px'}}
-                    errorText={this.state.modPath!=''?'path: '+this.state.modPath:''} 
-                    errorStyle={{color: grey400}}
-                />
-                <div style={{ float: 'right', width: '47%', marginTop:25}}>
-                    <Checkbox
-                        className={"netpyneCheckbox"}
-                        disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired}
-                        label="Compile mod files"
-                        checked={this.state.compileMod}
-                        onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
-                    />
-                </div>
-                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onlyFiles={'.json'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-            </div>
-        )
-        
-        var header = <CardHeader title="Load previews work" subtitle="JSON file" titleColor={blue500} />
-        var content = (
-            <CardText style={{marginTop: -22}}>
-                <div style={{width: '100%', marginTop: -22}}>   
-                    <TextField 
-                        readOnly
-                        className="netpyneField" 
-                        style={{cursor: 'pointer', marginBottom:15 }} 
-                        floatingLabelText="Json file:" 
-                        value={this.state.jsonModelFolder} 
-                        onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
-                        underlineStyle={{borderWidth:'1px'}}
-                        errorText={this.state.jsonPath!=''?'path: '+this.state.jsonPath:''} 
-                        errorStyle={{color: grey400}}
-                    />
-                    <List> 
-                        {this.options.map((el, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
-                            key={index}
-                            leftCheckbox= {<Checkbox onCheck={() => this.setState(({[el.state]: oldState, ...others}) => {return {[el.state]: !oldState}})} checked={this.state[el.state]} />}
-                            primaryText={el.label}
-                            secondaryText={el.label2}
-                            />})
-                        }
-                    </List>
-                    {loadModFiles}
-                </div>
-            </CardText>
-        )
         
         return (
             <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
-                {header}
-                {content}
+                <CardHeader title="Load previews work" subtitle="JSON file" titleColor={blue500} />
+                <CardText style={{marginTop: -22}}>
+                    <div style={{width: '100%', marginTop: -22}}>   
+                        <TextField 
+                            readOnly
+                            className="netpyneField" 
+                            style={{cursor: 'pointer', marginBottom:15 }} 
+                            floatingLabelText="Json file:" 
+                            value={this.state.jsonModelFolder} 
+                            onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
+                            underlineStyle={{borderWidth:'1px'}}
+                            errorText={this.state.jsonPath!=''?'path: '+this.state.jsonPath:''} 
+                            errorStyle={{color: grey400}}
+                        />
+                        <List> 
+                            {loadOptions.map((loadOption, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
+                                key={index}
+                                leftCheckbox= {<Checkbox onCheck={() => this.setState(({[loadOption.state]: oldState, ...others}) => {return {[loadOption.state]: !oldState}})} checked={this.state[loadOption.state]} />}
+                                primaryText={loadOption.label}
+                                secondaryText={loadOption.label2}
+                                />})
+                            }
+                        </List>
+                        <div>
+                            <SelectField
+                                className="netpyneField"
+                                errorText={this.state.areModFieldsRequired===undefined?"This field is required.":false}
+                                errorStyle={{color: orange500, marginBottom:-40}}
+                                floatingLabelText="Are custom mod files required for this model?"
+                                value={this.state.areModFieldsRequired}
+                                onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
+                            >
+                                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
+                                <MenuItem value={false} primaryText="no, only NEURON build-in mods." />
+                            </SelectField>
+                            <TextField 
+                                readOnly
+                                className="netpyneFieldNoWidth" 
+                                style={{ float: 'left', width: '48%', cursor: 'pointer' , marginBottom: 15, marginTop:-10}} 
+                                floatingLabelText="Mod folder:"
+                                disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired} 
+                                value={this.state.modFolder} 
+                                onClick={() => this.showExplorerDialog('modFolder', true)} 
+                                underlineStyle={{borderWidth:'1px'}}
+                                errorText={this.state.modPath!=''?'path: '+this.state.modPath:''} 
+                                errorStyle={{color: grey400}}
+                            />
+                            <div style={{ float: 'right', width: '47%', marginTop:25}}>
+                                <Checkbox
+                                    className={"netpyneCheckbox"}
+                                    disabled={this.state.areModFieldsRequired===''?true:!this.state.areModFieldsRequired}
+                                    label="Compile mod files"
+                                    checked={this.state.compileMod}
+                                    onCheck={() => this.setState((oldState) => {return {compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}})}
+                                />
+                            </div>
+                            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={'.json'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                        </div>
+                    </div>
+                </CardText>
             </Card>
         )
     }

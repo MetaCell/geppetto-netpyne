@@ -182,7 +182,6 @@ export default class NetPyNE extends React.Component {
         					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
 								<NetPyNETabs handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
 							</ToolbarGroup>
-							
 						</Toolbar>
 					</div>
 					

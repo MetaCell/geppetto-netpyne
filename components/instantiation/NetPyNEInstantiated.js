@@ -27,7 +27,23 @@ const styles = {
     menuItem: {
         lineHeight: '28px',
         minHeight: '28px'
+    },
+    instantiatedContainer: {
+        height: '100%', 
+        width: '100%', 
+        position: 'fixed'
+    },
+    controlpanelBtn: {
+        position: 'absolute', 
+        left: 34, 
+        top: 16 
+    },
+    plotBtn: {
+        position: 'absolute', 
+        left: 34, 
+        top: 317 
     }
+        
 };
 const plots = [
     {id: 'connectionPlot',      primaryText: 'Connectivity',            plotName: 'Connections Plot',       plotMethod: 'plotConn',             plotType: false},
@@ -64,31 +80,36 @@ export default class NetPyNEInstantiated extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
     }
-    
-    componentDidMount() {
-        this.refs.canvas.engine.setLinesThreshold(10000);
-        this.refs.canvas.displayAllInstances();
-    }
-    componentWillUnmount(){
+
+    remove() {
         var that = this.refs.canvas
         GEPPETTO.on(GEPPETTO.Events.Instance_deleted, function (instance) {
             that.remove([instance]);
         });
     }
+    
+    display() {
+        this.refs.canvas.engine.setLinesThreshold(10000);
+        this.refs.canvas.displayAllInstances();
+    }
+    
+    componentDidMount() {
+        this.display;
+    }
+
+    componentWillUnmount(){
+        this.remove();
+    }
 
     componentWillUpdate(nextProps, nextState) {
         if (this.props.frozenInstance!=nextProps.frozenInstance) {
-            var that = this.refs.canvas
-            GEPPETTO.on(GEPPETTO.Events.Instance_deleted, function (instance) {
-                that.remove([instance]);
-            });
+            this.remove();
         }
     }
 
     componentDidUpdate = (prevProps) => {
         if (this.props.frozenInstance!=prevProps.frozenInstance) {
-            this.refs.canvas.engine.setLinesThreshold(10000);
-            this.refs.canvas.displayAllInstances();
+            this.display()
         }
     }
 
@@ -185,13 +206,13 @@ export default class NetPyNEInstantiated extends React.Component {
         if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    {plots.map((el, index) => {return <MenuItem id={"el.id"} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText={el.primaryText} onClick={() => { this.plotFigure(el.plotName, el.plotMethod, el.plotType)}} />})}
+                    {plots.map((plot, index) => {return <MenuItem id={plot.id} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText={plot.primaryText} onClick={() => { this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}} />})}
                 </Menu>
             );
         }
 
         return (
-            <div id="instantiatedContainer" style={{ height: '100%', width: '100%', position: 'fixed' }}>
+            <div id="instantiatedContainer" style={styles.instantiatedContainer}>
                 <Canvas
                     key={this.props.frozenInstance?"FronzenCanvas":"aliveCanvas"}
                     id="CanvasContainer"
@@ -207,14 +228,14 @@ export default class NetPyNEInstantiated extends React.Component {
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 34, top: 16 }}
+                <IconButton style={styles.controlpanelBtn}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 34, top: 317 }}
+                        style={styles.plotBtn}
                         label="Plot"
                         icon={"fa-bar-chart"}
                         id="PlotButton"

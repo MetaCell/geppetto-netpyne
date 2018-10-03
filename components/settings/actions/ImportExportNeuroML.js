@@ -73,7 +73,7 @@ export default class ImportExportNeuroML extends React.Component {
                         onClick={() => this.showExplorerDialog('neuroMLFolder', false)} 
                         readOnly 
                     />
-                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onlyFiles={'.nml'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={'.nml'} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                 </CardText>
                 break
             case 6:

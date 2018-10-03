@@ -114,7 +114,7 @@ export default class Transition extends React.Component {
             else var actions = <FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} key={"cancelActionBtn"} primary={true} />
         }
 
-        if (this.props.tab=='simulate' && this.state.haveInstData) {
+        if (this.props.tab=='simulate' ) {
             var refreshInstanceButton = (
                 <IconButton iconStyle={{color: pink400}} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 30, top: 60, width:'24px', height:'24px'}} tooltip={this.props.freezeInstance?"Your network is in sync":"Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{marginTop: -37, marginRight:10}}>
                     <FontIcon className="fa fa-refresh"/>

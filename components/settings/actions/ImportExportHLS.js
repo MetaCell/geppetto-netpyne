@@ -90,45 +90,6 @@ export default class ImportExportHLS extends React.Component {
     }
 
     render() {
-        var importModFiles = (
-          <div >
-            <SelectField
-                className="netpyneField"
-                style={{marginTop:0}}
-                errorText={this.state.loadMod===undefined?"This field is required.":false}
-                errorStyle={{color: orange500}}
-                floatingLabelText="Are custom mod files required for this model?"
-                value={this.state.loadMod}
-                onChange={(event, index, value) => this.setState({loadMod: value})}
-            >
-                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
-            </SelectField>
-            <TextField 
-              className="netpyneFieldNoWidth" 
-              style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
-              floatingLabelText="Path to mod files"
-              disabled={this.state.loadMod===''?true:!this.state.loadMod} 
-              value={this.state.modFolder} 
-              onClick={() => this.showExplorerDialog('modFolder', true, false)} 
-              readOnly 
-            />
-            <div style={{ float: 'right', width: '48%', marginTop: 20}}>
-              <Checkbox
-                  disabled={this.state.loadMod===''?true:!this.state.loadMod}
-                  className="netpyneCheckbox"
-                  label="Compile mod files"
-                  checked={this.state.compileMod}
-                  onCheck={() => this.setState((oldState) => {
-                      return {
-                          compileMod: !oldState.compileMod,
-                      };
-                  })}
-              />
-            </div>
-            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} onlyFiles={this.state.filterFiles} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-          </div>
-        )
         switch(this.props.requestID) {
             case 2:
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
@@ -158,7 +119,43 @@ export default class ImportExportHLS extends React.Component {
                             errorStyle={{color: grey400}}
                         />
                         <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
-                        {importModFiles}
+                        <div >
+                            <SelectField
+                                className="netpyneField"
+                                style={{marginTop:0}}
+                                errorText={this.state.loadMod===undefined?"This field is required.":false}
+                                errorStyle={{color: orange500}}
+                                floatingLabelText="Are custom mod files required for this model?"
+                                value={this.state.loadMod}
+                                onChange={(event, index, value) => this.setState({loadMod: value})}
+                            >
+                                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
+                                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
+                            </SelectField>
+                            <TextField 
+                            className="netpyneFieldNoWidth" 
+                            style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
+                            floatingLabelText="Path to mod files"
+                            disabled={this.state.loadMod===''?true:!this.state.loadMod} 
+                            value={this.state.modFolder} 
+                            onClick={() => this.showExplorerDialog('modFolder', true, false)} 
+                            readOnly 
+                            />
+                            <div style={{ float: 'right', width: '48%', marginTop: 20}}>
+                            <Checkbox
+                                disabled={this.state.loadMod===''?true:!this.state.loadMod}
+                                className="netpyneCheckbox"
+                                label="Compile mod files"
+                                checked={this.state.compileMod}
+                                onCheck={() => this.setState((oldState) => {
+                                    return {
+                                        compileMod: !oldState.compileMod,
+                                    };
+                                })}
+                            />
+                            </div>
+                            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={this.state.filterFiles} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                        </div>
                     </CardText>
                 break;
             case 5:

@@ -51,28 +51,24 @@ export default class ExportToDocker extends React.Component {
     }
 
     render() {
-        var header =  <CardHeader title="Docker" titleColor={blue500} subtitle="Create a Docker container for your model" />
-        var content = (
-            <CardText style={{marginTop: -22}}>
-                <TextField className="netpyneField" floatingLabelText="Container name" value={this.state.label} onChange={(e, v) => {console.log(v); this.setState({label: v.toLowerCase()})}}/>
-                <TextField 
-                    className="netpyneField" 
-                    style={{ cursor: 'pointer', width: '100%'}} 
-                    floatingLabelText="Path to mod folder"
-                    value={this.state.modFolder} 
-                    onClick={() => this.showExplorerDialog('modFolder', true)} 
-                    readOnly 
-                />
-                <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={true} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
-                <br/><h5> </h5>
-                <h5>The container is build in the background, so you can keep working or close the GUI.</h5>
-                <h5>Check out.log and err.log in the folder where you initialized the GUI</h5>
-            </CardText>
-        )
         return (
             <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
-                {header}
-                {content}
+                <CardHeader title="Docker" titleColor={blue500} subtitle="Create a Docker container for your model" />
+                <CardText style={{marginTop: -22}}>
+                    <TextField className="netpyneField" floatingLabelText="Container name" value={this.state.label} onChange={(e, v) => {console.log(v); this.setState({label: v.toLowerCase()})}}/>
+                    <TextField 
+                        className="netpyneField" 
+                        style={{ cursor: 'pointer', width: '100%'}} 
+                        floatingLabelText="Path to mod folder"
+                        value={this.state.modFolder} 
+                        onClick={() => this.showExplorerDialog('modFolder', true)} 
+                        readOnly 
+                    />
+                    <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={true} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
+                    <br/><h5> </h5>
+                    <h5>The container is build in the background, so you can keep working or close the GUI.</h5>
+                    <h5>Check out.log and err.log in the folder where you initialized the GUI</h5>
+                </CardText>
             </Card>
         )
     }

@@ -19,10 +19,7 @@ export default class ImportExportSonata extends React.Component {
         }
     }
 
-    performAction() { // send here the message
-        // var action = 'netpyne_geppetto.importModel';
-        // var message = GEPPETTO.Resources.IMPORTING_MODEL;
-        // this.props.performAction(action, message, this.state)
+    performAction() {
         this.setState({actionExecuted: true})
     }
 
