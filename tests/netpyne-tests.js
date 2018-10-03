@@ -52,11 +52,6 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
 
-  // casper.then(function() { //test initial state of consoles
-  //   this.echo("######## Test Consoles ######## ", "INFO");
-  //   testConsoles(test);
-  // });
-
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test popParams fields")
     testPopParamsFields(test);
@@ -145,7 +140,6 @@ function testConsoles(test) {
  * Load console, and test it hides/shows fine
  */
 function loadConsole(test, consoleButton, consoleContainer) {
-  // casper.clickLabel('Console', 'span');
   casper.thenClick('li[id="'+consoleButton+'"]', function(){
     this.waitUntilVisible('div[id="' + consoleContainer + '"]', function() {
       this.echo(consoleContainer + ' loaded.');
