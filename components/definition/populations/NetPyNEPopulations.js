@@ -12,12 +12,14 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      selectedPopulation: undefined
+      selectedPopulation: undefined,
+      populationDeleted: undefined
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
     this.deletePopulation = this.deletePopulation.bind(this);
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -50,7 +52,9 @@ export default class NetPyNEPopulations extends React.Component {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newPopulationName = this.hasSelectedPopulationBeenRenamed(prevState, this.state);
     if (newPopulationName !== undefined) {
-      this.setState({ selectedPopulation: newPopulationName });
+      this.setState({
+        selectedPopulation: newPopulationName,
+        populationDeleted: undefined });
     }
   }
 
@@ -60,7 +64,7 @@ export default class NetPyNEPopulations extends React.Component {
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.populationDeleted !== undefined));
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged;
   }
@@ -99,8 +103,19 @@ export default class NetPyNEPopulations extends React.Component {
     Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedPopulation: undefined});
+      this.setState({value: model, selectedPopulation: undefined}, populationDeleted: name);
     });
+  }
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   render() {
@@ -120,7 +135,7 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var selectedPopulation = undefined;
       if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
-        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
+        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
       }
     }
 
