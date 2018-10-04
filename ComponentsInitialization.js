@@ -12,7 +12,6 @@ define(function (require) {
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
         GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
         GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
-        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
         require('./css/netpyne.less');
         require('./css/material.less');
 
@@ -43,21 +42,13 @@ define(function (require) {
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
-        window.customJupyterModelLoad = function (module, model) {
-            window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
+        window.customJupyterModelLoad = function () {
                 //initialize the Geppetto Python connector
                 Utils.sendPythonMessage('from netpyne_ui import geppetto_init');
                 //initialize NetPyNE-UI
                 Utils.sendPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
                 //import the GUI sync to use the Python Controlled Capabilities
                 Utils.sendPythonMessage('from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync');
-
-                Utils.sendPythonMessage('from zmq.utils import jsonapi');
-                Utils.sendPythonMessage('from ipykernel.jsonutil import json_clean');
-                
-            });
         }
-
-
     };
 });
