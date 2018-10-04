@@ -88,7 +88,7 @@ export default class DimensionsComponent extends Component {
                                     this.triggerUpdate(function () {
                                         // Set Population Dimension Python Side
                                         Utils
-                                            .sendPythonMessage('netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
+                                            .sendPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
                                             .then(function (response) {
                                                 console.log("Setting Pop Dimensions Parameters");
                                                 console.log("Response", response);
