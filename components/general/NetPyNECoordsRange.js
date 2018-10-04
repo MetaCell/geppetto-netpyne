@@ -29,7 +29,7 @@ export default class NetPyNECoordsRange extends Component {
   };
 
   updateLayout() {
-    var message = this.props.model + "['" + this.props.name + "']";
+    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']";
     if (this.props.conds!=undefined) {
       message = message + "['" + this.props.conds + "']";
     };
