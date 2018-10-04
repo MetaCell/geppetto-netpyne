@@ -46,11 +46,15 @@ define(function (require) {
         window.customJupyterModelLoad = function (module, model) {
             window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
                 //initialize the Geppetto Python connector
-                Utils.execPythonCommand('from netpyne_ui import geppetto_init');
+                Utils.sendPythonMessage('from netpyne_ui import geppetto_init');
                 //initialize NetPyNE-UI
-                Utils.execPythonCommand('from netpyne_ui.netpyneui_init import netpyne_geppetto');
+                Utils.sendPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
                 //import the GUI sync to use the Python Controlled Capabilities
-                Utils.execPythonCommand('from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync');
+                Utils.sendPythonMessage('from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync');
+
+                Utils.sendPythonMessage('from zmq.utils import jsonapi');
+                Utils.sendPythonMessage('from ipykernel.jsonutil import json_clean');
+                
             });
         }
 

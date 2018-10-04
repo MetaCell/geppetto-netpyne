@@ -61,7 +61,7 @@ export default class NetPyNEPlots extends React.Component {
               'include': ['all']
             }
           };
-          Utils.execPythonCommand("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
+          Utils.sendPythonMessage("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
         }
       });
     this.setState({

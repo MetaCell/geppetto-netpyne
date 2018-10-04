@@ -76,7 +76,7 @@ export default class NetPyNESynapse extends React.Component {
   };
   
   handleSynMechModChange(event, index, value) {
-    Utils.execPythonCommand("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
+    Utils.sendPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
     this.setState({ synMechMod: value });
   };
 

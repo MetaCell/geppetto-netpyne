@@ -78,7 +78,7 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   handleStimSourceTypeChange(event, index, value) {
-    Utils.execPythonCommand("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
+    Utils.sendPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
     this.setState({ sourceType: value });
   };
 
