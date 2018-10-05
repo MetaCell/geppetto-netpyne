@@ -43,12 +43,9 @@ define(function (require) {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
         window.customJupyterModelLoad = function () {
-                //initialize the Geppetto Python connector
-                Utils.sendPythonMessage('from netpyne_ui import geppetto_init');
-                //initialize NetPyNE-UI
-                Utils.sendPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
-                //import the GUI sync to use the Python Controlled Capabilities
-                Utils.sendPythonMessage('from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync');
+                
+            //initialize NetPyNE-UI
+            Utils.sendPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
         }
     };
 });
