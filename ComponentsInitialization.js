@@ -45,7 +45,7 @@ define(function (require) {
         window.customJupyterModelLoad = function () {
                 
             //initialize NetPyNE-UI
-            Utils.sendPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
+            Utils.execPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
         }
     };
 });

@@ -35,7 +35,7 @@ export default class NetPyNEMechanism extends React.Component {
     var content = []
     if (this.state.currentName!=undefined && this.state.currentName!='') {
       Utils
-        .sendPythonMessage("netpyne_geppetto.getMechParams", [this.state.currentName])
+        .evalPythonMessage("netpyne_geppetto.getMechParams", [this.state.currentName])
         .then((response) => {
           if (JSON.stringify(this.state.mechFields)!=JSON.stringify(response))
           this.setState({mechFields: response})

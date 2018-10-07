@@ -25,7 +25,7 @@ export default class NetPyNEField extends Component {
         return new Promise((resolve, reject) => {
             if (this.realType == 'func') {
                 if (value != "" && value != undefined) {
-                    Utils.sendPythonMessage('netpyne_geppetto.validateFunction', [value]).then((response) => {
+                    Utils.evalPythonMessage('netpyne_geppetto.validateFunction', [value]).then((response) => {
                         if (!response) {
                             resolve({ errorMsg: 'Not a valid function' })
                         }
@@ -56,7 +56,7 @@ export default class NetPyNEField extends Component {
                 return this.default;
             }
             else if (!this.model.split(".")[0].startsWith('simConfig') || this.model.split(".")[1].startsWith('analysis')) {
-                Utils.sendPythonMessage('del netpyne_geppetto.' + this.model)
+                Utils.execPythonMessage('del netpyne_geppetto.' + this.model)
             }
         }
         return value;

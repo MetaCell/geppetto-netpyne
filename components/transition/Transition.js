@@ -51,7 +51,7 @@ const TransitionDialog = React.createClass({
         GEPPETTO.CommandController.log("The NetPyNE model is getting instantiated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.INSTANTIATING_MODEL);
         this.closeTransition();
-        Utils.sendPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
+        Utils.evalPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [])
             .then(response => {
                 // var parsedResponse = JSON.parse(response);
                 if (!this.processError(response)) {
@@ -67,7 +67,7 @@ const TransitionDialog = React.createClass({
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
         this.closeTransition();
-        Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [this.state])
+        Utils.evalPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [this.state])
             .then(response => {
                 // var parsedResponse = JSON.parse(response);
                 if (!this.processError(response)) {

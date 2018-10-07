@@ -79,7 +79,7 @@ export default class NetPyNEPopulations extends React.Component {
     var newPopulation = Object.assign({ name: populationId }, value);
 
     // Create Population Client side
-    Utils.sendPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
+    Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
 
     // Update state
     model[populationId] = newPopulation;
@@ -96,7 +96,7 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   deletePopulation(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedPopulation: undefined});

@@ -43,7 +43,7 @@ export default class DimensionsComponent extends Component {
         let requests = this.popDimensionsOptions.map((popDimensionsOption) => {
             //FIXME Better to wrap calls rather than directly accessing objects
             return Utils
-                .sendPythonMessage("'" + popDimensionsOption.value + "' in netpyne_geppetto.netParams.popParams['" + this.state.modelName + "']");
+                .evalPythonMessage("'" + popDimensionsOption.value + "' in netpyne_geppetto.netParams.popParams['" + this.state.modelName + "']");
 
         });
 
@@ -88,7 +88,7 @@ export default class DimensionsComponent extends Component {
                                     this.triggerUpdate(function () {
                                         // Set Population Dimension Python Side
                                         Utils
-                                            .sendPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
+                                            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
                                             .then(function (response) {
                                                 console.log("Setting Pop Dimensions Parameters");
                                                 console.log("Response", response);

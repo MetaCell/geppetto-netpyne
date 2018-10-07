@@ -93,7 +93,7 @@ const SettingsDialog = React.createClass({
             // Import/Export model python side
             this.closeDialog();
             Utils
-                .sendPythonMessage(action, [this.state])
+                .evalPythonMessage(action, [this.state])
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {

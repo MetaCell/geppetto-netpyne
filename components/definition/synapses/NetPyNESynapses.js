@@ -31,7 +31,7 @@ export default class NetPyNESynapses extends React.Component {
     var value = defaultSynapses[key];
     var model = this.state.value;
     var SynapseId = Utils.getAvailableKey(model, key);
-    Utils.sendPythonMessage('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
     this.setState({
       value: model,
       selectedSynapse: SynapseId
@@ -81,7 +81,7 @@ export default class NetPyNESynapses extends React.Component {
   };
 
   deleteSynapse(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedSynapse: undefined});

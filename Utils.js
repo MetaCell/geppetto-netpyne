@@ -2,12 +2,12 @@ import GeppettoJupyterUtils from '../../js/communication/geppettoJupyter/Geppett
 
 const Utils = {
 
-    sendPythonMessage: function (command, parameters) {
-        return GeppettoJupyterUtils.sendPythonMessage(command, parameters);
+    evalPythonMessage: function (command, parameters) {
+        return GeppettoJupyterUtils.evalPythonMessage(command, parameters);
     },
 
-    execPythonCommand: function (command) {
-        return GeppettoJupyterUtils.execPythonCommand(command);
+    execPythonMessage: function (command) {
+        return GeppettoJupyterUtils.execPythonMessage(command);
     },
 
     getAvailableKey: function (model, prefix) {
@@ -112,18 +112,19 @@ const Utils = {
     },
 
     renameKey(path, oldValue, newValue, callback) {
-        this.sendPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
+        this.evalPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
             .then((response) => {
                 callback(response, newValue);
+                GEPPETTO.trigger("Force_rerender", {  });
             })
     },
 
     pauseSync(callback) {
-        this.sendPythonMessage('timer.pause', []).then(callback());
+        this.evalPythonMessage('timer.pause', []).then(callback());
     },
 
     resumeSync(callback) {
-        this.sendPythonMessage('timer.resume', []).then(callback());
+        this.evalPythonMessage('timer.resume', []).then(callback());
     }
 
 }

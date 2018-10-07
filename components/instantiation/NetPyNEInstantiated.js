@@ -92,7 +92,7 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     plotFigure(plotName, plotMethod, plotType=false) {
-        Utils.sendPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType])
+        Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType])
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){

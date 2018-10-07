@@ -51,6 +51,10 @@ export default class NetPyNETabs extends React.Component {
       this.setState({ model: modelObject })
     });
 
+    GEPPETTO.on('Force_rerender', (taka) => {
+      this.forceUpdate();
+    });
+
   }
 
   hideWidgetsFor = (value) => {
