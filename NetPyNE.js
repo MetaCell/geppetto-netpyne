@@ -13,6 +13,7 @@ import NetPyNESimConfig from './components/definition/configuration/NetPyNESimCo
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
+import Utils from './Utils';
 
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
@@ -52,8 +53,49 @@ export default class NetPyNE extends React.Component {
       window.isDocker = nextProps.data.isDocker;
 
       this.setState({ model: nextProps.data })
-    }
+	}
+	
+	this.componentsSubscribedToGlobalRefresh = [];
   };
+
+  componentDidMount() {
+	GEPPETTO.on('global_refresh', (newValue, oldValue, label) => {
+		Utils.evalPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+			.then((unique) => {
+			this.componentsSubscribedToGlobalRefresh.forEach( that => {
+				if (that.id.includes(label)) {
+					let pythonDataClone
+					if (unique) //checking if I should remove the old value from the menu
+						pythonDataClone = that.state.pythonData.filter( v => v != oldValue )
+					else 
+						pythonDataClone = [...that.state.pythonData]
+
+					if (newValue && that.state.pythonData.indexOf(newValue)==-1) { //checking if I should add a new  item to the menu
+						that.setState({pythonData: [ ...pythonDataClone, newValue]})
+					}
+					else {
+						that.setState({pythonData: pythonDataClone})
+					}
+				}
+			})
+			})
+		})
+		GEPPETTO.on('subscribe_to_global_refresh', (contexts) => {
+			console.log("%cWELCOME ONBOARD:", "color: green")
+			const newCustomers = Object.values(contexts)
+			const ids = newCustomers.map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = [ ...this.componentsSubscribedToGlobalRefresh, ...newCustomers ]
+			
+		});
+
+		GEPPETTO.on('unsubscribe_from_global_refresh', (contexts) => {
+			console.log("%cSORRY TO SEE YOU GO:", "color: blue")
+			const ids = Object.values(contexts).map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = this.componentsSubscribedToGlobalRefresh.filter( ({ id }) => ids.indexOf(id) == -1)
+		})
+	}
 
   hideWidgetsFor = (value) => {
 		if (value != "define") {

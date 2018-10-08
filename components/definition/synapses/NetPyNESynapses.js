@@ -36,6 +36,7 @@ export default class NetPyNESynapses extends React.Component {
       value: model,
       selectedSynapse: SynapseId
     });
+    GEPPETTO.trigger("global_refresh", SynapseId, '', 'synMech')
   };
 
   hasSelectedSynapseBeenRenamed(prevState, currentState) {
@@ -86,6 +87,7 @@ export default class NetPyNESynapses extends React.Component {
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedSynapse: undefined});
+      GEPPETTO.trigger("global_refresh", null, name, 'synMech')
     });
   }
 

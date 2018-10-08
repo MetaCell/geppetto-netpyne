@@ -1,0 +1,210 @@
+import React, { Component } from 'react';
+import Tabs, { Tab } from 'material-ui/Tabs';
+import Card, { CardHeader, CardText } from 'material-ui/Card';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
+import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
+import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
+import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
+import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
+import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
+import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
+import Utils from './Utils';
+import IconButton from 'material-ui/IconButton';
+import SettingsDialog from './components/settings/Settings';
+import TransitionDialog from './components/transition/Transition';
+import FontIcon from 'material-ui/FontIcon';
+
+var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
+var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
+var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
+var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
+var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
+var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
+var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
+
+export default class NetPyNETabs extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.widgets = {};
+    this.state = {
+      value: 'define',
+      prevValue: 'define',
+      model: null,
+      settingsOpen: false
+    };
+
+    GEPPETTO.on('OriginalModelLoaded', (model) => {
+      var modelObject = JSON.parse(model);
+      window.metadata = modelObject.metadata;
+      window.requirement = modelObject.requirement;
+      window.isDocker = modelObject.isDocker;
+      window.currentFolder = modelObject.currentFolder;
+      this.setState({ model: modelObject })
+      
+    });
+    this.componentsSubscribedToGlobalRefresh = [];
+  }
+
+  componentDidMount() {
+		GEPPETTO.on('global_refresh', (newValue, oldValue, label) => {
+      Utils.sendPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+        .then((unique) => {
+          this.componentsSubscribedToGlobalRefresh.forEach( that => {
+            console.log(that)
+            if (that.id.includes(label)) {
+              let pythonDataClone
+              if (unique) //checking if I should remove the old value from the menue
+                pythonDataClone = that.state.pythonData.filter( v => v!=oldValue )
+              else 
+                pythonDataClone = [...that.state.pythonData]
+
+              if (newValue && that.state.pythonData.indexOf(newValue)==-1) { //checking if I should add a new  item to the menu
+                that.setState({pythonData: [ ...pythonDataClone, newValue]})
+              }
+              else {
+                that.setState({pythonData: pythonDataClone})
+              }
+            }
+          })
+        })
+    })
+
+		GEPPETTO.on('subscribe_to_global_refresh', (contexts) => {
+			console.log("%cWELCOME ONBOARD:", "color: green")
+			const newCustomers = Object.values(contexts)
+			const ids = newCustomers.map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = [ ...this.componentsSubscribedToGlobalRefresh, ...newCustomers ]
+			
+		});
+
+		GEPPETTO.on('unsubscribe_from_global_refresh', (contexts) => {
+			console.log("%cSORRY TO SEE YOU GO:", "color: blue")
+			const ids = Object.values(contexts).map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = this.componentsSubscribedToGlobalRefresh.filter( ({ id }) => ids.indexOf(id) == -1)
+		})
+  }
+  
+  hideWidgetsFor = (value) => {
+    if (value != "define") {
+      var page = this.refs[value];
+      if (page) {
+        var widgets = page.getOpenedWidgets();
+        if (this.widgets[value]) {
+          widgets = widgets.concat(this.widgets[value]);
+        }
+        for (var w in widgets) {
+          if(!widgets[w].destroyed){
+            widgets[w].hide();
+          }
+          else{
+            delete widgets[w];
+          }
+        }
+        this.widgets[value] = widgets;
+      }
+    }
+  }
+
+  restoreWidgetsFor = (value) => {
+    if (value != "define") {
+      var widgets = this.widgets[value];
+      if (widgets) {
+        for (var w in widgets) {
+            widgets[w].show();
+        }
+      }
+    }
+  }
+
+  handleChange = (value) => {
+    this.hideWidgetsFor(this.state.value);
+    this.restoreWidgetsFor(value);
+
+    this.setState({
+      prevValue: this.state.value,
+      value: value,
+      transitionDialog: true
+    });
+  };
+
+  openSettings = () => {
+    this.setState({ settingsOpen: true });
+  }
+
+  cancelTransition=()=>{
+    this.hideWidgetsFor(this.state.value);
+    this.restoreWidgetsFor(this.state.prevValue);
+
+    this.setState({
+      prevValue: this.state.value,
+      value: this.state.prevValue,
+      transitionDialog: false
+    });
+  }
+
+  closeSettings = () => {
+    this.setState({ settingsOpen: false });
+  }
+
+  render() {
+
+    if (this.state.model == null) {
+      return (<div></div>)
+    }
+
+    var defineContent = this.state.value == "define" ? (
+      <div>
+        <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
+        <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
+        <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+        <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+        <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+        <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
+        <NetPyNESimConfig model={this.state.model.simConfig} />
+        <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
+      </div>
+    ) : (<div></div>);
+    var exploreContent = this.state.value == "explore" ? (<NetPyNEInstantiated ref={"explore"} model={this.state.model} page={"explore"} />) : (<div></div>);
+    var simulateContent = this.state.value == "simulate" ? (<NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />) : (<div></div>);
+    var bottomValue = this.state.value == "define" ? 35 : 0;
+    var transitionDialog = this.state.transitionDialog ? (<TransitionDialog tab={this.state.value} cancelTransition={this.cancelTransition}/>):(<div></div>);
+    return (
+      <div>
+        <Tabs
+          value={this.state.value}
+          style={{ height: '100%', width: 'calc(100% - 48px)', float: 'left' }}
+          tabTemplateStyle={{ height: '100%' }}
+          contentContainerStyle={{ bottom: bottomValue, position: 'absolute', top: 48, left: 0, right: 0, overflow: 'auto' }}
+          onChange={this.handleChange}
+        >
+          <Tab label="Define your network" value="define" id={"defineNetwork"}>
+            {defineContent}
+          </Tab>
+          <Tab label="Explore your network" value="explore" id={"exploreNetwork"}>
+            {exploreContent}
+          </Tab>
+          <Tab label="Simulate and analyse" value="simulate" id={"simulateNetwork"}>
+            {simulateContent}
+          </Tab>
+        </Tabs>
+        <div id="settingsIcon" style={{ float: 'left', width: '48px', backgroundColor: 'rgb(0, 188, 212)' }}>
+          <IconButton id="setupNetwork"onClick={this.openSettings}>
+            <FontIcon className={"fa fa-cog"} />
+          </IconButton>
+        </div>
+        <SettingsDialog open={this.state.settingsOpen} onRequestClose={this.closeSettings} />
+        {transitionDialog}
+        
+      </div>
+    )
+  }
+}

@@ -109,6 +109,10 @@ const Utils = {
             .then((response) => {
                 callback(response, newValue);
             })
+            .then(() => {
+                if (path=='netParams.popParams')
+                    GEPPETTO.trigger("global_refresh", newValue, oldValue, "['pop']")
+            })
     },
 
     //FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually

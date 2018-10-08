@@ -35,6 +35,7 @@ export default class NetPyNEStimulationSources extends React.Component {
       value: model,
       selectedStimulationSource: StimulationSourceId
     });
+    GEPPETTO.trigger("global_refresh", StimulationSourceId, '', 'source')
   };
 
   hasSelectedStimulationSourceBeenRenamed(prevState, currentState) {
@@ -85,7 +86,9 @@ export default class NetPyNEStimulationSources extends React.Component {
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedStimulationSource: undefined});
+      GEPPETTO.trigger("global_refresh", null, name, 'source')
     });
+    
   }
 
   render() {

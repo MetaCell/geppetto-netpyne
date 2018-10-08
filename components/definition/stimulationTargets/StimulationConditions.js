@@ -17,6 +17,14 @@ export default class StimulationConditions extends React.Component {
     };
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
   };
+
+  componentDidMount() {
+    GEPPETTO.trigger('subscribe_to_global_refresh', this.refs)
+  }
+  
+  componentWillUnmount() {
+    GEPPETTO.trigger('unsubscribe_from_global_refresh', this.refs)
+  }
   
   postProcessMenuItems(pythonData, selected) {
     return pythonData.map((name) => (
@@ -36,6 +44,7 @@ export default class StimulationConditions extends React.Component {
       <div>
         <NetPyNEField id={"netParams.stimTargetParams.conds.pop"} >
           <PythonMethodControlledSelectField
+            ref={"stimTargetParamsCondsPop"}
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['pop']"}
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
@@ -45,6 +54,7 @@ export default class StimulationConditions extends React.Component {
         
         <NetPyNEField id={"netParams.stimTargetParams.conds.cellModel"} >
           <PythonMethodControlledSelectField
+            ref={"stimTargetParamsCondsCellModel"}
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellModel']"}
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
@@ -54,6 +64,7 @@ export default class StimulationConditions extends React.Component {
         
         <NetPyNEField id={"netParams.stimTargetParams.conds.cellType"} >
           <PythonMethodControlledSelectField
+            ref={"stimTargetParamsCondsCellType"}
             model={"netParams.stimTargetParams['" + this.props.name + "']['conds']['cellType']"}
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}

@@ -34,7 +34,7 @@ export default class NetPyNECoordsRange extends Component {
       message = message + "['" + this.props.conds + "']";
     };
     Utils
-      .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
+      .evalPythonMessage("['" + this.props.name + "' in netpyne_geppetto." + this.props.model + " and key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
       .then((response) => {
         if (response[0]) {
           this.setState({rangeType: this.props.items[0].value});
