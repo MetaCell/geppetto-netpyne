@@ -92,7 +92,7 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     plotFigure(plotName, plotMethod, plotType=false) {
-        Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType])
+        Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType], false)
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){
@@ -112,7 +112,8 @@ export default class NetPyNEInstantiated extends React.Component {
                     this.processError(response, plotName)
                 }
                 else {
-                    this.newPlotWidget(plotName, response, response, 0, 0);
+                    var filteredResponse = response.replace(/\\n|\\r\\n|\\r/g, '')
+                    this.newPlotWidget(plotName, filteredResponse, filteredResponse, 0, 0);
                 }
             });
     }
