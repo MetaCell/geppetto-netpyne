@@ -115,7 +115,6 @@ const Utils = {
         this.evalPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
             .then((response) => {
                 callback(response, newValue);
-                GEPPETTO.trigger("Force_rerender", {  });
             })
     },
 
