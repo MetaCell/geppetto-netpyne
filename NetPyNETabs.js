@@ -44,7 +44,6 @@ export default class NetPyNETabs extends React.Component {
       var modelObject = JSON.parse(model);
       //FIXME: Abusing window object!
       window.metadata = modelObject.metadata;
-      window.requirement = modelObject.requirement;
       window.context = modelObject.context;
       window.isDocker = modelObject.isDocker;
       window.currentFolder = modelObject.currentFolder;
