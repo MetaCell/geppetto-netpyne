@@ -10,8 +10,10 @@ define(function (require) {
         var Console = require('../../js/components/interface/console/Console');
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
-        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
-        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
+        
+        GEPPETTO.GeppettoJupyterSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterSync');
+
+        
         require('./css/netpyne.less');
         require('./css/material.less');
 
