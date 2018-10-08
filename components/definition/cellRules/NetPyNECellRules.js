@@ -89,7 +89,7 @@ export default class NetPyNECellRules extends React.Component {
       model[selectedCellRule]['secs'] = {};
       Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"] = {}');
     }
-    Utils.sendPythexecPythonMessageonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
 
     // Update state
     this.setState({
