@@ -47,10 +47,37 @@ export default class NetPyNETabs extends React.Component {
       window.isDocker = modelObject.isDocker;
       window.currentFolder = modelObject.currentFolder;
       this.setState({ model: modelObject })
+      
     });
-
+    this.componentsSubscribedToGlobalRefresh = [];
   }
+  componentDidMount() {
+		GEPPETTO.on('global_refresh', (newValue, oldValue) => {
+			console.log("%cREFRESH ", "color: green")
+			this.componentsSubscribedToGlobalRefresh.forEach( ({ state: { value }, handleChange, callPythonMethod }) => {
+				callPythonMethod()
+				if (value==oldValue) 
+					handleChange(null, 0, newValue)
+			});
+		});
 
+		GEPPETTO.on('subscribe_to_global_refresh', (contexts) => {
+			console.log("%cWELCOME ONBOARD:", "color: green")
+			const newCustomers = Object.values(contexts)
+			const ids = newCustomers.map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = [ ...this.componentsSubscribedToGlobalRefresh, ...newCustomers ]
+			
+		});
+
+		GEPPETTO.on('unsubscribe_from_global_refresh', (contexts) => {
+			console.log("%cSORRY TO SEE YOU GO:", "color: blue")
+			const ids = Object.values(contexts).map(({ id }) => id )
+			console.table(ids)
+			this.componentsSubscribedToGlobalRefresh = this.componentsSubscribedToGlobalRefresh.filter( ({ id }) => ids.indexOf(id) == -1)
+		})
+  }
+  
   hideWidgetsFor = (value) => {
     if (value != "define") {
       var page = this.refs[value];

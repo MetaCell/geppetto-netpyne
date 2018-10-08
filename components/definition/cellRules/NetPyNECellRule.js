@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
@@ -20,6 +20,14 @@ export default class NetPyNECellRule extends React.Component {
       importCellOpen: false
     };
   };
+
+  componentDidMount() {
+    GEPPETTO.trigger('subscribe_to_global_refresh', this.refs)
+  }
+  
+  componentWillUnmount() {
+    GEPPETTO.trigger('unsubscribe_from_global_refresh', this.refs)
+  }
 
   handleRenameChange = (event) => {
     var that = this;
@@ -80,6 +88,7 @@ export default class NetPyNECellRule extends React.Component {
 
           <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
             <PythonMethodControlledSelectField
+              ref={"cellParamsCondsCellType"}
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
               method={"netpyne_geppetto.getAvailableCellTypes"}
               postProcessItems={this.postProcessMenuItems}
@@ -89,6 +98,7 @@ export default class NetPyNECellRule extends React.Component {
           
           <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
             <PythonMethodControlledSelectField
+              ref={"cellParamsCondsCellModel"}
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
               method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
@@ -98,6 +108,7 @@ export default class NetPyNECellRule extends React.Component {
 
           <NetPyNEField id={"netParams.cellParams.conds.pop"} >
             <PythonMethodControlledSelectField
+              ref={"cellParamsCondsPop"}
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
               method={"netpyne_geppetto.getAvailablePops"}
               postProcessItems={this.postProcessMenuItems}
