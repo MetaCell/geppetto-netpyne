@@ -81,7 +81,8 @@ export default class NetPyNESynapses extends React.Component {
   };
 
   deleteSynapse(name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
+    var parameter = "synMechParams['" + name + "']"
+    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedSynapse: undefined});

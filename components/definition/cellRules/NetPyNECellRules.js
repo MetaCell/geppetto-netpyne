@@ -251,7 +251,8 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   deleteCellRule(name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + name + "']"]).then((response) =>{
+    var parameter = "cellParams['" + name + "']"
+    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedCellRule: undefined});
@@ -260,7 +261,8 @@ export default class NetPyNECellRules extends React.Component {
 
   deleteMechanism(name) {
     if(this.state.selectedCellRule != undefined && this.state.selectedSection != undefined) {
-      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + this.state.selectedCellRule + "']['secs']['" + this.state.selectedSection + "']['mechs']['" + name + "']"]).then((response) =>{
+      var parameter = "cellParams['" + this.state.selectedCellRule + "']['secs']['" + this.state.selectedSection + "']['mechs']['" + name + "']"
+      Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
         var model = this.state.value;
         delete model[this.state.selectedCellRule].secs[this.state.selectedSection]['mechs'][name];
         this.setState({value: model, selectedMechanism: undefined});
@@ -270,7 +272,8 @@ export default class NetPyNECellRules extends React.Component {
 
   deleteSection(name) {
     if(this.state.selectedCellRule != undefined) {
-      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + this.state.selectedCellRule + "']['secs']['" + name + "']"]).then((response) =>{
+      var parameter = "cellParams['" + this.state.selectedCellRule + "']['secs']['" + name + "']"
+      Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
         var model = this.state.value;
         delete model[this.state.selectedCellRule]['secs'][name];
         this.setState({value: model, selectedSection: undefined});
