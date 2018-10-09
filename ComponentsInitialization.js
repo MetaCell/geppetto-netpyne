@@ -52,6 +52,7 @@ define(function (require) {
                 var data = JSON.parse(response.replace(/\\/g, "/"))
                 console.log(data)
                 ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
+                GEPPETTO.trigger("spinner:hide");
             })
         });
     };
