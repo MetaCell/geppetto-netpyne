@@ -44,10 +44,9 @@ define(function (require) {
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
-        window.customJupyterModelLoad = function () {
-                
-            //initialize NetPyNE-UI
+
+        GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
             Utils.execPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
-        }
+        });
     };
 });
