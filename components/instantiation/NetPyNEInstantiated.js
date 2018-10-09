@@ -112,8 +112,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     this.processError(response, plotName)
                 }
                 else {
-                    var filteredResponse = response.replace(/\\n|\\r\\n|\\r/g, '')
-                    this.newPlotWidget(plotName, filteredResponse, filteredResponse, 0, 0);
+                    this.newPlotWidget(plotName, response, response, 0, 0);
                 }
             });
     }
