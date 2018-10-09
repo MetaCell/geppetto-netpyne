@@ -112,7 +112,7 @@ const Utils = {
     },
 
     renameKey(path, oldValue, newValue, callback) {
-        this.evalPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
+        this.execPythonMessage('netpyne_geppetto.rename("' + path + '","' + oldValue + '","' + newValue + '")')
             .then((response) => {
                 callback(response, newValue);
             })
