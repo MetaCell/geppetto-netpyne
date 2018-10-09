@@ -65,7 +65,7 @@ export default class NetPyNEStimulationSource extends React.Component {
   updateLayout() {
     var opts = this.stimSourceTypeOptions.map((option) => { return option.type });
     Utils
-      .evalPythonMessage("[value == netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in "+JSON.stringify(opts)+"]")
+      .evalPythonMessage("[value == netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in "+JSON.stringify(opts)+"]")
       .then((responses) => {
         if (responses.constructor.name == "Array"){
           responses.forEach( (response, index) => {
