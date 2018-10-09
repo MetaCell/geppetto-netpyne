@@ -52,7 +52,7 @@ export default class NetPyNETabs extends React.Component {
     //TODO: we need to define the rules here
     if (this.props.data != nextProps.data) {
       console.log("Initialising NetPyNE Tabs")
-      window.metadata = nextProps.data['metadata'];
+      window.metadata = nextProps.data.metadata;
       window.context = nextProps.data.context;
       window.currentFolder = nextProps.data.currentFolder;
       this.setState({ model: nextProps.data })
