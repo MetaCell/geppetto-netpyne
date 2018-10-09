@@ -35,16 +35,6 @@ export default class NetPyNETabs extends React.Component {
       model: null,
       settingsOpen: false
     };
-
-    // GEPPETTO.on('OriginalModelLoaded', (model) => {
-    //   var modelObject = JSON.parse(model);
-    //   //FIXME: Abusing window object!
-    //   window.metadata = modelObject.metadata;
-    //   window.context = modelObject.context;
-    //   window.currentFolder = modelObject.currentFolder;
-    //   this.setState({ model: modelObject })
-    // });
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,7 +43,7 @@ export default class NetPyNETabs extends React.Component {
     if (this.props.data != nextProps.data) {
       console.log("Initialising NetPyNE Tabs")
       window.metadata = nextProps.data.metadata;
-      window.context = nextProps.data.context;
+      // window.context = nextProps.data.context;
       window.currentFolder = nextProps.data.currentFolder;
       this.setState({ model: nextProps.data })
     }
