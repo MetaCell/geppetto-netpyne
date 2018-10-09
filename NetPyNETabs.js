@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
 import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
@@ -12,7 +9,6 @@ import NetPyNEStimulationTargets from './components/definition/stimulationTarget
 import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
 import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
-import Utils from './Utils';
 import IconButton from 'material-ui/IconButton';
 import SettingsDialog from './components/settings/Settings';
 import TransitionDialog from './components/transition/Transition';
@@ -40,17 +36,28 @@ export default class NetPyNETabs extends React.Component {
       settingsOpen: false
     };
 
-    GEPPETTO.on('OriginalModelLoaded', (model) => {
-      var modelObject = JSON.parse(model);
-      //FIXME: Abusing window object!
-      window.metadata = modelObject.metadata;
-      window.context = modelObject.context;
-      window.isDocker = modelObject.isDocker;
-      window.currentFolder = modelObject.currentFolder;
-      this.setState({ model: modelObject })
-    });
+    // GEPPETTO.on('OriginalModelLoaded', (model) => {
+    //   var modelObject = JSON.parse(model);
+    //   //FIXME: Abusing window object!
+    //   window.metadata = modelObject.metadata;
+    //   window.context = modelObject.context;
+    //   window.currentFolder = modelObject.currentFolder;
+    //   this.setState({ model: modelObject })
+    // });
 
   }
+
+  componentWillReceiveProps(nextProps) {
+    // switch (nextProps.tab) {
+    //TODO: we need to define the rules here
+    if (this.props.data != nextProps.data) {
+      console.log("Initialising NetPyNE Tabs")
+      window.metadata = nextProps.data['metadata'];
+      window.context = nextProps.data.context;
+      window.currentFolder = nextProps.data.currentFolder;
+      this.setState({ model: nextProps.data })
+    }
+  };
 
   hideWidgetsFor = (value) => {
     if (value != "define") {

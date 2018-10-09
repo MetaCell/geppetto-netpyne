@@ -125,6 +125,7 @@ const Utils = {
     resumeSync(callback) {
         this.evalPythonMessage('timer.resume', []).then(callback());
     }
+
 }
 
 export default Utils
