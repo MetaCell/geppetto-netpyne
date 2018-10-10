@@ -11,9 +11,6 @@ define(function (require) {
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
         
-        // GEPPETTO.GeppettoJupyterSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterSync');
-
-        
         require('./css/netpyne.less');
         require('./css/material.less');
 
@@ -50,7 +47,6 @@ define(function (require) {
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
                 //FIXME: Hack to remove backslashes manually
                 var data = JSON.parse(response.replace(/\\/g, "/"))
-                console.log(data)
                 ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
                 GEPPETTO.trigger("spinner:hide");
             })
