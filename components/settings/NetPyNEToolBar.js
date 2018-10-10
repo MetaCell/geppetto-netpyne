@@ -140,7 +140,7 @@ export default class NetPyNEToolBar extends React.Component {
                         <MenuItem onClick={() => this.handleMenuItemClick(8)} primaryText="Create Docker container" />
                     ]}
                 />
-                <MenuItem onClick={() => this.handleMenuItemClick(9)} leftIcon={<FontIcon className='fa fa-trash-o' />} primaryText="Delete current work" />
+                <MenuItem onClick={() => this.handleMenuItemClick(9)} leftIcon={<FontIcon className='fa fa-trash-o' />} primaryText="Remove current project" />
             </Drawer>
 
             <RequestHandler
