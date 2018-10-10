@@ -59,18 +59,18 @@ export default class NetPyNEStimulationTargets extends React.Component {
         };
       };
     };
-    return false;
+    return undefined;
   };
  
   componentDidUpdate(prevProps, prevState) {
     var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(prevState, this.state);
-    if (newStimulationTargetName) {
+    if (newStimulationTargetName !== undefined) {
       this.setState({ selectedStimulationTarget: newStimulationTargetName });
     };
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
@@ -101,7 +101,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
         handleClick={this.selectStimulationTarget} />);
     };
     var selectedStimulationTarget = undefined;
-    if (this.state.selectedStimulationTarget && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
+    if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
       selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget}/>;
     };
 
