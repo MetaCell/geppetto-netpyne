@@ -43,7 +43,6 @@ export default class NetPyNE extends React.Component {
 		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
 		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
 		this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
-		this.cancelTransition = this.cancelTransition.bind(this)
 		
 		GEPPETTO.on('OriginalModelLoaded', (model) => {
 			var modelObject = JSON.parse(model);
@@ -86,17 +85,6 @@ export default class NetPyNE extends React.Component {
 				}
 			}
 		}
-	}
-	
-	cancelTransition = () => { 
-		this.setState(({prevValue: pv, value: v, ...others})=>{ 
-			this.hideWidgetsFor(v);
-			this.restoreWidgetsFor(pv);
-			return {
-				prevValue: v,
-				value: pv
-			}
-		});
 	}
 
   	handleChange = (tab) => {
@@ -192,7 +180,6 @@ export default class NetPyNE extends React.Component {
 						freezeInstance={this.state.freezeInstance} 
 						handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
 						freezeSimulation={this.state.freezeSimulation} 
-						cancelTransition={this.cancelTransition}
 						fastForwardInstantiation={this.state.fastForwardInstantiation}
 						fastForwardSimulation={this.state.fastForwardSimulation}
 					/>
