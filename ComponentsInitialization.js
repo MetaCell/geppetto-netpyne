@@ -43,7 +43,7 @@ define(function (require) {
 
 
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
-            Utils.execPythonMessage('from netpyne_ui.netpyneui_init import netpyne_geppetto');
+            Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
                 //FIXME: Hack to remove backslashes manually
                 var data = JSON.parse(response.replace(/\\/g, "/"))
