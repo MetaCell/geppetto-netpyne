@@ -11,7 +11,7 @@ define(function (require) {
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
         
-        GEPPETTO.GeppettoJupyterSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterSync');
+        // GEPPETTO.GeppettoJupyterSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterSync');
 
         
         require('./css/netpyne.less');
