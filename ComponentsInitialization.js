@@ -3,7 +3,7 @@ define(function (require) {
         var ReactDOM = require('react-dom');
         var React = require('react');
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
-        var NetPyNE = require('./NetPyNE').default;
+        var NetPyNETabs = require('./NetPyNETabs').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
         var Console = require('../../js/components/interface/console/Console');
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
@@ -14,7 +14,7 @@ define(function (require) {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNE/>
+                        <NetPyNETabs></NetPyNETabs>
                     </MuiThemeProvider>
 
                     <div id="footer">
