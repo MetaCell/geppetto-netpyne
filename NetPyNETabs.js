@@ -43,7 +43,7 @@ export default class NetPyNETabs extends React.Component {
       
       window.metadata = nextProps.data.metadata;
       window.currentFolder = nextProps.data.currentFolder;
-      window.isDocker = modelObject.isDocker;
+      window.isDocker = nextProps.data.isDocker;
 
       this.setState({ model: nextProps.data })
     }
