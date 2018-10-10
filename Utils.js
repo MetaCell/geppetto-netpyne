@@ -1,14 +1,6 @@
-import GeppettoJupyterUtils from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
 
 const Utils = {
-
-    evalPythonMessage: function (command, parameters, parse = true) {
-        return GeppettoJupyterUtils.evalPythonMessage(command, parameters, parse);
-    },
-
-    execPythonMessage: function (command) {
-        return GeppettoJupyterUtils.execPythonMessage(command);
-    },
 
     getAvailableKey: function (model, prefix) {
         if (model == undefined) {
@@ -118,14 +110,8 @@ const Utils = {
             })
     },
 
-    pauseSync(callback) {
-        this.evalPythonMessage('timer.pause', []).then(callback());
-    },
-
-    resumeSync(callback) {
-        this.evalPythonMessage('timer.resume', []).then(callback());
-    }
-
+    execPythonMessage: execPythonMessage,
+    evalPythonMessage: evalPythonMessage
 }
 
 export default Utils

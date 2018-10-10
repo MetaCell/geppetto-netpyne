@@ -38,13 +38,13 @@ export default class NetPyNETabs extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // switch (nextProps.tab) {
-    //TODO: we need to define the rules here
     if (this.props.data != nextProps.data) {
       console.log("Initialising NetPyNE Tabs")
+      
       window.metadata = nextProps.data.metadata;
-      // window.context = nextProps.data.context;
       window.currentFolder = nextProps.data.currentFolder;
+      window.isDocker = modelObject.isDocker;
+
       this.setState({ model: nextProps.data })
     }
   };
