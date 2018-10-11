@@ -87,21 +87,25 @@ export default class NetPyNEPopulations extends React.Component {
       value: model,
       selectedPopulation: populationId
     });
-
+    GEPPETTO.trigger("global_refresh", populationId, '', "['pop']")
   }
 
   /* Method that handles button click */
   selectPopulation(populationName) {
     this.setState({selectedPopulation: populationName});
   }
-
-  deletePopulation(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
-      var model = this.state.value;
-      delete model[name];
-      this.setState({value: model, selectedPopulation: undefined});
-    });
+  async deletePopulation(name) {
+    const response = await Utils.sendPythonMessage(`netParams.popParams['${name}']`)
+    // await Utils.sendPythonMessage('netpyne_geppetto.deleteParam', [`popParams['${name}']`])
+    await Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ['popParams', name]) 
+    const {[name]: value, ...model} = this.state.value
+    this.setState({value: model, selectedPopulation: undefined});
+    
+    await GEPPETTO.trigger("global_refresh", null, response.cellType, "['cellType']") // delete cellType
+    await GEPPETTO.trigger("global_refresh", null, response.cellModel, "['cellModel']") // delete cellModel
+    await GEPPETTO.trigger("global_refresh", null, name, "['pop']") // delete Population
   }
+
 
   render() {
 

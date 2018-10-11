@@ -108,7 +108,7 @@ export default class NetPyNECellRule extends React.Component {
 
           <NetPyNEField id={"netParams.cellParams.conds.pop"} >
             <PythonMethodControlledSelectField
-              ref={"cellParamsCondsPop"}
+              ref={"cellParamsCondsPops"}
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
               method={"netpyne_geppetto.getAvailablePops"}
               postProcessItems={this.postProcessMenuItems}

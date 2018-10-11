@@ -116,7 +116,10 @@ const Utils = {
             .then((response) => {
                 callback(response, newValue);
             })
-            .then(() => GEPPETTO.trigger("global_refresh", newValue, oldValue))
+            .then(() => {
+                if (path=='netParams.popParams')
+                    GEPPETTO.trigger("global_refresh", newValue, oldValue, "['pop']")
+            })
     },
 
     pauseSync(callback) {

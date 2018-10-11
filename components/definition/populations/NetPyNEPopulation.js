@@ -19,12 +19,17 @@ export default class NetPyNEPopulation extends React.Component {
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
-      sectionId: "General"
+      sectionId: "General",
+      doNotTrigger: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
+  }
+  componentDidUpdate(prevState, prevProps) {
+    if (this.state.currentName==prevState.currentName) 
+      this.setState({doNotTrigger: false})
   }
 
   setPopulationDimension = (value) => {
@@ -83,11 +88,11 @@ export default class NetPyNEPopulation extends React.Component {
     var that = this;
     var storedValue = this.props.name;
     var newValue = event.target.value;
-    this.setState({ currentName: newValue });
+    this.setState({ currentName: newValue, doNotTrigger: true });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
       that.renaming = true;
+      Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => that.renaming = false);
     });
 
   }
@@ -115,13 +120,15 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
-              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+              callback={this.state.doNotTrigger?undefined:(nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellType')}
+              model={`netParams.popParams['${this.props.name}']['cellType']`}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledTextField
-              model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
+              callback={this.state.doNotTrigger?undefined:(nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellModel')}
+              model={`netParams.popParams['${this.props.name}']['cellModel']`}
             />
           </NetPyNEField>
 

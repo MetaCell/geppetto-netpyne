@@ -51,15 +51,30 @@ export default class NetPyNETabs extends React.Component {
     });
     this.componentsSubscribedToGlobalRefresh = [];
   }
+
   componentDidMount() {
-		GEPPETTO.on('global_refresh', (newValue, oldValue) => {
-			console.log("%cREFRESH ", "color: green")
-			this.componentsSubscribedToGlobalRefresh.forEach( ({ state: { value }, handleChange, callPythonMethod }) => {
-				callPythonMethod()
-				if (value==oldValue) 
-					handleChange(null, 0, newValue)
-			});
-		});
+		GEPPETTO.on('global_refresh', (newValue, oldValue, label) => {
+      Utils.sendPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+        .then((unique) => {
+          this.componentsSubscribedToGlobalRefresh.forEach( that => {
+            console.log(that)
+            if (that.id.includes(label)) {
+              let pythonDataClone
+              if (unique) //checking if I should remove the old value from the menue
+                pythonDataClone = that.state.pythonData.filter( v => v!=oldValue )
+              else 
+                pythonDataClone = [...that.state.pythonData]
+
+              if (newValue && that.state.pythonData.indexOf(newValue)==-1) { //checking if I should add a new  item to the menu
+                that.setState({pythonData: [ ...pythonDataClone, newValue]})
+              }
+              else {
+                that.setState({pythonData: pythonDataClone})
+              }
+            }
+          })
+        })
+    })
 
 		GEPPETTO.on('subscribe_to_global_refresh', (contexts) => {
 			console.log("%cWELCOME ONBOARD:", "color: green")

@@ -35,7 +35,25 @@ export default class NetPyNEStimulationTarget extends React.Component {
       this.setState({ currentName: nextProps.name, selectedIndex:0, sectionId:'General'});
     };
   };
+
+  componentDidMount() {
+    GEPPETTO.trigger('subscribe_to_global_refresh', this.refs)
+  }
   
+  componentWillUnmount() {
+    GEPPETTO.trigger('unsubscribe_from_global_refresh', this.refs)
+  }
+  
+  // componentDidUpdate(prevState, prevProps) {
+  //   console.log("%cREFS: ", "color:pink")
+  //   console.log(this.refs)
+  //   if (this.state.sourceTypeNetStim && !prevState.sourceTypeNetStim) {
+  //     GEPPETTO.trigger('subscribe_to_global_refresh', {...this.refs['stimTargetParams.synMech']})
+  //   }
+  //   else if (!this.state.sourceTypeNetStim && prevState.sourceTypeNetStim) 
+  //     GEPPETTO.trigger('unsubscribe_from_global_refresh', {...this.refs['stimTargetParams.synMech']})
+  // }
+
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
@@ -58,7 +76,13 @@ export default class NetPyNEStimulationTarget extends React.Component {
     Utils
       .sendPythonMessage("'NetStim' == netParams.stimSourceParams['" + selection + "']['type']")
       .then((response) => {
-        this.setState({sourceTypeNetStim: response});
+        this.setState({sourceTypeNetStim: response})
+        if (response) {
+          GEPPETTO.trigger('subscribe_to_global_refresh', { stimTargetParamsSynMech: this.refs.stimTargetParamsSynMech })
+        }
+        else {
+          GEPPETTO.trigger('unsubscribe_from_global_refresh', { stimTargetParamsSynMech: this.refs.stimTargetParamsSynMech })
+        }
       });
   };
   
@@ -114,6 +138,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
             <PythonMethodControlledSelectField
+              ref={"stimTargetParams.source"}
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -136,31 +161,32 @@ export default class NetPyNEStimulationTarget extends React.Component {
       if (this.state.sourceTypeNetStim) {
         var extraContent = (
           <div>
-          <NetPyNEField id={"netParams.stimTargetParams.synMech"} >
-            <PythonMethodControlledSelectField
-              model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
-              method={"netpyne_geppetto.getAvailableSynMech"}
-              postProcessItems={this.postProcessMenuItems4SynMech}
-            />
-          </NetPyNEField>
-          
-          <NetPyNEField id="netParams.stimTargetParams.weight" >
-            <PythonControlledTextField
-              model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
-            />
-          </NetPyNEField>
-          
-          <NetPyNEField id="netParams.stimTargetParams.delay" >
-            <PythonControlledTextField
-              model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
-            />
-          </NetPyNEField>
-          
-          <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
-            <PythonControlledTextField
-              model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
-            />
-          </NetPyNEField>
+            <NetPyNEField id={"netParams.stimTargetParams.synMech"} >
+              <PythonMethodControlledSelectField
+                ref={"stimTargetParamsSynMech"}
+                model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
+                method={"netpyne_geppetto.getAvailableSynMech"}
+                postProcessItems={this.postProcessMenuItems4SynMech}
+              />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.stimTargetParams.weight" >
+              <PythonControlledTextField
+                model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
+              />
+            </NetPyNEField>
+            
+            <NetPyNEField id="netParams.stimTargetParams.delay" >
+              <PythonControlledTextField
+                model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
+              />
+            </NetPyNEField>
+            
+            <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
+              <PythonControlledTextField
+                model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
+              />
+            </NetPyNEField>
           </div>
         );
       } else {

@@ -37,6 +37,7 @@ export default class NetPyNESynapse extends React.Component {
       // Rename the population in Python
       Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
       that.renaming=true;
+      GEPPETTO.trigger("global_refresh", newValue, storedValue, 'synMech')
     });
 
   }

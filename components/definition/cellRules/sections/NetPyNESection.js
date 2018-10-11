@@ -45,7 +45,8 @@ export default class NetPyNESection extends React.Component {
     this.setState({ currentName: newValue });
     this.triggerUpdate(function () {
       // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
+      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => {});
+      Utils.sendPythonMessage("netpyne_geppetto.propagate_section_rename", [newValue, storedValue])
     });
 
   }
