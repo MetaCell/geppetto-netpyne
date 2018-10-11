@@ -41,7 +41,6 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
         test.assertTitle("NetPyNE", "NetPyNE title is ok");
         test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
         test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
-        //test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
       });
     }, null, 40000);
   });
@@ -117,9 +116,7 @@ function testLandingPage(test) {
     toolbox.assertExist(this, test, "StimulationSources", "div")
     toolbox.assertExist(this, test, "Configuration", "div")
     toolbox.assertExist(this, test, "defineNetwork", "button")
-    toolbox.assertExist(this, test, "exploreNetwork", "button")
     toolbox.assertExist(this, test, "simulateNetwork", "button")
-    toolbox.assertExist(this, test, "setupNetwork", "button")
   });
 }
 
@@ -483,21 +480,11 @@ function testLoadNetwork(test) {
 function testExploreNetwork(test) {
   casper.then(function() {
     this.echo("------Testing explore network");
-    test.assertExists('button[id="exploreNetwork"]', "Explore network button exists");
+    test.assertExists('button[id="simulateNetwork"]', "Explore network button exists");
   })
-  casper.thenClick('#exploreNetwork', function() {
-    this.waitUntilVisible('button[id="okInstantiateNetwork"]', function() {
-      simulationTest.canvasComponentsTests(this, test);
-    })
-  });
-  casper.thenClick('#okInstantiateNetwork', function() {
-    this.waitWhileVisible('button[id="okInstantiateNetwork"]', function() {
-      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network dialog is gone");
-    })
-  })
-  casper.then(function() {
+  casper.thenClick('#simulateNetwork', function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
+      simulationTest.canvasComponentsTests(this, test);
     }, 40000)
   })
   casper.then(function() {
@@ -525,7 +512,7 @@ function testExploreNetwork(test) {
   });
   casper.then(function() {
     var info = this.getElementInfo('button[id="PlotButton"]');
-    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+    this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
   })
   casper.then(function(){
     this.wait(1000)
@@ -546,15 +533,11 @@ function testExploreNetwork(test) {
  *                           simulate network                                  *
  ******************************************************************************/
 function testSimulateNetwork(test) {
-  casper.then(function() {
-    this.echo("------Testing explore network");
-    test.assertExists('button[id="simulateNetwork"]', "Simulate network button exists");
-  })
-  casper.thenClick('#simulateNetwork', function(){
-    this.waitUntilVisible('button[id="runSimulation"]')
+  casper.thenClick('#launchSimulationButton', function(){
+    this.waitUntilVisible('button[id="okRunSimulation"]')
   });
-  casper.thenClick('#runSimulation', function() {
-    this.waitWhileVisible('button[id="runSimulation"]', function() {
+  casper.thenClick('#okRunSimulation', function() {
+    this.waitWhileVisible('button[id="okRunSimulation"]', function() {
       this.echo("Dialog disappeared");
     })
   });
@@ -595,7 +578,7 @@ function testSimulateNetwork(test) {
   });
   casper.then(function() {
     var info = this.getElementInfo('button[id="PlotButton"]');
-    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+    this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
   })
   casper.then(function(){
     this.wait(1000)
