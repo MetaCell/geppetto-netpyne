@@ -42,12 +42,17 @@ export default class NetPyNESection extends React.Component {
     var that = this;
     var storedValue = this.props.name;
     var newValue = event.target.value;
+    var updateCondition = this.props.renameHandler(newValue);
     this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
-    });
 
+    if(updateCondition) {
+      this.triggerUpdate(function () {
+        // Rename the population in Python
+        Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
+      });
+    } else {
+      console.log("Rename forbidden, "+newValue+" already used.");
+    }
   }
 
   triggerUpdate(updateMethod) {

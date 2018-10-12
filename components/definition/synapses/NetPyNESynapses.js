@@ -13,11 +13,14 @@ export default class NetPyNESynapses extends React.Component {
     super(props);
     this.state = {
       selectedSynapse: undefined,
+      deletedSynapse: undefined,
       page: "main"
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
     this.deleteSynapse = this.deleteSynapse.bind(this);
+
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   };
 
   /* Method that handles button click */
@@ -64,7 +67,7 @@ export default class NetPyNESynapses extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     var newSynapseName = this.hasSelectedSynapseBeenRenamed(prevState, this.state);
     if (newSynapseName !== undefined) {
-      this.setState({ selectedSynapse: newSynapseName });
+      this.setState({ selectedSynapse: newSynapseName, deletedSynapse: undefined });
     };
   };
 
@@ -75,7 +78,7 @@ export default class NetPyNESynapses extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (this.state.value != undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedSynapse !== undefined));
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
@@ -84,8 +87,19 @@ export default class NetPyNESynapses extends React.Component {
     Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedSynapse: undefined});
+      this.setState({value: model, selectedSynapse: undefined, deletedSynapse: name});
     });
+  }
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   render() {
@@ -102,7 +116,7 @@ export default class NetPyNESynapses extends React.Component {
     };
     var selectedSynapse = undefined;
     if ((this.state.selectedSynapse !== undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
-      selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} />;
+      selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
     };
 
     return (

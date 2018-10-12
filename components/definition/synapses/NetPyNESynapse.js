@@ -32,13 +32,18 @@ export default class NetPyNESynapse extends React.Component {
     var that = this;
     var storedValue = this.props.name;
     var newValue = event.target.value;
+    var updateCondition = this.props.renameHandler(newValue);
     this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      // Rename the population in Python
-      Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-      that.renaming=true;
-    });
 
+    if(updateCondition) {
+      this.triggerUpdate(function () {
+        // Rename the population in Python
+        Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
+        that.renaming=true;
+      });
+    } else {
+      console.log("Rename forbidden, "+newValue+" already used.");
+    }
   }
 
   triggerUpdate(updateMethod) {

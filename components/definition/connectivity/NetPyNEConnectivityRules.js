@@ -15,6 +15,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.state = {
       drawerOpen: false,
       selectedConnectivityRule: undefined,
+      deletedConnectivityRule: undefined,
       page: "main"
     };
 
@@ -23,6 +24,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
     this.deleteConnectivityRule = this.deleteConnectivityRule.bind(this);
+
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -91,7 +94,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(prevState, this.state);
     if (newConnectivityRuleName !== undefined) {
-      this.setState({ selectedConnectivityRule: newConnectivityRuleName });
+      this.setState({ selectedConnectivityRule: newConnectivityRuleName, deletedConnectivityRule: undefined });
     }
   }
 
@@ -102,7 +105,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedConnectivityRule !== undefined));
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
@@ -111,8 +114,19 @@ export default class NetPyNEConnectivityRules extends React.Component {
     Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["connParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedConnectivityRule: undefined});
+      this.setState({value: model, selectedConnectivityRule: undefined, deletedConnectivityRule: name});
     });
+  }
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   render() {
@@ -133,7 +147,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
       }
       var selectedConnectivityRule = undefined;
       if ((this.state.selectedConnectivityRule !== undefined) && Object.keys(model).indexOf(this.state.selectedConnectivityRule)>-1) {
-        selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} />;
+        selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
       }
 
       content = (

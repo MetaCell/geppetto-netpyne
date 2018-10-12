@@ -24,6 +24,8 @@ export default class NetPyNECellRules extends React.Component {
       selectedCellRule: undefined,
       selectedSection: undefined,
       selectedMechanism: undefined,
+      deletedCellRule: undefined,
+      deletedSection: undefined,
       page: "main"
     };
 
@@ -40,6 +42,8 @@ export default class NetPyNECellRules extends React.Component {
     this.selectMechanism = this.selectMechanism.bind(this);
     this.handleNewMechanism = this.handleNewMechanism.bind(this);
     this.deleteMechanism = this.deleteMechanism.bind(this);
+
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
   selectPage(page) {
@@ -218,11 +222,11 @@ export default class NetPyNECellRules extends React.Component {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newCellRuleName = this.hasSelectedCellRuleBeenRenamed(prevState, this.state);
     if (newCellRuleName !== undefined) {
-      this.setState({ selectedCellRule: newCellRuleName });
+      this.setState({ selectedCellRule: newCellRuleName, deletedCellRule: undefined });
     }
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
     if (newSectionName !== undefined) {
-      this.setState({ selectedSection: newSectionName });
+      this.setState({ selectedSection: newSectionName, deletedSection: undefined });
     }
     var newMechanismName = this.hasSelectedMechanismBeenRenamed(prevState, this.state);
     if (newMechanismName !== undefined) {
@@ -237,14 +241,14 @@ export default class NetPyNECellRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedCellRule !== undefined));
       if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
-        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
+        newItemCreated = ((newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length) && (this.state.deletedSection !== undefined));
       }
       if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
-        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+        newItemCreated = (newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length);
       }
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
@@ -254,7 +258,7 @@ export default class NetPyNECellRules extends React.Component {
     Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedCellRule: undefined});
+      this.setState({value: model, selectedCellRule: undefined, deletedCellRule: name});
     });
   };
 
@@ -273,9 +277,20 @@ export default class NetPyNECellRules extends React.Component {
       Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams['" + this.state.selectedCellRule + "']['secs']['" + name + "']"]).then((response) =>{
         var model = this.state.value;
         delete model[this.state.selectedCellRule]['secs'][name];
-        this.setState({value: model, selectedSection: undefined});
+        this.setState({value: model, selectedSection: undefined, deletedSection: name});
       });
     }
+  };
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
   };
 
   render() {
@@ -296,7 +311,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedCellRule = undefined;
       if ((this.state.selectedCellRule !== undefined) && Object.keys(model).indexOf(this.state.selectedCellRule) > -1) {
-        selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} />;
+        selectedCellRule = <NetPyNECellRule name={this.state.selectedCellRule} model={this.state.value[this.state.selectedCellRule]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
       }
 
       content = (
@@ -333,7 +348,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedSection = undefined;
       if ((this.state.selectedSection !== undefined) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
-        selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} />;
+        selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
       }
 
       content = (

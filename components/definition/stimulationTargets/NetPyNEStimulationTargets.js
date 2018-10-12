@@ -12,11 +12,14 @@ export default class NetPyNEStimulationTargets extends React.Component {
     super(props);
     this.state = {
       selectedStimulationTarget: undefined,
+      deletedStimulationTarget: undefined,
       page: "main"
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
     this.deleteStimulationTarget = this.deleteStimulationTarget.bind(this);
+
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   };
 
   /* Method that handles button click */
@@ -65,7 +68,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(prevState, this.state);
     if (newStimulationTargetName !== undefined) {
-      this.setState({ selectedStimulationTarget: newStimulationTargetName });
+      this.setState({ selectedStimulationTarget: newStimulationTargetName, deletedStimulationTarget: undefined });
     };
   };
 
@@ -76,7 +79,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (this.state.value!=undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedStimulationTarget !== undefined));
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
@@ -85,8 +88,19 @@ export default class NetPyNEStimulationTargets extends React.Component {
     Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["stimTargetParams['" + name + "']"]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedStimulationTarget: undefined});
+      this.setState({value: model, selectedStimulationTarget: undefined, deletedStimulationTarget: name});
     });
+  }
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   render() {
@@ -102,7 +116,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     };
     var selectedStimulationTarget = undefined;
     if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
-      selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget}/>;
+      selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
     };
 
     var content = (
