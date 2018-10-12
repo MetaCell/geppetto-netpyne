@@ -48,8 +48,6 @@ export default class NetPyNEStimulationTarget extends React.Component {
         Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
         that.renaming=true;
       });
-    } else {
-      console.log("Rename forbidden, "+newValue+" already used.");
     }
   };
 

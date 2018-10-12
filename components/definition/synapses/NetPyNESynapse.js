@@ -41,8 +41,6 @@ export default class NetPyNESynapse extends React.Component {
         Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
         that.renaming=true;
       });
-    } else {
-      console.log("Rename forbidden, "+newValue+" already used.");
     }
   }
 

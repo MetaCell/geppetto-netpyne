@@ -50,8 +50,6 @@ export default class NetPyNESection extends React.Component {
         // Rename the population in Python
         Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
       });
-    } else {
-      console.log("Rename forbidden, "+newValue+" already used.");
     }
   }
 
