@@ -33,7 +33,9 @@ export default class NetPyNEStimulationSources extends React.Component {
     var value = defaultStimulationSources[key];
     var model = this.state.value;
     var StimulationSourceId = Utils.getAvailableKey(model, key);
+    var newStimulationSource = Object.assign({name: StimulationSourceId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.stimSourceParams["' + StimulationSourceId + '"] = ' + JSON.stringify(value));
+    model[StimulationSourceId] = newStimulationSource;
     this.setState({
       value: model,
       selectedStimulationSource: StimulationSourceId

@@ -34,7 +34,9 @@ export default class NetPyNESynapses extends React.Component {
     var value = defaultSynapses[key];
     var model = this.state.value;
     var SynapseId = Utils.getAvailableKey(model, key);
+    var newSynapse = Object.assign({name: SynapseId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
+    model[SynapseId] = newSynapse;
     this.setState({
       value: model,
       selectedSynapse: SynapseId

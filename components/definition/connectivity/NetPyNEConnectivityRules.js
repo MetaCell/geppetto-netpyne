@@ -54,10 +54,10 @@ export default class NetPyNEConnectivityRules extends React.Component {
 
     // Get New Available ID
     var connectivityRuleId = Utils.getAvailableKey(model, key);
-
+    var newConnectivityRule = Object.assign({name: connectivityRuleId}, value);
     // Create Cell Rule Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.connParams["' + connectivityRuleId + '"] = ' + JSON.stringify(value));
-
+    model[connectivityRuleId] = newConnectivityRule;
     // Update state
     this.setState({
       value: model,

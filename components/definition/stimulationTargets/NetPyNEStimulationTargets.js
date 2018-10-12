@@ -35,7 +35,9 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var value = defaultStimulationTargets[key];
     var model = this.state.value;
     var StimulationTargetId = Utils.getAvailableKey(model, key);
+    var newStimulationTarget = Object.assign({name: StimulationTargetId}, value);
     Utils.execPythonCommand('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
+    model[StimulationTargetId] = newStimulationTarget;
     this.setState({
       value: model,
       selectedStimulationTarget: StimulationTargetId

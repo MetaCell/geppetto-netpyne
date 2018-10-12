@@ -64,10 +64,10 @@ export default class NetPyNECellRules extends React.Component {
 
     // Get New Available ID
     var cellRuleId = Utils.getAvailableKey(model, key);
-
+    var newCellRule = Object.assign({name: cellRuleId}, value);
     // Create Cell Rule Client side
     Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
-
+    model[cellRuleId] = newCellRule;
     // Update state
     this.setState({
       value: model,
@@ -88,13 +88,13 @@ export default class NetPyNECellRules extends React.Component {
 
     // Get New Available ID
     var sectionId = Utils.getAvailableKey(model[selectedCellRule]['secs'], key);
-
+    var newSection = Object.assign({name: sectionId}, value);
     if (model[selectedCellRule]['secs'] == undefined) {
       model[selectedCellRule]['secs'] = {};
       Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"] = {}');
     }
     Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
-
+    model[selectedCellRule]["secs"][sectionId] = newSection;
     // Update state
     this.setState({
       value: model,
