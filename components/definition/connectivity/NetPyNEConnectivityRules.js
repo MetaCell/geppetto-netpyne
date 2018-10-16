@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import IconMenu from 'material-ui/IconMenu';
 
+import NetPyNEHome from '../../general/NetPyNEHome';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
-import NetPyNEAddNew from '../../general/NetPyNEAddNew';
+
 
 import Utils from '../../../Utils';
 
-export default class NetPyNEConnectivityRules extends React.Component {
+export default class NetPyNEConnectivityRules extends Component {
 
   constructor(props) {
     super(props);
@@ -142,14 +143,13 @@ export default class NetPyNEConnectivityRules extends React.Component {
         <CardText className={"tabContainer"} expandable={true}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+							<NetPyNEHome
+								selection={this.state.selectedConnectivityRule}
+								handleClick={()=> this.setState({selectedConnectivityRule: undefined})}
+							/>
+              
+							<NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+              
             </div>
             <div style={{ clear: "both" }}></div>
             {ConnectivityRules}

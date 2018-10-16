@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -140,14 +140,16 @@ export default class NetPyNEPopulations extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newPopulationButton"} handleClick={this.handleNewPopulation} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+							<NetPyNEHome
+								selection={this.state.selectedPopulation}
+								handleClick={()=> this.setState({selectedPopulation: undefined})}
+							/>
+
+							<NetPyNEAddNew 
+								id={"newPopulationButton"} 
+								handleClick={this.handleNewPopulation}
+							/>
+
             </div>
             <div style={{ clear: "both" }}></div>
             {populations}

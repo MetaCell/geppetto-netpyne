@@ -1,71 +1,103 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Menu from 'material-ui/Menu';
 import Popover from 'material-ui/Popover';
 import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
+
 import Utils from '../../../../../Utils';
+
+const hoverColor = '#66d2e2';
+const changeColor = 'rgb(0, 188, 212)';
+
+const styles = {
+	anchorOrigin: {
+		horizontal: 'left', 
+		vertical: 'bottom'
+	},
+	anchorTarget: {
+		horizontal: 'left',
+		vertical: 'top'
+	},
+	color: 'white'
+};
 
 export default class NetPyNENewMechanism extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      mechanisms: []
-    };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleButtonClick = this.handleButtonClick.bind(this);
-  };
+	constructor(props) {
+		super(props);
+		this.state = {
+			open: false,
+			mechanisms: []
+		};
+	};
   
-  componentDidMount() {
-    Utils
-      .evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
-      .then((response) => {
-        var menuItems = []
-        response.forEach((item) => 
-          menuItems.push(<MenuItem id={item} key={item} value={item} primaryText={item}/>)
-        )
-        this.setState({mechanisms: menuItems})
-      })
-  };
-  
-  handleButtonClick = (event) => {
-    // This prevents ghost click.
-    event.preventDefault();
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    });
-  };
+	async componentDidMount() {
+		const response = await Utils.evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
+		this.setState({mechanisms: response})
+	};
+	
+	handleClick = (value) => {
+		this.setState({open: false});
+		this.props.handleClick(value);
+	};
 
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    });
-  };
-  
-  handleClick(event, value) {
-    this.handleRequestClose();
-    this.props.handleClick(value);
-  };
+	handleButtonClick = (anchor) => {
+		const { blockButton, handleHierarchyClick } = this.props;
+		if (!blockButton) {
+			this.setState({open: true, anchorEl: anchor})
+		};
+		handleHierarchyClick();
+	};
 
-  render() {
-    return <div>
-      <FloatingActionButton id={"addNewMechButton"} mini={true} style={{ margin: 10, float: 'left'}} onClick={this.handleButtonClick}>
-        <ContentAdd />
-      </FloatingActionButton>
-      <Popover
-        open={this.state.open}
-        anchorEl={this.state.anchorEl}
-        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-        targetOrigin={{horizontal: 'left', vertical: 'top'}}
-        onRequestClose={this.handleRequestClose}
+	render() {
+		const { disabled, blockButton } = this.props;
+		const { open, anchorEl, mechanisms } = this.state;
+		
+		return <div>
+			<IconButton
+				data-tooltip={
+					disabled 
+						? "No section selected" 
+						: blockButton 
+							? "Explore mechanisms" 
+							: "Add new mechanism"
+				}
+				id="newMechButton"
+				className="gearAddButton"
+				disabled={disabled}
+				onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
-        <Menu onChange={this.handleClick}>
-          {this.state.mechanisms}
-        </Menu>
-      </Popover>
-    </div>
-  };
+				<FontIcon 
+					style={{position: 'absolute'}}
+					className="gpt-fullgear"
+					color={changeColor} 
+					hoverColor={hoverColor} 
+				/>
+				
+				{disabled 
+					? "" 
+					: blockButton
+						? <NavigationMoreHoriz />
+						: <ContentAdd/>
+				}
+      </IconButton>
+
+			<Popover
+				open={open}
+				anchorEl={anchorEl}
+				anchorOrigin={styles.anchorOrigin}
+				targetOrigin={styles.anchorTarget}
+				onRequestClose={ () => this.setState({open: false}) }
+			>
+				<Menu onChange={ (e, v) => this.handleClick(v) }>
+					{mechanisms.map( mechLabel => 
+						<MenuItem id={mechLabel} key={mechLabel} value={mechLabel} primaryText={mechLabel}/>)
+					}
+				</Menu>
+			</Popover>
+		</div>
+	};
 };

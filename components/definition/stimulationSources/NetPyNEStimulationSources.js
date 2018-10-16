@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationSource from './NetPyNEStimulationSource';
 
-export default class NetPyNEStimulationSources extends React.Component {
+export default class NetPyNEStimulationSources extends Component {
 
   constructor(props) {
     super(props);
@@ -112,14 +113,14 @@ export default class NetPyNEStimulationSources extends React.Component {
         </div>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
-            <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-              iconButtonElement={
-                <NetPyNEAddNew id={"newStimulationSourceButton"} handleClick={this.handleNewStimulationSource} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+						<NetPyNEHome
+							selection={this.state.selectedStimulationSource}
+							handleClick={()=> this.setState({selectedStimulationSource: undefined})}
+						/>
+						<NetPyNEAddNew 
+							id={"newStimulationSourceButton"} 
+							handleClick={this.handleNewStimulationSource}
+						/>
           </div>
           <div style={{ clear: "both" }}></div>
           {StimulationSources}
