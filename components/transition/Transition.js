@@ -72,9 +72,9 @@ export default class Transition extends React.Component {
             .then(response => {
                 var parsedResponse = JSON.parse(response)
                 if (!this.processError(parsedResponse)) {
+                    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     this.props.handleDeactivateSimulationUpdate(true)
                     if (!this.props.freezeInstance) this.props.handleDeactivateInstanceUpdate(true)
-                    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     GEPPETTO.Manager.loadModel(parsedResponse);
                     GEPPETTO.CommandController.log("The NetPyNE model simulation was completed");
                     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -116,12 +116,12 @@ export default class Transition extends React.Component {
 
         if (this.props.tab=='simulate' ) {
             var refreshInstanceButton = (
-                <IconButton iconStyle={{color: pink400}} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 30, top: 60, width:'24px', height:'24px'}} tooltip={this.props.freezeInstance?"Your network is in sync":"Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{marginTop: -37, marginRight:10}}>
+                <IconButton iconStyle={{color: pink400}} id={"refreshInstanciatedNetworkButton"} key={"refreshInstanceButton"} onClick={()=>this.instantiate({usePrevInst: false})} style={{position: 'absolute', right: 30, top: 60, width:'24px', height:'24px'}} tooltip={this.props.freezeInstance?"Your network is in sync":"Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{marginTop: -37, marginRight:10}}>
                     <FontIcon className="fa fa-refresh"/>
                 </IconButton>
             )
             var refreshSimulationButton = (
-                <IconButton iconStyle={{color: pink400}} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 110, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"simulate"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginTop: -38, marginRight:10}}>
+                <IconButton iconStyle={{color: pink400}} id={"launchSimulationButton"} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 110, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"simulate"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginTop: -38, marginRight:10}}>
                     <RocketIcon />
                 </IconButton>    
             )

@@ -51,8 +51,8 @@ export default class NetPyNETabs extends React.Component {
     render() {
 
         return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-            <FlatButton onClick={() => this.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
-            <FlatButton onClick={() => this.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
+            <FlatButton id={"defineNetwork"} onClick={() => this.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
+            <FlatButton id={"simulateNetwork"} onClick={() => this.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
                 value={this.state.simulateTabLabel}
                 iconStyle={{ color: '#ffffff' }}
