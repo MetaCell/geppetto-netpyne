@@ -64,11 +64,12 @@ export default class Transition extends React.Component {
         });
     }
 
-    simulate = (args) => {
+    simulate = () => {
         this.setState({openDialog: false})
         GEPPETTO.CommandController.log("The NetPyNE model is getting simulated...");
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.RUNNING_SIMULATION);
-        Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [{usePrevInst: args.ffs?false:this.props.freezeInstance, parallelSimulation: this.state.parallelSimulation, cores:this.state.cores}])
+        Utils.sendPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [{
+            usePrevInst: this.props.freezeInstance, parallelSimulation: this.state.parallelSimulation, cores:this.state.cores}])
             .then(response => {
                 var parsedResponse = JSON.parse(response)
                 if (!this.processError(parsedResponse)) {
@@ -109,9 +110,11 @@ export default class Transition extends React.Component {
                         <TextField floatingLabelText="Number of cores" onChange={(event) => this.setState({ cores: event.target.value })} className="netpyneRightField"  type="number"/>
                     </div>
                 )
-                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate({ffs:false})} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
+                var actions = [<FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={()=>this.simulate()} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
             }
-            else var actions = <FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} key={"cancelActionBtn"} primary={true} />
+            else{
+                var actions = <FlatButton label="CANCEL" onClick={()=>{this.closeTransition()}} key={"cancelActionBtn"} primary={true} />
+            }     
         }
 
         if (this.props.tab=='simulate' ) {
