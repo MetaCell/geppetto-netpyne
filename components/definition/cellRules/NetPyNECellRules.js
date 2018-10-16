@@ -12,6 +12,7 @@ import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
+import Dialog from 'material-ui/Dialog/Dialog';
 
 import Utils from '../../../Utils';
 
@@ -26,6 +27,8 @@ export default class NetPyNECellRules extends React.Component {
       selectedMechanism: undefined,
       deletedCellRule: undefined,
       deletedSection: undefined,
+      errorMessage: undefined,
+      errorDetails: undefined,
       page: "main"
     };
 
@@ -44,6 +47,7 @@ export default class NetPyNECellRules extends React.Component {
     this.deleteMechanism = this.deleteMechanism.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
+    this.handleRenameSections = this.handleRenameSections.bind(this);
   }
 
   selectPage(page) {
@@ -223,11 +227,61 @@ export default class NetPyNECellRules extends React.Component {
     var newCellRuleName = this.hasSelectedCellRuleBeenRenamed(prevState, this.state);
     if (newCellRuleName !== undefined) {
       this.setState({ selectedCellRule: newCellRuleName, deletedCellRule: undefined });
+    } else if((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model = this.state.value;
+      for(var m in model) {
+        if(!(m in prevState.value)) {
+          var newValue = Utils.nameValidation(m);
+          if(newValue != m) {
+            newValue = Utils.getAvailableKey(model, newValue);
+            model[newValue] = model[m];
+            delete model[m];
+            this.setState({ value: model,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in CellRule names.\n" +
+                                          m + " has been renamed " + newValue},
+                            function() {
+                              Utils.renameKey('netParams.cellParams', m, newValue, (response, newValue) => {});
+                            }.bind(this));
+          }
+        }
+      }
     }
+
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
     if (newSectionName !== undefined) {
       this.setState({ selectedSection: newSectionName, deletedSection: undefined });
+    } else if((prevState.value !== undefined)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model2 = this.state.value;
+      var prevModel = prevState.value;
+      for(var n in model2) {
+        if((prevModel[n] !== undefined) && (Object.keys(model2[n]['secs']).length !== Object.keys(prevModel[n]['secs']).length)) {
+          var cellRule = model2[n]['secs'];
+          for(var s in cellRule) {
+            if(!(s in prevState.value[n]['secs'])) {
+              var newValue2 = Utils.nameValidation(s);
+              if(newValue2 != s) {
+                newValue2 = Utils.getAvailableKey(model2[n]['secs'], newValue2);
+                model2[n]['secs'][newValue2] = model2[n]['secs'][s];
+                delete model2[n]['secs'][s];
+                this.setState({ value: model2,
+                                errorMessage: "Error",
+                                errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
+                                s + " has been renamed " + newValue2},
+                                function() {
+                                  Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {});
+                                }.bind(this));
+              }
+            }
+          }
+        }
+      }
     }
+
     var newMechanismName = this.hasSelectedMechanismBeenRenamed(prevState, this.state);
     if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
@@ -241,17 +295,18 @@ export default class NetPyNECellRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedCellRule !== undefined));
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
       if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
-        newItemCreated = ((newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length) && (this.state.deletedSection !== undefined));
+        newItemCreated = ((newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length));
       }
       if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
         var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
         newItemCreated = (newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length);
       }
     }
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
+    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
   deleteCellRule(name) {
@@ -293,7 +348,35 @@ export default class NetPyNECellRules extends React.Component {
     return true;
   };
 
+  handleRenameSections(childName, leaf) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value[leaf]['secs']);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
 
     var that = this;
     var model = this.state.value;
@@ -318,6 +401,7 @@ export default class NetPyNECellRules extends React.Component {
         <CardText className={"tabContainer"} expandable={true}>
           <div className={"details"}>
             {selectedCellRule}
+            {dialogPop}
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
@@ -348,7 +432,7 @@ export default class NetPyNECellRules extends React.Component {
       }
       var selectedSection = undefined;
       if ((this.state.selectedSection !== undefined) && Object.keys(sectionsModel).indexOf(this.state.selectedSection) > -1) {
-        selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
+        selectedSection = <NetPyNESection name={this.state.selectedSection} cellRule={this.state.selectedCellRule} name={this.state.selectedSection} model={sectionsModel[this.state.selectedSection]} selectPage={this.selectPage} renameHandler={this.handleRenameSections} />;
       }
 
       content = (
@@ -377,6 +461,7 @@ export default class NetPyNECellRules extends React.Component {
           </div>
           <div className={"details"}>
             {selectedSection}
+            {dialogPop}
           </div>
         </CardText>
       );
@@ -431,6 +516,7 @@ export default class NetPyNECellRules extends React.Component {
           </div>
           <div className={"details"}>
             {selectedMechanism}
+            {dialogPop}
           </div>
         </CardText>
       );
