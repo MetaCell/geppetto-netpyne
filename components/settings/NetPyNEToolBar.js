@@ -4,7 +4,6 @@ import FontIcon from 'material-ui/FontIcon';
 import LoadFile from './actions/LoadFile';
 import SaveFile from './actions/SaveFile';
 import DeleteWork from './actions/DeleteWork';
-import ExportToDocker from './actions/ExportToDocker';
 import ImportExportHLS from './actions/ImportExportHLS';
 import ImportExportSonata from './actions/ImportExportSonata';
 import ImportExportNeuroML from './actions/ImportExportNeuroML';
@@ -87,9 +86,6 @@ export default class NetPyNEToolBar extends React.Component {
             case 7:
                 var requestEl = <ImportExportSonata />
                 break
-            case 8:
-                var requestEl = <ExportToDocker />
-                break
             case 9:
                 var requestEl = <DeleteWork />
                 break
@@ -137,7 +133,6 @@ export default class NetPyNEToolBar extends React.Component {
                         <MenuItem onClick={() => this.handleMenuItemClick(5)} primaryText="High Level Specifications" />,
                         <MenuItem onClick={() => this.handleMenuItemClick(6)} primaryText="to NeuroML" />,
                         <MenuItem onClick={() => this.handleMenuItemClick(7)} primaryText="to Sonata" />,
-                        <MenuItem onClick={() => this.handleMenuItemClick(8)} primaryText="Create Docker container" />
                     ]}
                 />
                 <MenuItem onClick={() => this.handleMenuItemClick(9)} leftIcon={<FontIcon className='fa fa-trash-o' />} primaryText="Remove current project" />
