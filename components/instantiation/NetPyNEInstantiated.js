@@ -80,39 +80,7 @@ export default class NetPyNEInstantiated extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
     }
-
-    remove() {
-        var that = this.refs.canvas
-        GEPPETTO.on(GEPPETTO.Events.Instance_deleted, function (instance) {
-            that.remove([instance]);
-        });
-    }
     
-    display() {
-        this.refs.canvas.engine.setLinesThreshold(10000);
-        this.refs.canvas.displayAllInstances();
-    }
-    
-    componentDidMount() {
-        this.display;
-    }
-
-    componentWillUnmount(){
-        this.remove();
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-        if (this.props.frozenInstance!=nextProps.frozenInstance) {
-            this.remove();
-        }
-    }
-
-    componentDidUpdate = (prevProps) => {
-        if (this.props.frozenInstance!=prevProps.frozenInstance) {
-            this.display()
-        }
-    }
-
     handleCloseDialog = () => {
         this.setState({ openDialog: false });
     };
@@ -185,6 +153,11 @@ export default class NetPyNEInstantiated extends React.Component {
         return this.widgets;
     }
 
+    componentDidMount() {
+        this.refs.canvas.engine.setLinesThreshold(10000);
+        this.refs.canvas.displayAllInstances();
+    }
+
     handleClick(event) {
         // This prevents ghost click.
         event.preventDefault();
@@ -214,7 +187,6 @@ export default class NetPyNEInstantiated extends React.Component {
         return (
             <div id="instantiatedContainer" style={styles.instantiatedContainer}>
                 <Canvas
-                    key={this.props.frozenInstance?"FronzenCanvas":"aliveCanvas"}
                     id="CanvasContainer"
                     name={"Canvas"}
                     componentType={'Canvas'}

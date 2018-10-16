@@ -157,7 +157,7 @@ export default class NetPyNE extends React.Component {
 				</div>
 			}
 			else {
-				var content =  <NetPyNEInstantiated frozenInstance={this.state.freezeInstance} ref={"simulate"} model={this.state.model} page={"simulate"} />
+				var content =  <NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />
 			}
 			
 			return (
@@ -177,8 +177,8 @@ export default class NetPyNE extends React.Component {
 						tab={this.state.value} 
 						clickOnTab={this.state.tabClicked}
 						handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
-						freezeInstance={this.state.freezeInstance} 
 						handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
+						freezeInstance={this.state.freezeInstance} 
 						freezeSimulation={this.state.freezeSimulation} 
 						fastForwardInstantiation={this.state.fastForwardInstantiation}
 						fastForwardSimulation={this.state.fastForwardSimulation}
