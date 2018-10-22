@@ -2,50 +2,51 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import Utils from '../../Utils';
+import Utils from '../../../Utils';
 
-export default class RequestHandler extends React.Component {
+const styles = {
+    cancel: {
+        marginRight: 10
+    }
+}
+
+export default class ActionDialog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             open: this.props.open,
-            actionRequired: false,
             errorMessage: undefined,
-            errorDetails: undefined,
-            spinning: false
+            errorDetails: undefined
         }
     }
     
-    componentDidUpdate = () => {
-        if (this.props.open != this.state.open && this.state.spinning==false) {
+    componentDidUpdate = (prevProps, prevState) => {
+        if (this.props.open != prevProps.open) {
             this.setState({
                 open: this.props.open
             });
         }
     }
 
-    performAction = (action, message, args) => {
-        if (action==='abort') {
-            this.setState({actionRequired: false})
-        }
-        else {
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, message);
+    performAction = () => {
+        if (this.props.isFormValid === undefined || this.props.isFormValid()){
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
             this.closeDialog();
             Utils
-                .sendPythonMessage(action, [args])
+                .sendPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
-                        if (args.tab!=undefined) {
-                            this.props.changeTab(args.tab, args); //move to other tab
+                        if (this.props.args.tab!=undefined) {
+                            this.props.changeTab(this.props.args.tab, this.props.args); //move to other tab
                         }
-                        if (args.tab=='simulate' && this.props.requestID!=6) {
+                        console.log(this.props);
+                        if (this.props.args.tab=='simulate' && this.props.action != 'ExportNeuroML') {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
-                            GEPPETTO.CommandController.log("The NetPyNE model " + args.tab + " was completed");
+                            GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
                         }
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-                        this.setState({spinning: false})
                         this.props.onRequestClose();
                     }
             });
@@ -53,44 +54,34 @@ export default class RequestHandler extends React.Component {
     }
     
     closeDialog = () => {
-        this.setState({ open: false, spinning: true, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
+        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined})
+        // this.props.onRequestClose();
     }
 
     cancelDialog = () => {
-        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined, actionRequired: false })
+        this.setState({ open: false, errorMessage: undefined, errorDetails: undefined})
         this.props.onRequestClose();
     }
 
     processError = (parsedResponse) => {
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.setState({ open: true, spinning: false, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
+            this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
             return true;
         }
         return false;
     }
 
-    requestActionToChild = () => {
-        this.setState({actionRequired: true})
-    }
-
     render() {
         if (this.state.open) {
-            var cancelAction = <FlatButton label="CANCEL" primary={true} onClick={this.cancelDialog} />
-
+            var cancelAction = <FlatButton label="CANCEL" primary={true} onClick={this.cancelDialog} style={styles.cancel}/>;
             if (this.state.errorMessage == undefined) {
                 var title = this.props.title
                 var actions = [
                     cancelAction, 
-                    <RaisedButton primary label={this.props.buttonLabel} onTouchTap={this.requestActionToChild}/>
+                    <RaisedButton primary label={this.props.buttonLabel} onTouchTap={this.performAction}/>
                 ];
-                var content = React.Children.map(this.props.children, child => {
-                    return React.cloneElement(child, {
-                        requestID: this.props.requestID, 
-                        performAction: this.performAction, 
-                        actionRequired: this.state.actionRequired
-                    })
-                })
+                var content = this.props.children;
             }
             else {
                 var actions = [
@@ -98,7 +89,7 @@ export default class RequestHandler extends React.Component {
                     <RaisedButton
                         primary
                         label={"BACK"}
-                        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined , actionRequired: false})}
+                        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
                     />
                 ];
                 var title = this.state.errorMessage;
@@ -114,10 +105,10 @@ export default class RequestHandler extends React.Component {
                     style={{ whiteSpace: "pre-wrap" }}
                     onRequestClose={()=>this.closeDialog()}
                 >
-                    {content}
+                 {content}   
                 </Dialog>
             );
         }
         return null;
     }
-}
+};

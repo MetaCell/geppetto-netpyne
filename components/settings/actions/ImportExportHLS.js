@@ -6,12 +6,12 @@ import SelectField from 'material-ui/SelectField';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import { orange500, blue500 , grey400, blueGrey900} from 'material-ui/styles/colors';
 import FileBrowser from '../../general/FileBrowser';
+import ActionDialog from './ActionDialog';
 
 export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            actionExecuted: false,
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -27,34 +27,40 @@ export default class ImportExportHLS extends React.Component {
             filterFiles: false,
             netParamsHovered: 'hidden'
         }
+
+        this.isFormValid = this.isFormValid.bind(this);
     }
 
-    componentDidUpdate() {
-        if (this.props.actionRequired && !this.state.actionExecuted) {
-            this.performAction()
-        }
-        else if (!this.props.actionRequired && this.state.actionExecuted) {
-            this.setState({actionExecuted: false})
-        }
-    }
+    // performAction() {
+    //     if (this.props.mode=='EXPORT') {
+    //         var action = 'netpyne_geppetto.exportHLS';
+    //         var message = 'EXPORTING MODEL';
+    //         this.props.performAction(action, message, this.state)
+    //     }
+    //     // else if (this.state.loadMod===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
+    //     // }
+    //     // else if (this.state.loadMod==='') {
+    //     //     this.setState({loadMod: undefined, actionExecuted: true})
+    //     //     this.props.performAction('abort')
+    //     // }
+    //     else {
+    //         var action = 'netpyne_geppetto.importModel';
+    //         var message = 'IMPORTING MODEL';
+    //         this.props.performAction(action, message, this.state)
+    //         this.setState({actionExecuted: true})
+    //     }
+    // }
 
-    performAction() {
-        if (this.props.requestID==5) {
-            var action = 'netpyne_geppetto.exportHLS';
-            var message = 'EXPORTING MODEL';
-            this.props.performAction(action, message, this.state)
+    isFormValid(){
+        if (this.props.mode == 'IMPORT'){
+            // FIXME: Set to undefine to show error text. No particularly elegant
+            if (this.state.loadMod === ''){
+                this.setState({loadMod: undefined})
+            }
+            return this.state.loadMod !== undefined && this.state.loadMod !== ''
         }
-        else if (this.state.loadMod===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
-        }
-        else if (this.state.loadMod==='') {
-            this.setState({loadMod: undefined, actionExecuted: true})
-            this.props.performAction('abort')
-        }
-        else {
-            var action = 'netpyne_geppetto.importModel';
-            var message = 'IMPORTING MODEL';
-            this.props.performAction(action, message, this.state)
-            this.setState({actionExecuted: true})
+        else{
+            return true;
         }
     }
 
@@ -90,8 +96,8 @@ export default class ImportExportHLS extends React.Component {
     }
 
     render() {
-        switch(this.props.requestID) {
-            case 2:
+        switch(this.props.mode) {
+            case 'IMPORT':
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = 
                     <CardText style={{marginTop: -33}}>
@@ -157,8 +163,12 @@ export default class ImportExportHLS extends React.Component {
                             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={this.state.filterFiles} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                         </div>
                     </CardText>
+                    var command = 'netpyne_geppetto.importModel';
+                    var message = 'IMPORTING MODEL';
+                    var buttonLabel = 'Import'
+                    var title = 'Import'
                 break;
-            case 5:
+            case 'EXPORT':
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = <CardText style={{marginTop: -33}}>
                     <TextField
@@ -169,16 +179,26 @@ export default class ImportExportHLS extends React.Component {
                         onChange={(e, v) => {this.setState({fileName: v})}}
                     />
                 </CardText>
+                var command = 'netpyne_geppetto.exportHLS';
+                var message = 'EXPORTING MODEL';
+                var buttonLabel = 'Export'
+                var title = 'Export'
                 break
-            default:
-                var header = <CardHeader title="" subtitle="" titleColor={blue500} />
-                var content = <CardText style={{marginTop: -30}}></CardText>
         }
         return (
-            <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
-                {header}
-                {content}
-            </Card>
+            <ActionDialog
+                command ={command}
+                message = {message}
+                buttonLabel={buttonLabel}
+                args={this.state}
+                title={title}
+                isFormValid={this.isFormValid}
+                {...this.props}>
+                <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
+                    {header}
+                    {content}
+                </Card>
+            </ActionDialog>
         )
     }
 }

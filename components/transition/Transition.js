@@ -37,7 +37,15 @@ export default class Transition extends React.Component {
                 else {
                     if (!this.state.haveInstData) { // if there is no previous instance data
                         Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
-                            .then(response => {if (response.constructor.name=='Array') this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})}) 
+                            .then(response => {
+                                //FIXME: Checking if the contructor name is an array is clearly the wrong approach
+                                if (response.constructor.name=='Array'){
+                                    this.instantiate({usePrevInst: this.props.fastForwardInstantiation?false:response[0]})
+                                }
+                                else if (response.haveInstance){
+                                    this.instantiate({usePrevInst: true, haveInstData: true})
+                                }
+                            }) 
                     }
                     else { // if has prev instance data
                         this.instantiate({usePrevInst: true})

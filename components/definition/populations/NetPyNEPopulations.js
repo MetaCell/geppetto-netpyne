@@ -105,7 +105,7 @@ export default class NetPyNEPopulations extends React.Component {
 
   render() {
 
-    if (this.state.value != undefined) {
+    if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
       for (var m in model) {
         model[m].name = m;

@@ -18,13 +18,13 @@ export default class NetPyNETabs extends React.Component {
         }
 
         this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(this);
-        this.handleChange = this.handleChange.bind(this);
 
     }
 
-    handleChange(value) {
-        this.setState({ label: value });
-        this.props.handleChange(value)
+    componentDidUpdate (prevProps, prevState) {
+        if (this.props.label!=prevProps.label) {
+            this.setState({label:this.props.label});
+        }
     }
 
     handleTransitionOptionsChange(e, v) {
@@ -51,8 +51,8 @@ export default class NetPyNETabs extends React.Component {
     render() {
 
         return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-            <FlatButton id={"defineNetwork"} onClick={() => this.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
-            <FlatButton id={"simulateNetwork"} onClick={() => this.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
+            <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
+            <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
                 value={this.state.simulateTabLabel}
                 iconStyle={{ color: '#ffffff' }}
