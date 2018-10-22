@@ -60,7 +60,7 @@ export default class NetPyNEPopulations extends React.Component {
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged;
   }
@@ -105,7 +105,7 @@ export default class NetPyNEPopulations extends React.Component {
 
   render() {
 
-    if (this.state.value != undefined) {
+    if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
       for (var m in model) {
         model[m].name = m;
