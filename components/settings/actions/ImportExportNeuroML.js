@@ -17,22 +17,6 @@ export default class ImportExportNeuroML extends React.Component {
         }
     }
 
-    // performAction() { // send here the message+
-    //     if (this.props.mode=='IMPORT'){
-    //         var tab = 'define'
-    //         var action = 'netpyne_geppetto.importNeuroML';
-    //         var message = GEPPETTO.Resources.IMPORTING_MODEL;
-    //     }
-    //     else if (this.props.mode=='EXPORT') {
-    //         var tab = 'simulate'
-    //         var action = 'netpyne_geppetto.exportNeuroML';
-    //         var message = GEPPETTO.Resources.EXPORTING_MODEL;
-    //     }
-        
-    //     this.props.performAction(action, message, {...this.state, tab:tab})
-    //     this.setState({actionExecuted: true})
-    // }
-
     showExplorerDialog(explorerParameter, exploreOnlyDirs) {
         this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs })
     }

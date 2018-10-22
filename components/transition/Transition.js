@@ -28,7 +28,6 @@ export default class Transition extends React.Component {
         if (this.props.clickOnTab!=prevProps.clickOnTab) {
             if (this.props.tab!=prevProps.tab && this.props.tab=='simulate') {
                 if (this.props.fastForwardSimulation) { // re instantiate and re simulate network
-                    // this.simulate({ffs: true})
                     this.setState({openDialog: true})
                 }
                 else if (this.props.fastForwardInstantiation) { // re instantiate network but do not simulate

@@ -4,7 +4,7 @@ import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import { orange500, blue500 , grey400, blueGrey900} from 'material-ui/styles/colors';
+import { orange500, blue500 , grey400 } from 'material-ui/styles/colors';
 import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
 
@@ -30,26 +30,6 @@ export default class ImportExportHLS extends React.Component {
 
         this.isFormValid = this.isFormValid.bind(this);
     }
-
-    // performAction() {
-    //     if (this.props.mode=='EXPORT') {
-    //         var action = 'netpyne_geppetto.exportHLS';
-    //         var message = 'EXPORTING MODEL';
-    //         this.props.performAction(action, message, this.state)
-    //     }
-    //     // else if (this.state.loadMod===undefined) { //this is cause of the warning (if mod in SelectField is not selected)
-    //     // }
-    //     // else if (this.state.loadMod==='') {
-    //     //     this.setState({loadMod: undefined, actionExecuted: true})
-    //     //     this.props.performAction('abort')
-    //     // }
-    //     else {
-    //         var action = 'netpyne_geppetto.importModel';
-    //         var message = 'IMPORTING MODEL';
-    //         this.props.performAction(action, message, this.state)
-    //         this.setState({actionExecuted: true})
-    //     }
-    // }
 
     isFormValid(){
         if (this.props.mode == 'IMPORT'){

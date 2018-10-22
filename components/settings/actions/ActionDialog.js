@@ -38,9 +38,8 @@ export default class ActionDialog extends React.Component {
                     var parsedResponse = JSON.parse(response);
                     if (!this.processError(parsedResponse)) {
                         if (this.props.args.tab!=undefined) {
-                            this.props.changeTab(this.props.args.tab, this.props.args); //move to other tab
+                            this.props.changeTab(this.props.args.tab, this.props.args);
                         }
-                        console.log(this.props);
                         if (this.props.args.tab=='simulate' && this.props.action != 'ExportNeuroML') {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(parsedResponse);
@@ -55,7 +54,6 @@ export default class ActionDialog extends React.Component {
     
     closeDialog = () => {
         this.setState({ open: false, errorMessage: undefined, errorDetails: undefined})
-        // this.props.onRequestClose();
     }
 
     cancelDialog = () => {
