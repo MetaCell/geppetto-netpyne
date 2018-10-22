@@ -73,8 +73,8 @@ export default class NetPyNEStimulationSources extends React.Component {
     var selectionChanged = this.state.selectedStimulationSource != nextState.selectedStimulationSource;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value!=undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+    if (!newModel) {
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
