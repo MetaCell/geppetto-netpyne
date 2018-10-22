@@ -60,7 +60,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
   handleSelection = (selection) => {
     Utils
-      .sendPythonMessage("'NetStim' == netParams.stimSourceParams['" + selection + "']['type']")
+      .evalPythonMessage("'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" + selection + "']['type']")
       .then((response) => {
         this.setState({sourceTypeNetStim: response});
       });

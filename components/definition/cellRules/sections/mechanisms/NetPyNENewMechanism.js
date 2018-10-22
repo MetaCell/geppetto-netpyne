@@ -20,7 +20,7 @@ export default class NetPyNENewMechanism extends React.Component {
   
   componentDidMount() {
     Utils
-      .sendPythonMessage("netpyne_geppetto.getAvailableMechs", [])
+      .evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
       .then((response) => {
         var menuItems = []
         response.forEach((item) => 

@@ -33,7 +33,7 @@ export default class NetPyNEPopulation extends React.Component {
     this.triggerUpdate(function () {
       // Set Population Dimension Python Side
       Utils
-        .sendPythonMessage('api.getParametersForCellModel', [value])
+        .evalPythonMessage('api.getParametersForCellModel', [value])
         .then((response) => {
 
           var cellModelFields = "";
