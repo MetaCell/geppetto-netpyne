@@ -23,7 +23,7 @@ var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.creat
 var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
 
-export default class NetPyNETabs extends React.Component {
+export default class NetPyNE extends React.Component {
 
   constructor(props) {
     super(props);
