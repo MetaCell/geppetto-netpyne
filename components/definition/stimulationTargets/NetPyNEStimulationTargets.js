@@ -40,7 +40,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var model = this.state.value;
     var StimulationTargetId = Utils.getAvailableKey(model, key);
     var newStimulationTarget = Object.assign({name: StimulationTargetId}, value);
-    Utils.execPythonCommand('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
     model[StimulationTargetId] = newStimulationTarget;
     this.setState({
       value: model,
@@ -105,15 +105,16 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value!=undefined) {
-      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
+    if(!newModel){
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedStimulationTarget !== undefined));
     };
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   };
 
   deleteStimulationTarget(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["stimTargetParams['" + name + "']"]).then((response) =>{
+    var parameter = "stimTargetParams['" + name + "']"
+    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedStimulationTarget: undefined, deletedStimulationTarget: name});

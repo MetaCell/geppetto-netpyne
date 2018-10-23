@@ -60,7 +60,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
     var connectivityRuleId = Utils.getAvailableKey(model, key);
     var newConnectivityRule = Object.assign({name: connectivityRuleId}, value);
     // Create Cell Rule Client side
-    Utils.execPythonCommand('netpyne_geppetto.netParams.connParams["' + connectivityRuleId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.connParams["' + connectivityRuleId + '"] = ' + JSON.stringify(value));
     model[connectivityRuleId] = newConnectivityRule;
     // Update state
     this.setState({
@@ -137,7 +137,8 @@ export default class NetPyNEConnectivityRules extends React.Component {
   }
 
   deleteConnectivityRule(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["connParams['" + name + "']"]).then((response) =>{
+    var parameter = "connParams['" + name + "']"
+    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedConnectivityRule: undefined, deletedConnectivityRule: name});

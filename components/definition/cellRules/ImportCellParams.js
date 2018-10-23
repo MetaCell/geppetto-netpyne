@@ -65,7 +65,7 @@ export default class ImportCellParams extends React.Component {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
 
     Utils
-      .sendPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
+      .evalPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
       .then((response) => {
         var data = {
           conds: response,
@@ -78,7 +78,7 @@ export default class ImportCellParams extends React.Component {
         // Import template
         this.closeImportCellParams();
         Utils
-          .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
+          .evalPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
           .then(response => {
             var parsedResponse = JSON.parse(response);
             if (!this.processError(parsedResponse)) {

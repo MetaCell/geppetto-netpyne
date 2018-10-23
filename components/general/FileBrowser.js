@@ -21,7 +21,7 @@ export default class FileBrowser extends React.Component {
         }
 
         Utils
-            .sendPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs])
+            .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
             .then((dirList) => {
                 if (treeData != [] && treeData.length > 0) {
                     rowInfo.node.children = dirList;
@@ -102,6 +102,10 @@ export default class FileBrowser extends React.Component {
     }
 };
 
+FileBrowser.defaultProps = {
+    exploreOnlyDirs: false,
+    filterFiles: false
+};
 
 
 
