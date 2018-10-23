@@ -2,14 +2,6 @@ import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppe
 
 const Utils = {
 
-    sendPythonMessage: function (command, parameters) {
-        return GeppettoJupyterUtils.sendPythonMessage(command, parameters);
-    },
-
-    execPythonCommand: function (command) {
-        return GeppettoJupyterUtils.execPythonCommand(command);
-    },
-
     getAvailableKey: function (model, prefix) {
         if (model == undefined) {
             return prefix;
