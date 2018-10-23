@@ -23,38 +23,39 @@ var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.creat
 var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
 
-
-
-
 export default class NetPyNE extends React.Component {
-    constructor(props) {
-        super(props);
-        this.widgets = {};
-        this.state = {
-            value: 'define',
-            prevValue: 'define',
-			model: null,
-			tabClicked: false,
-			freezeInstance: false,
-			freezeSimulation: false,
-			fastForwardInstantiation: true,
-			fastForwardSimulation: false
-		};
-		this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
-		this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
-		this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
-		
-		GEPPETTO.on('OriginalModelLoaded', (model) => {
-			var modelObject = JSON.parse(model);
-			window.metadata = modelObject.metadata;
-			window.requirement = modelObject.requirement;
-			window.isDocker = modelObject.isDocker;
-			window.currentFolder = modelObject.currentFolder;
-			this.setState({ model: modelObject })
-		});
-	}
-	
-  	hideWidgetsFor = (value) => {
+
+  constructor(props) {
+    super(props);
+    this.widgets = {};
+    this.state = {
+      value: 'define',
+      prevValue: 'define',
+      model: null,
+      tabClicked: false,
+      freezeInstance: false,
+      freezeSimulation: false,
+      fastForwardInstantiation: true,
+      fastForwardSimulation: false
+    };
+    this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
+    this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
+    this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
+  }		
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.data != nextProps.data) {
+      console.log("Initialising NetPyNE Tabs")
+      
+      window.metadata = nextProps.data.metadata;
+      window.currentFolder = nextProps.data.currentFolder;
+      window.isDocker = nextProps.data.isDocker;
+
+      this.setState({ model: nextProps.data })
+    }
+  };
+
+  hideWidgetsFor = (value) => {
 		if (value != "define") {
 			var page = this.refs[value];
 			if (page) {
