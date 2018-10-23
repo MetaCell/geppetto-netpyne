@@ -5,6 +5,8 @@ import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 
 export default class NetPyNESynapses extends React.Component {
@@ -14,7 +16,9 @@ export default class NetPyNESynapses extends React.Component {
     this.state = {
       selectedSynapse: undefined,
       deletedSynapse: undefined,
-      page: "main"
+      page: "main",
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
@@ -70,7 +74,28 @@ export default class NetPyNESynapses extends React.Component {
     var newSynapseName = this.hasSelectedSynapseBeenRenamed(prevState, this.state);
     if (newSynapseName !== undefined) {
       this.setState({ selectedSynapse: newSynapseName, deletedSynapse: undefined });
-    };
+    } else if((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model = this.state.value;
+      for(var m in model) {
+        if(!(m in prevState.value)) {
+          var newValue = Utils.nameValidation(m);
+          if(newValue != m) {
+            newValue = Utils.getAvailableKey(model, newValue);
+            model[newValue] = model[m];
+            delete model[m];
+            this.setState({ value: model,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in Synapses names.\n" +
+                                          m + " has been renamed " + newValue},
+                            function() {
+                              Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => {});
+                            }.bind(this));
+          }
+        }
+      }
+    }
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -82,7 +107,8 @@ export default class NetPyNESynapses extends React.Component {
     if (!newModel) {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedSynapse !== undefined));
     };
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
+    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   };
 
   deleteSynapse(name) {
@@ -106,6 +132,24 @@ export default class NetPyNESynapses extends React.Component {
   }
 
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
+
     var model = this.state.value;
     var Synapses = [];
     for (var c in model) {
@@ -148,6 +192,7 @@ export default class NetPyNESynapses extends React.Component {
             </div>
             <div style={{ clear: "both" }}></div>
             {Synapses}
+            {dialogPop}
           </div>
         </CardText>
       </Card>

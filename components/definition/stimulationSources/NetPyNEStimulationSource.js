@@ -5,6 +5,8 @@ import SelectField from 'material-ui/SelectField';
 import Utils from '../../../Utils';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -16,7 +18,9 @@ export default class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: ''
+      sourceType: '',
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.stimSourceTypeOptions = [
       { type: 'IClamp' },
@@ -37,15 +41,28 @@ export default class NetPyNEStimulationSource extends React.Component {
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
-    var newValue = event.target.value;
+    var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
-    this.setState({ currentName: newValue });
+    if(newValue != event.target.value) {
+      // if the new value has been changed by the function Utils.nameValidation means that the name convention
+      // has not been respected, so we need to open the dialog and inform the user.
+      this.setState({ currentName: newValue,
+                      errorMessage: "Error",
+                      errorDetails: "Leading digits or whitespaces are not allowed in StimulationSource names."});
+    } else {
+      this.setState({ currentName: newValue });
+    }
 
     if(updateCondition) {
       this.triggerUpdate(function () {
         Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
         that.renaming = true;
       });
+    } else if(!(updateCondition) && !(newValue != event.target.value)){
+      this.setState({ currentName: newValue,
+                      errorMessage: "Error",
+                      errorDetails: "Name collision detected, the name "+newValue+
+                                    " is already used in this model, please pick another name."});
     }
   };
 
@@ -87,6 +104,23 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
@@ -271,6 +305,7 @@ export default class NetPyNEStimulationSource extends React.Component {
           </NetPyNEField>
         </div>
         {variableContent}
+        {dialogPop}
       </div>
     );
   };

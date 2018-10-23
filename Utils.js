@@ -10,7 +10,7 @@ const Utils = {
         var id = prefix;
         var i = 2;
         while (model[id] != undefined) {
-            id = prefix + " " + i++;
+            id = prefix + i++;
         }
         return id;
     },
@@ -109,6 +109,23 @@ const Utils = {
                 callback(response, newValue);
             })
     },
+
+    pauseSync(callback) {
+        this.sendPythonMessage('timer.pause', []).then(callback());
+    },
+
+    resumeSync(callback) {
+        this.sendPythonMessage('timer.resume', []).then(callback());
+    },
+
+    nameValidation(myString) {
+        if((/\s/.test(myString))) {
+            myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
+        } else if((/^[0-9]/.test(myString))) {
+            myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
+        }
+        return myString;
+    }
 
     execPythonMessage: execPythonMessage,
     evalPythonMessage: evalPythonMessage
