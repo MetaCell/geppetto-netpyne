@@ -249,7 +249,6 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
     if (newSectionName !== undefined) {
       this.setState({ selectedSection: newSectionName, deletedSection: undefined });
@@ -281,7 +280,6 @@ export default class NetPyNECellRules extends React.Component {
         }
       }
     }
-
     var newMechanismName = this.hasSelectedMechanismBeenRenamed(prevState, this.state);
     if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
