@@ -125,7 +125,7 @@ const Utils = {
             myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
         }
         return myString;
-    }
+    },
 
     execPythonMessage: execPythonMessage,
     evalPythonMessage: evalPythonMessage
