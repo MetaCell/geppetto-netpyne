@@ -3,7 +3,7 @@ define(function (require) {
         var ReactDOM = require('react-dom');
         var React = require('react');
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
-        var NetPyNETabs = require('./NetPyNETabs').default;
+        var NetPyNE = require('./NetPyNE').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
 
         var Utils = require('./Utils').default;
@@ -20,7 +20,7 @@ define(function (require) {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNETabs {...data}></NetPyNETabs>
+                        <NetPyNE {...data}></NetPyNE>
                     </MuiThemeProvider>
 
                     <div id="footer">
