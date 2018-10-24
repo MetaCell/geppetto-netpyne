@@ -110,14 +110,6 @@ const Utils = {
             })
     },
 
-    pauseSync(callback) {
-        this.sendPythonMessage('timer.pause', []).then(callback());
-    },
-
-    resumeSync(callback) {
-        this.sendPythonMessage('timer.resume', []).then(callback());
-    },
-
     nameValidation(myString) {
         if((/\s/.test(myString))) {
             myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
