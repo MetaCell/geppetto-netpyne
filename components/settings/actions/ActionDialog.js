@@ -63,13 +63,21 @@ export default class ActionDialog extends React.Component {
     }
 
     processError = (response) => {
-        var parsedResponse = JSON.parse(response);
-        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+        // if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+        //     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+        //     this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
+        //     return true;
+        // }
+        // return false;
+
+        var parsedResponse = Utils.getErrorResponse(response);
+        if (parsedResponse) {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
             return true;
         }
         return false;
+        
     }
 
     render() {
