@@ -69,6 +69,7 @@ export default class FileBrowser extends React.Component {
                 style={{ marginRight: 16 }}
             />,
             <RaisedButton
+								id="browserAccept"
                 primary
                 label={'SELECT'}
                 onTouchTap={(event) => this.props.onRequestClose(this.state.selection)}

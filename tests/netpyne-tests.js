@@ -1,4 +1,5 @@
 var toolbox = require('./toolbox');
+var appbarTest = require('./appbarTest');
 var simConfigTest = require('./simConfigTest');
 var popParamsTest = require('./popParamsTest');
 var cellParamsTest = require('./cellParamsTest');
@@ -9,6 +10,7 @@ var stimTargetParamsTest = require('./stimTargetParamsTest');
 var simulationTest = require('./simulationTest');
 
 var urlBase = casper.cli.get('host');
+
 if (urlBase == null || urlBase == undefined) {
   urlBase = "http://localhost:8888/";
 }
@@ -48,57 +50,62 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   casper.then(function() { //test HTML elements in landing page
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
     testLandingPage(test);
+	});
+	
+	casper.then(function() { // test adding a population using UI  
+    toolbox.header(this, "test appbar")
+    testAppbar(test);
   });
 
-  casper.then(function() { // test adding a population using UI  
-    toolbox.header(this, "test popParams fields")
-    testPopParamsFields(test);
-  });
+  // casper.then(function() { // test adding a population using UI  
+  //   toolbox.header(this, "test popParams fields")
+  //   testPopParamsFields(test);
+  // });
   
-  casper.then(function() { // test adding a cell rule using UI
-    toolbox.header(this, "test cellparams fields")
-    testCellParamsFields(test);
-  });
+  // casper.then(function() { // test adding a cell rule using UI
+  //   toolbox.header(this, "test cellparams fields")
+  //   testCellParamsFields(test);
+  // });
   
-  casper.then(function() { // test adding a synapse rule using UI
-    toolbox.header(this, "test synMechParams fields")
-    testSynMechParamsFields(test);
-  });
+  // casper.then(function() { // test adding a synapse rule using UI
+  //   toolbox.header(this, "test synMechParams fields")
+  //   testSynMechParamsFields(test);
+  // });
   
-  casper.then(function() { // test adding a connection using UI
-    toolbox.header(this, "test connParams fields")
-    testConnParamsFields(test);
-  });
+  // casper.then(function() { // test adding a connection using UI
+  //   toolbox.header(this, "test connParams fields")
+  //   testConnParamsFields(test);
+  // });
   
-  casper.then(function() { // test adding a stimulus  source using UI
-    toolbox.header(this, "test stimSourceParams fields")
-    testStimSourceFields(test);
-  });
+  // casper.then(function() { // test adding a stimulus  source using UI
+  //   toolbox.header(this, "test stimSourceParams fields")
+  //   testStimSourceFields(test);
+  // });
   
-  casper.then(function() { // test adding a stimulus target using UI
-    toolbox.header(this, "test stimTargetParams fields")
-    testStimTargetFields(test);
-  });
+  // casper.then(function() { // test adding a stimulus target using UI
+  //   toolbox.header(this, "test stimTargetParams fields")
+  //   testStimTargetFields(test);
+  // });
   
-  casper.then(function() { // test config 
-    toolbox.header(this, "test simConfig fields")
-    testSimConfigFields(test);
-  });
+  // casper.then(function() { // test config 
+  //   toolbox.header(this, "test simConfig fields")
+  //   testSimConfigFields(test);
+  // });
   
-  casper.then(function() {
-    toolbox.header(this, "load network")
-    testLoadNetwork(test)
-  })
+  // casper.then(function() {
+  //   toolbox.header(this, "load network")
+  //   testLoadNetwork(test)
+  // })
   
-  casper.then(function() { //test explore network tab functionality
-    toolbox.header(this, "Explore Network Functionality")
-    testExploreNetwork(test);
-  });
+  // casper.then(function() { //test explore network tab functionality
+  //   toolbox.header(this, "Explore Network Functionality")
+  //   testExploreNetwork(test);
+  // });
   
-  casper.then(function() { //test simulate network tab functionality
-    toolbox.header(this, "Simulate Network Functionality")
-    testSimulateNetwork(test);
-  });
+  // casper.then(function() { //test simulate network tab functionality
+  //   toolbox.header(this, "Simulate Network Functionality")
+  //   testSimulateNetwork(test);
+  // });
   casper.run(function() {
     test.done();
   });
@@ -152,8 +159,17 @@ function loadConsole(test, consoleButton, consoleContainer) {
     this.wait(1000)
   })
 }
-/*******************************************************************************
- *                                 popParams                                   *
+/******************************************************************************
+ *                                  appbar                                    *
+ ******************************************************************************/
+function testAppbar(test) {
+	toolbox.message(casper, "import")
+	casper.then(function() { 
+    appbarTest.testImport(this, test, toolbox)
+  })
+}
+/******************************************************************************
+ *                                 popParams                                  *
  ******************************************************************************/
 function testPopParamsFields(test) {
   toolbox.message(casper, "create")
