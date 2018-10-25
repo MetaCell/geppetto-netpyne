@@ -51,7 +51,8 @@ export default class ImportCellParams extends React.Component {
     }
   };
 
-  processError(parsedResponse) {
+  processError(response) {
+    var parsedResponse = JSON.parse(response);
     if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })

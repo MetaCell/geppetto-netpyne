@@ -36,7 +36,7 @@ export default class Transition extends React.Component {
                 }
                 else {
                     if (!this.state.haveInstData) { // if there is no previous instance data
-                        Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
+                        Utils.evalPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
                             .then(response => {
                                 //FIXME: Checking if the contructor name is an array is clearly the wrong approach
                                 if (response.constructor.name=='Array'){
@@ -94,7 +94,8 @@ export default class Transition extends React.Component {
         });    
     }
 
-    processError(parsedResponse) {
+    processError(response) {
+        var parsedResponse = JSON.parse(response);
         if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             this.setState({ openDialog: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
