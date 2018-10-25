@@ -64,7 +64,7 @@ export default class NetPyNEPopulations extends React.Component {
       // if the name convention pass the checks, differently rename this and open dialog to inform.
       var model = this.state.value;
       for(var m in model) {
-        if(!(m in prevState.value)) {
+        if((prevState.value !== "") && (!(m in prevState.value))) {
           var newValue = Utils.nameValidation(model[m].name);
           if(newValue != model[m].name) {
             newValue = Utils.getAvailableKey(model, newValue);
