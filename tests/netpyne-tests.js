@@ -57,55 +57,55 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testAppbar(test);
   });
 
-  // casper.then(function() { // test adding a population using UI  
-  //   toolbox.header(this, "test popParams fields")
-  //   testPopParamsFields(test);
-  // });
+  casper.then(function() { // test adding a population using UI  
+    toolbox.header(this, "test popParams fields")
+    testPopParamsFields(test);
+  });
   
-  // casper.then(function() { // test adding a cell rule using UI
-  //   toolbox.header(this, "test cellparams fields")
-  //   testCellParamsFields(test);
-  // });
+  casper.then(function() { // test adding a cell rule using UI
+    toolbox.header(this, "test cellparams fields")
+    testCellParamsFields(test);
+  });
   
-  // casper.then(function() { // test adding a synapse rule using UI
-  //   toolbox.header(this, "test synMechParams fields")
-  //   testSynMechParamsFields(test);
-  // });
+  casper.then(function() { // test adding a synapse rule using UI
+    toolbox.header(this, "test synMechParams fields")
+    testSynMechParamsFields(test);
+  });
   
-  // casper.then(function() { // test adding a connection using UI
-  //   toolbox.header(this, "test connParams fields")
-  //   testConnParamsFields(test);
-  // });
+  casper.then(function() { // test adding a connection using UI
+    toolbox.header(this, "test connParams fields")
+    testConnParamsFields(test);
+  });
   
-  // casper.then(function() { // test adding a stimulus  source using UI
-  //   toolbox.header(this, "test stimSourceParams fields")
-  //   testStimSourceFields(test);
-  // });
+  casper.then(function() { // test adding a stimulus  source using UI
+    toolbox.header(this, "test stimSourceParams fields")
+    testStimSourceFields(test);
+  });
   
-  // casper.then(function() { // test adding a stimulus target using UI
-  //   toolbox.header(this, "test stimTargetParams fields")
-  //   testStimTargetFields(test);
-  // });
+  casper.then(function() { // test adding a stimulus target using UI
+    toolbox.header(this, "test stimTargetParams fields")
+    testStimTargetFields(test);
+  });
   
-  // casper.then(function() { // test config 
-  //   toolbox.header(this, "test simConfig fields")
-  //   testSimConfigFields(test);
-  // });
+  casper.then(function() { // test config 
+    toolbox.header(this, "test simConfig fields")
+    testSimConfigFields(test);
+  });
   
-  // casper.then(function() {
-  //   toolbox.header(this, "load network")
-  //   testLoadNetwork(test)
-  // })
+  casper.then(function() {
+    toolbox.header(this, "load network")
+    testLoadNetwork(test)
+  })
   
-  // casper.then(function() { //test explore network tab functionality
-  //   toolbox.header(this, "Explore Network Functionality")
-  //   testExploreNetwork(test);
-  // });
+  casper.then(function() { //test explore network tab functionality
+    toolbox.header(this, "Explore Network Functionality")
+    testExploreNetwork(test);
+  });
   
-  // casper.then(function() { //test simulate network tab functionality
-  //   toolbox.header(this, "Simulate Network Functionality")
-  //   testSimulateNetwork(test);
-  // });
+  casper.then(function() { //test simulate network tab functionality
+    toolbox.header(this, "Simulate Network Functionality")
+    testSimulateNetwork(test);
+  });
   casper.run(function() {
     test.done();
   });

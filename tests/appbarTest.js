@@ -1,12 +1,16 @@
-const CELL = '#TreeContainerCutting_component > div > div:nth-child(1) > div > div > div:nth-child(10) > div.rst__nodeContent';
-const XCELL = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[10]/div[4]';
-const TESTS = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[6]/div[3]/div/div[1]/button';
-const TUT3 = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[9]/div[4]/div/div/div/div/div[1]/span';
-const TUT3JSON = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[10]/div[2]/div/div/div/div/div[1]/span';
-const TUT3ALT = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[10]/div[2]/div/div/div/div/div[1]/span';
-const NETPYNE_UI = '//*[@id="TreeContainerCutting_component"]/div/div[1]/div/div/div[5]/div[2]/div/div[1]/button';
-
-const x = path => ({type: 'xpath', path: path})
+function clickOnTree(casper, file) {
+	return casper.evaluate(function(item) {
+		let leaves = document.getElementById("TreeContainerCutting_component").getElementsByTagName("span");
+		for (var i = 0 ; i < leaves.length ; i++) {
+			if (leaves[i].textContent == item) {
+				leaves[i].scrollIntoView();
+				leaves[i].click();
+				return true
+			}
+		}
+		return false
+	}, file)
+}
 
 // ----------------------------------------------------------------------------------- //
 
@@ -26,31 +30,32 @@ function importHLS(casper, test, toolbox, tut3=true) {
 			this.click('input[id="appbarImportFileName"]')
 		})
 	})
-	casper.then(function() {
-		this.waitUntilVisible(x(tut3 ? NETPYNE_UI : TUT3ALT), function() {
-			this.click(x(tut3 ? NETPYNE_UI : TUT3ALT))
-		})
+	casper.then(function(){
+		this.wait(1000)
 	})
+	casper.then(function() {
+		test.assert(clickOnTree(this, (tut3 ? 'netpyne_ui' : 'output.py')), "click " + (tut3 ? "netpyne_ui" : "output.py") + " folder")
+	})
+	
 	casper.then(function(){
 		if (!tut3) {
-			this.bypass(3)
+			this.bypass(4)
 		}
 	})
-	casper.then(function() {
-		this.waitUntilVisible(x(TESTS), function() {
-			this.click(x(TESTS))
-		})
+
+	casper.then(function(){
+		this.wait(1000)
 	})
 	casper.then(function() {
-		this.waitUntilVisible(x(XCELL), function() {
-			this.evaluate(function(selector) {
-				$(selector)['0'].scrollIntoView()
-			}, CELL);
-		})
+		test.assert(clickOnTree(this, 'tests'), "click tests folder")
 	})
 	casper.then(function(){
-		this.click(x(TUT3))
+		this.wait(1000)
 	})
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'tut3.py'), "click tests folder")
+	})
+
 	casper.then(function(){
 		this.wait(1000, function() {
 			this.click('button[id="browserAccept"]')
@@ -223,10 +228,11 @@ function openNetwork(casper, test, toolbox) {
 			this.click('input[id="loadJsonFile"]')
 		})
 	})
+	casper.then(function(){
+		this.wait(1000)
+	})
 	casper.then(function() {
-		this.waitUntilVisible(x(TUT3JSON), function() {
-			this.click(x(TUT3JSON))
-		})
+		test.assert(clickOnTree(this, 'output.json'), "click output.json file")
 	})
 
 	casper.then(function(){
