@@ -31,7 +31,14 @@ export default class ActionDialog extends React.Component {
     performAction = () => {
         if (this.props.isFormValid === undefined || this.props.isFormValid()){
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-            this.closeDialog();
+						this.closeDialog();
+						if (this.props.command == "netpyne_geppetto.deleteModel") {
+							Object.keys(window).forEach(key => {
+								if (key.startsWith("Popup") && key != "PopupsController") {
+									window[key].destroy()
+								}
+							})
+						}
             Utils
                 .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
@@ -49,7 +56,7 @@ export default class ActionDialog extends React.Component {
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                         this.props.onRequestClose();
                     }
-            });
+						});
         }
     }
     
@@ -87,7 +94,7 @@ export default class ActionDialog extends React.Component {
                 var title = this.props.title
                 var actions = [
                     cancelAction, 
-                    <RaisedButton id="appbarPerformAction" primary label={this.props.buttonLabel} onTouchTap={this.performAction}/>
+                    <RaisedButton id="appbarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
                 ];
                 var content = this.props.children;
             }
@@ -97,7 +104,7 @@ export default class ActionDialog extends React.Component {
                     <RaisedButton
                         primary
                         label={"BACK"}
-                        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+                        onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
                     />
                 ];
                 var title = this.state.errorMessage;

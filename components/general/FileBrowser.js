@@ -65,14 +65,14 @@ export default class FileBrowser extends React.Component {
         const actions = [
             <FlatButton
                 label={'CANCEL'}
-                onTouchTap={(event) => this.props.onRequestClose()}
+                onClick={(event) => this.props.onRequestClose()}
                 style={{ marginRight: 16 }}
             />,
             <RaisedButton
 								id="browserAccept"
                 primary
                 label={'SELECT'}
-                onTouchTap={(event) => this.props.onRequestClose(this.state.selection)}
+                onClick={(event) => this.props.onRequestClose(this.state.selection)}
                 disabled={!this.state.selection}
             />
         ];

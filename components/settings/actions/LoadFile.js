@@ -93,7 +93,8 @@ export default class LoadFile extends React.Component {
                     <CardText style={{marginTop: -22}}>
                         <div style={{width: '100%', marginTop: -22}}>   
                             <TextField 
-                                readOnly
+																readOnly
+																id="loadJsonFile"
                                 className="netpyneField" 
                                 style={{cursor: 'pointer', marginBottom:15 }} 
                                 floatingLabelText="Json file:" 
@@ -114,7 +115,8 @@ export default class LoadFile extends React.Component {
                             </List>
                             <div>
                                 <SelectField
-                                    className="netpyneField"
+																		className="netpyneField"
+																		id="appbarLoadRequiresMod"
                                     errorText={this.state.areModFieldsRequired===undefined?"This field is required.":false}
                                     errorStyle={{color: orange500, marginBottom:-40}}
                                     floatingLabelText="Are custom mod files required for this model?"
@@ -122,7 +124,7 @@ export default class LoadFile extends React.Component {
                                     onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
                                 >
                                     <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                                    <MenuItem value={false} primaryText="no, only NEURON build-in mods." />
+                                    <MenuItem id="appbarLoadRequiresModNo" value={false} primaryText="no, only NEURON build-in mods." />
                                 </SelectField>
                                 <TextField 
                                     readOnly

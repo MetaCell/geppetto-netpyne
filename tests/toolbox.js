@@ -439,7 +439,45 @@ function secondChance(casper, test, value, expectedValue, elementID, callback, t
     }
   })
 }
-
+//----------------------------------------------------------------------------//
+function testPlotButton(casper, test, plotButton) {
+  casper.then(function() {
+    this.waitUntilVisible('span[id="' + plotButton + '"]');
+  })
+  casper.thenEvaluate(function(plotButton) {
+    document.getElementById(plotButton).click();
+  }, plotButton);
+  
+  casper.then(function() {
+    this.waitUntilVisible('div[id="Popup1"]', function() {
+      test.assertExists('div[id="Popup1"]', plotButton + " exists");
+    })
+  })
+	casper.then(function() {
+		this.waitUntilVisible('g[id="figure_1"]')
+		this.waitUntilVisible('g[id="axes_1"]')
+  });
+  casper.thenEvaluate(function() {
+    window['Popup1'].destroy();
+  });
+  
+  casper.then(function(){
+    this.waitWhileVisible('div[id="Popup1"]', function() {
+      test.assertDoesntExist('div[id="Popup1"]', plotButton + " was destroyed successfully");
+    });
+  })  
+  
+  casper.then(function() {
+    var plotError = test.assertEvalEquals(function() {
+      var error = document.getElementById("netPyneDialog") == undefined;
+      if (!error) {
+        document.getElementById("netPyneDialog").click();
+      }
+      return error;
+    }, true, "no error on: " + plotButton);
+  });
+}
+//----------------------------------------------------------------------------//
 var toolbox = module.exports = {
   click: click,
   header: header,
@@ -463,5 +501,6 @@ var toolbox = module.exports = {
   testCheckBoxValue: testCheckBoxValue,
   assertExist: assertExist,
   assertDoesntExist: assertDoesntExist,
-  active: {}
+	active: {},
+	testPlotButton: testPlotButton
 }

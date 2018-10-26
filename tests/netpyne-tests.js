@@ -163,10 +163,58 @@ function loadConsole(test, consoleButton, consoleContainer) {
  *                                  appbar                                    *
  ******************************************************************************/
 function testAppbar(test) {
-	toolbox.message(casper, "import")
+	toolbox.message(casper, "import HLS")
 	casper.then(function() { 
-    appbarTest.testImport(this, test, toolbox)
-  })
+    appbarTest.importHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.simulateNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "save model")
+	casper.then(function(){
+		appbarTest.saveNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "open model")
+	casper.then(function(){
+		appbarTest.openNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.exploreOpenedModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "save HLS")
+	casper.then(function(){
+		appbarTest.saveHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "import HLS")
+	casper.then(function() { 
+		appbarTest.importHLS(this, test, toolbox, false)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
 }
 /******************************************************************************
  *                                 popParams                                  *
