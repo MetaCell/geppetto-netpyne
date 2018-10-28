@@ -13,6 +13,7 @@ define(function (require) {
         
         require('./css/netpyne.less');
         require('./css/material.less');
+        require('./css/traceback.less');
 
         injectTapEventPlugin();
 
@@ -45,8 +46,7 @@ define(function (require) {
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
             Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
-                //FIXME: Hack to remove backslashes manually
-                var data = JSON.parse(response.replace(/\\/g, "/"))
+                var data = Utils.convertToJSON(response)
                 ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
                 GEPPETTO.trigger("spinner:hide");
             })

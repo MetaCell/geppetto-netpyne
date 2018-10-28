@@ -36,7 +36,7 @@ export default class Transition extends React.Component {
                 }
                 else {
                     if (!this.state.haveInstData) { // if there is no previous instance data
-                        Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
+                        Utils.evalPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
                             .then(response => {
                                 //FIXME: Checking if the contructor name is an array is clearly the wrong approach
                                 if (response.constructor.name=='Array'){
@@ -61,7 +61,6 @@ export default class Transition extends React.Component {
         this.closeTransition();
         Utils.evalPythonMessage('netpyne_geppetto.instantiateNetPyNEModelInGeppetto', [args])
             .then(response => {
-                // var parsedResponse = JSON.parse(response);
                 if (!this.processError(response)) {
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     if (!args.usePrevInst) this.props.handleDeactivateInstanceUpdate(true)
@@ -81,7 +80,6 @@ export default class Transition extends React.Component {
         Utils.evalPythonMessage('netpyne_geppetto.simulateNetPyNEModelInGeppetto ', [{
             usePrevInst: this.props.freezeInstance, parallelSimulation: this.state.parallelSimulation, cores:this.state.cores}])
             .then(response => {
-                // var parsedResponse = JSON.parse(response);
                 if (!this.processError(response)) {
                     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                     this.props.handleDeactivateSimulationUpdate(true)
@@ -94,8 +92,9 @@ export default class Transition extends React.Component {
         });    
     }
 
-    processError(parsedResponse) {
-        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+    processError(response) {
+        var parsedResponse = Utils.getErrorResponse(response);
+        if (parsedResponse) {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             this.setState({ openDialog: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
             return true;
@@ -108,7 +107,7 @@ export default class Transition extends React.Component {
     }
     
     render () {
-        var children = this.state.errorDetails?this.state.errorDetails:null
+        var children = this.state.errorDetails?Utils.parsePythonException(this.state.errorDetails):null
         var title = this.state.errorMessage?this.state.errorMessage:"NetPyNE";
         
         if (this.state.openDialog) {

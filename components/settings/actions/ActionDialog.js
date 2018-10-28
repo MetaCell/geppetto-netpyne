@@ -33,16 +33,15 @@ export default class ActionDialog extends React.Component {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
             this.closeDialog();
             Utils
-                .sendPythonMessage(this.props.command, [this.props.args])
+                .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
-                    var parsedResponse = JSON.parse(response);
-                    if (!this.processError(parsedResponse)) {
+                    if (!this.processError(response)) {
                         if (this.props.args.tab!=undefined) {
                             this.props.changeTab(this.props.args.tab, this.props.args);
                         }
                         if (this.props.args.tab=='simulate' && this.props.action != 'ExportNeuroML') {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
-                            GEPPETTO.Manager.loadModel(parsedResponse);
+                            GEPPETTO.Manager.loadModel(response);
                             GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
                         }
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -61,8 +60,9 @@ export default class ActionDialog extends React.Component {
         this.props.onRequestClose();
     }
 
-    processError = (parsedResponse) => {
-        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
+    processError = (response) => {
+        var parsedResponse = Utils.getErrorResponse(response);
+        if (parsedResponse) {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
             return true;
@@ -91,7 +91,7 @@ export default class ActionDialog extends React.Component {
                     />
                 ];
                 var title = this.state.errorMessage;
-                var content = this.state.errorDetails;
+                var content = Utils.parsePythonException(this.state.errorDetails);
             }
             return (
                 <Dialog
