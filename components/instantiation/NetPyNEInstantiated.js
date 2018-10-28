@@ -111,16 +111,6 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     processError(response, plotName) {
-        // var parsedResponse = JSON.parse(response);
-        // if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-        //     this.setState({
-        //         dialogTitle: "NetPyNE returned an error plotting " + plotName,
-        //         dialogMessage: parsedResponse['message'] + "\n " + parsedResponse['details'],
-        //         openDialog: true
-        //     });
-        //     return true;
-        // }
-        // return false;
         var parsedResponse = Utils.getErrorResponse(response);
         if (parsedResponse) {
             this.setState({

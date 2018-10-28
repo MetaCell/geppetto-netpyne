@@ -93,13 +93,6 @@ export default class Transition extends React.Component {
     }
 
     processError(response) {
-        // var parsedResponse = JSON.parse(response.replace(/\\/g, ""))
-        // if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-        //     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-        //     this.setState({ openDialog: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
-        //     return true;
-        // }
-        // return false;
         var parsedResponse = Utils.getErrorResponse(response);
         if (parsedResponse) {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -114,7 +107,7 @@ export default class Transition extends React.Component {
     }
     
     render () {
-        var children = this.state.errorDetails?this.state.errorDetails:null
+        var children = this.state.errorDetails?Utils.parsePythonException(this.state.errorDetails):null
         var title = this.state.errorMessage?this.state.errorMessage:"NetPyNE";
         
         if (this.state.openDialog) {
