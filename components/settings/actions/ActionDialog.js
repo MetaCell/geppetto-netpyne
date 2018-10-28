@@ -35,8 +35,6 @@ export default class ActionDialog extends React.Component {
             Utils
                 .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
-                    //var parsedResponse = JSON.parse(response);
-                    // var parsedResponse = response;
                     if (!this.processError(response)) {
                         if (this.props.args.tab!=undefined) {
                             this.props.changeTab(this.props.args.tab, this.props.args);
