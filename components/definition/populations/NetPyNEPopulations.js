@@ -88,6 +88,13 @@ export default class NetPyNEPopulations extends React.Component {
       selectedPopulation: populationId
     });
 
+    GEPPETTO.trigger('populations_change', model);
+
+    // Utils.sendPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+    //     .then((unique) => {
+          
+    //     });
+
   }
 
   /* Method that handles button click */

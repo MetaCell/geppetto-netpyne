@@ -19,6 +19,10 @@ export default class NetPyNECellRule extends React.Component {
       currentName: props.name,
       importCellOpen: false
     };
+
+    GEPPETTO.on('populations_change', (populations) => {
+      this.forceUpdate();
+    })
   };
 
   handleRenameChange = (event) => {
@@ -32,6 +36,7 @@ export default class NetPyNECellRule extends React.Component {
       that.renaming = true;
     });
 
+    
   }
 
   triggerUpdate(updateMethod) {
