@@ -29,12 +29,12 @@ export default class NetPyNECoordsRange extends Component {
   };
 
   updateLayout() {
-    var message = this.props.model + "['" + this.props.name + "']";
+    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']";
     if (this.props.conds!=undefined) {
       message = message + "['" + this.props.conds + "']";
     };
     Utils
-      .sendPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
+      .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
       .then((response) => {
         if (response[0]) {
           this.setState({rangeType: this.props.items[0].value});

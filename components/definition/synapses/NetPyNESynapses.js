@@ -31,7 +31,7 @@ export default class NetPyNESynapses extends React.Component {
     var value = defaultSynapses[key];
     var model = this.state.value;
     var SynapseId = Utils.getAvailableKey(model, key);
-    Utils.execPythonCommand('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
     this.setState({
       value: model,
       selectedSynapse: SynapseId
@@ -75,14 +75,14 @@ export default class NetPyNESynapses extends React.Component {
     var selectionChanged = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value != undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-    };
+    if (!newModel) {
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+    }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
   deleteSynapse(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams", name]).then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["synMechParams", name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedSynapse: undefined});

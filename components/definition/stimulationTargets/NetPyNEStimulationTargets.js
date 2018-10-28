@@ -32,7 +32,7 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var value = defaultStimulationTargets[key];
     var model = this.state.value;
     var StimulationTargetId = Utils.getAvailableKey(model, key);
-    Utils.execPythonCommand('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
     this.setState({
       value: model,
       selectedStimulationTarget: StimulationTargetId
@@ -75,14 +75,14 @@ export default class NetPyNEStimulationTargets extends React.Component {
     var selectionChanged = this.state.selectedStimulationTarget != nextState.selectedStimulationTarget;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value!=undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+    if(!newModel){
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     };
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   };
 
   deleteStimulationTarget(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["stimTargetParams", name]).then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["stimTargetParams", name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedStimulationTarget: undefined});

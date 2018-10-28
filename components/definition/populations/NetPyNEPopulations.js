@@ -60,7 +60,7 @@ export default class NetPyNEPopulations extends React.Component {
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged;
   }
@@ -79,7 +79,7 @@ export default class NetPyNEPopulations extends React.Component {
     var newPopulation = Object.assign({ name: populationId }, value);
 
     // Create Population Client side
-    Utils.execPythonCommand('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
+    Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
 
     // Update state
     model[populationId] = newPopulation;
@@ -95,9 +95,9 @@ export default class NetPyNEPopulations extends React.Component {
     this.setState({selectedPopulation: populationName});
   }
   async deletePopulation(name) {
-    const response = await Utils.sendPythonMessage(`netParams.popParams['${name}']`)
+    const response = await Utils.evalPythonMessage(`netParams.popParams['${name}']`)
     // await Utils.sendPythonMessage('netpyne_geppetto.deleteParam', [`popParams['${name}']`])
-    await Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ['popParams', name]) 
+    await Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['popParams', name]) 
     const {[name]: value, ...model} = this.state.value
     this.setState({value: model, selectedPopulation: undefined});
     
@@ -106,10 +106,9 @@ export default class NetPyNEPopulations extends React.Component {
     await GEPPETTO.trigger("global_refresh", null, name, "['pop']") // delete Population
   }
 
-
   render() {
 
-    if (this.state.value != undefined) {
+    if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
       for (var m in model) {
         model[m].name = m;

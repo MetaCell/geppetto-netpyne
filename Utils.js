@@ -1,14 +1,7 @@
-import GeppettoJupyterUtils from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import React from 'react';
 
 const Utils = {
-
-    sendPythonMessage: function (command, parameters) {
-        return GeppettoJupyterUtils.sendPythonMessage(command, parameters);
-    },
-
-    execPythonCommand: function (command) {
-        return GeppettoJupyterUtils.execPythonCommand(command);
-    },
 
     getAvailableKey: function (model, prefix) {
         if (model == undefined) {
@@ -112,7 +105,7 @@ const Utils = {
     },
 
     renameKey(path, oldValue, newValue, callback) {
-        this.sendPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
+        this.execPythonMessage('netpyne_geppetto.rename("' + path + '","' + oldValue + '","' + newValue + '")')
             .then((response) => {
                 callback(response, newValue);
             })
@@ -122,14 +115,28 @@ const Utils = {
             })
     },
 
-    pauseSync(callback) {
-        this.sendPythonMessage('timer.pause', []).then(callback());
+    //FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
+    convertToJSON(data){
+        if (typeof data === 'string' || data instanceof String){
+            return JSON.parse(data.replace(/\\\\/g, '\\').replace(/\\'/g, '\''))
+        }
+        return data
     },
 
-    resumeSync(callback) {
-        this.sendPythonMessage('timer.resume', []).then(callback());
-    }
+    getErrorResponse(data){
+        var parsedData = this.convertToJSON(data)
+        if (parsedData.hasOwnProperty("type") && parsedData['type'] == 'ERROR'){
+            return {'message': parsedData['message'], 'details' : parsedData['details']}
+        }
+        return null;
+    },
 
+    parsePythonException(exception){
+        return <pre dangerouslySetInnerHTML={{__html: IPython.utils.fixConsole(exception)}}></pre>
+    },
+
+    execPythonMessage: execPythonMessage,
+    evalPythonMessage: evalPythonMessage
 }
 
 export default Utils

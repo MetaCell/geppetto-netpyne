@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
@@ -62,7 +62,7 @@ export default class NetPyNECellRules extends React.Component {
     var cellRuleId = Utils.getAvailableKey(model, key);
 
     // Create Cell Rule Client side
-    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
 
     // Update state
     this.setState({
@@ -87,9 +87,9 @@ export default class NetPyNECellRules extends React.Component {
 
     if (model[selectedCellRule]['secs'] == undefined) {
       model[selectedCellRule]['secs'] = {};
-      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"] = {}');
+      Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"] = {}');
     }
-    Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
+    Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
 
     // Update state
     this.setState({
@@ -111,14 +111,14 @@ export default class NetPyNECellRules extends React.Component {
     // Create Mechanism Client side
     if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
-      Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
+      Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
     };
     var params = {};
     Utils
-      .sendPythonMessage("netpyne_geppetto.getMechParams", [mechanism])
+      .evalPythonMessage("netpyne_geppetto.getMechParams", [mechanism])
       .then((response) => {
         response.forEach((param) => params[param] = 0);
-        Utils.execPythonCommand('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanism + '"] = ' + JSON.stringify(params));
+        Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanism + '"] = ' + JSON.stringify(params));
       })
     // Update state
     this.setState({
@@ -237,21 +237,21 @@ export default class NetPyNECellRules extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-      if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
-        var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
-        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
-      }
-      if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
-        var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
-        newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
-      }
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+        if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
+          var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
+          newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
+        }
+        if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
+          var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+          newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+        }
     }
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
   }
 
   deleteCellRule(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["cellParams", name]).then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["cellParams", name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedCellRule: undefined});
@@ -260,7 +260,7 @@ export default class NetPyNECellRules extends React.Component {
 
   deleteMechanism(name) {
     if(this.state.selectedCellRule != undefined && this.state.selectedSection != undefined) {
-      Utils.sendPythonMessage('netpyne_geppetto.deleteParam', [[this.state.selectedCellRule, this.state.selectedSection], name]).then((response) =>{
+      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', [[this.state.selectedCellRule, this.state.selectedSection], name]).then((response) =>{
         var model = this.state.value;
         delete model[this.state.selectedCellRule].secs[this.state.selectedSection]['mechs'][name];
         this.setState({value: model, selectedMechanism: undefined});
@@ -270,7 +270,7 @@ export default class NetPyNECellRules extends React.Component {
 
   deleteSection(name) {
     if(this.state.selectedCellRule != undefined) {
-      Utils.sendPythonMessage('netpyne_geppetto.deleteParam', [ [this.state.selectedCellRule], name]).then((response) =>{
+      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', [ [this.state.selectedCellRule], name]).then((response) =>{
         var model = this.state.value;
         delete model[this.state.selectedCellRule]['secs'][name];
         this.setState({value: model, selectedSection: undefined});

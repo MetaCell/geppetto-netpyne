@@ -39,7 +39,7 @@ export default class NetPyNEPlots extends React.Component {
       var model = { plot: true }
     };
     Utils
-      .sendPythonMessage("netpyne_geppetto.getAvailablePlots", [])
+      .evalPythonMessage("netpyne_geppetto.getAvailablePlots", [])
       .then((response) => {
         if (response.includes(plot)) {
           if (plot == "plotLFP") {
@@ -61,7 +61,7 @@ export default class NetPyNEPlots extends React.Component {
               'include': ['all']
             }
           };
-          Utils.execPythonCommand("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
+          Utils.execPythonMessage("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
         }
       });
     this.setState({
@@ -75,9 +75,9 @@ export default class NetPyNEPlots extends React.Component {
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
-    if (this.state.value != undefined) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-    };
+    if (!newModel) {
+        newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+    }
     return newModel || newItemCreated || selectionChanged || pageChanged;;
   };
 

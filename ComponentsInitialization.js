@@ -3,18 +3,25 @@ define(function (require) {
         var ReactDOM = require('react-dom');
         var React = require('react');
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
-        var NetPyNETabs = require('./NetPyNETabs').default;
+        var NetPyNE = require('./NetPyNE').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
+
+        var Utils = require('./Utils').default;
         var Console = require('../../js/components/interface/console/Console');
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
         var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
+        
+        require('./css/netpyne.less');
+        require('./css/material.less');
+        require('./css/traceback.less');
+
         injectTapEventPlugin();
 
-        function App() {
+        function App(data = {}) {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNETabs></NetPyNETabs>
+                        <NetPyNE {...data}></NetPyNE>
                     </MuiThemeProvider>
 
                     <div id="footer">
@@ -31,33 +38,18 @@ define(function (require) {
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
         GEPPETTO.G.setIdleTimeOut(-1);
+        GEPPETTO.G.debug(true); //Change this to true to see messages on the Geppetto console while loading
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
-        $('.nav-tabs li.active').removeClass('active');
 
-        require('./css/netpyne.less');
-        require('./css/material.less');
-
-        window.customJupyterModelLoad = function (module, model) {
-            console.log("Loading custom Jupyter code...")
-
-            // Can we delete this line?
-            GEPPETTO.trigger('kernel:ready', "Kernel started");
-
-            window.IPython.notebook.restart_kernel({ confirm: false }).then(function () {
-
-                GEPPETTO.trigger('kernel:ready', "Kernel started");
-
-                var kernel = IPython.notebook.kernel;
-                kernel.execute('from netpyne_ui import netpyne_geppetto');
-                kernel.execute('from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync');
-                kernel.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")');
-            });
-        }
-
-        // Add geppetto jupyter connector
-        GEPPETTO.GeppettoJupyterModelSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterModelSync');
-        GEPPETTO.GeppettoJupyterGUISync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterGUISync');
-        GEPPETTO.GeppettoJupyterWidgetSync = require('./../../js/communication/geppettoJupyter/GeppettoJupyterWidgetSync');
+        GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
+            Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
+            Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
+                var data = Utils.convertToJSON(response)
+                ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
+                GEPPETTO.trigger("spinner:hide");
+            })
+        });
     };
 });
