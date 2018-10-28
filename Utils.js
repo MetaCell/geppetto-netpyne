@@ -1,4 +1,5 @@
 import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import React from 'react';
 
 const Utils = {
 
@@ -110,10 +111,10 @@ const Utils = {
             })
     },
 
-    //FIXME: Hack to remove scaped chars (backslashes) manually
+    //FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
     convertToJSON(data){
         if (typeof data === 'string' || data instanceof String){
-            return JSON.parse(data.replace(/\\/g, ""))
+            return JSON.parse(data.replace(/\\\\/g, '\\').replace(/\\'/g, '\''))
         }
         return data
     },
@@ -124,6 +125,10 @@ const Utils = {
             return {'message': parsedData['message'], 'details' : parsedData['details']}
         }
         return null;
+    },
+
+    parsePythonException(exception){
+        return <pre dangerouslySetInnerHTML={{__html: IPython.utils.fixConsole(exception)}}></pre>
     },
 
     execPythonMessage: execPythonMessage,
