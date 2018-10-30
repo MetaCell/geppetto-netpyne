@@ -3,7 +3,7 @@ define(function (require) {
         var ReactDOM = require('react-dom');
         var React = require('react');
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
-        var NetPyNETabs = require('./NetPyNETabs').default;
+        var NetPyNE = require('./NetPyNE').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
 
         var Utils = require('./Utils').default;
@@ -13,6 +13,7 @@ define(function (require) {
         
         require('./css/netpyne.less');
         require('./css/material.less');
+        require('./css/traceback.less');
 
         injectTapEventPlugin();
 
@@ -20,7 +21,7 @@ define(function (require) {
             return (
                 <div>
                     <MuiThemeProvider>
-                        <NetPyNETabs {...data}></NetPyNETabs>
+                        <NetPyNE {...data}></NetPyNE>
                     </MuiThemeProvider>
 
                     <div id="footer">
@@ -45,8 +46,7 @@ define(function (require) {
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
             Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
-                //FIXME: Hack to remove backslashes manually
-                var data = JSON.parse(response.replace(/\\/g, "/"))
+                var data = Utils.convertToJSON(response)
                 ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
                 GEPPETTO.trigger("spinner:hide");
             })

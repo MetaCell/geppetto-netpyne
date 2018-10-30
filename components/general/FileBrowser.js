@@ -3,7 +3,7 @@ import Tree from '../../../../js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import { changeNodeAtPath, walk, addNodeUnderParent } from 'react-sortable-tree';
+import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from 'material-ui/Dialog';
 
 export default class FileBrowser extends React.Component {
@@ -18,6 +18,9 @@ export default class FileBrowser extends React.Component {
     getDirList(treeData, rowInfo) {
         if (rowInfo != undefined) {
             var path = rowInfo.node.path;
+        }
+        else{
+            var path = ""
         }
 
         Utils

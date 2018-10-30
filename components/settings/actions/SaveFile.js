@@ -28,7 +28,7 @@ export default class SaveFile extends React.Component {
     }
 
     componentDidMount () {
-        Utils.sendPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
+        Utils.evalPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
             .then(response => {
                 this.setState({disableNetCells: !response['haveInstance'], disableSimData: !response['haveSimData'], netCells:response['haveInstance'], simData: response['haveSimData']})
             }
