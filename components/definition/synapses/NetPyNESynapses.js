@@ -105,7 +105,7 @@ export default class NetPyNESynapses extends React.Component {
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length) && (this.state.deletedSynapse !== undefined));
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     };
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
