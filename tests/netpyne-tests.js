@@ -23,7 +23,11 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   casper.options.waitTimeout = 10000
   casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
-  });
+	});
+	
+	casper.on('remote.message', function(message) {
+    this.echo('remote message caught: ' + message);
+	});
 
   // show page level errors
   casper.on('resource.received', function(resource) {
