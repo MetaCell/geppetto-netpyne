@@ -215,6 +215,17 @@ function testAppbar(test) {
 	casper.then(function () {
 		appbarTest.instantiateNetwork(this, test, toolbox)
 	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	casper.then(function() {
+		this.wait(1000, function(){
+			this.click("#Populations")
+		})
+	})
 }
 /******************************************************************************
  *                                 popParams                                  *
