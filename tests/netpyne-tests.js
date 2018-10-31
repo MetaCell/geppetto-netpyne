@@ -45,7 +45,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
         test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
       });
     }, null, 40000);
-  });
+	});
+	
+	casper.then(function(){
+		this.echo("I waited for page to load")
+		this.wait(40000)
+	})
 
   casper.then(function() { //test HTML elements in landing page
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
