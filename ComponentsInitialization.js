@@ -13,6 +13,7 @@ define(function (require) {
         
         require('./css/netpyne.less');
         require('./css/material.less');
+        require('./css/traceback.less');
 
         injectTapEventPlugin();
 
