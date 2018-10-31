@@ -42,9 +42,7 @@ export default class ActionDialog extends React.Component {
             Utils
                 .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
-                    //var parsedResponse = JSON.parse(response);
-                    var parsedResponse = response;
-                    if (!this.processError(parsedResponse)) {
+                    if (!this.processError(response)) {
                         if (this.props.args.tab!=undefined) {
                             this.props.changeTab(this.props.args.tab, this.props.args);
                         }
@@ -70,13 +68,6 @@ export default class ActionDialog extends React.Component {
     }
 
     processError = (response) => {
-        // if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-        //     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-        //     this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
-        //     return true;
-        // }
-        // return false;
-
         var parsedResponse = Utils.getErrorResponse(response);
         if (parsedResponse) {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -84,7 +75,6 @@ export default class ActionDialog extends React.Component {
             return true;
         }
         return false;
-        
     }
 
     render() {
@@ -108,7 +98,7 @@ export default class ActionDialog extends React.Component {
                     />
                 ];
                 var title = this.state.errorMessage;
-                var content = this.state.errorDetails;
+                var content = Utils.parsePythonException(this.state.errorDetails);
             }
             return (
                 <Dialog

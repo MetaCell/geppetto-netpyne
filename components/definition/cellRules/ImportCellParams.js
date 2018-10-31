@@ -59,12 +59,6 @@ export default class ImportCellParams extends React.Component {
         return true;
       }
       return false;
-    // if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-    //   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    //   this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
-    //   return true;
-    // }
-    // return false;
   };
 
   performAction = () => {
@@ -87,8 +81,7 @@ export default class ImportCellParams extends React.Component {
         Utils
           .evalPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
           .then(response => {
-            var parsedResponse = JSON.parse(response);
-            if (!this.processError(parsedResponse)) {
+            if (!this.processError(response)) {
               GEPPETTO.CommandController.log("The cell params were imported");
               GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             }
@@ -209,7 +202,7 @@ export default class ImportCellParams extends React.Component {
           />
         ];
         var title = this.state.errorMessage;
-        var children = this.state.errorDetails;
+        var children = Utils.parsePythonException(this.state.errorDetails);
       }
 
       return (
