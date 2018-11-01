@@ -25,9 +25,9 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     this.echo("Error: " + msg, "ERROR");
 	});
 	
-	casper.on('remote.message', function(message) {
-    this.echo('remote message caught: ' + message);
-	});
+	// casper.on('remote.message', function(message) { // UNCOMMENT TO GET MORE DEBUGGING INFO THAN WHAT YOU PROBABLY WANT
+  //   this.echo('remote message caught: ' + message);
+	// });
 
   // show page level errors
   casper.on('resource.received', function(resource) {

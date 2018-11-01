@@ -1,15 +1,15 @@
 function clickOnTree(casper, file) {
-	// casper.then(function(){   // UNLOCK THIS TO CAPTURE CONSOLE IN CASPER
-	// 	let text = casper.evaluate(function(item) {
-	// 		let leaves = document.getElementById("TreeContainerCutting_component").getElementsByTagName("span");
-	// 		let out = {}
-	// 		for (var i = 0 ; i < leaves.length ; i++) {
-	// 			out[i] = leaves[i].textContent
-	// 		}
-	// 		return JSON.stringify(out)
-	// 	}, file)
-	// 	this.echo(text)
-	// })
+	casper.then(function(){ 
+		let text = casper.evaluate(function(item) {
+			let leaves = document.getElementById("TreeContainerCutting_component").getElementsByTagName("span");
+			let out = {}
+			for (var i = 0 ; i < leaves.length ; i++) {
+				out[i] = leaves[i].textContent
+			}
+			return JSON.stringify(out)
+		}, file)
+		this.echo(text)
+	})
 	return casper.evaluate(function(item) {
 		let leaves = document.getElementById("TreeContainerCutting_component").getElementsByTagName("span");
 		for (var i = 0 ; i < leaves.length ; i++) {
