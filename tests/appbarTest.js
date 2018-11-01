@@ -64,18 +64,28 @@ function importHLS(casper, test, toolbox, tut3=true) {
 		this.wait(1000)
 	})
 	casper.then(function() {
-		test.assert(clickOnTree(this, 'tut3.py'), "click tests folder")
+		test.assert(clickOnTree(this, 'tut3.py'), "click tut3.py file")
 	})
 
 	casper.then(function(){
 		this.wait(1000, function() {
-			this.click('button[id="browserAccept"]')
+			this.waitUntilVisible('button[id="browserAccept"]', function(){
+				this.click('button[id="browserAccept"]')
+			})
+		})
+	})
+
+	casper.then(function(){
+		this.waitWhileVisible("div[id='TreeContainerCutting_component']", function(){
+			this.echo(tut3 ? 'tut3.py selection OK' : 'output.py selection OK')
 		})
 	})
 	
 	casper.then(function(){
 		this.wait(1000, function() {
-			this.click('button[id="appbarPerformActionButton"]')
+			this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
+				this.click('button[id="appbarPerformActionButton"]')
+			})
 		})
 	})
 	casper.then(function() {
@@ -92,9 +102,15 @@ function importHLS(casper, test, toolbox, tut3=true) {
 	casper.then(function(){
 		toolbox.click(this, 'appbarImportRequiresModNo', 'span')
 	})
+
 	casper.then(function(){
-		toolbox.click(this, "appbarPerformActionButton", "button")
+		this.wait(1000, function() {
+			this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
+				this.click('button[id="appbarPerformActionButton"]')
+			})
+		})
 	})
+
 	casper.then(function() {
 		this.waitWhileVisible('input[id="appbarImportFileName"]')
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
