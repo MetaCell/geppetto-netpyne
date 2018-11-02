@@ -93,11 +93,12 @@ export default class NetPyNEPopulations extends React.Component {
   /* Method that handles button click */
   selectPopulation(populationName) {
     this.setState({selectedPopulation: populationName});
-  }
+	}
+	
   async deletePopulation(name) {
-    const response = await Utils.execPythonMessage(`netParams.popParams['${name}']`)
+    const response = await Utils.evalPythonMessage(`netpyne_geppetto.netParams.popParams['${name}']`)
     // await Utils.sendPythonMessage('netpyne_geppetto.deleteParam', [`popParams['${name}']`])
-    await Utils.execPythonMessage('netpyne_geppetto.deleteParam', ['popParams', name]) 
+    await Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['popParams', name])
     const {[name]: value, ...model} = this.state.value
     this.setState({value: model, selectedPopulation: undefined});
     
