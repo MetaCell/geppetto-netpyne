@@ -25,7 +25,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     this.echo("Error: " + msg, "ERROR");
 	});
 	
-	// casper.on('remote.message', function(message) { // UNCOMMENT TO GET MORE DEBUGGING INFO THAN WHAT YOU PROBABLY WANT
+	// casper.on('remote.message', function(message) { // UNCOMMENT TO GET MORE DEBUGGING INFO THAN YOU PROBABLY WANT
   //   this.echo('remote message caught: ' + message);
 	// });
 
@@ -169,7 +169,7 @@ function loadConsole(test, consoleButton, consoleContainer) {
 function testAppbar(test) {
 	toolbox.message(casper, "import HLS")
 	casper.then(function() { 
-    appbarTest.importHLS(this, test, toolbox)
+		appbarTest.importHLS(this, test, toolbox)
 	})
 
 	toolbox.message(casper, "run model")
@@ -200,9 +200,9 @@ function testAppbar(test) {
 		appbarTest.exploreOpenedModel(this, test, toolbox)
 	})
 
-	toolbox.message(casper, "save HLS")
+	toolbox.message(casper, "export HLS")
 	casper.then(function(){
-		appbarTest.saveHLS(this, test, toolbox)
+		appbarTest.exportHLS(this, test, toolbox)
 	})
 
 	toolbox.message(casper, "delete model")

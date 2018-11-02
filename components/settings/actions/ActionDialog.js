@@ -46,7 +46,7 @@ export default class ActionDialog extends React.Component {
                         if (this.props.args.tab!=undefined) {
                             this.props.changeTab(this.props.args.tab, this.props.args);
                         }
-                        if (this.props.args.tab=='simulate' && this.props.action != 'ExportNeuroML') {
+                        if (this.props.args.tab=='simulate') {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(response);
                             GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
@@ -84,7 +84,7 @@ export default class ActionDialog extends React.Component {
                 var title = this.props.title
                 var actions = [
                     cancelAction, 
-                    <RaisedButton id="appbarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
+                    <RaisedButton id="appBarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
                 ];
                 var content = this.props.children;
             }

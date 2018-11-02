@@ -64,9 +64,9 @@ export default class NetPyNETabs extends React.Component {
                 targetOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem id="transit_not" primaryText="Create Network" value="Create Network" />
-                <MenuItem id="transit_sim" primaryText="Create and Simulate Network" value="Create and Simulate Network" />
-                <MenuItem id="transit_exp" primaryText="Explore Existing Network" value="Explore Existing Network" />
+                <MenuItem id="transitCreate" primaryText="Create Network" value="Create Network" />
+                <MenuItem id="transitSimulate" primaryText="Create and Simulate Network" value="Create and Simulate Network" />
+                <MenuItem id="transitExplore" primaryText="Explore Existing Network" value="Explore Existing Network" />
             </IconMenu>
         </div>
     }

@@ -27,18 +27,21 @@ function clickOnTree(casper, file) {
 
 function importHLS(casper, test, toolbox, tut3=true) {
 	casper.then(function () {
-		this.waitUntilVisible('button[id="appbar"]', function(){
-			this.click('button[id="appbar"]')
+		this.waitUntilVisible('button[id="appBar"]', function(){
+			this.click('button[id="appBar"]')
 		})
 	})
 	casper.then(function() {
-		this.waitUntilVisible('span[id="appBarImport"]', function(){
-			this.click('span[id="appBarImport"]')
+		this.waitUntilVisible('span[id="appBarImportHLS"]', function(){
+			this.wait(3000, function(){
+				this.click('span[id="appBarImportHLS"]')
+			})
+			
 		})
 	})
 	casper.then(function() {
-		this.waitUntilVisible('input[id="appbarImportFileName"]', function(){
-			this.click('input[id="appbarImportFileName"]')
+		this.waitUntilVisible('input[id="appBarImportFileName"]', function(){
+			this.click('input[id="appBarImportFileName"]')
 		})
 	})
 	casper.then(function(){
@@ -83,8 +86,8 @@ function importHLS(casper, test, toolbox, tut3=true) {
 	
 	casper.then(function(){
 		this.wait(1000, function() {
-			this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
-				this.click('button[id="appbarPerformActionButton"]')
+			this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+				this.click('button[id="appBarPerformActionButton"]')
 			})
 		})
 	})
@@ -92,27 +95,27 @@ function importHLS(casper, test, toolbox, tut3=true) {
 		this.wait(1000)
 	})
 	casper.then(function(){
-		test.assertExist('input[id="appbarImportFileName"]', "specify if mod files required before importing HLS OK")
+		test.assertExist('input[id="appBarImportFileName"]', "specify if mod files required before importing HLS OK")
 	})
 
 	casper.then(function() {
-		toolbox.click(this, 'appbarImportRequiresMod')
+		toolbox.click(this, 'appBarImportRequiresMod')
 	})
 
 	casper.then(function(){
-		toolbox.click(this, 'appbarImportRequiresModNo', 'span')
+		toolbox.click(this, 'appBarImportRequiresModNo', 'span')
 	})
 
 	casper.then(function(){
 		this.wait(1000, function() {
-			this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
-				this.click('button[id="appbarPerformActionButton"]')
+			this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+				this.click('button[id="appBarPerformActionButton"]')
 			})
 		})
 	})
 
 	casper.then(function() {
-		this.waitWhileVisible('input[id="appbarImportFileName"]')
+		this.waitWhileVisible('input[id="appBarImportFileName"]')
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assert(true, "Completed HLS import")
     }, 40000)
@@ -213,8 +216,8 @@ function simulateNetwork(casper, test, toolbox) {
 
 function saveNetwork(casper, test, toolbox) {
 	casper.then(function () {
-		this.waitUntilVisible('button[id="appbar"]', function(){
-			this.click('button[id="appbar"]')
+		this.waitUntilVisible('button[id="appBar"]', function(){
+			this.click('button[id="appBar"]')
 		})
 	})
 	casper.then(function(){
@@ -226,12 +229,12 @@ function saveNetwork(casper, test, toolbox) {
 		})
 	})
 	casper.then(function(){
-		this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
-			this.click('button[id="appbarPerformActionButton"]')
+		this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+			this.click('button[id="appBarPerformActionButton"]')
 		})
 	})
 	casper.then(function() {
-		this.waitWhileVisible('button[id="appbarPerformActionButton"]', function(){
+		this.waitWhileVisible('button[id="appBarPerformActionButton"]', function(){
 			this.echo("Saved model in json format")
 		})
 	})
@@ -241,8 +244,8 @@ function saveNetwork(casper, test, toolbox) {
 
 function openNetwork(casper, test, toolbox) {
 	casper.then(function () {
-		this.waitUntilVisible('button[id="appbar"]', function() {
-			this.click('button[id="appbar"]')
+		this.waitUntilVisible('button[id="appBar"]', function() {
+			this.click('button[id="appBar"]')
 		})
 	})
 	casper.then(function() {
@@ -270,7 +273,7 @@ function openNetwork(casper, test, toolbox) {
 	
 	casper.then(function(){
 		this.wait(1000, function() {
-			this.click('button[id="appbarPerformActionButton"]')
+			this.click('button[id="appBarPerformActionButton"]')
 		})
 	})
 	casper.then(function() {
@@ -282,14 +285,14 @@ function openNetwork(casper, test, toolbox) {
 	})
 
 	casper.then(function() {
-		toolbox.click(this, 'appbarLoadRequiresMod')
+		toolbox.click(this, 'appBarLoadRequiresMod')
 	})
 
 	casper.then(function(){
-		toolbox.click(this, 'appbarLoadRequiresModNo', 'span')
+		toolbox.click(this, 'appBarLoadRequiresModNo', 'span')
 	})
 	casper.then(function(){
-		toolbox.click(this, "appbarPerformActionButton", "button")
+		toolbox.click(this, "appBarPerformActionButton", "button")
 	})
 	casper.then(function() {
 		this.waitWhileVisible('input[id="loadJsonFile"]')
@@ -336,24 +339,24 @@ function exploreOpenedModel(casper, test, toolbox) {
 
 // ----------------------------------------------------------------------------------- //
 
-function saveHLS(casper, test, toolbox) {
+function exportHLS(casper, test, toolbox) {
 	casper.then(function () {
-		this.waitUntilVisible('button[id="appbar"]', function(){
-			this.click('button[id="appbar"]')
+		this.waitUntilVisible('button[id="appBar"]', function(){
+			this.click('button[id="appBar"]')
 		})
 	})
 	casper.then(function() {
-		this.waitUntilVisible('span[id="appBarExport"]', function(){
-			this.click('span[id="appBarExport"]')
+		this.waitUntilVisible('span[id="appBarExportHLS"]', function(){
+			this.click('span[id="appBarExportHLS"]')
 		})
 	})
 	casper.then(function(){
-		this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
-			this.click('button[id="appbarPerformActionButton"]')
+		this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+			this.click('button[id="appBarPerformActionButton"]')
 		})
 	})
 	casper.then(function(){
-		this.waitWhileVisible('button[id="appbarPerformActionButton"]')
+		this.waitWhileVisible('button[id="appBarPerformActionButton"]')
 	})
 	casper.then(function(){
 		this.waitWhileVisible('div[id="loading-spinner', function(){
@@ -366,8 +369,8 @@ function saveHLS(casper, test, toolbox) {
 
 function clearModel(casper, test, toolbox) {
 	casper.then(function () {
-		this.waitUntilVisible('button[id="appbar"]', function(){
-			this.click('button[id="appbar"]')
+		this.waitUntilVisible('button[id="appBar"]', function(){
+			this.click('button[id="appBar"]')
 		})
 	})
 	casper.then(function() {
@@ -376,15 +379,15 @@ function clearModel(casper, test, toolbox) {
 		})
 	})
 	casper.then(function(){
-		this.waitUntilVisible('button[id="appbarPerformActionButton"]', function(){
+		this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
 			this.evaluate(function() {
-				document.getElementById("appbarPerformActionButton").click()
+				document.getElementById("appBarPerformActionButton").click()
 			})
 		})
 	})
 
 	casper.then(function(){
-		this.waitWhileVisible('button[id="appbarPerformActionButton"]')
+		this.waitWhileVisible('button[id="appBarPerformActionButton"]')
 	})
 
 	casper.then(function() {
@@ -403,11 +406,11 @@ function clearModel(casper, test, toolbox) {
 }
 module.exports = {  
 	importHLS: importHLS,
-	instantiateNetwork: instantiateNetwork,
-	simulateNetwork: simulateNetwork,
-	saveNetwork: saveNetwork,
+	exportHLS: exportHLS,
 	openNetwork: openNetwork,
+	saveNetwork: saveNetwork,
+	simulateNetwork: simulateNetwork,
+	instantiateNetwork: instantiateNetwork,
 	exploreOpenedModel: exploreOpenedModel,
-	saveHLS: saveHLS,
 	clearModel: clearModel
 }
