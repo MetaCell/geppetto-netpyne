@@ -120,14 +120,14 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
-              callback={this.state.doNotTrigger?undefined:(nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellType')}
+              callback={this.state.doNotTrigger ? undefined : (nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellType')}
               model={`netParams.popParams['${this.props.name}']['cellType']`}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledTextField
-              callback={this.state.doNotTrigger?undefined:(nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellModel')}
+              callback={this.state.doNotTrigger ? undefined : (nv, ov) => GEPPETTO.trigger("global_refresh", nv, ov, 'cellModel')}
               model={`netParams.popParams['${this.props.name}']['cellModel']`}
             />
           </NetPyNEField>

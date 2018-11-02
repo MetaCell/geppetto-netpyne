@@ -59,16 +59,15 @@ export default class NetPyNE extends React.Component {
 
   componentDidMount() {
 	GEPPETTO.on('global_refresh', (newValue, oldValue, label) => {
-	Utils.sendPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
-		.then((unique) => {
-		this.componentsSubscribedToGlobalRefresh.forEach( that => {
-			console.log(that)
-			if (that.id.includes(label)) {
-			let pythonDataClone
-			if (unique) //checking if I should remove the old value from the menue
-				pythonDataClone = that.state.pythonData.filter( v => v!=oldValue )
-			else 
-				pythonDataClone = [...that.state.pythonData]
+		Utils.evalPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+			.then((unique) => {
+			this.componentsSubscribedToGlobalRefresh.forEach( that => {
+				if (that.id.includes(label)) {
+					let pythonDataClone
+					if (unique) //checking if I should remove the old value from the menu
+						pythonDataClone = that.state.pythonData.filter( v => v != oldValue )
+					else 
+						pythonDataClone = [...that.state.pythonData]
 
 			if (newValue && that.state.pythonData.indexOf(newValue)==-1) { //checking if I should add a new  item to the menu
 				that.setState({pythonData: [ ...pythonDataClone, newValue]})
