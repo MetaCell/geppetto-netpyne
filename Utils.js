@@ -111,13 +111,16 @@ const Utils = {
             })
     },
 
-    nameValidation(myString) {
-        if((/\s/.test(myString))) {
-            myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
-        } else if((/^[0-9]/.test(myString))) {
-            myString = myString.replace(/\s+/g, "").replace(/^\d+/g, "");
+    nameValidation(name) {
+        // Remove spaces
+        if((/\s/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
+        } 
+        // Remove number at the beginning
+        else if((/^[0-9]/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
         }
-        return myString;
+        return name;
 
     },
     
