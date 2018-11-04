@@ -54,6 +54,7 @@ export default class NetPyNETabs extends React.Component {
             <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
             <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
+								id="transit"
                 value={this.state.simulateTabLabel}
                 iconStyle={{ color: '#ffffff' }}
                 style={{ position: 'absolute', top: '6px', right: '28px' }}
@@ -63,9 +64,9 @@ export default class NetPyNETabs extends React.Component {
                 targetOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem primaryText="Create Network" value="Create Network" />
-                <MenuItem primaryText="Create and Simulate Network" value="Create and Simulate Network" />
-                <MenuItem primaryText="Explore Existing Network" value="Explore Existing Network" />
+                <MenuItem id="transitCreate" primaryText="Create Network" value="Create Network" />
+                <MenuItem id="transitSimulate" primaryText="Create and Simulate Network" value="Create and Simulate Network" />
+                <MenuItem id="transitExplore" primaryText="Explore Existing Network" value="Explore Existing Network" />
             </IconMenu>
         </div>
     }

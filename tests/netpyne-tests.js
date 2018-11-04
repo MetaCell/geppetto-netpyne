@@ -1,4 +1,5 @@
 var toolbox = require('./toolbox');
+var appbarTest = require('./appbarTest');
 var simConfigTest = require('./simConfigTest');
 var popParamsTest = require('./popParamsTest');
 var cellParamsTest = require('./cellParamsTest');
@@ -9,6 +10,7 @@ var stimTargetParamsTest = require('./stimTargetParamsTest');
 var simulationTest = require('./simulationTest');
 
 var urlBase = casper.cli.get('host');
+
 if (urlBase == null || urlBase == undefined) {
   urlBase = "http://localhost:8888/";
 }
@@ -21,7 +23,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   casper.options.waitTimeout = 10000
   casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
-  });
+	});
+  
+  // UNCOMMENT OUT to get the javascript logs (console.log). Particularly useful for debugginf purpose
+  // casper.on('remote.message', function(message) { 
+  //   this.echo('remote message caught: ' + message);
+	// });
 
   // show page level errors
   casper.on('resource.received', function(resource) {
@@ -43,11 +50,16 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
         test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
       });
     }, null, 40000);
-  });
+	});
 
   casper.then(function() { //test HTML elements in landing page
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
     testLandingPage(test);
+	});
+	
+	casper.then(function() { // test adding a population using UI  
+    toolbox.header(this, "test appbar")
+    testAppbar(test);
   });
 
   casper.then(function() { // test adding a population using UI
@@ -152,8 +164,76 @@ function loadConsole(test, consoleButton, consoleContainer) {
     this.wait(1000)
   })
 }
-/*******************************************************************************
- *                                 popParams                                   *
+/******************************************************************************
+ *                                  appbar                                    *
+ ******************************************************************************/
+function testAppbar(test) {
+	toolbox.message(casper, "import HLS")
+	casper.then(function() { 
+		appbarTest.importHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.simulateNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "save model")
+	casper.then(function(){
+		appbarTest.saveNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "open model")
+	casper.then(function(){
+		appbarTest.openNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.exploreOpenedModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "export HLS")
+	casper.then(function(){
+		appbarTest.exportHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "import HLS")
+	casper.then(function() { 
+		appbarTest.importHLS(this, test, toolbox, false)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	casper.then(function() {
+		this.wait(1000, function(){
+			this.click("#Populations")
+		})
+	})
+}
+/******************************************************************************
+ *                                 popParams                                  *
  ******************************************************************************/
 function testPopParamsFields(test) {
   toolbox.message(casper, "create")
