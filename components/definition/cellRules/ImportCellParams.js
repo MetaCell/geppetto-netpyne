@@ -126,7 +126,7 @@ export default class ImportCellParams extends React.Component {
     if (this.state.open) {
       var cancelAction = <FlatButton
         label={'CANCEL'}
-        onTouchTap={this.cancelImportCellParams}
+        onClick={this.cancelImportCellParams}
         style={{ marginRight: 16 }}
       />
       if (this.state.errorMessage == undefined) {
@@ -135,7 +135,7 @@ export default class ImportCellParams extends React.Component {
           <RaisedButton
             primary
             label={"IMPORT"}
-            onTouchTap={this.performAction}
+            onClick={this.performAction}
           />
         ];
         var children = <Card style={{ padding: 10, float: 'left', width: '100%' }}>
@@ -198,7 +198,7 @@ export default class ImportCellParams extends React.Component {
           <RaisedButton
             primary
             label={"BACK"}
-            onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
           />
         ];
         var title = this.state.errorMessage;

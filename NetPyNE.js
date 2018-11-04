@@ -134,8 +134,8 @@ export default class NetPyNE extends React.Component {
 			return {
 				value: tab,
 				prevValue: tab, 
-				freezeInstance: args.freezeInstance!=undefined?args.freezeInstance:fi,
-				freezeSimulation: args.freezeSimulation!=undefined?args.freezeSimulation:fs,
+				freezeInstance: args.freezeInstance != undefined ? args.freezeInstance : fi,
+				freezeSimulation: args.freezeSimulation != undefined ? args.freezeSimulation : fs,
 			}
 		});
 	}
@@ -168,7 +168,7 @@ export default class NetPyNE extends React.Component {
 							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
-        					<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
+        			<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
 								<NetPyNETabs label={this.state.value} handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
 							</ToolbarGroup>
 						</Toolbar>

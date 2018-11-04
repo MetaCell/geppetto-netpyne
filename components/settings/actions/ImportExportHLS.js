@@ -12,6 +12,7 @@ export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+			fileName: "output",
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -73,8 +74,8 @@ export default class ImportExportHLS extends React.Component {
             }
         }
         this.setState(newState);
-    }
-
+		}
+		
     render() {
         switch(this.props.mode) {
             case 'IMPORT':
@@ -82,6 +83,7 @@ export default class ImportExportHLS extends React.Component {
                 var content = 
                     <CardText style={{marginTop: -33}}>
                         <TextField 
+                            id="appBarImportFileName"
                             readOnly
                             className="netpyneFieldNoWidth"
                             style={{width:'48%'}}
@@ -107,6 +109,7 @@ export default class ImportExportHLS extends React.Component {
                         <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
                         <div >
                             <SelectField
+								id="appBarImportRequiresMod"
                                 className="netpyneField"
                                 style={{marginTop:0}}
                                 errorText={this.state.loadMod===undefined?"This field is required.":false}
@@ -116,17 +119,17 @@ export default class ImportExportHLS extends React.Component {
                                 onChange={(event, index, value) => this.setState({loadMod: value})}
                             >
                                 <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                                <MenuItem value={false} primaryText="no, this model only requires NEURON build-in mods." />
+                                <MenuItem id="appBarImportRequiresModNo" value={false} primaryText="no, this model only requires NEURON build-in mods." />
                             </SelectField>
                             <TextField 
-                            className="netpyneFieldNoWidth" 
-                            style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
-                            floatingLabelText="Path to mod files"
-                            disabled={this.state.loadMod===''?true:!this.state.loadMod} 
-                            value={this.state.modFolder} 
-                            onClick={() => this.showExplorerDialog('modFolder', true, false)} 
-                            readOnly 
-                            />
+                                className="netpyneFieldNoWidth" 
+                                style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
+                                floatingLabelText="Path to mod files"
+                                disabled={this.state.loadMod===''?true:!this.state.loadMod} 
+                                value={this.state.modFolder} 
+                                onClick={() => this.showExplorerDialog('modFolder', true, false)} 
+                                readOnly 
+                                />
                             <div style={{ float: 'right', width: '48%', marginTop: 20}}>
                             <Checkbox
                                 disabled={this.state.loadMod===''?true:!this.state.loadMod}
