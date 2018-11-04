@@ -12,7 +12,7 @@ export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-						fileName: "output",
+			fileName: "output",
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -82,9 +82,9 @@ export default class ImportExportHLS extends React.Component {
                 var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = 
                     <CardText style={{marginTop: -33}}>
-												<TextField 
-														id="appBarImportFileName"
-														readOnly
+                        <TextField 
+                            id="appBarImportFileName"
+                            readOnly
                             className="netpyneFieldNoWidth"
                             style={{width:'48%'}}
                             value={this.state.netParamsModuleName}
@@ -109,7 +109,7 @@ export default class ImportExportHLS extends React.Component {
                         <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
                         <div >
                             <SelectField
-																id="appBarImportRequiresMod"
+								id="appBarImportRequiresMod"
                                 className="netpyneField"
                                 style={{marginTop:0}}
                                 errorText={this.state.loadMod===undefined?"This field is required.":false}
@@ -122,14 +122,14 @@ export default class ImportExportHLS extends React.Component {
                                 <MenuItem id="appBarImportRequiresModNo" value={false} primaryText="no, this model only requires NEURON build-in mods." />
                             </SelectField>
                             <TextField 
-                            className="netpyneFieldNoWidth" 
-                            style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
-                            floatingLabelText="Path to mod files"
-                            disabled={this.state.loadMod===''?true:!this.state.loadMod} 
-                            value={this.state.modFolder} 
-                            onClick={() => this.showExplorerDialog('modFolder', true, false)} 
-                            readOnly 
-                            />
+                                className="netpyneFieldNoWidth" 
+                                style={{ float: 'left', width: '48%', cursor: 'pointer', marginTop: -20 }} 
+                                floatingLabelText="Path to mod files"
+                                disabled={this.state.loadMod===''?true:!this.state.loadMod} 
+                                value={this.state.modFolder} 
+                                onClick={() => this.showExplorerDialog('modFolder', true, false)} 
+                                readOnly 
+                                />
                             <div style={{ float: 'right', width: '48%', marginTop: 20}}>
                             <Checkbox
                                 disabled={this.state.loadMod===''?true:!this.state.loadMod}
