@@ -116,7 +116,7 @@ export default class LoadFile extends React.Component {
                             <div>
                                 <SelectField
 																		className="netpyneField"
-																		id="appbarLoadRequiresMod"
+																		id="appBarLoadRequiresMod"
                                     errorText={this.state.areModFieldsRequired===undefined?"This field is required.":false}
                                     errorStyle={{color: orange500, marginBottom:-40}}
                                     floatingLabelText="Are custom mod files required for this model?"
@@ -124,7 +124,7 @@ export default class LoadFile extends React.Component {
                                     onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
                                 >
                                     <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                                    <MenuItem id="appbarLoadRequiresModNo" value={false} primaryText="no, only NEURON build-in mods." />
+                                    <MenuItem id="appBarLoadRequiresModNo" value={false} primaryText="no, only NEURON build-in mods." />
                                 </SelectField>
                                 <TextField 
                                     readOnly

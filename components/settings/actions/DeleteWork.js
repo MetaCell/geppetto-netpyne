@@ -13,7 +13,7 @@ export default class DeleteWork extends React.Component {
             <ActionDialog
                 command ={"netpyne_geppetto.deleteModel"}
                 message = {"DELETING MODEL"}
-                args = {{tab: 'define'}}
+                args = {{tab: 'define', action: 'deleteModel' }}
                 buttonLabel={"Delete"}
                 title={"Delete"}
                 {...this.props}

@@ -31,14 +31,7 @@ export default class ActionDialog extends React.Component {
     performAction = () => {
         if (this.props.isFormValid === undefined || this.props.isFormValid()){
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-						this.closeDialog();
-						if (this.props.command == "netpyne_geppetto.deleteModel") {
-							Object.keys(window).forEach(key => {
-								if (key.startsWith("Popup") && key != "PopupsController") {
-									window[key].destroy()
-								}
-							})
-						}
+			this.closeDialog();
             Utils
                 .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
@@ -46,11 +39,18 @@ export default class ActionDialog extends React.Component {
                         if (this.props.args.tab!=undefined) {
                             this.props.changeTab(this.props.args.tab, this.props.args);
                         }
-                        if (this.props.args.tab=='simulate' && this.props.action != 'ExportNeuroML') {
+                        if (this.props.args.tab=='simulate') {
                             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
                             GEPPETTO.Manager.loadModel(response);
                             GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
                         }
+                        if (this.props.args.action == "deleteModel") {
+                            GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
+                                controller.widgets.forEach(widget => {
+                                    widget.destroy()
+                                })
+                            })
+						}
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                         this.props.onRequestClose();
                     }
@@ -84,7 +84,7 @@ export default class ActionDialog extends React.Component {
                 var title = this.props.title
                 var actions = [
                     cancelAction, 
-                    <RaisedButton id="appbarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
+                    <RaisedButton id="appBarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
                 ];
                 var content = this.props.children;
             }

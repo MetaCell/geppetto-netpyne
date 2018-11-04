@@ -138,9 +138,6 @@ export default class NetPyNE extends React.Component {
 				freezeSimulation: args.freezeSimulation != undefined ? args.freezeSimulation : fs,
 			}
 		});
-		if (tab=="define") {
-			this.hideWidgetsFor("simulate")
-		}
 	}
 	
 	render() {
