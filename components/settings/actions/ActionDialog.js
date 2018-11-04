@@ -31,14 +31,7 @@ export default class ActionDialog extends React.Component {
     performAction = () => {
         if (this.props.isFormValid === undefined || this.props.isFormValid()){
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-						this.closeDialog();
-						if (this.props.command == "netpyne_geppetto.deleteModel") {
-							Object.keys(window).forEach(key => {
-								if (key.startsWith("Popup") && key != "PopupsController") {
-									window[key].destroy()
-								}
-							})
-						}
+			this.closeDialog();
             Utils
                 .evalPythonMessage(this.props.command, [this.props.args])
                 .then(response => {
@@ -51,6 +44,13 @@ export default class ActionDialog extends React.Component {
                             GEPPETTO.Manager.loadModel(response);
                             GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
                         }
+                        if (this.props.args.action == "deleteModel") {
+                            GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
+                                controller.widgets.forEach(widget => {
+                                    widget.destroy()
+                                })
+                            })
+						}
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                         this.props.onRequestClose();
                     }

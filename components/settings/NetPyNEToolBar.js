@@ -76,7 +76,7 @@ export default class NetPyNEToolBar extends React.Component {
         
         return <div>
             <IconButton
-								id="appBar"
+				id="appBar"
                 tooltip={'File options'}
                 style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden' }}
                 iconStyle={{ color: '#ffffff', marginTop: -4, marginLeft: -4 }}
@@ -96,7 +96,7 @@ export default class NetPyNEToolBar extends React.Component {
                 <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
                 <MenuItem id="appBarSave" primaryText="Save..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
                 <MenuItem id="appBarImportHLS" primaryText="Import HLS" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />
-								<MenuItem id="appBarExportHLS" primaryText="Export HLS" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
+				<MenuItem id="appBarExportHLS" primaryText="Export HLS" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
                 <MenuItem id="appBarDelete" primaryText="Remove current project" onClick={() => this.handleMenuItemClick('Remove')} leftIcon={<FontIcon className='fa fa-trash-o' />} />
             </Drawer>
             
