@@ -9,6 +9,8 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -22,21 +24,39 @@ export default class NetPyNEConnectivityRule extends React.Component {
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
-      sectionId: "General"
+      sectionId: "General",
+      errorMessage: undefined,
+      errorDetails: undefined
     };
   }
 
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;
-    var newValue = event.target.value;
-    this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      // Rename the population in Python
-      Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
-      that.renaming = true;
-    });
+    var newValue = Utils.nameValidation(event.target.value);
+    var updateCondition = this.props.renameHandler(newValue);
+    if(newValue != event.target.value) {
+      // if the new value has been changed by the function Utils.nameValidation means that the name convention
+      // has not been respected, so we need to open the dialog and inform the user.
+      this.setState({ currentName: newValue,
+                      errorMessage: "Error",
+                      errorDetails: "Leading digits or whitespaces are not allowed in ConnectionRule names."});
+    } else {
+      this.setState({ currentName: newValue });
+    }
 
+    if(updateCondition) {
+      this.triggerUpdate(function () {
+        // Rename the population in Python
+        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
+        that.renaming = true;
+      });
+    } else if(!(updateCondition) && !(newValue != event.target.value)) {
+      this.setState({ currentName: newValue,
+                      errorMessage: "Error",
+                      errorDetails: "Name collision detected, the name "+newValue+
+                                    " is already used in this model, please pick another name."});
+    }
   }
 
   triggerUpdate(updateMethod) {
@@ -78,6 +98,24 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
+
     if (this.state.sectionId == "General") {
       var content =
         <div>
@@ -153,7 +191,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['plasticity']"}
             />
           </NetPyNEField>
-
+          {dialogPop}
         </div>
     }
     else if (this.state.sectionId == "Pre Conditions") {
