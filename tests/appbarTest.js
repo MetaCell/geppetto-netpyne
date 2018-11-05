@@ -48,21 +48,21 @@ function importHLS(casper, test, toolbox, tut3=true) {
 		this.wait(1000)
 	})
 	casper.then(function() {
-		test.assert(clickOnTree(this, (tut3 ? 'netpyne_ui' : 'output.py')), "click " + (tut3 ? "netpyne_ui" : "output.py") + " folder")
+		test.assert(clickOnTree(this, (tut3 ? 'tests' : 'output.py')), "click " + (tut3 ? "tests" : "output.py") + " folder")
 	})
 	
 	casper.then(function(){
 		if (!tut3) {
-			this.bypass(4)
+			this.bypass(2)
 		}
 	})
 
-	casper.then(function(){
-		this.wait(1000)
-	})
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'tests'), "click tests folder")
-	})
+	// casper.then(function(){
+	// 	this.wait(1000)
+	// })
+	// casper.then(function() {
+	// 	test.assert(clickOnTree(this, 'tests'), "click tests folder")
+	// })
 	casper.then(function(){
 		this.wait(1000)
 	})
