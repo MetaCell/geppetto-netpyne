@@ -57,12 +57,6 @@ function importHLS(casper, test, toolbox, tut3=true) {
 		}
 	})
 
-	// casper.then(function(){
-	// 	this.wait(1000)
-	// })
-	// casper.then(function() {
-	// 	test.assert(clickOnTree(this, 'tests'), "click tests folder")
-	// })
 	casper.then(function(){
 		this.wait(1000)
 	})
