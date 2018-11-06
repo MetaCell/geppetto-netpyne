@@ -85,8 +85,8 @@ function create2rules(casper, test, cardID, addButtonID, ruleThumbID) {
   })
 
   casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
-    this.waitUntilVisible('button[id="' + ruleThumbID + ' 2"]', function() {
-      test.assertExist('button[id="' + ruleThumbID + ' 2"]', "rule added");
+    this.waitUntilVisible('button[id="' + ruleThumbID + '2"]', function() {
+      test.assertExist('button[id="' + ruleThumbID + '2"]', "rule added");
     })
   })
 

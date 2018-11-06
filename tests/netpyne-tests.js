@@ -62,7 +62,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testAppbar(test);
   });
 
-  casper.then(function() { // test adding a population using UI  
+  casper.then(function() { // test adding a population using UI
     toolbox.header(this, "test popParams fields")
     testPopParamsFields(test);
   });
@@ -247,10 +247,10 @@ function testPopParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "Population 2", "populationName")
+    toolbox.selectThumbRule(this, test, "Population2", "populationName")
   })
   casper.then(function() { // check rule 2 is empty
-    popParamsTest.checkPopParamsValues(this, test, toolbox, "Population 2", true)
+    popParamsTest.checkPopParamsValues(this, test, toolbox, "Population2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -261,7 +261,7 @@ function testPopParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "Population 2")
+    toolbox.delThumbnail(this, test, "Population2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "Population", "populationName")
@@ -295,10 +295,10 @@ function testCellParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "CellRule 2", "cellRuleName")
+    toolbox.selectThumbRule(this, test, "CellRule2", "cellRuleName")
   })
   casper.then(function() { // check fields are not copy to rule 2
-    cellParamsTest.checkCellParamsValues(this, test, toolbox, "CellRule 2", "", "", "", true)
+    cellParamsTest.checkCellParamsValues(this, test, toolbox, "CellRule2", "", "", "", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -312,7 +312,7 @@ function testCellParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "CellRule 2")
+    toolbox.delThumbnail(this, test, "CellRule2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "CellRule", "cellRuleName")
@@ -343,10 +343,10 @@ function testSynMechParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "Synapse 2", "synapseName")
+    toolbox.selectThumbRule(this, test, "Synapse2", "synapseName")
   })
   casper.then(function() { // check rule 2 is empty
-    synMechParamsTest.checkSynMechEmpty(this, test, toolbox, "Synapse 2")
+    synMechParamsTest.checkSynMechEmpty(this, test, toolbox, "Synapse2")
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -357,7 +357,7 @@ function testSynMechParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "Synapse 2")
+    toolbox.delThumbnail(this, test, "Synapse2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "Synapse", "synapseName")
@@ -391,10 +391,10 @@ function testConnParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { //focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "ConnectivityRule 2", "ConnectivityName")
+    toolbox.selectThumbRule(this, test, "ConnectivityRule2", "ConnectivityName")
   })
   casper.then(function() { // check rule 2 is empty
-    connParamsTest.checkConnRuleValues(this, test, toolbox, "ConnectivityRule 2", true)
+    connParamsTest.checkConnRuleValues(this, test, toolbox, "ConnectivityRule2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -405,7 +405,7 @@ function testConnParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "ConnectivityRule 2")
+    toolbox.delThumbnail(this, test, "ConnectivityRule2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "ConnectivityRule", "ConnectivityName")
@@ -436,10 +436,10 @@ function testStimSourceFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "stim_source 2", "sourceName")
+    toolbox.selectThumbRule(this, test, "stim_source2", "sourceName")
   })
   casper.then(function() { // check rule 2 is empty
-    stimSourceParamsTest.checkStimSourceEmpty(this, test, toolbox, "stim_source 2")
+    stimSourceParamsTest.checkStimSourceEmpty(this, test, toolbox, "stim_source2")
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -450,7 +450,7 @@ function testStimSourceFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "stim_source 2")
+    toolbox.delThumbnail(this, test, "stim_source2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "stim_source", "sourceName")
@@ -484,10 +484,10 @@ function testStimTargetFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "stim_target 2", "targetName")
+    toolbox.selectThumbRule(this, test, "stim_target2", "targetName")
   })
   casper.then(function() { // check rule 2 is empty
-    stimTargetParamsTest.checkStimTargetValues(this, test, toolbox, "stim_target 2", true)
+    stimTargetParamsTest.checkStimTargetValues(this, test, toolbox, "stim_target2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -498,7 +498,7 @@ function testStimTargetFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "stim_target 2")
+    toolbox.delThumbnail(this, test, "stim_target2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "stim_target", "targetName")

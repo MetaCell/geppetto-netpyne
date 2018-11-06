@@ -11,7 +11,7 @@ const Utils = {
         var id = prefix;
         var i = 2;
         while (model[id] != undefined) {
-            id = prefix + " " + i++;
+            id = prefix + i++;
         }
         return id;
     },
@@ -111,6 +111,19 @@ const Utils = {
             })
     },
 
+    nameValidation(name) {
+        // Remove spaces
+        if((/\s/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
+        } 
+        // Remove number at the beginning
+        else if((/^[0-9]/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
+        }
+        return name;
+
+    },
+    
     //FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
     convertToJSON(data){
         if (typeof data === 'string' || data instanceof String){
