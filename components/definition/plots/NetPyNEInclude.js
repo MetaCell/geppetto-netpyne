@@ -101,7 +101,7 @@ export default class NetPyNEInclude extends Component {
       Object.keys(this.state.include.popids).forEach(key => data.push([key, this.state.include.popids[key]]))
     }
     Utils
-      .execPythonCommand("netpyne_geppetto." + this.props.model + " = " + JSON.stringify(data))
+      .execPythonMessage("netpyne_geppetto." + this.props.model + " = " + JSON.stringify(data))
   }
   
   convertFromPython(data) {
@@ -129,13 +129,16 @@ export default class NetPyNEInclude extends Component {
     return out
   }
   collectInfo = () =>{
+		console.log(this.props.model)
     Utils
-      .sendPythonMessage("netpyne_geppetto.getGIDs", [])
+      .evalPythonMessage("netpyne_geppetto.getGIDs", [])
       .then((response) => {
+				console.log(response)
         if (response) {
           Utils
-            .sendPythonMessage(this.props.model)
+						.evalPythonMessage("self."+this.props.model, [])
             .then((response2) => {
+							console.log(response2)
               if (response2) {
                 var included = this.convertFromPython(response2)
                 var clone = Object.assign({}, response)
