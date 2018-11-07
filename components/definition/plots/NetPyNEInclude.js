@@ -112,10 +112,10 @@ export default class NetPyNEInclude extends Component {
             out['gids'].push(element)
             break;
           case 'String':
-            element!='all'?out['groups'].push(element):out.exclusive='all'
+            element != 'all' ? out['groups'].push(element) : out.exclusive = 'all'
             break;
           case 'Array':
-            if (element[1].constructor.name=='Number') {
+            if (element[1].constructor.name == 'Number') {
               out['popids'][element[0]] = [element[1]]
             }
             else {
@@ -127,32 +127,26 @@ export default class NetPyNEInclude extends Component {
         }
     });
     return out
-  }
-  collectInfo = () =>{
-		console.log(this.props.model)
-    Utils
-      .evalPythonMessage("netpyne_geppetto.getGIDs", [])
-      .then((response) => {
-				console.log(response)
-        if (response) {
-          Utils
-						.evalPythonMessage("self."+this.props.model, [])
-            .then((response2) => {
-							console.log(response2)
-              if (response2) {
-                var included = this.convertFromPython(response2)
-                var clone = Object.assign({}, response)
-                Object.keys(clone).forEach((key) => clone[key]=false)
-                this.setState({
-                  data: response,
-                  include: included,
-                  secondPopoverOpen: clone,
-                  label: this.whoIsIncluded(included, response)
-                })
-              }
-          })
-        }
-    })
+	}
+	
+  collectInfo = async () => {
+    const numberOfCellsByPopulation = await Utils.evalPythonMessage("netpyne_geppetto.getGIDs", [])
+    
+		if (numberOfCellsByPopulation) {
+			const dataInPythonFormat = await Utils.evalPythonMessage("netpyne_geppetto."+this.props.model)
+		
+			if (dataInPythonFormat) {
+				const included = this.convertFromPython(dataInPythonFormat)
+				let clone = Object.assign({}, numberOfCellsByPopulation)
+				Object.keys(clone).forEach((key) => clone[key] = false)
+				this.setState({
+					include: included,
+					secondPopoverOpen: clone,
+					data: numberOfCellsByPopulation,
+					label: this.whoIsIncluded(included, numberOfCellsByPopulation)
+				})
+			}
+		}
   }
     
   handleMainPopoverOpen = (open, preventDefault=false, target=false) => {
