@@ -16,7 +16,8 @@ export default class ImportCellParams extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
+			name: 'Cell_Rule_Name',
+      open: true,
       fileName: '',
       cellName: '',
       modFolder: '',
@@ -35,12 +36,13 @@ export default class ImportCellParams extends React.Component {
   updateCheck(name) {
     this.setState(({[name]: pv}) => ({ [name]: !pv}));
 	};
+
 	
-	componentDidUpdate(nextProps, nextState) {
-		if (nextProps.open != this.props.open) {
-			this.setState({open: true})
-		}
-	}
+	// componentDidUpdate(nextProps, nextState) {
+	// 	if (nextProps.open != this.props.open) {
+	// 		this.setState({open: true})
+	// 	}
+	// }
 
   processError(response) {
     var parsedResponse = Utils.getErrorResponse(response);
@@ -53,19 +55,18 @@ export default class ImportCellParams extends React.Component {
   };
 
   performAction =  async () => {
-		const { name } = this.props;
 		const cellArgs = this.refs.cellArgs.state.children;
-		const { fileName, cellName, modFolder, compileMod } = this.state;
+		const { name, fileName, cellName, modFolder, compileMod } = this.state;
 
 		this.closeImportCellParams();
 		GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
-		
-    const conds = await Utils.evalPythonMessage(`netpyne_geppetto.netParams.cellParams['${name}']['conds']`)
-    
+
+    const conds = await Utils.evalPythonMessage(`netpyne_geppetto.netParams.cellParams['${name}']['conds'] if '${name}' in netpyne_geppetto.netParams.cellParams else {}`)
+
     const data = { conds, cellArgs, fileName, cellName, label: name };
-        
+
 		const response = await Utils.evalPythonMessage('netpyne_geppetto.importCellTemplate', [data, modFolder, compileMod])
-		
+
 		if (!this.processError(response)) {
 			GEPPETTO.CommandController.log("The cell params were imported");
 			GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -104,7 +105,7 @@ export default class ImportCellParams extends React.Component {
   };
 
   render() {
-		const { open, fileName, cellName, modFolder, importSynMechs, compileMod, errorMessage, errorDetails, explorerDialogOpen, exploreOnlyDirs } = this.state;
+		const { open, name, fileName, cellName, modFolder, importSynMechs, compileMod, errorMessage, errorDetails, explorerDialogOpen, exploreOnlyDirs } = this.state;
     if (open) {
       var cancelAction = <FlatButton
         label={'CANCEL'}
@@ -115,8 +116,9 @@ export default class ImportCellParams extends React.Component {
         var actions = [
           cancelAction,
           <RaisedButton
-            primary
-            label={"IMPORT"}
+						primary
+						label={"IMPORT"}
+						id="acceptImportCellTemplate"
             onClick={this.performAction}
           />
         ];
@@ -128,10 +130,17 @@ export default class ImportCellParams extends React.Component {
 							subtitle="Python or Hoc files"
 						/>
 						<CardText>
+							<TextField
+									value={name}
+									id="importCellTemplateName"
+									floatingLabelText="Cell rule label"
+									onChange={event => this.setState({ name: event.target.value })}
+							/>
 							<NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
 								<TextField
 									readOnly
 									value={fileName}
+									id="importCellTemplateFile"
 									onClick={() => this.showExplorerDialog('fileName', false)}
 								/>
 							</NetPyNEField>
@@ -139,6 +148,7 @@ export default class ImportCellParams extends React.Component {
 							<NetPyNEField id="netParams.importCellParams.cellName" className="netpyneRightField">
 								<TextField
 									value={cellName}
+									id="importCellTemplateCellName"
 									onChange={event => this.setState({ cellName: event.target.value })}
 								/>
 							</NetPyNEField>
@@ -147,6 +157,7 @@ export default class ImportCellParams extends React.Component {
 								<TextField
 									readOnly
 									value={modFolder}
+									id="importCellTemplateModFile"
 									onClick={() => this.showExplorerDialog('modFolder', true)} 
 								/>
 							</NetPyNEField>
@@ -171,6 +182,7 @@ export default class ImportCellParams extends React.Component {
 										<Checkbox
 											checked={compileMod}
 											style={styles.mods.checkbox}
+											id="importCellTemplateCompileMods"
 											onCheck={() => this.updateCheck('compileMod')}
 										/>
 									</NetPyNEField>

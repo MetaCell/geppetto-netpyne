@@ -168,6 +168,11 @@ function loadConsole(test, consoleButton, consoleContainer) {
  *                                  appbar                                    *
  ******************************************************************************/
 function testAppbar(test) {
+	toolbox.message(casper, "import cell template and compile mod files")
+	casper.then(function() { 
+		appbarTest.importCellTemplate(this, test, toolbox)
+	})
+
 	toolbox.message(casper, "import HLS")
 	casper.then(function() { 
 		appbarTest.importHLS(this, test, toolbox)

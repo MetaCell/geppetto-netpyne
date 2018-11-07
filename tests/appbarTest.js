@@ -24,7 +24,181 @@ function clickOnTree(casper, file) {
 }
 
 // ----------------------------------------------------------------------------------- //
+function importCellTemplate(casper, test, toolbox) {
+	casper.then(function() {
+    toolbox.create2rules(this, test, "Populations", "newPopulationButton", "Population")
+	})
+	
+	casper.then(function() {
+    toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
+    toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
+	})
 
+	casper.then(function() {
+    populatePopDimension(this, test, toolbox)
+	})
+	
+	casper.then(function() {
+    toolbox.create2rules(this, test, "CellRules", "newCellRuleButton", "CellRule")
+  })
+	
+	casper.then(function() {
+    toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']", "PYRMenuItem")
+    toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']", "HHMenuItem")
+	})
+	
+  casper.then(function() {
+    this.wait(1000)
+	})
+	
+	casper.then(function() {
+		this.waitUntilVisible('button[id="appBar"]', function(){
+			this.click('button[id="appBar"]')
+		})
+	})
+	
+	casper.then(function() {
+		this.waitUntilVisible('span[id="appBarImportCellTemplate"]', function(){
+			this.wait(3000, function(){
+				this.click('span[id="appBarImportCellTemplate"]')
+			})		
+		})
+	})
+
+	casper.then(function(){
+		toolbox.setInputValue(this, test, "importCellTemplateName", "CellRule")
+	})
+
+	casper.then(function(){
+		toolbox.setInputValue(this, test, "importCellTemplateCellName", "PTcell")
+	})
+
+	casper.then(function() {
+		this.waitUntilVisible('input[id="importCellTemplateFile"]', function(){
+			this.click('input[id="importCellTemplateFile"]')
+		})
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'netpyne_ui'), "click netpyne_ui folder")
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'tests'), "click tests folder")
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'cells'), "click cells folder")
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'PTcell_simple.hoc'), "click PTcell_simple.hoc file")
+	}) 
+
+	casper.then(function(){
+		this.wait(1000, function() {
+			this.waitUntilVisible('button[id="browserAccept"]', function(){
+				this.click('button[id="browserAccept"]')
+			})
+		})
+	})
+
+	casper.then(function(){
+		this.wait(1000)
+	})
+
+	casper.then(function(){
+		toolbox.clickCheckBox(this, test, "importCellTemplateCompileMods");
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		this.waitUntilVisible('input[id="importCellTemplateModFile"]', function(){
+			this.click('input[id="importCellTemplateModFile"]')
+		})
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'netpyne_ui'), "click netpyne_ui folder")
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'tests'), "click tests folder")
+	})
+
+	casper.then(function(){
+		this.wait(500)
+	})
+
+	casper.then(function() {
+		test.assert(clickOnTree(this, 'mod'), "click mod folder")
+	})
+
+	casper.then(function(){
+		this.wait(1000, function() {
+			this.waitUntilVisible('button[id="browserAccept"]', function(){
+				this.click('button[id="browserAccept"]')
+			})
+		})
+	})
+
+	casper.then(function(){
+		this.wait(1000)
+	})
+
+	casper.then(function(){
+		this.click("button[id='acceptImportCellTemplate']", function(){
+			this.echo('Importing PTcell.hoc this will take some time....')
+		})
+	})
+	casper.then(function() {
+    this.waitWhileVisible('div[id="loading-spinner"]', function() {
+      test.assert(true, "Completed PTcell_simple.hoc import")
+    }, null, 40000)
+	})
+
+	casper.then(function() {
+		this.waitUntilVisible('button[id="simulateNetwork"]', function() {
+			this.click('button[id="simulateNetwork"]')
+		})
+	})
+  casper.then(function() {
+    this.waitWhileVisible('div[id="loading-spinner"]', function() {
+      test.assert(this.evaluate(function() {
+				return CanvasContainer.engine.getRealMeshesForInstancePath("network.Population[0]")[0].visible
+			}), "Cell Imported correctly")
+    }, null, 120000)
+	})
+
+	clearModel(this, test, toolbox)
+}
+
+// ----------------------------------------------------------------------------------- //
 function importHLS(casper, test, toolbox, tut3=true) {
 	casper.then(function () {
 		this.waitUntilVisible('button[id="appBar"]', function(){
@@ -401,16 +575,36 @@ function clearModel(casper, test, toolbox) {
 	casper.then(function(){
 		test.assertDoesntExist('input[id="populationName"]', "Model deleted")
 	})
-	
-
 }
+
+// ---------------------------------------------------------------------- //
+
+function populatePopDimension(casper, test, toolbox) {
+  casper.then(function() {
+    toolbox.click(this, "popParamsDimensionsSelect", "div");
+  })
+  casper.then(function() { // check all menuItems exist
+    toolbox.assertExist(this, test, "popParamSnumCells", "span");
+  });
+
+  casper.thenClick("#popParamSnumCells", function() {
+    toolbox.setInputValue(this, test, "popParamsDimensions", "1")
+  })
+  casper.then(function() {
+    this.wait(1000)
+  })
+}
+
+// ---------------------------------------------------------------------- //
+
 module.exports = {  
-	importHLS: importHLS,
-	exportHLS: exportHLS,
-	openNetwork: openNetwork,
-	saveNetwork: saveNetwork,
-	simulateNetwork: simulateNetwork,
-	instantiateNetwork: instantiateNetwork,
-	exploreOpenedModel: exploreOpenedModel,
-	clearModel: clearModel
+	importHLS,
+	exportHLS,
+	clearModel,
+	openNetwork,
+	saveNetwork,
+	simulateNetwork,
+	importCellTemplate,
+	instantiateNetwork,
+	exploreOpenedModel
 }
