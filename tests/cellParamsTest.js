@@ -52,7 +52,7 @@ function testSectionAndMechanisms(casper, test, toolbox) {
   })
 
   casper.thenClick('#newSectionButton', function() { //create section 2
-    toolbox.getInputValue(this, test, "cellParamsSectionName", "Section 2")
+    toolbox.getInputValue(this, test, "cellParamsSectionName", "Section2")
   });
   casper.thenClick('button[id="Section"]') //focus on section 1
 
