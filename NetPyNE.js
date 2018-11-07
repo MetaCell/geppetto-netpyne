@@ -59,40 +59,30 @@ export default class NetPyNE extends React.Component {
   };
 
   componentDidMount() {
-	GEPPETTO.on('global_refresh', (newValue, oldValue, label) => {
-		Utils.evalPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
-			.then((unique) => {
+		GEPPETTO.on('global_refresh', async (newValue, oldValue, label) => {
+			const isOldValueUnique = await Utils.evalPythonMessage('netpyne_geppetto.propagate_field_rename', [label.replace(/[\[\]']/g, ''), newValue, oldValue])
+			
 			this.componentsSubscribedToGlobalRefresh.forEach( that => {
 				if (that.id.includes(label)) {
-					let pythonDataClone
-					if (unique) //checking if I should remove the old value from the menu
-						pythonDataClone = that.state.pythonData.filter( v => v != oldValue )
-					else 
-						pythonDataClone = [...that.state.pythonData]
 
-					if (newValue && that.state.pythonData.indexOf(newValue)==-1) { //checking if I should add a new  item to the menu
-						that.setState({pythonData: [ ...pythonDataClone, newValue]})
-					}
-					else {
-						that.setState({pythonData: pythonDataClone})
-					}
+					const menuOptions = isOldValueUnique ? that.state.pythonData.filter( v => v != oldValue ) : that.state.pythonData;
+					
+					(newValue && that.state.pythonData.indexOf(newValue) == -1 ) ? that.setState({pythonData: [ ...menuOptions, newValue]}) : that.setState({pythonData: menuOptions})
+					
 				}
 			})
-			})
 		})
-		GEPPETTO.on('subscribe_to_global_refresh', (contexts) => {
-			console.log("%cWELCOME ONBOARD:", "color: green")
-			const newCustomers = Object.values(contexts)
-			const ids = newCustomers.map(({ id }) => id )
-			console.table(ids)
+
+		GEPPETTO.on('subscribe_to_global_refresh', refs => {
+			const newCustomers = Object.values(refs)
+			console.log(refs)
 			this.componentsSubscribedToGlobalRefresh = [ ...this.componentsSubscribedToGlobalRefresh, ...newCustomers ]
 			
 		});
 
-		GEPPETTO.on('unsubscribe_from_global_refresh', (contexts) => {
-			console.log("%cSORRY TO SEE YOU GO:", "color: blue")
-			const ids = Object.values(contexts).map(({ id }) => id )
-			console.table(ids)
+		GEPPETTO.on('unsubscribe_from_global_refresh', refs => {
+			console.log(refs)
+			const ids = Object.values(refs).map(({ id }) => id )
 			this.componentsSubscribedToGlobalRefresh = this.componentsSubscribedToGlobalRefresh.filter( ({ id }) => ids.indexOf(id) == -1)
 		})
 	}
