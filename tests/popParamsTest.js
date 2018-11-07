@@ -99,13 +99,13 @@ function addTestPops(casper, test, toolbox) {
     this.wait(2500)
   })
   casper.thenClick('button[id="newPopulationButton"]', function() { //add new population
-    this.waitUntilVisible('button[id="Population 2"]', function() {
-      test.assertExists('button[id="Population 2"]', "rule added");
+    this.waitUntilVisible('button[id="Population2"]', function() {
+      test.assertExists('button[id="Population2"]', "rule added");
     })
   })
   casper.then(function() { //populate fields
-    toolbox.setInputValue(this, test, "netParams.popParams[\'Population 2\'][\'cellType\']", "BC")
-    toolbox.setInputValue(this, test, "netParams.popParams[\'Population 2\'][\'cellModel\']", "Izi")
+    toolbox.setInputValue(this, test, "netParams.popParams[\'Population2\'][\'cellType\']", "BC")
+    toolbox.setInputValue(this, test, "netParams.popParams[\'Population2\'][\'cellModel\']", "Izi")
   })
   casper.then(function() {
     this.wait(2500)

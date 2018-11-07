@@ -80,13 +80,13 @@ function testSectionAndMechanisms(casper, test, toolbox) {
     toolbox.deleteListItem(this, test, "netParams.cellParams[\'CellRule\'][\'secs\'][\'Section\'][\'geom\'][\'pt3d\']1")
   })
 
-  casper.thenClick('button[id="Section 2"]', function() { // change to rule 2
+  casper.thenClick('button[id="Section2"]', function() { // change to rule 2
     this.echo("go to section 2 -> values must be empty")
     this.wait(2500) // let python populate fields  
   })
 
   casper.then(function() { // check values must be empty
-    checkSectionGeomTabValues(this, test, toolbox, "CellRule", "Section 2", "", "", "", "", "", "")
+    checkSectionGeomTabValues(this, test, toolbox, "CellRule", "Section2", "", "", "", "", "", "")
   })
 
   casper.thenClick('button[id="Section"]', function() { // back to section 1
@@ -114,13 +114,13 @@ function testSectionAndMechanisms(casper, test, toolbox) {
     checkSectionTopoTabValues(this, test, toolbox, "CellRule", "Section", "Section", "1", "0")
   })
 
-  casper.thenClick('button[id="Section 2"]', function() { // change to rule 2
+  casper.thenClick('button[id="Section2"]', function() { // change to rule 2
     this.echo("go to section 2 -> values must be empty")
     this.wait(2500) // let python populate fields  
   })
 
   casper.then(function() { // check values must be empty
-    checkSectionTopoTabValues(this, test, toolbox, "CellRule", "Section 2", "", "", "")
+    checkSectionTopoTabValues(this, test, toolbox, "CellRule", "Section2", "", "", "")
   })
 
   casper.thenClick('button[id="Section"]', function() { // back to section 1
@@ -180,9 +180,9 @@ function testSectionAndMechanisms(casper, test, toolbox) {
   casper.thenClick('button[id="newSectionButton"]', function() { // go back to --sections--
   });
 
-  casper.then(function() { //delete section 2 
+  casper.then(function() { //delete section 2
     this.echo("delete section 2:")
-    toolbox.delThumbnail(this, test, "Section 2")
+    toolbox.delThumbnail(this, test, "Section2")
   })
 
   casper.thenClick('button[id="Section"]', function() {

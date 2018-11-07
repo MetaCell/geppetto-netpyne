@@ -1,5 +1,6 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
@@ -15,6 +16,7 @@ import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThu
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import { pink400, cyan500 } from 'material-ui/styles/colors';
 import { HomeIcon } from '../../general/CustomIcons';
+import Dialog from 'material-ui/Dialog/Dialog';
 
 import Utils from '../../../Utils';
 
@@ -64,6 +66,10 @@ export default class NetPyNECellRules extends React.Component {
       selectedCellRule: undefined,
       selectedSection: undefined,
       selectedMechanism: undefined,
+      deletedCellRule: undefined,
+      deletedSection: undefined,
+      errorMessage: undefined,
+      errorDetails: undefined,
       page: "main"
     };
 
@@ -80,6 +86,9 @@ export default class NetPyNECellRules extends React.Component {
     this.selectMechanism = this.selectMechanism.bind(this);
     this.handleNewMechanism = this.handleNewMechanism.bind(this);
     this.deleteMechanism = this.deleteMechanism.bind(this);
+
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
+    this.handleRenameSections = this.handleRenameSections.bind(this);
   }
 
   selectPage(page, state) {
@@ -97,9 +106,11 @@ export default class NetPyNECellRules extends React.Component {
 
     // Get New Available ID
     var cellRuleId = Utils.getAvailableKey(model, key);
-
+    var newCellRule = Object.assign({name: cellRuleId}, value);
+    // Create Cell Rule Client side
     Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + cellRuleId + '"] = ' + JSON.stringify(value));
-
+    model[cellRuleId] = newCellRule;
+    // Update state
     this.setState({
       value: model,
 			selectedCellRule: cellRuleId,
@@ -119,12 +130,14 @@ export default class NetPyNECellRules extends React.Component {
     
     // Get New Available ID
     var sectionId = Utils.getAvailableKey(model[selectedCellRule]['secs'], key);
+    var newSection = Object.assign({name: sectionId}, value);
     if (model[selectedCellRule]['secs'] == undefined) {
       model[selectedCellRule]['secs'] = {};
       Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"] = {}');
     }
     Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + sectionId + '"] = ' + JSON.stringify(value));
-
+    model[selectedCellRule]["secs"][sectionId] = newSection;
+    // Update state
     this.setState({
       value: model,
 			selectedSection: sectionId,
@@ -248,67 +261,65 @@ export default class NetPyNECellRules extends React.Component {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newCellRuleName = this.hasSelectedCellRuleBeenRenamed(prevState, this.state);
     if (newCellRuleName !== undefined) {
-      this.setState({ selectedCellRule: newCellRuleName });
+      this.setState({ selectedCellRule: newCellRuleName, deletedCellRule: undefined });
+    } else if((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model = this.state.value;
+      for(var m in model) {
+        if((prevState.value !== "") && (!(m in prevState.value))) {
+          var newValue = Utils.nameValidation(m);
+          if(newValue != m) {
+            newValue = Utils.getAvailableKey(model, newValue);
+            model[newValue] = model[m];
+            delete model[m];
+            this.setState({ value: model,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in CellRule names.\n" +
+                                          m + " has been renamed " + newValue},
+                            function() {
+                              Utils.renameKey('netParams.cellParams', m, newValue, (response, newValue) => {});
+                            }.bind(this));
+          }
+        }
+      }
     }
     var newSectionName = this.hasSelectedSectionBeenRenamed(prevState, this.state);
     if (newSectionName !== undefined) {
-      this.setState({ selectedSection: newSectionName });
+      this.setState({ selectedSection: newSectionName, deletedSection: undefined });
+    } else if((prevState.value !== undefined)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model2 = this.state.value;
+      var prevModel = prevState.value;
+      for(var n in model2) {
+        if((prevModel[n] !== undefined) && (Object.keys(model2[n]['secs']).length !== Object.keys(prevModel[n]['secs']).length)) {
+          var cellRule = model2[n]['secs'];
+          for(var s in cellRule) {
+            if(!(s in prevState.value[n]['secs'])) {
+              var newValue2 = Utils.nameValidation(s);
+              if(newValue2 != s) {
+                newValue2 = Utils.getAvailableKey(model2[n]['secs'], newValue2);
+                model2[n]['secs'][newValue2] = model2[n]['secs'][s];
+                delete model2[n]['secs'][s];
+                this.setState({ value: model2,
+									errorMessage: "Error",
+									errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
+									s + " has been renamed " + newValue2},
+									function() {
+										Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {});
+									}.bind(this));
+              }
+            }
+          }
+        }
+      }
     }
     var newMechanismName = this.hasSelectedMechanismBeenRenamed(prevState, this.state);
     if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
     }
   }
-
-	shouldComponentUpdate(nextProps, nextState) {
-		var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedSectionBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedMechanismBeenRenamed(this.state, nextState) !== undefined;
-		var newItemCreated = false;
-		var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
-		var pageChanged = this.state.page != nextState.page;
-		var newModel = this.state.value == undefined;
-		if (!newModel) {
-			newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
-			if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
-				var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
-				newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length;
-			}
-			if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
-				var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
-				newItemCreated = newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
-			}
-		}
-		return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged;
-	}
-
-	deleteCellRule(name) {
-		let parameter = "cellParams['" + name + "']"
-		Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")')
-		let model = this.state.value;
-		delete model[name];
-		this.setState({value: model, selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined});
-	};
-	
-	deleteMechanism(name) {
-		const { value, selectedCellRule, selectedSection } = this.state;
-		if(selectedCellRule != undefined && selectedSection != undefined) {
-			let parameter = "cellParams['" + selectedCellRule + "']['secs']['" + selectedSection + "']['mechs']['" + name + "']"
-			Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")')
-			let model = value;
-			delete model[selectedCellRule].secs[selectedSection]['mechs'][name];
-			this.setState({value: model, selectedMechanism: undefined});
-		}
-	};
-
-	deleteSection(name) {
-		const { value, selectedCellRule } = this.state;
-		if (selectedCellRule != undefined) {
-			let parameter = `cellParams['${selectedCellRule}']['secs']['${name}']`
-			Utils.execPythonMessage(`netpyne_geppetto.deleteParam("${parameter}")`)
-			let model = value;
-			delete model[selectedCellRule]['secs'][name];
-			this.setState({value: model, selectedSection: undefined, selectedMechanism: undefined});
-		};
-	};
 
 	handleHierarchyClick = (nextPage) => {
 		const { page, selectedCellRule, value } = this.state;
@@ -333,17 +344,107 @@ export default class NetPyNECellRules extends React.Component {
 			}
 		}
 	}
+  shouldComponentUpdate(nextProps, nextState) {
+    var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedSectionBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedMechanismBeenRenamed(this.state, nextState) !== undefined;
+    var newItemCreated = false;
+    var selectionChanged = this.state.selectedCellRule != nextState.selectedCellRule || this.state.selectedSection != nextState.selectedSection || this.state.selectedMechanism != nextState.selectedMechanism;
+    var pageChanged = this.state.page != nextState.page;
+    var newModel = this.state.value == undefined;
+    if (!newModel) {
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
+      if (this.state.selectedCellRule != undefined && nextState.value[this.state.selectedCellRule] != undefined) {
+        var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
+        newItemCreated = ((newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length));
+      }
+      if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
+        var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+        newItemCreated = (newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length);
+      }
+    }
+    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
+  }
+
+  deleteCellRule(name) {
+    var parameter = "cellParams['" + name + "']"
+    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+      var model = this.state.value;
+      delete model[name];
+      this.setState({value: model, selectedCellRule: undefined, deletedCellRule: name});
+    });
+  };
+
+  deleteMechanism(name) {
+    if(this.state.selectedCellRule != undefined && this.state.selectedSection != undefined) {
+      var parameter = "cellParams['" + this.state.selectedCellRule + "']['secs']['" + this.state.selectedSection + "']['mechs']['" + name + "']"
+      Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+        var model = this.state.value;
+        delete model[this.state.selectedCellRule].secs[this.state.selectedSection]['mechs'][name];
+        this.setState({value: model, selectedMechanism: undefined});
+      });
+    }
+  };
+
+  deleteSection(name) {
+    if(this.state.selectedCellRule != undefined) {
+      var parameter = "cellParams['" + this.state.selectedCellRule + "']['secs']['" + name + "']"
+      Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+        var model = this.state.value;
+        delete model[this.state.selectedCellRule]['secs'][name];
+        this.setState({value: model, selectedSection: undefined, deletedSection: name});
+      });
+    }
+  };
+
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  handleRenameSections(childName, leaf) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value[leaf]['secs']);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   render() {
-		const { value: model, page, selectedCellRule, selectedSection, selectedMechanism } = this.state;
+
+		const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
 		var selectedCellRuleContainer = undefined;
+
+		const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
+
+    const dialogPop = (errorMessage != undefined 
+			? <Dialog
+					title={errorMessage}
+					open={true}
+					actions={actions}
+					bodyStyle={{ overflow: 'auto' }}
+					style={{ whiteSpace: "pre-wrap" }}>
+					{errorDetails}
+				</Dialog> 
+			: undefined
+		);
+
 		if (page == 'main') {
 			if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
 				selectedCellRuleContainer = (
 					<NetPyNECellRule
 						name={selectedCellRule}
-						model={model[selectedCellRule]}
 						selectPage={this.selectPage}
+						model={model[selectedCellRule]}
+						renameHandler={this.handleRenameChildren} 
 					/>
 				)
 			}
@@ -368,8 +469,9 @@ export default class NetPyNECellRules extends React.Component {
 					<NetPyNESection
 						name={selectedSection}
 						cellRule={selectedCellRule}
-						model={sectionsModel[selectedSection]}
 						selectPage={this.selectPage}
+						model={sectionsModel[selectedSection]}
+						renameHandler={this.handleRenameSections}
 					/>
 				)
 			}
@@ -414,11 +516,7 @@ export default class NetPyNECellRules extends React.Component {
 					<div className="breadcrumb">
 						<IconButton
 							style={styles.home.container}
-							data-tooltip={
-								page != "main"
-								  ? "Go back to main"
-								  : undefined
-							}
+							data-tooltip={ page != "main" ? "Go back to main" : undefined }
 							iconStyle={{color: page != 'main' ? cyan500 : pink400, ...styles.home.icon}}
 							onClick={ () => this.setState({page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined})}
 						>
@@ -520,6 +618,7 @@ export default class NetPyNECellRules extends React.Component {
 							showExpandableButton={true}
 						/>
 						{content}
+						{dialogPop}
 				</Card>
 		);
   }

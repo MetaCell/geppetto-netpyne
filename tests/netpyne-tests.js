@@ -1,4 +1,5 @@
 var toolbox = require('./toolbox');
+var appbarTest = require('./appbarTest');
 var simConfigTest = require('./simConfigTest');
 var popParamsTest = require('./popParamsTest');
 var cellParamsTest = require('./cellParamsTest');
@@ -9,6 +10,7 @@ var stimTargetParamsTest = require('./stimTargetParamsTest');
 var simulationTest = require('./simulationTest');
 
 var urlBase = casper.cli.get('host');
+
 if (urlBase == null || urlBase == undefined) {
   urlBase = "http://localhost:8888/";
 }
@@ -19,10 +21,14 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     height: 768
   };
   casper.options.waitTimeout = 10000
-
   casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
-  });
+	});
+  
+  // UNCOMMENT OUT to get the javascript logs (console.log). Particularly useful for debugginf purpose
+  // casper.on('remote.message', function(message) { 
+  //   this.echo('remote message caught: ' + message);
+	// });
 
   // show page level errors
   casper.on('resource.received', function(resource) {
@@ -42,17 +48,21 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
         test.assertTitle("NetPyNE", "NetPyNE title is ok");
         test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
         test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
-        //test.assertExists('div[id="settingsIcon"]', "NetPyNE loads the initial settingsIcon");
       });
     }, null, 40000);
-  });
+	});
 
   casper.then(function() { //test HTML elements in landing page
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
     testLandingPage(test);
+	});
+	
+	casper.then(function() { // test adding a population using UI  
+    toolbox.header(this, "test appbar")
+    testAppbar(test);
   });
 
-  casper.then(function() { // test adding a population using UI  
+  casper.then(function() { // test adding a population using UI
     toolbox.header(this, "test popParams fields")
     testPopParamsFields(test);
   });
@@ -118,9 +128,7 @@ function testLandingPage(test) {
     toolbox.assertExist(this, test, "StimulationSources", "div")
     toolbox.assertExist(this, test, "Configuration", "div")
     toolbox.assertExist(this, test, "defineNetwork", "button")
-    toolbox.assertExist(this, test, "exploreNetwork", "button")
     toolbox.assertExist(this, test, "simulateNetwork", "button")
-    toolbox.assertExist(this, test, "setupNetwork", "button")
   });
 }
 
@@ -156,8 +164,76 @@ function loadConsole(test, consoleButton, consoleContainer) {
     this.wait(1000)
   })
 }
-/*******************************************************************************
- *                                 popParams                                   *
+/******************************************************************************
+ *                                  appbar                                    *
+ ******************************************************************************/
+function testAppbar(test) {
+	toolbox.message(casper, "import HLS")
+	casper.then(function() { 
+		appbarTest.importHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.simulateNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "save model")
+	casper.then(function(){
+		appbarTest.saveNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "open model")
+	casper.then(function(){
+		appbarTest.openNetwork(this, test, toolbox)
+	})
+
+	casper.then(function(){
+		appbarTest.exploreOpenedModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "export HLS")
+	casper.then(function(){
+		appbarTest.exportHLS(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "import HLS")
+	casper.then(function() { 
+		appbarTest.importHLS(this, test, toolbox, false)
+	})
+
+	toolbox.message(casper, "run model")
+	casper.then(function () {
+		appbarTest.instantiateNetwork(this, test, toolbox)
+	})
+
+	toolbox.message(casper, "delete model")
+	casper.then(function(){
+		appbarTest.clearModel(this, test, toolbox)
+	})
+
+	casper.then(function() {
+		this.wait(1000, function(){
+			this.click("#Populations")
+		})
+	})
+}
+/******************************************************************************
+ *                                 popParams                                  *
  ******************************************************************************/
 function testPopParamsFields(test) {
   toolbox.message(casper, "create")
@@ -171,10 +247,10 @@ function testPopParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "Population 2", "populationName")
+    toolbox.selectThumbRule(this, test, "Population2", "populationName")
   })
   casper.then(function() { // check rule 2 is empty
-    popParamsTest.checkPopParamsValues(this, test, toolbox, "Population 2", true)
+    popParamsTest.checkPopParamsValues(this, test, toolbox, "Population2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -185,7 +261,7 @@ function testPopParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "Population 2")
+    toolbox.delThumbnail(this, test, "Population2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "Population", "populationName")
@@ -219,10 +295,10 @@ function testCellParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "CellRule 2", "cellRuleName")
+    toolbox.selectThumbRule(this, test, "CellRule2", "cellRuleName")
   })
   casper.then(function() { // check fields are not copy to rule 2
-    cellParamsTest.checkCellParamsValues(this, test, toolbox, "CellRule 2", "", "", "", true)
+    cellParamsTest.checkCellParamsValues(this, test, toolbox, "CellRule2", "", "", "", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -236,7 +312,7 @@ function testCellParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "CellRule 2")
+    toolbox.delThumbnail(this, test, "CellRule2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "CellRule", "cellRuleName")
@@ -267,10 +343,10 @@ function testSynMechParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "Synapse 2", "synapseName")
+    toolbox.selectThumbRule(this, test, "Synapse2", "synapseName")
   })
   casper.then(function() { // check rule 2 is empty
-    synMechParamsTest.checkSynMechEmpty(this, test, toolbox, "Synapse 2")
+    synMechParamsTest.checkSynMechEmpty(this, test, toolbox, "Synapse2")
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -281,7 +357,7 @@ function testSynMechParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "Synapse 2")
+    toolbox.delThumbnail(this, test, "Synapse2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "Synapse", "synapseName")
@@ -315,10 +391,10 @@ function testConnParamsFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { //focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "ConnectivityRule 2", "ConnectivityName")
+    toolbox.selectThumbRule(this, test, "ConnectivityRule2", "ConnectivityName")
   })
   casper.then(function() { // check rule 2 is empty
-    connParamsTest.checkConnRuleValues(this, test, toolbox, "ConnectivityRule 2", true)
+    connParamsTest.checkConnRuleValues(this, test, toolbox, "ConnectivityRule2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -329,7 +405,7 @@ function testConnParamsFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "ConnectivityRule 2")
+    toolbox.delThumbnail(this, test, "ConnectivityRule2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "ConnectivityRule", "ConnectivityName")
@@ -360,10 +436,10 @@ function testStimSourceFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "stim_source 2", "sourceName")
+    toolbox.selectThumbRule(this, test, "stim_source2", "sourceName")
   })
   casper.then(function() { // check rule 2 is empty
-    stimSourceParamsTest.checkStimSourceEmpty(this, test, toolbox, "stim_source 2")
+    stimSourceParamsTest.checkStimSourceEmpty(this, test, toolbox, "stim_source2")
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -374,7 +450,7 @@ function testStimSourceFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "stim_source 2")
+    toolbox.delThumbnail(this, test, "stim_source2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "stim_source", "sourceName")
@@ -408,10 +484,10 @@ function testStimTargetFields(test) {
   toolbox.message(casper, "check")
   casper.then(function() { // focus on rule 2
     this.echo("moved to second rule -> should be empty")
-    toolbox.selectThumbRule(this, test, "stim_target 2", "targetName")
+    toolbox.selectThumbRule(this, test, "stim_target2", "targetName")
   })
   casper.then(function() { // check rule 2 is empty
-    stimTargetParamsTest.checkStimTargetValues(this, test, toolbox, "stim_target 2", true)
+    stimTargetParamsTest.checkStimTargetValues(this, test, toolbox, "stim_target2", true)
   })
   casper.then(function() { //focus on rule 1
     this.echo("moved to first rule -> should be populated")
@@ -422,7 +498,7 @@ function testStimTargetFields(test) {
   })
   toolbox.message(casper, "rename")
   casper.then(function() { // delete rule 2
-    toolbox.delThumbnail(this, test, "stim_target 2")
+    toolbox.delThumbnail(this, test, "stim_target2")
   })
   casper.then(function() { //focus on rule 1
     toolbox.selectThumbRule(this, test, "stim_target", "targetName")
@@ -484,21 +560,11 @@ function testLoadNetwork(test) {
 function testExploreNetwork(test) {
   casper.then(function() {
     this.echo("------Testing explore network");
-    test.assertExists('button[id="exploreNetwork"]', "Explore network button exists");
+    test.assertExists('button[id="simulateNetwork"]', "Explore network button exists");
   })
-  casper.thenClick('#exploreNetwork', function() {
-    this.waitUntilVisible('button[id="okInstantiateNetwork"]', function() {
-      simulationTest.canvasComponentsTests(this, test);
-    })
-  });
-  casper.thenClick('#okInstantiateNetwork', function() {
-    this.waitWhileVisible('button[id="okInstantiateNetwork"]', function() {
-      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network dialog is gone");
-    })
-  })
-  casper.then(function() {
+  casper.thenClick('#simulateNetwork', function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assertDoesntExist('button[id="okInstantiateNetwork"]', "Explore network's finished loading");
+      simulationTest.canvasComponentsTests(this, test);
     }, 40000)
   })
   casper.then(function() {
@@ -526,7 +592,7 @@ function testExploreNetwork(test) {
   });
   casper.then(function() {
     var info = this.getElementInfo('button[id="PlotButton"]');
-    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+    this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
   })
   casper.then(function(){
     this.wait(1000)
@@ -547,15 +613,11 @@ function testExploreNetwork(test) {
  *                           simulate network                                  *
  ******************************************************************************/
 function testSimulateNetwork(test) {
-  casper.then(function() {
-    this.echo("------Testing explore network");
-    test.assertExists('button[id="simulateNetwork"]', "Simulate network button exists");
-  })
-  casper.thenClick('#simulateNetwork', function(){
-    this.waitUntilVisible('button[id="runSimulation"]')
+  casper.thenClick('#launchSimulationButton', function(){
+    this.waitUntilVisible('button[id="okRunSimulation"]')
   });
-  casper.thenClick('#runSimulation', function() {
-    this.waitWhileVisible('button[id="runSimulation"]', function() {
+  casper.thenClick('#okRunSimulation', function() {
+    this.waitWhileVisible('button[id="okRunSimulation"]', function() {
       this.echo("Dialog disappeared");
     })
   });
@@ -596,7 +658,7 @@ function testSimulateNetwork(test) {
   });
   casper.then(function() {
     var info = this.getElementInfo('button[id="PlotButton"]');
-    this.mouse.click(info.x + 4, info.y + 4); //move a bit away from corner
+    this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
   })
   casper.then(function(){
     this.wait(1000)
