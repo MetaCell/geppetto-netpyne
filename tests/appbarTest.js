@@ -195,7 +195,9 @@ function importCellTemplate(casper, test, toolbox) {
     }, null, 120000)
 	})
 
-	clearModel(this, test, toolbox)
+	casper.then(function(){
+		clearModel(this, test, toolbox)
+	})
 }
 
 // ----------------------------------------------------------------------------------- //
