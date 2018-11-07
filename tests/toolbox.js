@@ -85,8 +85,8 @@ function create2rules(casper, test, cardID, addButtonID, ruleThumbID) {
   })
 
   casper.thenClick('button[id="' + addButtonID + '"]', function() { //add new rule
-    this.waitUntilVisible('button[id="' + ruleThumbID + ' 2"]', function() {
-      test.assertExist('button[id="' + ruleThumbID + ' 2"]', "rule added");
+    this.waitUntilVisible('button[id="' + ruleThumbID + '2"]', function() {
+      test.assertExist('button[id="' + ruleThumbID + '2"]', "rule added");
     })
   })
 
@@ -183,6 +183,35 @@ function getInputValue(casper, test, elementID, expectedValue, times = 3) {
 
     // required in case python fails to update field
     secondChance(this, test, value, expectedValue, elementID, getInputValue, times)
+  })
+}
+
+//----------------------------------------------------------------------------//
+function getlistItemValues(casper, test, elementID, expectedValues, times = 3) {
+  var elementIDs = expectedValues.map((elem, i)=>{return elementID+i})
+  var failed = false
+  casper.then(function(){
+    this.each(elementIDs, function(self, el) {
+      self.waitUntilVisible('input[id="' + el +'"]')
+    })
+  })
+  
+  casper.then(function() {
+    var values = elementIDs.map((el) => {
+      return this.evaluate(function(el) {
+        return $('input[id="' + el + '"]').val();
+      }, el);
+    })
+    expectedValues.forEach((el)=>{
+      if (values.indexOf(el)==-1) {
+        // required in case python fails to update field
+        secondChance(this, test, values, expectedValues, elementID, getlistItemValues, times)    
+        var failed = true
+      }
+    })
+    if (!failed) {
+      test.assert(true, expectedValues + " found in: " + elementID)
+    }
   })
 }
 
@@ -410,7 +439,45 @@ function secondChance(casper, test, value, expectedValue, elementID, callback, t
     }
   })
 }
-
+//----------------------------------------------------------------------------//
+function testPlotButton(casper, test, plotButton) {
+  casper.then(function() {
+    this.waitUntilVisible('span[id="' + plotButton + '"]');
+  })
+  casper.thenEvaluate(function(plotButton) {
+    document.getElementById(plotButton).click();
+  }, plotButton);
+  
+  casper.then(function() {
+    this.waitUntilVisible('div[id="Popup1"]', function() {
+      test.assertExists('div[id="Popup1"]', plotButton + " exists");
+    })
+  })
+	casper.then(function() {
+		this.waitUntilVisible('g[id="figure_1"]')
+		this.waitUntilVisible('g[id="axes_1"]')
+  });
+  casper.thenEvaluate(function() {
+    window['Popup1'].destroy();
+  });
+  
+  casper.then(function(){
+    this.waitWhileVisible('div[id="Popup1"]', function() {
+      test.assertDoesntExist('div[id="Popup1"]', plotButton + " was destroyed successfully");
+    });
+  })  
+  
+  casper.then(function() {
+    var plotError = test.assertEvalEquals(function() {
+      var error = document.getElementById("netPyneDialog") == undefined;
+      if (!error) {
+        document.getElementById("netPyneDialog").click();
+      }
+      return error;
+    }, true, "no error on: " + plotButton);
+  });
+}
+//----------------------------------------------------------------------------//
 var toolbox = module.exports = {
   click: click,
   header: header,
@@ -424,6 +491,7 @@ var toolbox = module.exports = {
   selectThumbRule: selectThumbRule,
   setInputValue: setInputValue,
   getInputValue: getInputValue,
+  getlistItemValues: getlistItemValues,
   setSelectFieldValue: setSelectFieldValue,
   getSelectFieldValue: getSelectFieldValue,
   addListItem: addListItem,
@@ -433,5 +501,6 @@ var toolbox = module.exports = {
   testCheckBoxValue: testCheckBoxValue,
   assertExist: assertExist,
   assertDoesntExist: assertDoesntExist,
-  active: {}
+	active: {},
+	testPlotButton: testPlotButton
 }

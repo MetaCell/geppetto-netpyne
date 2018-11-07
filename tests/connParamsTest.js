@@ -48,7 +48,7 @@ function populateConnRule(casper, test, toolbox) {
   })
 
   casper.then(function() {
-    toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "Population 2MenuItem")
+    toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "Population2MenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellModel\']", "IziMenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellType\']", "BCMenuItem")
   })
@@ -104,7 +104,7 @@ function checkConnRuleValues(casper, test, toolbox, name="ConnectivityRule", emp
   })
 
   casper.then(function() {
-    toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", !empty ? "Population 2" : "")
+    toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", !empty ? "Population2" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellModel\']", !empty ? "Izi" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellType\']", !empty ? "BC" : "")
     rangeComponentTest.checkRangeComponentIsEmpty(this, test, toolbox, "PostConn")

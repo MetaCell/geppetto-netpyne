@@ -52,12 +52,13 @@ export default class ImportCellParams extends React.Component {
   };
 
   processError(parsedResponse) {
-    if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-      GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-      this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
-      return true;
-    }
-    return false;
+    var parsedResponse = Utils.getErrorResponse(response);
+    if (parsedResponse) {
+        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+        this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
+        return true;
+      }
+      return false;
   };
 
   performAction = () => {
@@ -65,7 +66,7 @@ export default class ImportCellParams extends React.Component {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.IMPORTING_MODEL);
 
     Utils
-      .sendPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
+      .evalPythonMessage("netParams.cellParams['" + this.props.name + "']['conds']")
       .then((response) => {
         var data = {
           conds: response,
@@ -78,10 +79,9 @@ export default class ImportCellParams extends React.Component {
         // Import template
         this.closeImportCellParams();
         Utils
-          .sendPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
+          .evalPythonMessage('netpyne_geppetto.importCellTemplate', [data, this.state.modFolder, this.state.compileMod])
           .then(response => {
-            var parsedResponse = JSON.parse(response);
-            if (!this.processError(parsedResponse)) {
+            if (!this.processError(response)) {
               GEPPETTO.CommandController.log("The cell params were imported");
               GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             }
@@ -126,7 +126,7 @@ export default class ImportCellParams extends React.Component {
     if (this.state.open) {
       var cancelAction = <FlatButton
         label={'CANCEL'}
-        onTouchTap={this.cancelImportCellParams}
+        onClick={this.cancelImportCellParams}
         style={{ marginRight: 16 }}
       />
       if (this.state.errorMessage == undefined) {
@@ -135,7 +135,7 @@ export default class ImportCellParams extends React.Component {
           <RaisedButton
             primary
             label={"IMPORT"}
-            onTouchTap={this.performAction}
+            onClick={this.performAction}
           />
         ];
         var children = <Card style={{ padding: 10, float: 'left', width: '100%' }}>
@@ -198,11 +198,11 @@ export default class ImportCellParams extends React.Component {
           <RaisedButton
             primary
             label={"BACK"}
-            onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
           />
         ];
         var title = this.state.errorMessage;
-        var children = this.state.errorDetails;
+        var children = Utils.parsePythonException(this.state.errorDetails);
       }
 
       return (

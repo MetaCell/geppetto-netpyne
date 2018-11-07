@@ -1,5 +1,4 @@
-
-import React, { Component } from 'react';
+import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Canvas from '../../../../js/components/interface/3dCanvas/Canvas';
@@ -28,8 +27,40 @@ const styles = {
     menuItem: {
         lineHeight: '28px',
         minHeight: '28px'
+    },
+    instantiatedContainer: {
+        height: '100%', 
+        width: '100%', 
+        position: 'fixed'
+    },
+    controlpanelBtn: {
+        position: 'absolute', 
+        left: 34, 
+        top: 16 
+    },
+    plotBtn: {
+        position: 'absolute', 
+        left: 34, 
+        top: 317 
     }
+        
 };
+const plots = [
+    {id: 'connectionPlot',      primaryText: 'Connectivity',            plotName: 'Connections Plot',       plotMethod: 'plotConn',             plotType: false},
+    {id: '2dNetPlot',           primaryText: '2D network',              plotName: '2D Net Plot',            plotMethod: 'plot2Dnet',            plotType: false},
+    {id: 'shapePlot',           primaryText: 'Cell shape',              plotName: 'Shape Plot',             plotMethod: 'plotShape',            plotType: false},
+    {id: 'tracesPlot',          primaryText: 'Cell traces',             plotName: 'Traces Plot',            plotMethod: 'plotTraces',           plotType: false},
+    {id: 'rasterPlot',          primaryText: 'Raster plot',             plotName: 'Raster Plot',            plotMethod: 'plotRaster',           plotType: false},
+    {id: 'spikePlot',           primaryText: 'Spike histogram',         plotName: 'Spike Hist Plot',        plotMethod: 'plotSpikeHist',        plotType: false},
+    {id: 'spikeStatsPlot',      primaryText: 'Spike stats',             plotName: 'Spike Stats Plot',       plotMethod: 'plotSpikeStats',       plotType: false},
+    {id: 'ratePSDPlot',         primaryText: 'Rate PSD"',               plotName: 'Rate PSD Plot',          plotMethod: 'plotRatePSD',          plotType: false},
+    {id: 'LFPTimeSeriesPlot',   primaryText: 'LFP time-series',         plotName: 'LFP Time Series Plot',   plotMethod: 'plotLFP',              plotType: 'timeSeries'},
+    {id: 'LFPLocationsPlot',    primaryText: 'LFP PSD',                 plotName: 'LFP PSD Plot',           plotMethod: 'plotLFP',              plotType: 'PSD'},
+    {id: 'LFPSpectrogramPlot',  primaryText: 'LFP spectrogram',         plotName: 'LFP Spectrogram Plot',   plotMethod: 'plotLFP',              plotType: 'spectrogram'},
+    {id: 'LFPLocationsPlot',    primaryText: 'LFP locations',           plotName: 'LFP Locations Plot',     plotMethod: 'plotLFP',              plotType: 'locations'},
+    {id: 'grangerPlot',         primaryText: 'Granger causality plot',  plotName: 'Granger Plot',           plotMethod: 'granger',              plotType: false},
+    {id: 'rxdConcentrationPlot',primaryText: 'RxD concentration plot',  plotName: 'RxD concentration plot', plotMethod: 'plotRxDConcentration', plotType: false}
+];
 
 export default class NetPyNEInstantiated extends React.Component {
 
@@ -41,6 +72,7 @@ export default class NetPyNEInstantiated extends React.Component {
             plotButtonOpen: false,
             openDialog: false
         };
+        
         this.widgets = [];
         this.plotFigure = this.plotFigure.bind(this);
         this.newPlotWidget = this.newPlotWidget.bind(this);
@@ -48,7 +80,7 @@ export default class NetPyNEInstantiated extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
     }
-
+    
     handleCloseDialog = () => {
         this.setState({ openDialog: false });
     };
@@ -78,18 +110,26 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
-    plotFigure(pythonFigureMethod, plotName) {
-        Utils.sendPythonMessage(pythonFigureMethod, [])
+    processError(response, plotName) {
+        var parsedResponse = Utils.getErrorResponse(response);
+        if (parsedResponse) {
+            this.setState({
+                dialogTitle: "NetPyNE returned an error plotting " + plotName,
+                dialogMessage: parsedResponse['message'] + "\n " + parsedResponse['details'],
+                openDialog: true
+            });
+            return true;
+        }
+        return false;
+    }
+
+    plotFigure(plotName, plotMethod, plotType=false) {
+        Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType], false)
             .then(response => {
                 //TODO Fix this, use just JSON
                 if(typeof response === 'string'){
                     if (response.startsWith("{") && response.endsWith("}")) {
-                        var parsedResponse = JSON.parse(response);
-                        if (parsedResponse.hasOwnProperty("type") && parsedResponse['type'] == 'ERROR') {
-                            this.setState({
-                                dialogMessage: "NetPyNE returned an error plotting " + plotName,
-                                openDialog: true
-                            });
+                        if (this.processError(response, plotName)){
                             return;
                         }
                     }
@@ -101,10 +141,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
                 }
                 else if (response == -1) {
-                    this.setState({
-                        dialogMessage: "NetPyNE returned an error plotting " + plotName,
-                        openDialog: true
-                    });
+                    this.processError(response, plotName)
                 }
                 else {
                     this.newPlotWidget(plotName, response, response, 0, 0);
@@ -137,44 +174,18 @@ export default class NetPyNEInstantiated extends React.Component {
         });
     }
 
-
     render() {
-
         var controls;
-        if (this.props.page == 'explore') {
+        if (this.props.page == 'simulate') {
             controls = (
                 <Menu>
-                    <MenuItem id={"connectionPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Connectivity" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEConnectionsPlot', 'Connections Plot') }} />
-                    <MenuItem id={"2dNetPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="2D network" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNE2DNetPlot', '2D Net Plot') }} />
-                    <MenuItem id={"shapePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell shape" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEShapePlot', 'Shape Plot') }} />
+                    {plots.map((plot, index) => {return <MenuItem id={plot.id} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText={plot.primaryText} onClick={() => { this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}} />})}
                 </Menu>
-            );
-
-        }
-        else if (this.props.page == 'simulate') {
-            controls = (
-                <Menu>
-                    <MenuItem id={"tracesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Cell traces" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNETracesPlot', 'Traces Plot') }} />
-                    <MenuItem id={"rasterPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Raster plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERasterPlot', 'Raster Plot') }} />
-                    <MenuItem id={"spikePlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike histogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeHistPlot', 'Spike Hist Plot') }} />
-                    <MenuItem id={"spikeStatsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Spike stats" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNESpikeStatsPlot', 'Spike Stats Plot') }} />
-                    <MenuItem id={"ratePSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Rate PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERatePSDPlot', 'Rate PSD Plot') }} />
-                    <MenuItem id={"LFPTimeSeriesPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP time-series" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPTimeSeriesPlot', 'LFP Time Series Plot') }} />
-                    <MenuItem id={"LFPPSDPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP PSD" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPPSDPlot', 'LFP PSD Plot') }} />
-                    <MenuItem id={"LFPSpectrogramPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP spectrogram" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPSpectrogramPlot', 'LFP Spectrogram Plot') }} />
-                    <MenuItem id={"LFPLocationsPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="LFP locations" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNELFPLocationsPlot', 'LFP Locations Plot') }} />
-                    <MenuItem id={"grangerPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Granger causality plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNEGrangerPlot', 'Granger Plot') }} />
-                    <MenuItem id={"rxdConcentrationPlot"} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="RxD concentration plot" onClick={() => { that.plotFigure('netpyne_geppetto.getNetPyNERxDConcentrationPlot', 'RxD concentration plot') }} />
-                </Menu>
-
-
             );
         }
 
-
-        var that = this;
         return (
-            <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
+            <div id="instantiatedContainer" style={styles.instantiatedContainer}>
                 <Canvas
                     id="CanvasContainer"
                     name={"Canvas"}
@@ -182,21 +193,21 @@ export default class NetPyNEInstantiated extends React.Component {
                     ref={"canvas"}
                     style={{ height: '100%', width: '100%' }}
                 />
-                <div id="controlpanel" style={{ top: 0 }}>
+                <div id="controlpanel" style={{top: 10 }}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 35, top: 10 }}
+                <IconButton style={styles.controlpanelBtn}
                     onClick={() => { $('#controlpanel').show(); }}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 35, top: 318 }}
+                        style={styles.plotBtn}
                         label="Plot"
                         icon={"fa-bar-chart"}
                         id="PlotButton"
@@ -212,15 +223,17 @@ export default class NetPyNEInstantiated extends React.Component {
                     </Popover>
                 </div>
                 <Dialog
-                    title="NetPyNE"
+                    title={this.state.dialogTitle}
                     modal={true}
                     actions={<FlatButton
+                        id="netPyneDialog"
                         label="Ok"
                         primary={true}
                         keyboardFocused={true}
                         onClick={this.handleCloseDialog}
-                        id="netPyneDialog"
-                    />}
+                        />}
+                    bodyStyle={{ overflow: 'auto' }}
+                    style={{ whiteSpace: "pre-wrap" }}
                     open={this.state.openDialog}
                     onRequestClose={this.handleCloseDialog}
                 >
