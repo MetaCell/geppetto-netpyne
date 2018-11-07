@@ -1,4 +1,7 @@
 function clickOnTree(casper, file) {
+	casper.then(function(){
+		this.wait(500)
+	})
 	casper.then(function(){ 
 		let text = casper.evaluate(function(item) {
 			let leaves = document.getElementById("TreeContainerCutting_component").getElementsByTagName("span");
@@ -21,6 +24,13 @@ function clickOnTree(casper, file) {
 		}
 		return false
 	}, file)
+}
+
+// ----------------------------------------------------------------------------------- //
+function treeSelection(casper, sequence, test) {
+	casper.eachThen(sequence, function(response){
+		test.assert(clickOnTree(this, response.data), "click " + response.data + "folder")
+	})
 }
 
 // ----------------------------------------------------------------------------------- //
@@ -80,35 +90,8 @@ function importCellTemplate(casper, test, toolbox) {
 	})
 
 	casper.then(function(){
-		this.wait(500)
+		treeSelection(this, ["netpyne_ui", "tests", "cells", "PTcell_simple.hoc"], test)
 	})
-
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'netpyne_ui'), "click netpyne_ui folder")
-	})
-
-	casper.then(function(){
-		this.wait(500)
-	})
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'tests'), "click tests folder")
-	})
-
-	casper.then(function(){
-		this.wait(500)
-	})
-
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'cells'), "click cells folder")
-	})
-
-	casper.then(function(){
-		this.wait(500)
-	})
-
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'PTcell_simple.hoc'), "click PTcell_simple.hoc file")
-	}) 
 
 	casper.then(function(){
 		this.wait(1000, function() {
@@ -137,26 +120,7 @@ function importCellTemplate(casper, test, toolbox) {
 	})
 
 	casper.then(function(){
-		this.wait(500)
-	})
-
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'netpyne_ui'), "click netpyne_ui folder")
-	})
-
-	casper.then(function(){
-		this.wait(500)
-	})
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'tests'), "click tests folder")
-	})
-
-	casper.then(function(){
-		this.wait(500)
-	})
-
-	casper.then(function() {
-		test.assert(clickOnTree(this, 'mod'), "click mod folder")
+		treeSelection(this, ["netpyne_ui", "tests", "mod"], test)
 	})
 
 	casper.then(function(){
