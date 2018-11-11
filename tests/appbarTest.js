@@ -90,7 +90,7 @@ function importCellTemplate(casper, test, toolbox) {
 	})
 
 	casper.then(function(){
-		treeSelection(this, ["netpyne_ui", "tests", "cells", "PTcell_simple.hoc"], test)
+		treeSelection(this, ["tests", "cells", "PTcell_simple.hoc"], test)
 	})
 
 	casper.then(function(){
@@ -120,7 +120,7 @@ function importCellTemplate(casper, test, toolbox) {
 	})
 
 	casper.then(function(){
-		treeSelection(this, ["netpyne_ui", "tests", "mod"], test)
+		treeSelection(this, ["tests", "mod"], test)
 	})
 
 	casper.then(function(){
