@@ -36,29 +36,29 @@ function treeSelection(casper, sequence, test) {
 // ----------------------------------------------------------------------------------- //
 function importCellTemplate(casper, test, toolbox) {
 	casper.then(function() {
-    toolbox.create2rules(this, test, "Populations", "newPopulationButton", "Population")
+		toolbox.create2rules(this, test, "Populations", "newPopulationButton", "Population")
 	})
 	
 	casper.then(function() {
-    toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
-    toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
+		toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellType\']", "PYR")
+		toolbox.setInputValue(this, test, "netParams.popParams[\'Population\'][\'cellModel\']", "HH")
 	})
 
 	casper.then(function() {
-    populatePopDimension(this, test, toolbox)
+		populatePopDimension(this, test, toolbox)
 	})
 	
 	casper.then(function() {
-    toolbox.create2rules(this, test, "CellRules", "newCellRuleButton", "CellRule")
-  })
-	
-	casper.then(function() {
-    toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']", "PYRMenuItem")
-    toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']", "HHMenuItem")
+		toolbox.create2rules(this, test, "CellRules", "newCellRuleButton", "CellRule")
 	})
 	
-  casper.then(function() {
-    this.wait(1000)
+	casper.then(function() {
+		toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellType\']", "PYRMenuItem")
+		toolbox.setSelectFieldValue(this, test, "netParams.cellParams[\'CellRule\'][\'conds\'][\'cellModel\']", "HHMenuItem")
+	})
+	
+	casper.then(function() {
+		this.wait(1000)
 	})
 	
 	casper.then(function() {
@@ -141,9 +141,9 @@ function importCellTemplate(casper, test, toolbox) {
 		})
 	})
 	casper.then(function() {
-    this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assert(true, "Completed PTcell_simple.hoc import")
-    }, null, 40000)
+		this.waitWhileVisible('div[id="loading-spinner"]', function() {
+			test.assert(true, "Completed PTcell_simple.hoc import")
+		}, null, 40000)
 	})
 
 	casper.then(function() {
@@ -151,12 +151,12 @@ function importCellTemplate(casper, test, toolbox) {
 			this.click('button[id="simulateNetwork"]')
 		})
 	})
-  casper.then(function() {
-    this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assert(this.evaluate(function() {
+	casper.then(function() {
+		this.waitWhileVisible('div[id="loading-spinner"]', function() {
+			test.assert(this.evaluate(function() {
 				return CanvasContainer.engine.getRealMeshesForInstancePath("network.Population[0]")[0].visible
 			}), "Cell Imported correctly")
-    }, null, 120000)
+		}, null, 120000)
 	})
 
 	casper.then(function(){
@@ -250,10 +250,10 @@ function importHLS(casper, test, toolbox, tut3=true) {
 
 	casper.then(function() {
 		this.waitWhileVisible('input[id="appBarImportFileName"]')
-    this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assert(true, "Completed HLS import")
-    }, 40000)
-  })
+		this.waitWhileVisible('div[id="loading-spinner"]', function() {
+			test.assert(true, "Completed HLS import")
+		}, 40000)
+	})
 }
 
 // ----------------------------------------------------------------------------------- //
@@ -264,12 +264,12 @@ function instantiateNetwork(casper, test, toolbox) {
 			this.click('button[id="simulateNetwork"]')
 		})
 	})
-  casper.then(function() {
-    this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assert(this.evaluate(function() {
+	casper.then(function() {
+		this.waitWhileVisible('div[id="loading-spinner"]', function() {
+			test.assert(this.evaluate(function() {
 				return CanvasContainer.engine.getRealMeshesForInstancePath("network.S[10]")[0].visible
 			}), "Instance created with 40 cells")
-    }, 40000)
+		}, 40000)
 	})
 }
 
@@ -279,10 +279,10 @@ function simulateNetwork(casper, test, toolbox) {
 	casper.thenClick('#PlotButton');
 
 	casper.then(function() {
-    this.waitUntilVisible('span[id="rasterPlot"]');
-  })
-  casper.thenEvaluate(function() {
-    document.getElementById('rasterPlot').click();
+		this.waitUntilVisible('span[id="rasterPlot"]');
+	})
+	casper.thenEvaluate(function() {
+		document.getElementById('rasterPlot').click();
 	});
 	casper.then(function() {
 		this.wait(2000, function(){
@@ -291,17 +291,17 @@ function simulateNetwork(casper, test, toolbox) {
 	})
 
 	casper.then(function() {
-    var info = this.getElementInfo('button[id="launchSimulationButton"]');
-    this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
+		var info = this.getElementInfo('button[id="launchSimulationButton"]');
+		this.mouse.click(info.x - 4, info.y - 4); //move a bit away from corner
 	})
 	
-  casper.then(function(){
-    this.wait(1000)
-  })
-  casper.then(function() {
-    this.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
-      test.assertDoesntExist('div[role="menu"]', "Plot Menu is gone");
-    });
+	casper.then(function(){
+		this.wait(1000)
+	})
+	casper.then(function() {
+		this.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
+			test.assertDoesntExist('div[role="menu"]', "Plot Menu is gone");
+		});
 	})
 	
 	casper.then(function(){
@@ -309,7 +309,7 @@ function simulateNetwork(casper, test, toolbox) {
 			this.click('button[id="launchSimulationButton"]')
 		})
 	})
-  casper.then(function(){
+	casper.then(function(){
 		this.waitUntilVisible('button[id="okRunSimulation"]', function(){
 			this.click('button[id="okRunSimulation"]')
 		})
@@ -321,28 +321,28 @@ function simulateNetwork(casper, test, toolbox) {
 	})
 
 	casper.then(function() {
-    this.waitUntilVisible('span[id="rasterPlot"]');
-  })
-  casper.thenEvaluate(function() {
-    document.getElementById('rasterPlot').click();
-  });
-  
-  casper.then(function() {
-    this.waitUntilVisible('div[id="Popup1"]', function() {
+		this.waitUntilVisible('span[id="rasterPlot"]');
+	})
+	casper.thenEvaluate(function() {
+		document.getElementById('rasterPlot').click();
+	});
+	
+	casper.then(function() {
+		this.waitUntilVisible('div[id="Popup1"]', function() {
 			this.waitUntilVisible('g[id="figure_1"]')
 			this.waitUntilVisible('g[id="axes_1"]')
 		})
-  })
-	
-	casper.then(function() {
-    toolbox.click(this, "launchSimulationButton", "button"); //move a bit away from corner
 	})
 	
-  
-  casper.then(function() {
-    this.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
-      test.assertDoesntExist('div[role="menu"]', "Plot Menu is gone");
-    });
+	casper.then(function() {
+		toolbox.click(this, "launchSimulationButton", "button"); //move a bit away from corner
+	})
+	
+	
+	casper.then(function() {
+		this.waitWhileVisible('div[role="menu"]', function() { //wait for menu to close
+			test.assertDoesntExist('div[role="menu"]', "Plot Menu is gone");
+		});
 	})
 }
 
@@ -431,8 +431,8 @@ function openNetwork(casper, test, toolbox) {
 	casper.then(function() {
 		this.waitWhileVisible('input[id="loadJsonFile"]')
 		this.waitWhileVisible('div[id="loading-spinner"]', function() {
-      test.assert(true, "Completed Model load")
-    }, 40000)
+			test.assert(true, "Completed Model load")
+		}, 40000)
 	})
 }
 
@@ -440,7 +440,7 @@ function openNetwork(casper, test, toolbox) {
 
 function exploreOpenedModel(casper, test, toolbox) {
 	casper.then(function() {
-    this.waitWhileVisible('div[id="loading-spinner"]')
+		this.waitWhileVisible('div[id="loading-spinner"]')
 	})
 	casper.then( function(){
 		test.assert(this.evaluate(function() {
@@ -463,7 +463,7 @@ function exploreOpenedModel(casper, test, toolbox) {
 	})
 
 	casper.then(function() {
-    toolbox.click(this, "launchSimulationButton", "button"); //move a bit away from corner
+		toolbox.click(this, "launchSimulationButton", "button"); //move a bit away from corner
 	})
 
 	casper.then(function(){
@@ -540,19 +540,19 @@ function clearModel(casper, test, toolbox) {
 // ---------------------------------------------------------------------- //
 
 function populatePopDimension(casper, test, toolbox) {
-  casper.then(function() {
-    toolbox.click(this, "popParamsDimensionsSelect", "div");
-  })
-  casper.then(function() { // check all menuItems exist
-    toolbox.assertExist(this, test, "popParamSnumCells", "span");
-  });
+	casper.then(function() {
+		toolbox.click(this, "popParamsDimensionsSelect", "div");
+	})
+	casper.then(function() { // check all menuItems exist
+		toolbox.assertExist(this, test, "popParamSnumCells", "span");
+	});
 
-  casper.thenClick("#popParamSnumCells", function() {
-    toolbox.setInputValue(this, test, "popParamsDimensions", "1")
-  })
-  casper.then(function() {
-    this.wait(1000)
-  })
+	casper.thenClick("#popParamSnumCells", function() {
+		toolbox.setInputValue(this, test, "popParamsDimensions", "1")
+	})
+	casper.then(function() {
+		this.wait(1000)
+	})
 }
 
 // ---------------------------------------------------------------------- //
