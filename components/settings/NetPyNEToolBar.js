@@ -62,14 +62,14 @@ export default class NetPyNEToolBar extends React.Component {
                         onRequestClose={() => this.setState({ openDialogBox: false })}
                         changeTab={this.props.changeTab}
                         mode ={"EXPORT"}
-										/>
-										break;
-								case 'ImportCellTemplate':
-										var content = <ImportCellParams
-												open={this.state.openDialogBox}
-												onRequestClose={() => this.setState({ openDialogBox: false })}
-										/>
-										break;
+                    />
+                    break;
+                case 'ImportCellTemplate':
+                    var content = <ImportCellParams
+                        open={this.state.openDialogBox}
+                        onRequestClose={() => this.setState({ openDialogBox: false })}
+                    />
+                    break;
                 case 'Remove':
                     var content = <DeleteWork
                         open={this.state.openDialogBox}
@@ -83,7 +83,7 @@ export default class NetPyNEToolBar extends React.Component {
         
         return <div>
             <IconButton
-								id="appBar"
+                id="appBar"
                 tooltip={'File options'}
                 style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden' }}
                 iconStyle={{ color: '#ffffff', marginTop: -4, marginLeft: -4 }}
@@ -103,8 +103,8 @@ export default class NetPyNEToolBar extends React.Component {
                 <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
                 <MenuItem id="appBarSave" primaryText="Save..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
                 <MenuItem id="appBarImportHLS" primaryText="Import HLS" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />
-								<MenuItem id="appBarExportHLS" primaryText="Export HLS" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
-								<MenuItem id="appBarImportCellTemplate" primaryText="Import cell" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<ExportIcon />} />
+                <MenuItem id="appBarExportHLS" primaryText="Export HLS" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
+                <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon />} />
                 <MenuItem id="appBarDelete" primaryText="Remove current project" onClick={() => this.handleMenuItemClick('Remove')} leftIcon={<FontIcon className='fa fa-trash-o' />} />
             </Drawer>
             
