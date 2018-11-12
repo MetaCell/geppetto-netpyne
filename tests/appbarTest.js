@@ -136,7 +136,7 @@ function importCellTemplate(casper, test, toolbox) {
 	})
 
 	casper.then(function(){
-		this.click("button[id='acceptImportCellTemplate']", function(){
+		this.click("button[id='appBarPerformActionButton']", function(){
 			this.echo('Importing PTcell.hoc this will take some time....')
 		})
 	})

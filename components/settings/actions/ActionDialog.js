@@ -50,7 +50,7 @@ export default class ActionDialog extends React.Component {
                                     widget.destroy()
                                 })
                             })
-						}
+												}
                         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
                         this.props.onRequestClose();
                     }
