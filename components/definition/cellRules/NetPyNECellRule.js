@@ -85,17 +85,16 @@ export default class NetPyNECellRule extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-		var dialogPop = (this.state.errorMessage != undefined
-			? <Dialog
-					title={title}
-					open={true}
-					actions={actions}
-					bodyStyle={{ overflow: 'auto' }}
-					style={{ whiteSpace: "pre-wrap" }}>
-					{children}
-				</Dialog> 
-			: undefined
-		)
+    var dialogPop = (this.state.errorMessage != undefined ? <Dialog
+          title={title}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {children}
+        </Dialog> 
+      : undefined
+    )
     return (
       <div>
         <div>
