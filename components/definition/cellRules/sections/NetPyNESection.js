@@ -140,16 +140,6 @@ export default class NetPyNESection extends React.Component {
             floatingLabelText="The name of the section"
             className={"netpyneField"}
           />
-          <br /><br />
-          <IconButton
-            id={"cellParamsGoMechsButton"}
-            className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
-            onClick={() => that.props.selectPage("mechanisms")}
-          >
-            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
-            <span className={"gearThumbLabel"}>Mechanisms</span>
-          </IconButton>
-          {dialogPop}
         </div>
       )
     }
