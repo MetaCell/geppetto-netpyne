@@ -8,75 +8,75 @@ import FileBrowser from '../../general/FileBrowser';
 import NetPyNEField from '../../general/NetPyNEField';
 
 const styles = {
-  card: {
-    main: {
-      padding: 10, float: 'left', width: '100%'
-    },
-    title: {
-      paddingBottom: 0
-    },
-    cancel: {
-      marginRight: 16
-    }
-  },
-  mods: {
-    container: {
-      width: '100%', float: 'left', marginTop: '15px'
-    },
-    leftSubContainer: {
-      float: 'left', width: '50%'
-    },
-    rightSubContainer: {
-      float: 'right', width: '50%'
-    },
-    checkbox: {
-      width: '90%'
-    }
-  }
+	card: {
+		main: {
+			padding: 10, float: 'left', width: '100%'
+		},
+		title: {
+			paddingBottom: 0
+		},
+		cancel: {
+			marginRight: 16
+		}
+	},
+	mods: {
+		container: {
+			width: '100%', float: 'left', marginTop: '15px'
+		},
+		leftSubContainer: {
+			float: 'left', width: '50%'
+		},
+		rightSubContainer: {
+			float: 'right', width: '50%'
+		},
+		checkbox: {
+			width: '90%'
+		}
+	}
 }
 
 export default class ImportCellParams extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      label: 'NewCellRule',
-      fileName: '',
-      cellName: '',
-      modFolder: '',
-      compileMod: false,
-      importSynMechs: false,
-      explorerDialogOpen: false,
-      exploreOnlyDirs: false,
-    };
-  };
-
-  updateCheck(name) {
-    this.setState(({[name]: pv}) => ({ [name]: !pv}));
+	constructor(props) {
+		super(props);
+		this.state = {
+			label: 'NewCellRule',
+			fileName: '',
+			cellName: '',
+			modFolder: '',
+			compileMod: false,
+			importSynMechs: false,
+			explorerDialogOpen: false,
+			exploreOnlyDirs: false,
+		};
 	};
 
-  showExplorerDialog(explorerParameter, exploreOnlyDirs) {
-    this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
-  };
+	updateCheck(name) {
+		this.setState(({[name]: pv}) => ({ [name]: !pv}));
+	};
 
-  closeExplorerDialog(fieldValue) {
-    var newState = { explorerDialogOpen: false };
-    if (fieldValue) {
-      switch (this.state.explorerParameter) {
-        case "fileName":
-          newState["fileName"] = fieldValue.path;
-          break;
-        case "modFolder":
-          newState["modFolder"] = fieldValue.path;
-          break;
-        default:
-          throw ("Not a valid parameter!");
-      }
-    }
-    this.setState(newState);
-  };
+	showExplorerDialog(explorerParameter, exploreOnlyDirs) {
+		this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
+	};
 
-  render() {
+	closeExplorerDialog(fieldValue) {
+		var newState = { explorerDialogOpen: false };
+		if (fieldValue) {
+			switch (this.state.explorerParameter) {
+				case "fileName":
+					newState["fileName"] = fieldValue.path;
+					break;
+				case "modFolder":
+					newState["modFolder"] = fieldValue.path;
+					break;
+				default:
+					throw ("Not a valid parameter!");
+			}
+		}
+		this.setState(newState);
+	};
+
+	render() {
 		const cellArgs = this.refs.cellArgs ? this.refs.cellArgs.state.children : {}
 		const { label, fileName, cellName, modFolder, importSynMechs, compileMod, explorerDialogOpen, exploreOnlyDirs } = this.state;
 		
@@ -164,5 +164,5 @@ export default class ImportCellParams extends React.Component {
 				</Card>
 			</ActionDialog>
 		)
-  };
+	};
 };
