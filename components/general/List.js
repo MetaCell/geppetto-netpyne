@@ -12,18 +12,12 @@ export default class ListComponent extends Component {
         super(props);
         this.state = {
             model: props.model,
-            children: [],
+            children: (props.realType == 'dict' || props.realType == 'dict(dict())') ? {} : [],
             newItemValue: ''
         };
         this.addChild = this.addChild.bind(this);
         this.handleNewItemChange = this.handleNewItemChange.bind(this);
-		}
-		componentDidMount() {
-			const { realType } = this.props;
-			if (realType == 'dict' || realType == 'dict(dict())') {
-				this.setState({children: {}})
-			}
-		}
+    }
 
     isValid(value) {
         switch (this.props.realType) {
