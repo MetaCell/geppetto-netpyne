@@ -508,8 +508,8 @@ function clearModel(casper, test, toolbox) {
     })
   })
   casper.then(function() {
-    this.waitUntilVisible('span[id="appBarDelete"]', function(){
-      this.click('span[id="appBarDelete"]')
+    this.waitUntilVisible('span[id="appBarNew"]', function(){
+      this.click('span[id="appBarNew"]')
     })
   })
   casper.then(function(){
