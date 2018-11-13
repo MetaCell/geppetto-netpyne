@@ -24,6 +24,18 @@ export default class NetPyNECellRule extends React.Component {
     };
   };
 
+  componentDidMount(){
+    GEPPETTO.on('populations_change', () => {
+      this.forceUpdate();
+    })
+  }
+
+  componentWillUnmount(){
+    GEPPETTO.off('populations_change', () => {
+      this.forceUpdate();
+    })
+  }
+
   handleRenameChange = (event) => {
     var that = this;
     var storedValue = this.props.name;

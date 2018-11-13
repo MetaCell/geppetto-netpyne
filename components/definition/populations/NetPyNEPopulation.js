@@ -26,9 +26,9 @@ export default class NetPyNEPopulation extends React.Component {
       errorMessage: undefined,
       errorDetails: undefined
     };
-
   }
 
+  
   componentWillReceiveProps(nextProps) {
     this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
   }
@@ -102,7 +102,10 @@ export default class NetPyNEPopulation extends React.Component {
     if(updateCondition) {
       this.triggerUpdate(function () {
         // Rename the population in Python
-        Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
+        Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { 
+          that.renaming = false 
+          GEPPETTO.trigger('populations_change');
+        });
         that.renaming = true;
       });
     } else if(!(updateCondition) && !(newValue != event.target.value)) {

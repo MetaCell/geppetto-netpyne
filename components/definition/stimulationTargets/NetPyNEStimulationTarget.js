@@ -34,6 +34,18 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.select = this.select.bind(this);
   };
   
+  componentDidMount(){
+    GEPPETTO.on('populations_change', () => {
+      this.forceUpdate();
+    })
+  }
+
+  componentWillUnmount(){
+    GEPPETTO.off('populations_change', () => {
+      this.forceUpdate();
+    })
+  }
+  
   componentWillReceiveProps(nextProps) {
     if (this.state.currentName!=nextProps.name) {
       this.setState({ currentName: nextProps.name, selectedIndex:0, sectionId:'General'});
