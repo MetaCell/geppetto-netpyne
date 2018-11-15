@@ -14,7 +14,7 @@ export default class Nsg extends React.Component {
         super(props);
         this.state = {
           open: false,
-          pass: 'P&wonqn2208',
+          pass: 'FakePass1234',
           deploymentOptions: [],
           user: 'frodriguez4600',
           deployment: "NEURON 7.4 on Comet using python",
