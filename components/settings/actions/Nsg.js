@@ -1,8 +1,10 @@
 import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
+import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import NSG from '../../general/NSG.png'
@@ -12,12 +14,13 @@ export default class Nsg extends React.Component {
         super(props);
         this.state = {
           open: false,
-          key: 'netpyne-4B3B1CC6623047BC8C1F5E0ED31914FE',
-          user: 'frodriguez4600',
           pass: 'P&wonqn2208',
+          deploymentOptions: [],
+          user: 'frodriguez4600',
+          deployment: "NEURON 7.4 on Comet using python",
+          key: 'netpyne-4B3B1CC6623047BC8C1F5E0ED31914FE',
         }
         this.parser = new DOMParser();
-        
         this.url = "https://nsgr.sdsc.edu:8443/cipresrest/v1"
     }
 
@@ -31,28 +34,23 @@ export default class Nsg extends React.Component {
         const consumedResponse = await response.text()
         const xmlData = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
     
-        let deployments = []
+        let deploymentOptions = []
         for (let i = 0 ; i < xmlData.length ; i++) {
-          deployments.push(xmlData[i].textContent)
+          deploymentOptions.push(xmlData[i].textContent)
         }
         
-        this.setState({ deployments })
+        this.setState({ deploymentOptions })
         
       }
     }
 
     async currentJobs() {
       const { user, pass, key } = this.state;
-      
       if (user && pass && key) {
         const headers = new Headers();
         const url = `${this.url}/job/${user}`
-
         headers.append('Authorization', `Basic ${btoa(user+':'+pass)}`);
         headers.append('cipres-appkey', key)
-        console.log(headers);
-        
-        
         const response = await fetch(url, { method:'GET', headers: headers })
         const consumedResponse = await response.text()
         
@@ -62,10 +60,8 @@ export default class Nsg extends React.Component {
 
 
     render() {
-      const { user, pass, key } = this.state;
+      const { user, pass, key, deployment, deploymentOptions } = this.state;
       const { open, onRequestClose } = this.props;
-      console.log("HEHEHEHEH")
-      console.log(open)
       return (
         <Drawer width={460} openSecondary={true} open={open}>
           
@@ -99,20 +95,26 @@ export default class Nsg extends React.Component {
             onChange={e => this.setState({ key: e.target.value })}
           />
 
-          
-
-
+          <SelectField
+            value={deployment}
+            menuStyle={{ width:"97%" }}
+            floatingLabelText="Select deployment"
+            style={{ margin:"5px", width: "97%" }}
+            onChange={ (event, index, value) => this.setState({ deployment: value ? value : "NEURON 7.4 on Comet using python"})}
+          >
+            {deploymentOptions.map((name, i) => <MenuItem key={name} value={name} primaryText={name} />)}
+          </SelectField>
 
           <div style={{textAlign: "center"}}>
             <RaisedButton
-              label="run" 
-              style={{ margin:"1px", marginTop: "20px" }}
+              label="run"
               onClick={()=>this.currentJobs()}
+              style={{ margin:"1px", marginTop: "20px" }}
             />
             <RaisedButton
               label={"close"}
-              style={{ margin:"1px", marginTop: "20px" }}
               onClick={() => onRequestClose()}
+              style={{ margin:"1px", marginTop: "20px" }}
             />
           </div>
           
