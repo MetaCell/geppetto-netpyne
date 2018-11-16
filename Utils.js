@@ -144,6 +144,31 @@ const Utils = {
         return <pre dangerouslySetInnerHTML={{__html: IPython.utils.fixConsole(exception)}}></pre>
     },
 
+    handleUpdate(updateCondition, newValue, originalValue, context, componentName) {
+        if((updateCondition) && (newValue != originalValue)) {
+            // if the new value has been changed by the function Utils.nameValidation means that the name convention
+            // has not been respected, so we need to open the dialog and inform the user.
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in "+componentName+" names."});
+            return true;
+        } else if ((updateCondition) && (newValue == originalValue)){
+            context.setState({ currentName: newValue });
+            return true;
+        } else if (!(updateCondition) && (newValue == originalValue)) {
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Name collision detected, the name "+newValue+
+                                        " is already used in this model, please pick another name."});
+            return false;
+        } else if (!(updateCondition) && (newValue != originalValue)) {
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in "+componentName+" names."});
+            return false;
+        }
+    },
+
     execPythonMessage: execPythonMessage,
     evalPythonMessage: evalPythonMessage
 }

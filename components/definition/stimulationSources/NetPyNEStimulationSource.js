@@ -43,26 +43,13 @@ export default class NetPyNEStimulationSource extends React.Component {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
-    if(newValue != event.target.value) {
-      // if the new value has been changed by the function Utils.nameValidation means that the name convention
-      // has not been respected, so we need to open the dialog and inform the user.
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Leading digits or whitespaces are not allowed in StimulationSource names."});
-    } else {
-      this.setState({ currentName: newValue });
-    }
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationSource");
 
-    if(updateCondition) {
+    if(triggerCondition) {
       this.triggerUpdate(function () {
         Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
         that.renaming = true;
       });
-    } else if(!(updateCondition) && !(newValue != event.target.value)){
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Name collision detected, the name "+newValue+
-                                    " is already used in this model, please pick another name."});
     }
   };
 
