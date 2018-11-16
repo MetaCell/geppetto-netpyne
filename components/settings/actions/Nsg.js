@@ -129,6 +129,11 @@ export default class Nsg extends React.Component {
     }
 
     async submitJob() {
+      const { runtime_, number_nodes_, number_cores_, filename_, tool, statusEmail, clientJobId, emailAddress, clientJobName } = this.props;
+      const metadata = { statusEmail, clientJobId, emailAddress, clientJobName }
+      const vparams = { runtime_, number_nodes_, number_cores_, filename_, tool: tool.id }
+      const response = await Utils.evalPythonMessage('netpyne_geppetto.submitJob', [{ metadata, vparams }])
+      
     }
 
     async testRequestJobs(){
@@ -238,7 +243,7 @@ export default class Nsg extends React.Component {
               </Table>
               
               {currentJob != -1
-                ? <div style={{width: '100%', height: '400px'}}>
+                ? <div style={{width: '100%', height: '200px'}}>
                     <h3>Details</h3>
                     <Divider/>
                     <h4>Name:</h4>
