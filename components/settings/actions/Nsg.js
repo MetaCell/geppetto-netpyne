@@ -8,7 +8,8 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress';
-
+import {List, ListItem} from 'material-ui/List';
+import Avatar from 'material-ui/Avatar';
 import {
   Table,
   TableBody,
@@ -21,7 +22,6 @@ import {
 import {
   Step,
   Stepper,
-  StepLabel,
   StepContent,
   StepButton
 } from 'material-ui/Stepper';
@@ -51,104 +51,105 @@ export default class Nsg extends React.Component {
           //vparams
           runtime_: 0.5,
           number_nodes_: 1,
-          number_cores_: 8,
+          number_cores_: 1,
           filename_:"init.py",
           tool: { id: "NEURON74_PY_TG", name: "NEURON 7.4 on Comet using python" },
-          tools: [],
           //metadata
-          statusEmail: false,
+          statusEmail: true,
           clientJobId: "",
-          emailAddress: "",
           clientJobName: "",
+          emailAddress: "frodriguez4600@gmail.com",
           // job list
+          jobs: [],
           currentJob: -1,
-          jobs: [
-            {
-              id: "netpyne-4872897241",
-              name: "simple cell",
-              status: "error"
-            },
-            {
-              id: "netpyne-8457728373",
-              name: "complex cell",
-              status: "queue"
-            },
-            {
-              id: "netpyne-7696292384",
-              name: "simple cell",
-              status: "completed"
-            }
-          ],
           // status info
+          tools: [],
+          tabIndex: 2,
           fetching: false,
           errorMessage: undefined,
           errorDetails: undefined,
           // setting navigation
           settingIndex: 0,
-          saveLocally: false
+          saveLocally: false,
+          // logged info
+          logged: false,
         }
         this.parser = new DOMParser();
     }
 
-    async componentDidMount() {
-      const { username, password, appID, baseUrl } = this.state;
-      
-      if (username && password && appID) {
-        const url = `${baseUrl}/tool`
-        this.setState({fetching: true})
-        
-        const response = await fetch(url, { method:'GET' })
-        const consumedResponse = await response.text()
-        const xmlToolName = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
-        const xmlToolID = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
-        let tools = []
-        for (let i = 0 ; i < xmlToolName.length ; i++) {
-          tools.push({
-            name: xmlToolName[i].textContent,
-            id: xmlToolID[i].textContent
-          })
+    async login(){
+      const { password, username, appID, baseUrl } = this.state;
+      const payload = { password, username, appID, baseUrl }
+      this.setState({fetching: true, logged: false})
+      const response = await Utils.evalPythonMessage('netpyne_geppetto.nsg_login', [payload])
+      if (!this.processError(response)){ //handle error at backend level
+        if (response.success) { // handle error at NSG restAPI level
+          this.setState(({ username }) => ({
+            logged: true, 
+            password: "",
+            username: "",
+            errorMessage: undefined, 
+            errorDetails: undefined,
+            loginName: username,
+          }))
+        } else {
+          this.setState({errorMessage: response.displayMessage, errorDetails: response.message})
         }
-
-        this.setState({ tools, fetching: false })
-        
       }
+      this.setState({fetching: false})
     }
 
-    async currentJobs() {
-      const { username, password, appID, baseUrl } = this.state;
-      if (username && password && appID) {
-        const headers = new Headers();
-        const url = `${baseUrl}/job/${user}`
-        headers.append('Authorization', `Basic ${btoa(username+':'+password)}`);
-        headers.append('cipres-appkey', appID)
-        const response = await fetch(url, { method:'GET', headers: headers })
-        const consumedResponse = await response.text()
-        
-        console.log(consumedResponse);
+    logout(){
+      this.setState({
+        logged: false,
+      })
+    }
+
+    async fetchTools(){
+      const { baseUrl } = this.state;
+      const url = baseUrl + "/tool"
+      this.setState({fetching: true})
+      const response = await fetch(url, { method:'GET' })
+      const consumedResponse = await response.text()
+      const xmlToolName = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
+      const xmlToolID = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
+      let tools = []
+      for (let i = 0 ; i < xmlToolName.length ; i++) {
+        tools.push({
+          name: xmlToolName[i].textContent,
+          id: xmlToolID[i].textContent
+        })
       }
+      this.setState({ tools, fetching: false })
+    }
+
+    async jobList(){
+      this.setState({fetching: true})
+      const response = await Utils.evalPythonMessage('netpyne_geppetto.job_list', [])
+
+      if (!this.processError(response)){
+        console.log(response)
+        this.setState({errorMessage: undefined, errorDetails: undefined, jobs: response})
+      }
+      
+      this.setState({fetching: false})
     }
 
     async submitJob() {
-      const { runtime_, number_nodes_, number_cores_, filename_, tool, statusEmail, clientJobId, emailAddress, clientJobName } = this.props;
+      const { runtime_, number_nodes_, number_cores_, filename_, tool, statusEmail, clientJobId, emailAddress, clientJobName, loginName } = this.state;
       const metadata = { statusEmail, clientJobId, emailAddress, clientJobName }
-      const vparams = { runtime_, number_nodes_, number_cores_, filename_, tool: tool.id }
-      const response = await Utils.evalPythonMessage('netpyne_geppetto.submitJob', [{ metadata, vparams }])
+      const vParams = { runtime_, number_nodes_, number_cores_, filename_, tool: tool.id }
       
-    }
-
-    async testRequestJobs(){
-      const { password, username, appID, baseUrl } = this.state;
-      const payload = { password, username, appID, baseUrl }
-
       this.setState({fetching: true})
-      const response = await Utils.evalPythonMessage('netpyne_geppetto.test', [payload])
-      
+      const response = await Utils.evalPythonMessage('netpyne_geppetto.submit_job', [vParams, metadata])
       if (!this.processError(response)){
         console.log(response)
         this.setState({errorMessage: undefined, errorDetails: undefined})
       }
       this.setState({fetching: false})
     }
+
+    
 
     processError = (response) => {
       var parsedResponse = Utils.getErrorResponse(response);
@@ -163,12 +164,12 @@ export default class Nsg extends React.Component {
     render() {
       const { open, onRequestClose } = this.props;
       const { 
+        settingIndex, saveLocally, logged, loginName,tabIndex, //settings
         tools, jobs, currentJob, // general info
         username, password, appID, // fetch info
         errorMessage, errorDetails, fetching, // status info
         clientJobId, clientJobName, statusEmail, emailAddress,  // metadata
         filename_, runtime_, number_nodes_, number_cores_, tool, // vparams
-        settingIndex, saveLocally//settings
       } = this.state;
   
       return (
@@ -185,47 +186,53 @@ export default class Nsg extends React.Component {
           
           <Divider /> 
           
-          <Tabs>
+          <Tabs 
+            value={tabIndex} 
+            inkBarStyle={{ backgroundColor: "#00BCD4" }}
+            onChange={value => logged ? this.setState({tabIndex: value}) : null}
+          >
             <Tab 
               label="New"
-              onActive={() => this.submitJob()}
-            >
-              <div style={{textAlign: "center", position: "absolute", top: '560px', width: '100%'}}>
-                <RaisedButton
-                  label="run"
-                  onClick={()=>this.testRequestJobs()}
-                  style={{ margin:"1px" }}
-                />
-                <RaisedButton
-                  label={"close"}
-                  onClick={() => onRequestClose()}
-                  style={{ margin:"1px" }}
-                />
-              </div>
-            </Tab>
-            <Tab 
-              label="Status"
-              onActive={() => this.testRequestJobs()}
+              value={0}
+              onActive={logged ? () => {} : () => {}}
             >
               { errorMessage ? <span>{errorMessage}{Utils.parsePythonException(errorDetails)}</span> : null }
               
+              <div style={{textAlign: "center", position: "absolute", top: '560px', width: '100%'}}>
+                <RaisedButton
+                  label={fetching ? "..." : "run"}
+                  disabled={fetching ? true : false}
+                  onClick={ () => this.submitJob() }
+                  style={{ margin:"1px" }}
+                />
+                <RaisedButton
+                  label={"hide"}
+                  style={{ margin:"1px" }}
+                  onClick={ () => onRequestClose() }
+                />
+              </div>
+              
+            </Tab>
+            <Tab 
+              value={1}
+              label="Status"
+              onActive={() => logged ? this.jobList() : null}
+            > 
               <Table
                 selectable
+                fixedHeader
                 height="200px"
+                style={{width: "98%"}}
                 onCellClick={ (row, col) => this.setState({ currentJob: row }) }
-                fixedHeader={this.state.fixedHeader}
-                fixedFooter={this.state.fixedFooter}
               >
                 <TableHeader>
                   <TableRow>
-                    <TableHeaderColumn colSpan="3" style={{textAlign: 'center'}}>
-                      <h6>{`current jobs: (${username})`}</h6>
+                    <TableHeaderColumn colSpan="1" style={{textAlign: 'center'}}>
+                      <h4>{"current jobs: ("+loginName+")"}</h4>
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow>
-                    <TableHeaderColumn >Local ID</TableHeaderColumn>
-                    <TableHeaderColumn >name</TableHeaderColumn>
-                    <TableHeaderColumn >Status</TableHeaderColumn>
+                    <TableHeaderColumn >Name</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                   <TableBody
@@ -233,57 +240,120 @@ export default class Nsg extends React.Component {
                     showRowHover={this.state.showRowHover}
                   >
                     {jobs.map( (row, index) => (
-                      <TableRow key={row.id} selected={ currentJob == index }>
-                        <TableRowColumn>{row.id}</TableRowColumn>
-                        <TableRowColumn>{row.name}</TableRowColumn>
-                        <TableRowColumn>{row.status}</TableRowColumn>
+                      <TableRow key={row.jobHandle} selected={ currentJob == index }>
+                        <TableRowColumn>{row.jobHandle}</TableRowColumn>
                       </TableRow>
                       ))}
                   </TableBody>
               </Table>
               
               {currentJob != -1
-                ? <div style={{width: '100%', height: '200px'}}>
-                    <h3>Details</h3>
-                    <Divider/>
-                    <h4>Name:</h4>
-                    <h5>{jobs[currentJob].name}</h5>
-                    <h4>Status:</h4>
-                    <h5>{jobs[currentJob].status}</h5>
+                ? <div style={{width: '100%', height: '300px'}}>
+                    <h3 style={{marginLeft: "20px"}}>Details</h3>
+                    <Divider />
+                    <div style={{marginLeft: "25px", height: "250px", "overflowX": "auto"}}>
+                      {Object.keys(jobs[currentJob]).map(key => (
+                        <details key={key} >
+                          <summary style={{outline: "none"}}>{key}</summary>
+                          { key == "messages" 
+                            ? (jobs[currentJob][key].map(({timestamp, text}, index) => (
+                                <details style={{marginLeft: "10px"}}key={index}>
+                                  <summary style={{outline: "none"}}>{timestamp}</summary>
+                                  <p style={{marginLeft: "20px", wordWrap: "break-word"}}>{text}</p>
+                                </details>
+                              )))
+                            : <p style={{marginLeft: "10px", wordWrap: "break-word"}}>
+                                {jobs[currentJob][key] === null
+                                  ? "Empty"
+                                  : jobs[currentJob][key].constructor.name == "Boolean"
+                                    ? jobs[currentJob][key]
+                                      ? "Yes"
+                                      : "No"
+                                    : jobs[currentJob][key]
+                                }
+                              </p>
+                          }
+                        </details>
+                      ))}
+                    </div>
                   </div>
                 : null
               }
+
+              { errorMessage ? <span>{errorMessage}{Utils.parsePythonException(errorDetails)}</span> : null }
             </Tab>
 
-            <Tab label="Account" >
-              <TextField
-                hintText="User name"
-                value={username}  
-                floatingLabelText="User name"
-                style={{ float:"left", width:"45%", margin:"5px" }}
-                onChange={e => this.setState({ username: e.target.value })}
-              />
+            <Tab value={2} label="Account" >
+              {!logged 
+                ? <span>
+                    <TextField
+                      hintText="User name"
+                      value={username}  
+                      floatingLabelText="User name"
+                      style={{ float:"left", width:"45%", margin:"5px" }}
+                      onChange={e => this.setState({ username: e.target.value })}
+                    />
 
-              <TextField
-                id="nsg_pass"
-                type="password"
-                value={password}
-                hintText="Password"
-                floatingLabelText="Password"
-                style={{float:"right", width:"45%", margin:"5px"}}
-                onChange={e => this.setState({ password: e.target.value })}
-              />
+                    <TextField
+                      id="nsg_pass"
+                      type="password"
+                      value={password}
+                      hintText="Password"
+                      floatingLabelText="Password"
+                      style={{float:"right", width:"45%", margin:"5px"}}
+                      onChange={e => this.setState({ password: e.target.value })}
+                    />
 
-              <TextField
-                value={appID}  
-                hintText="The ID created "
-                floatingLabelText="Application ID"
-                style={{ margin:"5px", width: "97%" }}
-                onChange={e => this.setState({ appID: e.target.value })}
-              />
+                    <TextField
+                      value={appID}  
+                      hintText="The ID created "
+                      floatingLabelText="Application ID"
+                      style={{ margin:"5px", width: "97%" }}
+                      onChange={e => this.setState({ appID: e.target.value })}
+                    />
+                  </span>
+                : <List>
+                    <ListItem
+                      disabled={true}
+                      leftAvatar={
+                        <Avatar
+                          size={40}  
+                          color={"white"}
+                          backgroundColor={"#2196F3"}
+                        >
+                          {loginName[0]}
+                        </Avatar>
+                      }
+                    >
+                      {loginName}
+                    </ListItem>
+                </List>
+              }
+
+              { errorMessage ? <span>{errorMessage}{Utils.parsePythonException(errorDetails)}</span> : null }
+              
+              <div style={{textAlign: "center", position: "absolute", top: '560px', width: '100%'}}>
+                <RaisedButton
+                  secondary={!logged}
+                  style={{ margin:"1px" }}
+                  label={logged ? "Log out" : "Log in"}
+                  onClick={logged ? () => this.logout() : () => this.login()}
+                  disabled={fetching ? true : logged ? false : username && password && appID ? false : true}
+                />
+                <RaisedButton
+                  label={"exit"}
+                  style={{ margin:"1px" }}
+                  onClick={ () => onRequestClose() }
+                />
+              </div>
             </Tab>
 
-            <Tab label="Settings" >
+            <Tab 
+              value={3} 
+              label="Settings"
+              onTouchTap={()=>{}} 
+              onActive={() => tools.length == 0 ? this.fetchTools() : null}
+            >
               <Stepper orientation="vertical" >
                 <Step completed={false} active={settingIndex === 0}>
                   <StepButton onClick={() => this.setState({settingIndex: 0})}>Simulation</StepButton>
@@ -385,6 +455,7 @@ export default class Nsg extends React.Component {
                   <StepContent>
                     <Checkbox
                       checked={saveLocally}
+                      style={{marginTop: "20px"}}
                       label="Save a local copy of the model"
                       onCheck={()=> this.setState(({saveLocally}) => ({saveLocally: !saveLocally}))}
                     />
@@ -397,3 +468,41 @@ export default class Nsg extends React.Component {
       )
     }
 }
+// async currentJobs() {
+    //   const { username, password, appID, baseUrl } = this.state;
+    //   if (username_ && password_ && appID) {
+    //     const headers = new Headers();
+    //     const url = `${baseUrl}/job/${user}`
+    //     headers.append('Authorization', `Basic ${btoa(username_+':'+password_)}`);
+    //     headers.append('cipres-appkey', appID)
+    //     const response = await fetch(url, { method:'GET', headers: headers })
+    //     const consumedResponse = await response.text()
+        
+    //     console.log(consumedResponse);
+    //   }
+    // }
+
+
+    // async componentDidMount() {
+    //   const { password, username, appID, baseUrl } = this.state;
+      
+    //   if (username && password && appID) {
+    //     const url = `${baseUrl}/tool`
+    //     this.setState({fetching: true})
+        
+    //     const response = await fetch(url, { method:'GET' })
+    //     const consumedResponse = await response.text()
+    //     const xmlToolName = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
+    //     const xmlToolID = await this.parser.parseFromString(consumedResponse,"text/xml").getElementsByTagName("toolName")
+    //     let tools = []
+    //     for (let i = 0 ; i < xmlToolName.length ; i++) {
+    //       tools.push({
+    //         name: xmlToolName[i].textContent,
+    //         id: xmlToolID[i].textContent
+    //       })
+    //     }
+
+    //     this.setState({ tools, fetching: false })
+        
+    //   }
+    // }
