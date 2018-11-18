@@ -10,7 +10,7 @@ export default class NewModel extends React.Component {
         return (
             <ActionDialog
                 command ={"netpyne_geppetto.deleteModel"}
-                message = {"CREATE NEW MODEL"}
+                message = {"CREATING NEW MODEL"}
                 style={{textAlign: "center"}}
                 args = {{tab: 'define', action: 'deleteModel' }}
                 buttonLabel={"CREATE"}
