@@ -83,7 +83,7 @@ export default class ImportCellParams extends React.Component {
       <ActionDialog
         buttonLabel={'Import'}
         message = {'LOADING TEMPLATE'}
-        title={'Import cell Template (.py or .hoc)'}
+        title={'Import cell template (.py or .hoc)'}
         command={'netpyne_geppetto.importCellTemplate'}
         args={{ cellArgs, fileName, cellName, label, modFolder, importSynMechs, compileMod }}
         {...this.props}
