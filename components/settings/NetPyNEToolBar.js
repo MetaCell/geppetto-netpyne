@@ -99,7 +99,7 @@ export default class NetPyNEToolBar extends React.Component {
       >
         <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 8, width: 205 }} src={NetPyNElogo} />
         <Divider />
-				<MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon className='fa fa-plus' />} />
+        <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon className='fa fa-plus' />} />
         <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
         <MenuItem id="appBarSave" primaryText="Save..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
         <MenuItem id="appBarImportHLS" primaryText="Import" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />

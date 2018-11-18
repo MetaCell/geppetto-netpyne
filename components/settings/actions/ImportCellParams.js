@@ -83,75 +83,75 @@ export default class ImportCellParams extends React.Component {
       <ActionDialog
         buttonLabel={'Import'}
         message = {'LOADING TEMPLATE'}
-        title={'Import cell Template (.py or .hoc)'}
+        title={'Import cell template (.py or .hoc)'}
         command={'netpyne_geppetto.importCellTemplate'}
         args={{ cellArgs, fileName, cellName, label, modFolder, importSynMechs, compileMod }}
         {...this.props}
       >
-				<TextField
-					value={label}
-					id="importCellTemplateName"
-					floatingLabelText="Cell rule label"
-					onChange={event => this.setState({ label: event.target.value })}
-				/>
-				<NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
-					<TextField
-						readOnly
-						value={fileName}
-						id="importCellTemplateFile"
-						onClick={() => this.showExplorerDialog('fileName', false)}
-					/>
-				</NetPyNEField>
+        <TextField
+          value={label}
+          id="importCellTemplateName"
+          floatingLabelText="Cell rule label"
+          onChange={event => this.setState({ label: event.target.value })}
+        />
+        <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
+          <TextField
+            readOnly
+            value={fileName}
+            id="importCellTemplateFile"
+            onClick={() => this.showExplorerDialog('fileName', false)}
+          />
+        </NetPyNEField>
 
-				<NetPyNEField id="netParams.importCellParams.cellName" className="netpyneRightField">
-					<TextField
-						value={cellName}
-						id="importCellTemplateCellName"
-						onChange={event => this.setState({ cellName: event.target.value })}
-					/>
-				</NetPyNEField>
+        <NetPyNEField id="netParams.importCellParams.cellName" className="netpyneRightField">
+          <TextField
+            value={cellName}
+            id="importCellTemplateCellName"
+            onChange={event => this.setState({ cellName: event.target.value })}
+          />
+        </NetPyNEField>
 
-				<NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
-					<TextField
-						readOnly
-						value={modFolder}
-						id="importCellTemplateModFile"
-						onClick={() => this.showExplorerDialog('modFolder', true)} 
-					/>
-				</NetPyNEField>
+        <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
+          <TextField
+            readOnly
+            value={modFolder}
+            id="importCellTemplateModFile"
+            onClick={() => this.showExplorerDialog('modFolder', true)} 
+          />
+        </NetPyNEField>
 
-				<div className="listStyle netpyneField">
-					<ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
-				</div>
+        <div className="listStyle netpyneField">
+          <ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+        </div>
 
-				<div style={styles.mods.container}>
-					<div style={styles.mods.leftSubContainer}>
-						<NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
-							<Checkbox
-								checked={importSynMechs}
-								style={styles.mods.checkbox}
-								onCheck={() => this.updateCheck('importSynMechs')}
-							/>
-						</NetPyNEField>
-					</div>
+        <div style={styles.mods.container}>
+          <div style={styles.mods.leftSubContainer}>
+            <NetPyNEField id="netParams.importCellParams.importSynMechs" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
+              <Checkbox
+                checked={importSynMechs}
+                style={styles.mods.checkbox}
+                onCheck={() => this.updateCheck('importSynMechs')}
+              />
+            </NetPyNEField>
+          </div>
 
-					<div style={styles.mods.rightSubContainer}>
-						<NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
-							<Checkbox
-								checked={compileMod}
-								style={styles.mods.checkbox}
-								id="importCellTemplateCompileMods"
-								onCheck={() => this.updateCheck('compileMod')}
-							/>
-						</NetPyNEField>
-					</div>
-				</div>
+          <div style={styles.mods.rightSubContainer}>
+            <NetPyNEField id="netParams.importCellParams.compileMod" className="netpyneCheckbox netpyneFieldNoWidth" noStyle>
+              <Checkbox
+                checked={compileMod}
+                style={styles.mods.checkbox}
+                id="importCellTemplateCompileMods"
+                onCheck={() => this.updateCheck('compileMod')}
+              />
+            </NetPyNEField>
+          </div>
+        </div>
 
-				<FileBrowser 
-					open={explorerDialogOpen} 
-					exploreOnlyDirs={exploreOnlyDirs} 
-					onRequestClose={selection => this.closeExplorerDialog(selection)}
-				/>
+        <FileBrowser 
+          open={explorerDialogOpen} 
+          exploreOnlyDirs={exploreOnlyDirs} 
+          onRequestClose={selection => this.closeExplorerDialog(selection)}
+        />
 
       </ActionDialog>
     )

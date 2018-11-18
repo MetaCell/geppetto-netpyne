@@ -42,21 +42,21 @@ export default class SaveFile extends React.Component {
                 title={'Save as JSON file'}
                 args={this.state}
                 {...this.props}
-							>
-								<TextField 
-									className="netpyneField" 
-									value={this.state.fileName} 
-									floatingLabelText="File name" 
-									onChange={(event) => this.setState({ fileName: event.target.value })} 
-								/>
-								<List >
-									{saveOptions.map((saveOption, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
-										key={index}
-										leftCheckbox= {<Checkbox disabled={index==2?this.state.disableNetCells:index==3?this.state.disableNetCells:false} onCheck={() => this.setState(({[saveOption.state]: oldState, ...others}) => {return {[saveOption.state]: !oldState}})} checked={this.state[saveOption.state]}/>}
-										primaryText={saveOption.label}
-										secondaryText={saveOption.label2}
-									/>})}
-								</List>
+              >
+                <TextField 
+                  className="netpyneField" 
+                  value={this.state.fileName} 
+                  floatingLabelText="File name" 
+                  onChange={(event) => this.setState({ fileName: event.target.value })} 
+                />
+                <List >
+                  {saveOptions.map((saveOption, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
+                    key={index}
+                    leftCheckbox= {<Checkbox disabled={index==2?this.state.disableNetCells:index==3?this.state.disableNetCells:false} onCheck={() => this.setState(({[saveOption.state]: oldState, ...others}) => {return {[saveOption.state]: !oldState}})} checked={this.state[saveOption.state]}/>}
+                    primaryText={saveOption.label}
+                    secondaryText={saveOption.label2}
+                  />})}
+                </List>
             </ActionDialog>
         )
     }

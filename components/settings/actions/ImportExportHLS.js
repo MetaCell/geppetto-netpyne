@@ -11,7 +11,7 @@ export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-			fileName: "output",
+            fileName: "output",
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -73,8 +73,8 @@ export default class ImportExportHLS extends React.Component {
             }
         }
         this.setState(newState);
-		}
-		
+    }
+
     render() {
         switch(this.props.mode) {
             case 'IMPORT':
@@ -107,7 +107,7 @@ export default class ImportExportHLS extends React.Component {
                         <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
                         <div >
                             <SelectField
-																id="appBarImportRequiresMod"
+                                id="appBarImportRequiresMod"
                                 className="netpyneField"
                                 style={{marginTop:0}}
                                 errorText={this.state.loadMod===undefined?"This field is required.":false}
@@ -149,8 +149,8 @@ export default class ImportExportHLS extends React.Component {
                     var buttonLabel = 'Import'
                     var title = 'Import python file'
                 break;
-						case 'EXPORT':
-								var content = 
+            case 'EXPORT':
+                var content = 
                     <TextField
                         className="netpyneField"
                         hintText="File name"
@@ -173,8 +173,8 @@ export default class ImportExportHLS extends React.Component {
                 title={title}
                 isFormValid={this.isFormValid}
                 {...this.props}
-							>
-								{content}
+              >
+                {content}
             </ActionDialog>
         )
     }

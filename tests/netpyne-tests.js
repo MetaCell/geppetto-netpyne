@@ -26,9 +26,9 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   });
   
   // UNCOMMENT OUT to get the javascript logs (console.log). Particularly useful for debugginf purpose
-  casper.on('remote.message', function(message) { 
-    this.echo('remote message caught: ' + message);
-  });
+  // casper.on('remote.message', function(message) { 
+  //   this.echo('remote message caught: ' + message);
+  // });
 
   // show page level errors
   casper.on('resource.received', function(resource) {
