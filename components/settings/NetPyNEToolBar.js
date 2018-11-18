@@ -24,7 +24,7 @@ export default class NetPyNEToolBar extends React.Component {
       openDialogBox: false,
       open: false,
       action: null
-    }		
+    }
   }
 
   handleMenuItemClick = (action) => {
