@@ -172,7 +172,12 @@ body {
   height: 100%;
   width: 100%;
 }
-
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb {
+  width: 0.4em;
+  border-radius: 13px;
+  background-clip: padding-box;
+}
 #CanvasContainer_component {
   background: #eaeaea;
   background: -moz-linear-gradient(top, #eaeaea 0%, #ececec 53%, #d6d6d6 100%);

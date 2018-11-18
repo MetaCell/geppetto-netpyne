@@ -72,8 +72,6 @@ export default class NetPyNEToolBar extends React.Component {
                     />
                     break;
                 case 'Nsg':
-                    console.log(("I am here"));
-                    
                     var content = <Nsg
                         open={this.state.openDialogBox}
                         onRequestClose={() => this.setState({ openDialogBox: false })}
