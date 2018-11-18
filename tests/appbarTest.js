@@ -430,12 +430,19 @@ function openNetwork(casper, test, toolbox) {
   casper.then(function(){
     toolbox.click(this, 'appBarLoadRequiresModNo', 'span')
   })
+
   casper.then(function(){
-    toolbox.click(this, "appBarPerformActionButton", "button")
+    this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+      this.evaluate(function() {
+        document.getElementById("appBarPerformActionButton").click()
+      })
+    })
   })
-  casper.then(function() {
-    this.waitWhileVisible('input[id="loadJsonFile"]')
+
+  casper.then(function(){
+    this.waitWhileVisible('button[id="appBarPerformActionButton"]')
   })
+  
   casper.then(function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assert(true, "Completed Model load")
