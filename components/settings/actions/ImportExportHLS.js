@@ -11,7 +11,7 @@ export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-      fileName: "output",
+            fileName: "output",
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -74,7 +74,7 @@ export default class ImportExportHLS extends React.Component {
         }
         this.setState(newState);
     }
-    
+
     render() {
         switch(this.props.mode) {
             case 'IMPORT':
