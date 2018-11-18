@@ -80,10 +80,10 @@ export default class LoadFile extends React.Component {
         
     return (
       <ActionDialog
-        title={'Open JSON file'}		
+        title={'Open JSON file'}
         buttonLabel={'Load'}
         message = {'LOADING FILE'}
-        isFormValid={this.isFormValid}		
+        isFormValid={this.isFormValid}
         command ={'netpyne_geppetto.loadModel'}
         args={{...this.state, tab:tab, freezeInstance: freezeInstance, freezeSimulation: freezeSimulation}}
         {...this.props}
