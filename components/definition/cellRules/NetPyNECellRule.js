@@ -5,7 +5,6 @@ import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
-import ImportCellParams from './ImportCellParams';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from 'material-ui/Dialog/Dialog';
 
@@ -18,7 +17,6 @@ export default class NetPyNECellRule extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      importCellOpen: false,
       errorMessage: undefined,
       errorDetails: undefined
     };
@@ -87,15 +85,16 @@ export default class NetPyNECellRule extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
-
+    var dialogPop = (this.state.errorMessage != undefined ? <Dialog
+          title={title}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {children}
+        </Dialog> 
+      : undefined
+    )
     return (
       <div>
         <div>
@@ -174,20 +173,7 @@ export default class NetPyNECellRule extends React.Component {
           />
 
           <div style={{ float: 'left', marginTop: '10px' }}>
-            <RaisedButton
-              style={{ marginLeft: 40 }}
-              label="Import template"
-              labelPosition="before"
-              primary={true}
-              onClick={() => this.setState({ importCellOpen: true })}
-            />
           </div>
-
-          <ImportCellParams
-            name={this.state.currentName}
-            open={this.state.importCellOpen}
-            onRequestClose={() => this.setState({ importCellOpen: false })}
-          />
         </div>
         {dialogPop}
       </div>
