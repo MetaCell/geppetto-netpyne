@@ -23,12 +23,12 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
   casper.options.waitTimeout = 10000
   casper.on("page.error", function(msg, trace) {
     this.echo("Error: " + msg, "ERROR");
-	});
+  });
   
   // UNCOMMENT OUT to get the javascript logs (console.log). Particularly useful for debugginf purpose
   // casper.on('remote.message', function(message) { 
   //   this.echo('remote message caught: ' + message);
-	// });
+  // });
 
   // show page level errors
   casper.on('resource.received', function(resource) {
@@ -50,14 +50,14 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
         test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
       });
     }, null, 40000);
-	});
+  });
 
   casper.then(function() { //test HTML elements in landing page
     this.echo("######## Testing landping page contents and layout ######## ", "INFO");
     testLandingPage(test);
-	});
-	
-	casper.then(function() { // test adding a population using UI  
+  });
+  
+  casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test appbar")
     testAppbar(test);
   });
@@ -168,69 +168,74 @@ function loadConsole(test, consoleButton, consoleContainer) {
  *                                  appbar                                    *
  ******************************************************************************/
 function testAppbar(test) {
-	toolbox.message(casper, "import HLS")
-	casper.then(function() { 
-		appbarTest.importHLS(this, test, toolbox)
-	})
+  toolbox.message(casper, "import cell template and compile mod files")
+  casper.then(function() { 
+    appbarTest.importCellTemplate(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "run model")
-	casper.then(function () {
-		appbarTest.instantiateNetwork(this, test, toolbox)
-	})
+  toolbox.message(casper, "import HLS")
+  casper.then(function() { 
+    appbarTest.importHLS(this, test, toolbox)
+  })
 
-	casper.then(function(){
-		appbarTest.simulateNetwork(this, test, toolbox)
-	})
+  toolbox.message(casper, "run model")
+  casper.then(function () {
+    appbarTest.instantiateNetwork(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "save model")
-	casper.then(function(){
-		appbarTest.saveNetwork(this, test, toolbox)
-	})
+  casper.then(function(){
+    appbarTest.simulateNetwork(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "delete model")
-	casper.then(function(){
-		appbarTest.clearModel(this, test, toolbox)
-	})
+  toolbox.message(casper, "save model")
+  casper.then(function(){
+    appbarTest.saveNetwork(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "open model")
-	casper.then(function(){
-		appbarTest.openNetwork(this, test, toolbox)
-	})
+  toolbox.message(casper, "delete model")
+  casper.then(function(){
+    appbarTest.clearModel(this, test, toolbox)
+  })
 
-	casper.then(function(){
-		appbarTest.exploreOpenedModel(this, test, toolbox)
-	})
+  toolbox.message(casper, "open model")
+  casper.then(function(){
+    appbarTest.openNetwork(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "export HLS")
-	casper.then(function(){
-		appbarTest.exportHLS(this, test, toolbox)
-	})
+  casper.then(function(){
+    appbarTest.exploreOpenedModel(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "delete model")
-	casper.then(function(){
-		appbarTest.clearModel(this, test, toolbox)
-	})
+  toolbox.message(casper, "export HLS")
+  casper.then(function(){
+    appbarTest.exportHLS(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "import HLS")
-	casper.then(function() { 
-		appbarTest.importHLS(this, test, toolbox, false)
-	})
+  toolbox.message(casper, "delete model")
+  casper.then(function(){
+    appbarTest.clearModel(this, test, toolbox)
+  })
 
-	toolbox.message(casper, "run model")
-	casper.then(function () {
-		appbarTest.instantiateNetwork(this, test, toolbox)
-	})
+  toolbox.message(casper, "import HLS")
+  casper.then(function() { 
+    appbarTest.importHLS(this, test, toolbox, false)
+  })
 
-	toolbox.message(casper, "delete model")
-	casper.then(function(){
-		appbarTest.clearModel(this, test, toolbox)
-	})
+  toolbox.message(casper, "run model")
+  casper.then(function () {
+    appbarTest.instantiateNetwork(this, test, toolbox)
+  })
 
-	casper.then(function() {
-		this.wait(1000, function(){
-			this.click("#Populations")
-		})
-	})
+  toolbox.message(casper, "delete model")
+  casper.then(function(){
+    appbarTest.clearModel(this, test, toolbox)
+  })
+
+  casper.then(function() {
+    this.wait(1000, function(){
+      this.click("#Populations")
+    })
+  })
 }
 /******************************************************************************
  *                                 popParams                                  *
