@@ -372,6 +372,9 @@ function saveNetwork(casper, test, toolbox) {
       this.echo("Saved model in json format")
     })
   })
+  casper.then(function(){
+    this.wait(1500)
+  })
 }
 
 // ----------------------------------------------------------------------------------- //
@@ -386,6 +389,9 @@ function openNetwork(casper, test, toolbox) {
     this.waitUntilVisible('span[id="appBarOpen"]', function() {
       this.click('span[id="appBarOpen"]')
     })
+  })
+  casper.then(function(){
+    this.wait(1000)
   })
   casper.then(function() {
     this.waitUntilVisible('input[id="loadJsonFile"]', function() {
@@ -421,15 +427,23 @@ function openNetwork(casper, test, toolbox) {
   casper.then(function() {
     toolbox.click(this, 'appBarLoadRequiresMod')
   })
-
   casper.then(function(){
     toolbox.click(this, 'appBarLoadRequiresModNo', 'span')
   })
+
   casper.then(function(){
-    toolbox.click(this, "appBarPerformActionButton", "button")
+    this.waitUntilVisible('button[id="appBarPerformActionButton"]', function(){
+      this.evaluate(function() {
+        document.getElementById("appBarPerformActionButton").click()
+      })
+    })
   })
+
+  casper.then(function(){
+    this.waitWhileVisible('button[id="appBarPerformActionButton"]')
+  })
+  
   casper.then(function() {
-    this.waitWhileVisible('input[id="loadJsonFile"]')
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assert(true, "Completed Model load")
     }, 40000)
@@ -508,8 +522,8 @@ function clearModel(casper, test, toolbox) {
     })
   })
   casper.then(function() {
-    this.waitUntilVisible('span[id="appBarDelete"]', function(){
-      this.click('span[id="appBarDelete"]')
+    this.waitUntilVisible('span[id="appBarNew"]', function(){
+      this.click('span[id="appBarNew"]')
     })
   })
   casper.then(function(){
@@ -522,6 +536,10 @@ function clearModel(casper, test, toolbox) {
 
   casper.then(function(){
     this.waitWhileVisible('button[id="appBarPerformActionButton"]')
+  })
+
+  casper.then(function(){
+    this.wait(1500)
   })
 
   casper.then(function() {
