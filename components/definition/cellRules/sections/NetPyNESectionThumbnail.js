@@ -44,17 +44,17 @@ export default class NetPyNESectionThumbnail extends React.Component {
         id={name}
         primary={true} 
         style={ styles.btn }
-				buttonStyle={ styles.btn }
+        buttonStyle={ styles.btn }
         onMouseEnter={ () => this.setState({isHovered: true}) }
         onMouseLeave={ () => this.setState({isHovered: false}) }
-				data-tooltip={isHovered && name.length > 14 ? name : undefined}
-				className={"rectangularActionButton " + (selected ? "selectedRectangularActionButton " : "")} 
+        data-tooltip={isHovered && name.length > 14 ? name : undefined}
+        className={"rectangularActionButton " + (selected ? "selectedRectangularActionButton " : "")} 
         onClick={() => this.handleClick()}
       >
-        {isHovered && selected ? 
-					<FontIcon className="fa fa-trash-o" color="white" hoverColor="white"/> : 
-					name.length > 14 ? `${name.slice(0,10)}...` : name
-				}
+        {(isHovered && selected)
+          ? <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"/> 
+          : name.length > 14 ? `${name.slice(0,10)}...` : name
+        }
       </RaisedButton>
       <DeleteDialogBox
             open={dialogOpen}

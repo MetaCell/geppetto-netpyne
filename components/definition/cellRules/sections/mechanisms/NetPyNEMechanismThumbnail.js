@@ -53,26 +53,27 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     return (
       <div style={styles.main}>
         <IconButton
-					id={`mechThumb${name}`}
+          id={`mechThumb${name}`}
           onMouseEnter={ () => this.setState({isHovered: true}) }
-					onMouseLeave={ () => this.setState({isHovered: false}) }
-					data-tooltip={isHovered && name.length > 10 ? name : undefined}
+          onMouseLeave={ () => this.setState({isHovered: false}) }
+          data-tooltip={isHovered && name.length > 10 ? name : undefined}
           className={"gearThumbButton " + (selected ? "selectedGearButton" : "")}
           onClick={ (e, v) => this.handleClick(v) }
         >
           <div>
-            {(isHovered && selected) ? 
-            	<FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={styles.trash}/> :
-							<span className={"gearThumbLabel"}>
-								{name.length > 14 ? `${name.slice(0,10)}...` : name}
-							</span>}
+            {(isHovered && selected) 
+              ? <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={styles.trash}/> 
+              : <span className={"gearThumbLabel"}>
+                  {name.length > 14 ? `${name.slice(0,10)}...` : name}
+                </span>
+            }
             <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear"/>
           </div>
         </IconButton>
         <DeleteDialogBox
           open={dialogOpen}
-          onDialogResponse={ (r) => this.handleDialogBox(r) }
           textForDialog={name}
+          onDialogResponse={r => this.handleDialogBox(r) }
         />
       </div>
     );

@@ -19,13 +19,13 @@ export default class NetPyNEAddNew extends React.Component {
 
   render() {
     return (
-			<FloatingActionButton 
-				id={this.props.id}
-				style={styles.add}
-				onClick={this.handleClick}
-				data-tooltip="Create rule"
-				className={"actionButton smallActionButton"}
-			>
+      <FloatingActionButton 
+        id={this.props.id}
+        style={styles.add}
+        onClick={this.handleClick}
+        data-tooltip="Create rule"
+        className={"actionButton smallActionButton"}
+      >
         <ContentAdd />
       </FloatingActionButton>
     );
@@ -34,9 +34,9 @@ export default class NetPyNEAddNew extends React.Component {
 
 
 const styles = {
-	add: {
-		marginTop: "15px",
-		float: "left",
-		textAlign: 'center'
-	}
+  add: {
+    marginTop: "15px",
+    float: "left",
+    textAlign: 'center'
+  }
 }

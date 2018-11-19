@@ -32,19 +32,19 @@ export default class NetPyNEThumbnail extends React.Component {
   }
 
   render() {
-			const { name, selected } = this.props;
-			const { dialogOpen, isHovered } = this.state;
+      const { name, selected } = this.props;
+      const { dialogOpen, isHovered } = this.state;
       return (
         <div>
           <FloatingActionButton 
             id={name}
             onMouseEnter={() => this.setState({isHovered: true})}
-						onMouseLeave={() => this.setState({isHovered: false})}
-						data-tooltip={isHovered && name.length > 14 ? name : undefined}
+            onMouseLeave={() => this.setState({isHovered: false})}
+            data-tooltip={isHovered && name.length > 14 ? name : undefined}
             iconClassName={(this.state.isHovered && selected) ? "fa fa-trash-o" : ""} 
             className={"actionButton " + (selected ? "selectedActionButton" : "")} 
             onClick={()=>this.handleClick()}
-					>
+          >
             {isHovered && selected ? "" : name.length > 14 ? name.slice(0,11)+"...": name}
           </FloatingActionButton>
           <DeleteDialogBox

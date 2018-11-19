@@ -173,14 +173,14 @@ export default class NetPyNEStimulationSources extends Component {
         </div>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
-						<NetPyNEHome
-							selection={this.state.selectedStimulationSource}
-							handleClick={()=> this.setState({selectedStimulationSource: undefined})}
-						/>
-						<NetPyNEAddNew 
-							id={"newStimulationSourceButton"} 
-							handleClick={this.handleNewStimulationSource}
-						/>
+            <NetPyNEHome
+              selection={this.state.selectedStimulationSource}
+              handleClick={()=> this.setState({selectedStimulationSource: undefined})}
+            />
+            <NetPyNEAddNew 
+              id={"newStimulationSourceButton"} 
+              handleClick={this.handleNewStimulationSource}
+            />
           </div>
           <div style={{ clear: "both" }}></div>
           {StimulationSources}

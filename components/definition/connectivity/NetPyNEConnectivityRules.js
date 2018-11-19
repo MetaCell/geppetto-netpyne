@@ -197,12 +197,12 @@ export default class NetPyNEConnectivityRules extends Component {
         <CardText className={"tabContainer"} expandable={true}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-							<NetPyNEHome
-								selection={this.state.selectedConnectivityRule}
-								handleClick={()=> this.setState({selectedConnectivityRule: undefined})}
-							/>
+              <NetPyNEHome
+                selection={this.state.selectedConnectivityRule}
+                handleClick={()=> this.setState({selectedConnectivityRule: undefined})}
+              />
               
-							<NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+              <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
               
             </div>
             <div style={{ clear: "both" }}></div>

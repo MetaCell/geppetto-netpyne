@@ -182,11 +182,11 @@ export default class NetPyNESynapses extends Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-							<NetPyNEHome
-								selection={this.state.selectedSynapse}
-								handleClick={()=> this.setState({selectedSynapse: undefined})}
-							/>
-							<NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+              <NetPyNEHome
+                selection={this.state.selectedSynapse}
+                handleClick={()=> this.setState({selectedSynapse: undefined})}
+              />
+              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
             </div>
             <div style={{ clear: "both" }}></div>
             {Synapses}

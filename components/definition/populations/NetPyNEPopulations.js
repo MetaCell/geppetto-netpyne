@@ -200,15 +200,15 @@ export default class NetPyNEPopulations extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-							<NetPyNEHome
-								selection={this.state.selectedPopulation}
-								handleClick={()=> this.setState({selectedPopulation: undefined})}
-							/>
+              <NetPyNEHome
+                selection={this.state.selectedPopulation}
+                handleClick={()=> this.setState({selectedPopulation: undefined})}
+              />
 
-							<NetPyNEAddNew 
-								id={"newPopulationButton"} 
-								handleClick={this.handleNewPopulation}
-							/>
+              <NetPyNEAddNew 
+                id={"newPopulationButton"} 
+                handleClick={this.handleNewPopulation}
+              />
 
             </div>
             <div style={{ clear: "both" }}></div>
