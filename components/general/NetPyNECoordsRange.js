@@ -31,7 +31,7 @@ export default class NetPyNECoordsRange extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.name != prevProps.name)  {
       this.triggerUpdate(() => {
-        var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + (this.props.conds!=undefined)?"['" + this.props.conds + "']" : "";
+        var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds!=undefined)?"['" + this.props.conds + "']" : "");
         Utils
           .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
           .then((response) => {
@@ -57,7 +57,7 @@ export default class NetPyNECoordsRange extends Component {
   };
 
   updateLayout() {
-    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + (this.props.conds!=undefined)?"['" + this.props.conds + "']":"";
+    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds!=undefined)?"['" + this.props.conds + "']":"");
     Utils
       .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
       .then((response) => {
