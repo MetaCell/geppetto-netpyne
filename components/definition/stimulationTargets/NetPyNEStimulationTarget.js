@@ -41,16 +41,15 @@ export default class NetPyNEStimulationTarget extends React.Component {
   };
   
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationTarget");
 
     if(triggerCondition) {
-      this.triggerUpdate(function () {
-        Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-        that.renaming=true;
+      this.triggerUpdate(() => {
+        Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { this.renaming=false;});
+        this.renaming=true;
       });
     }
   };

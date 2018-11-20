@@ -44,16 +44,15 @@ export default class NetPyNESection extends React.Component {
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue, this.props.cellRule);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Section");
 
     if(triggerCondition) {
-      this.triggerUpdate(function () {
+      this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
+        Utils.renameKey("netParams.cellParams['" + this.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
       });
     }
   }
