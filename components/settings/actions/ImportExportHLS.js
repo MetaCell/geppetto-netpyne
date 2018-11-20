@@ -3,8 +3,7 @@ import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import { orange500, blue500 , grey400 } from 'material-ui/styles/colors';
+import { orange500 , grey400 } from 'material-ui/styles/colors';
 import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
 
@@ -12,7 +11,7 @@ export default class ImportExportHLS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-			fileName: "output",
+            fileName: "output",
             netParamsPath: "",
             netParamsModuleName: "",
             netParamsVariable: "netParams",
@@ -74,14 +73,13 @@ export default class ImportExportHLS extends React.Component {
             }
         }
         this.setState(newState);
-		}
-		
+    }
+
     render() {
         switch(this.props.mode) {
             case 'IMPORT':
-                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
                 var content = 
-                    <CardText style={{marginTop: -33}}>
+                    <div>
                         <TextField 
                             id="appBarImportFileName"
                             readOnly
@@ -109,7 +107,7 @@ export default class ImportExportHLS extends React.Component {
                         <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15}} floatingLabelText="SimConfig variable" value={this.state.simConfigVariable} onChange={(event) => this.setState({ simConfigVariable: event.target.value })} />
                         <div >
                             <SelectField
-								id="appBarImportRequiresMod"
+                                id="appBarImportRequiresMod"
                                 className="netpyneField"
                                 style={{marginTop:0}}
                                 errorText={this.state.loadMod===undefined?"This field is required.":false}
@@ -145,15 +143,14 @@ export default class ImportExportHLS extends React.Component {
                             </div>
                             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={this.state.filterFiles} onRequestClose={(selection) => this.closeExplorerDialog(selection)} />
                         </div>
-                    </CardText>
+                    </div>
                     var command = 'netpyne_geppetto.importModel';
                     var message = 'IMPORTING MODEL';
                     var buttonLabel = 'Import'
-                    var title = 'Import'
+                    var title = 'Import python file'
                 break;
             case 'EXPORT':
-                var header =  <CardHeader title="High Level Specification" titleColor={blue500} subtitle="Python file" />
-                var content = <CardText style={{marginTop: -33}}>
+                var content = 
                     <TextField
                         className="netpyneField"
                         hintText="File name"
@@ -161,11 +158,10 @@ export default class ImportExportHLS extends React.Component {
                         value={this.state.fileName}
                         onChange={(e, v) => {this.setState({fileName: v})}}
                     />
-                </CardText>
                 var command = 'netpyne_geppetto.exportHLS';
                 var message = 'EXPORTING MODEL';
                 var buttonLabel = 'Export'
-                var title = 'Export'
+                var title = 'Export as python file'
                 break
         }
         return (
@@ -176,11 +172,9 @@ export default class ImportExportHLS extends React.Component {
                 args={this.state}
                 title={title}
                 isFormValid={this.isFormValid}
-                {...this.props}>
-                <Card style={{padding: 10, float: 'left', width: '100%', marginTop: 10}} zDepth={2}>
-                    {header}
-                    {content}
-                </Card>
+                {...this.props}
+              >
+                {content}
             </ActionDialog>
         )
     }
