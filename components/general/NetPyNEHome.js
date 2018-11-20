@@ -4,20 +4,6 @@ import { pink400 } from 'material-ui/styles/colors';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import { HomeIcon } from './CustomIcons';
 
-export default ({handleClick, selection}) => (
-  <span>
-    <IconButton
-      style={styles.home.container}
-      data-tooltip={selection ? "Unselect" : undefined}
-      iconStyle={{color: pink400, ...styles.home.icon}}
-      onClick={ () => handleClick()}
-    >
-      <HomeIcon/>
-    </IconButton>
-    <NavigationChevronRight style={styles.rightArrow}/>
-  </span>
-)
-
 const styles = {
   rightArrow : {
     float: 'left',
@@ -39,3 +25,17 @@ const styles = {
     }
   }
 }
+
+export default ({handleClick, selection}) => (
+  <span>
+    <IconButton
+      style={styles.home.container}
+      data-tooltip={selection ? "Unselect" : undefined}
+      iconStyle={{color: pink400, ...styles.home.icon}}
+      onClick={ () => handleClick()}
+    >
+      <HomeIcon/>
+    </IconButton>
+    <NavigationChevronRight style={styles.rightArrow}/>
+  </span>
+)

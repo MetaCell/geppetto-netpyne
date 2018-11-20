@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import DeleteDialogBox from '../../../../general/DeleteDialogBox';
@@ -47,7 +47,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     this.setState({dialogOpen: false});
   };
 
-	render() {
+  render() {
     const { name, selected } = this.props;
     const { dialogOpen, isHovered } = this.state;
     return (
