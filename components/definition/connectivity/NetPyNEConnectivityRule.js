@@ -35,27 +35,14 @@ export default class NetPyNEConnectivityRule extends React.Component {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
-    if(newValue != event.target.value) {
-      // if the new value has been changed by the function Utils.nameValidation means that the name convention
-      // has not been respected, so we need to open the dialog and inform the user.
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Leading digits or whitespaces are not allowed in ConnectionRule names."});
-    } else {
-      this.setState({ currentName: newValue });
-    }
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "ConnectionRule");
 
-    if(updateCondition) {
+    if(triggerCondition) {
       this.triggerUpdate(function () {
         // Rename the population in Python
         Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
         that.renaming = true;
       });
-    } else if(!(updateCondition) && !(newValue != event.target.value)) {
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Name collision detected, the name "+newValue+
-                                    " is already used in this model, please pick another name."});
     }
   }
 
