@@ -20,33 +20,29 @@ export default class NetPyNECoordsRange extends Component {
     this._isMounted = false;
   };
 
-  triggerUpdate(updateMethod2) {
+  triggerUpdate(updateMethod) {
     //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
-    if (this.updateTimer2 != undefined) {
-      clearTimeout(this.updateTimer2);
+    if (this.updateTimer != undefined) {
+      clearTimeout(this.updateTimer);
     }
-    this.updateTimer2 = setTimeout(updateMethod2, 1000);
+    this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.name != prevProps.name)  {
-      var that = this;
-      this.triggerUpdate(function() {
-        var message = 'netpyne_geppetto.' + that.props.model + "['" + that.props.name + "']";
-        if (that.props.conds!=undefined) {
-          message = message + "['" + that.props.conds + "']";
-        };
+      this.triggerUpdate(() => {
+        var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + (this.props.conds!=undefined)?"['" + this.props.conds + "']" : "";
         Utils
-          .evalPythonMessage("[key in "+message+" for key in ['"+that.props.items[0].value+"', '"+that.props.items[1].value+"']]")
+          .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
           .then((response) => {
-            if (response[0] && that._isMounted === true) {
-              that.setState({rangeType: that.props.items[0].value});
+            if (response[0] && this._isMounted === true) {
+              this.setState({rangeType: this.props.items[0].value});
             }
-            else if (response[1] && that._isMounted === true){
-              that.setState({rangeType: that.props.items[1].value});
+            else if (response[1] && this._isMounted === true){
+              this.setState({rangeType: this.props.items[1].value});
             }
-            else if (that._isMounted === true) {
-              that.setState({rangeType: undefined});
+            else if (this._isMounted === true) {
+              this.setState({rangeType: undefined});
             }
         });
       });
@@ -61,10 +57,7 @@ export default class NetPyNECoordsRange extends Component {
   };
 
   updateLayout() {
-    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']";
-    if (this.props.conds!=undefined) {
-      message = message + "['" + this.props.conds + "']";
-    };
+    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + (this.props.conds!=undefined)?"['" + this.props.conds + "']":"";
     Utils
       .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
       .then((response) => {
