@@ -31,17 +31,16 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "ConnectionRule");
 
     if(triggerCondition) {
-      this.triggerUpdate(function () {
+      this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
-        that.renaming = true;
+        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        this.renaming = true;
       });
     }
   }

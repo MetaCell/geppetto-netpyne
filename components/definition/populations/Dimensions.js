@@ -84,11 +84,10 @@ export default class DimensionsComponent extends Component {
                                     var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
                                     // Update State
                                     this.setState({ value: newValue });
-                                    var that = this;
-                                    this.triggerUpdate(function () {
+                                    this.triggerUpdate(() => {
                                         // Set Population Dimension Python Side
                                         Utils
-                                            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
+                                            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
                                             .then(function (response) {
                                                 console.log("Setting Pop Dimensions Parameters");
                                                 console.log("Response", response);
