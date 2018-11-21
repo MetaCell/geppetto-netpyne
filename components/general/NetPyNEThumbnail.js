@@ -34,6 +34,19 @@ export default class NetPyNEThumbnail extends React.Component {
   render() {
       const { name, selected } = this.props;
       const { dialogOpen, isHovered } = this.state;
+
+      let label;
+      if (isHovered && selected)  {
+        label = ""
+      }
+      else {
+        if (name.length > 14) {
+          label = name.slice(0,11)+"..."
+        }
+        else {
+          label = name
+        }
+      }
       return (
         <div>
           <FloatingActionButton 
@@ -45,7 +58,7 @@ export default class NetPyNEThumbnail extends React.Component {
             className={"actionButton " + (selected ? "selectedActionButton" : "")} 
             onClick={()=>this.handleClick()}
           >
-            {isHovered && selected ? "" : name.length > 14 ? name.slice(0,11)+"...": name}
+            {label}
           </FloatingActionButton>
           <DeleteDialogBox
             open={dialogOpen}

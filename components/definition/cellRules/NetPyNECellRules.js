@@ -24,18 +24,6 @@ const styles = {
     fontSize: "20px",
     marginLeft: '15px'
   },
-  home: {
-    container : {
-      float: 'left',
-      height: '36px',
-      width: '36px',
-      padding: '0px'
-    },
-    icon: {
-      width: '36px',
-      height: '36px'
-    }
-  },
   cellRule: {
     marginTop: "15px",
     float: "left",
@@ -318,29 +306,29 @@ export default class NetPyNECellRules extends React.Component {
     }
   }
 
-	handleHierarchyClick = (nextPage) => {
+  handleHierarchyClick = (nextPage) => {
     const { page, selectedCellRule, value } = this.state;
     // with this herarchy navigation, the tree buttons in the breadclumb can behave  in 2 different ways
     // they can move the view to a different level (cellRule -> section) (seccions --> mechanisms) 
     // or they can add a new cellRule ( or section or mechanims) 
     // here we chech if we want to jump to a different level or if we want to create a new rule in the current level
-		if (nextPage===page) { 
+    if (nextPage===page) { 
       if (page === "main") {
         this.handleNewCellRule({ 'CellRule': {'conds':{}, 'secs':{}} });
       }
       else if (page === "sections") {
         this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
-			}
-		}
-		else {
-			this.setState({page: nextPage});
-			if (nextPage == 'sections') { // saves one click if there are no sections
-				if (Object.keys(value[selectedCellRule]['secs']).length == 0) {
-					this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
-				}
-			}
-		}
-	}
+      }
+    }
+    else {
+      this.setState({page: nextPage});
+      if (nextPage == 'sections') { // saves one click if there are no sections
+        if (Object.keys(value[selectedCellRule]['secs']).length == 0) {
+          this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
+        }
+      }
+    }
+  }
   shouldComponentUpdate(nextProps, nextState) {
     var itemRenamed = this.hasSelectedCellRuleBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedSectionBeenRenamed(this.state, nextState) !== undefined || this.hasSelectedMechanismBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
@@ -513,164 +501,164 @@ export default class NetPyNECellRules extends React.Component {
 
   render() {
 
-		const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
+    const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
     let selection = null;
     let container = null;
 
     const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
 
     const dialogPop = (errorMessage != undefined 
-			? <Dialog
-					title={errorMessage}
-					open={true}
-					actions={actions}
-					bodyStyle={{ overflow: 'auto' }}
-					style={{ whiteSpace: "pre-wrap" }}>
-					{errorDetails}
-				</Dialog> 
-			: undefined
-		);
+      ? <Dialog
+          title={errorMessage}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {errorDetails}
+        </Dialog> 
+      : undefined
+    );
 
-		if (page == 'main') {
-			if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
-				selection = (
-					<NetPyNECellRule
-						name={selectedCellRule}
-						selectPage={this.selectPage}
-						model={model[selectedCellRule]}
-						renameHandler={this.handleRenameChildren} 
-					/>
-				)
-			}
-			if (model != undefined) {
-				container = Object.keys(model).map( cellRuleName => 
-					<NetPyNEThumbnail
-						id={cellRuleName}
-						name={cellRuleName}
-						key={cellRuleName} 
-						selected={cellRuleName == selectedCellRule}
-						deleteMethod={this.deleteCellRule}
-						handleClick={this.selectCellRule} 
-					/>
-				)
-			}
-		}
-		else if (page == "sections") {
-			const sectionsModel = model[selectedCellRule].secs;
-			if ( selectedSection !== undefined && Object.keys(sectionsModel).indexOf(selectedSection) > -1 ) {
-				selection = (
-					<NetPyNESection
-						name={selectedSection}
-						cellRule={selectedCellRule}
-						selectPage={this.selectPage}
-						model={sectionsModel[selectedSection]}
-						renameHandler={this.handleRenameSections}
-					/>
-				)
-			}
-			container = Object.keys(sectionsModel).map( sectionName => 
-				<NetPyNESectionThumbnail 
-					key={sectionName} 
-					name={sectionName}
-					selected={sectionName == selectedSection}
-					deleteMethod={this.deleteSection}
-					handleClick={this.selectSection} 
-				/>
-			)
-		}
-		else if (page == "mechanisms") {
-			const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
-			if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
-				selection = (
-					<NetPyNEMechanism 
-						cellRule={selectedCellRule}
-						section={selectedSection} 
-						name={selectedMechanism} 
-						model={mechanismsModel[selectedMechanism]}
-					/>
-				)
-			}
-			container = Object.keys(mechanismsModel).map( mechName => 
-				<NetPyNEMechanismThumbnail 
-					name={mechName} 
-					key={mechName} 
-					selected={mechName == selectedMechanism} 
-					model={mechanismsModel[mechName]} 
-					deleteMethod={this.deleteMechanism}
-					handleClick={this.selectMechanism} 
-				/>
-			)
+    if (page == 'main') {
+      if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
+        selection = (
+          <NetPyNECellRule
+            name={selectedCellRule}
+            selectPage={this.selectPage}
+            model={model[selectedCellRule]}
+            renameHandler={this.handleRenameChildren} 
+          />
+        )
+      }
+      if (model != undefined) {
+        container = Object.keys(model).map( cellRuleName => 
+          <NetPyNEThumbnail
+            id={cellRuleName}
+            name={cellRuleName}
+            key={cellRuleName} 
+            selected={cellRuleName == selectedCellRule}
+            deleteMethod={this.deleteCellRule}
+            handleClick={this.selectCellRule} 
+          />
+        )
+      }
+    }
+    else if (page == "sections") {
+      const sectionsModel = model[selectedCellRule].secs;
+      if ( selectedSection !== undefined && Object.keys(sectionsModel).indexOf(selectedSection) > -1 ) {
+        selection = (
+          <NetPyNESection
+            name={selectedSection}
+            cellRule={selectedCellRule}
+            selectPage={this.selectPage}
+            model={sectionsModel[selectedSection]}
+            renameHandler={this.handleRenameSections}
+          />
+        )
+      }
+      container = Object.keys(sectionsModel).map( sectionName => 
+        <NetPyNESectionThumbnail 
+          key={sectionName} 
+          name={sectionName}
+          selected={sectionName == selectedSection}
+          deleteMethod={this.deleteSection}
+          handleClick={this.selectSection} 
+        />
+      )
+    }
+    else if (page == "mechanisms") {
+      const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
+      if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
+        selection = (
+          <NetPyNEMechanism 
+            cellRule={selectedCellRule}
+            section={selectedSection} 
+            name={selectedMechanism} 
+            model={mechanismsModel[selectedMechanism]}
+          />
+        )
+      }
+      container = Object.keys(mechanismsModel).map( mechName => 
+        <NetPyNEMechanismThumbnail 
+          name={mechName} 
+          key={mechName} 
+          selected={mechName == selectedMechanism} 
+          model={mechanismsModel[mechName]} 
+          deleteMethod={this.deleteMechanism}
+          handleClick={this.selectMechanism} 
+        />
+      )
     }
     
-		const content = (
-			<CardText className={"tabContainer"} expandable={true}>
-				<div className={"thumbnails"}>
-					<div className="breadcrumb">
+    const content = (
+      <CardText className={"tabContainer"} expandable={true}>
+        <div className={"thumbnails"}>
+          <div className="breadcrumb">
             <NetPyNEHome
               selection={selectedCellRule}
               handleClick={() => this.setState({page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined})}
             />
 
-						<FloatingActionButton
-							zDepth={1}
-							id="newCellRuleButton"
-							style={styles.cellRule}
+            <FloatingActionButton
+              zDepth={1}
+              id="newCellRuleButton"
+              style={styles.cellRule}
               secondary={ page != 'main' }
               data-tooltip={ this.createTooltip('cellRule')}
               className={"actionButton smallActionButton"}
-							onClick={() => this.handleHierarchyClick('main')}
-						>
-							{ this.createLabel('cellRule')}
-						</FloatingActionButton>
-						
-						<NavigationChevronRight style={styles.rightArrow}/>
+              onClick={() => this.handleHierarchyClick('main')}
+            >
+              { this.createLabel('cellRule')}
+            </FloatingActionButton>
+            
+            <NavigationChevronRight style={styles.rightArrow}/>
 
-						<RaisedButton
-							id="newSectionButton"
-							style={styles.sections.container}
-							disabledBackgroundColor="grey"
-							buttonStyle={styles.sections.icon}
-							primary={ page != 'mechanisms' }
-							secondary={ page == 'mechanisms' }
-							disabled={ selectedCellRule == undefined }
-							onClick={ () => this.handleHierarchyClick('sections') }
-							data-tooltip={ this.createTooltip('section')}
-						>
-							<p style={{color: 'white', height: '100%'}}>
-								{this.createLabel('sections')}
-							</p>
-						</RaisedButton>
+            <RaisedButton
+              id="newSectionButton"
+              style={styles.sections.container}
+              disabledBackgroundColor="grey"
+              buttonStyle={styles.sections.icon}
+              primary={ page != 'mechanisms' }
+              secondary={ page == 'mechanisms' }
+              disabled={ selectedCellRule == undefined }
+              onClick={ () => this.handleHierarchyClick('sections') }
+              data-tooltip={ this.createTooltip('section')}
+            >
+              <p style={{color: 'white', height: '100%'}}>
+                {this.createLabel('sections')}
+              </p>
+            </RaisedButton>
 
-						<NavigationChevronRight style={styles.rightArrow}/>
+            <NavigationChevronRight style={styles.rightArrow}/>
 
-						<NetPyNENewMechanism
-							handleClick={this.handleNewMechanism}
+            <NetPyNENewMechanism
+              handleClick={this.handleNewMechanism}
               disabled={selectedSection == undefined || page == 'main'}
               handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
-							blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
-						/> 
-					</div>
-					<div style={{ clear: "both" }}/>
-					{ container }
-				</div>
-				<div className="details">
-					{ selection }
-				</div>
-			</CardText>
-		);
+              blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
+            /> 
+          </div>
+          <div style={{ clear: "both" }}/>
+          { container }
+        </div>
+        <div className="details">
+          { selection }
+        </div>
+      </CardText>
+    );
 
-		return (
-				<Card style={{ clear: 'both' }}>
-						<CardHeader
-							id="CellRules"
-							title="Cell rules"
-							subtitle="Define here the rules to set the biophysics and morphology of the cells in your network"
-							actAsExpander={true}
-							showExpandableButton={true}
-						/>
-						{content}
-						{dialogPop}
-				</Card>
-		);
+    return (
+        <Card style={{ clear: 'both' }}>
+            <CardHeader
+              id="CellRules"
+              title="Cell rules"
+              subtitle="Define here the rules to set the biophysics and morphology of the cells in your network"
+              actAsExpander={true}
+              showExpandableButton={true}
+            />
+            {content}
+            {dialogPop}
+        </Card>
+    );
   }
 }
