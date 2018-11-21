@@ -45,21 +45,20 @@ function checkCellParamsValues(casper, test, toolbox, name, cellType, cellModel,
 //----------- going to section page ----------
 function testSectionAndMechanisms(casper, test, toolbox) {
   toolbox.message(casper, "going to section page")
-  casper.thenClick('button[id="cellParamsGoSectionButton"]', function() { //go to "section" page
-    test.assertExist('button[id="newCellRuleSectionButton"]', "landed in section page")
+  casper.thenClick('button[id="newSectionButton"]', function() { //go to "section" page
+    this.waitUntilVisible('button[id="Section"]', function () {
+      test.assertExist('button[id="Section"]', "landed in section page")
+    })
   })
-  casper.thenClick('#newCellRuleSectionButton', function() { //create section 1
-    this.echo("creating 2 sections")
-    toolbox.getInputValue(this, test, "cellParamsSectionName", "Section")
-  });
-  casper.thenClick('#newCellRuleSectionButton', function() { //create section 2
+
+  casper.thenClick('#newSectionButton', function() { //create section 2
     toolbox.getInputValue(this, test, "cellParamsSectionName", "Section2")
   });
   casper.thenClick('button[id="Section"]') //focus on section 1
 
-  //----------- going to "Geometry" tab in "section" page ----------
+  // ----------- going to "Geometry" tab in "section" page ----------
   casper.then(function() {
-    toolbox.active.buttonID = "newCellRuleSectionButton"
+    toolbox.active.buttonID = "newSectionButton"
     toolbox.active.tabID = "sectionGeomTab"
   })
 
@@ -134,16 +133,16 @@ function testSectionAndMechanisms(casper, test, toolbox) {
 
   //----------- going to "Mechanism" page ----------
   casper.thenClick("#sectionGeneralTab", function() { //Go to Mechs page
-    this.waitUntilVisible('button[id="cellParamsGoMechsButton"]', function() {
+    this.waitUntilVisible('button[id="newMechButton"]', function() {
       toolbox.message(this, "going to mechanisms page...")
     })
   })
-  casper.thenClick("#cellParamsGoMechsButton", function() { // check landing in Mech page
-    test.assertExist("#addNewMechButton", "landed in Mechanisms page");
+  casper.thenClick("#newMechButton", function() { // check landing in Mech page
+    test.assertDoesntExist('button[id="Section"]', "landed in Mechanisms page");
   })
 
   casper.then(function() {
-    toolbox.active.buttonID = "addNewMechButton"
+    toolbox.active.buttonID = "newMechButton"
     toolbox.active.tabID = false
   })
 
@@ -155,8 +154,8 @@ function testSectionAndMechanisms(casper, test, toolbox) {
     checkMechs(this, test, toolbox)
   })
 
-  casper.thenClick('#fromMech2SectionButton', function() { // leave Mech page and go to Section page
-    this.click("#cellParamsGoMechsButton")
+  casper.thenClick('#newSectionButton', function() { // leave Mech page and go to Section page
+    this.click("#newMechButton")
   })
   casper.then(function() { //go back to Mechs page
     this.waitUntilVisible('button[id="mechThumbhh"]', function() {
@@ -178,10 +177,7 @@ function testSectionAndMechanisms(casper, test, toolbox) {
     toolbox.delThumbnail(this, test, "mechThumbfastpas")
   })
 
-  casper.thenClick('button[id="fromMech2SectionButton"]', function() { // go back to --sections--
-    this.waitWhileVisible('button[id="addNewMechButton"]', function() {
-      test.assertDoesntExist('button[id="addNewMechButton"]', "landed in Section page")
-    })
+  casper.thenClick('button[id="newSectionButton"]', function() { // go back to --sections--
   });
 
   casper.then(function() { //delete section 2
@@ -193,11 +189,8 @@ function testSectionAndMechanisms(casper, test, toolbox) {
     toolbox.renameRule(this, test, "cellParamsSectionName", "newSec") // rename section 
   })
 
-  casper.thenClick('button[id="fromSection2CellRuleButton"]', function() { // go back to cellRule
-    this.echo("going back to cellParams page...")
-    this.waitWhileVisible('button[id="newCellRuleSectionButton"]', function() {
-      test.assertDoesntExist('button[id="newCellRuleSectionButton"]', "landed in cellParams page")
-    })
+  casper.thenClick('button[id="newCellRuleButton"]', function() { // go back to cellRule
+    this.echo("went back to cellParams page...")
   })
 }
 
@@ -262,7 +255,7 @@ function checkSectionTopoTabValues(casper, test, toolbox, cellRuleName, sectionN
   })
 }
 
-/*******************************************************************************
+/********************************************************************************
  * ---------------------------- CELL-PARAMS -- MECHS -------------------------- *
  ********************************************************************************/
 
@@ -273,7 +266,8 @@ function populateMechs(casper, test, toolbox) {
       n: "mechNamegnabar", v: "0.1"}, {
       n: "mechNamegkbar", v: "0.2"}, {
       n: "mechNamegl", v: "0.3"}, {
-      n: "mechNameel", v: "0.4"}
+      n: "mechNameel", v: "0.4"},
+      true
     )
   })
 
@@ -332,10 +326,10 @@ function checkMechs(casper, test, toolbox) {
 
 //----------------------------------------------------------------------------//
 
-function populateMech(casper, test, toolbox, mechName, v1, v2, v3, v4) {
-  casper.thenClick('#addNewMechButton', function() { // click SelectField and check MenuItem exist
+function populateMech(casper, test, toolbox, mechName, v1, v2, v3, v4, doNotOpenSelectField=false) {
+  {doNotOpenSelectField ? null : casper.thenClick('#newMechButton', function() { // click SelectField and check MenuItem exist
     this.waitUntilVisible('span[id="' + mechName + '"]')
-  })
+  })}
   casper.thenClick("#" + mechName, function() { // click add mech and populate fields
     toolbox.getInputValue(this, test, "singleMechName", mechName)
     toolbox.setInputValue(this, test, v1.n, v1.v);
@@ -376,8 +370,8 @@ function exploreCellRuleAfterRenaming(casper, test, toolbox) {
     checkCellParamsValues(this, test, toolbox, "newCellRule", "PYR", "HH", "newPop")
   })
 
-  casper.thenClick('button[id="cellParamsGoSectionButton"]', function() { //go to "sections"
-    test.assertExist('button[id="newCellRuleSectionButton"]', "landed in section")
+  casper.thenClick('button[id="newSectionButton"]', function() { //go to "sections"
+    test.assertExist('button[id="newSectionButton"]', "landed in section")
   })
   casper.then(function() {
     this.wait(2500)
@@ -389,7 +383,7 @@ function exploreCellRuleAfterRenaming(casper, test, toolbox) {
   })
   casper.then(function() {
     this.wait(2500) //wait  for python to populate fields
-    toolbox.active.buttonID = "newCellRuleSectionButton"
+    toolbox.active.buttonID = "newSectionButton"
   })
 
   casper.then(function() { // check section name
@@ -414,17 +408,17 @@ function exploreCellRuleAfterRenaming(casper, test, toolbox) {
   })
 
   casper.thenClick("#sectionGeneralTab", function() { //go to "general tab" in "section" page
-    this.waitUntilVisible('button[id="cellParamsGoMechsButton"]')
+    this.waitUntilVisible('button[id="newMechButton"]')
   })
   casper.then(function() { // go to mechs page 
-    toolbox.click(this, "cellParamsGoMechsButton", "button")
+    toolbox.click(this, "newMechButton", "button")
   })
   casper.then(function() { // wait for button to appear
     this.waitUntilVisible('button[id="mechThumbhh"]')
   })
   casper.then(function() { // select HH thumbnail
     this.click('button[id="mechThumbhh"]')
-    toolbox.active.buttonID = "addNewMechButton"
+    toolbox.active.buttonID = "newMechButton"
     toolbox.active.tabID = false
   })
   casper.then(function() { // check values

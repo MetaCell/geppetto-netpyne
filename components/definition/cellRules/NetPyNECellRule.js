@@ -177,15 +177,6 @@ export default class NetPyNECellRule extends React.Component {
             ]}
           />
 
-          <div style={{ float: 'left', marginTop: '10px' }}>
-            <RaisedButton
-              id={"cellParamsGoSectionButton"}
-              label="Sections"
-              labelPosition="before"
-              primary={true}
-              onClick={() => this.props.selectPage("sections")}
-            />
-          </div>
         </div>
         {dialogPop}
       </div>

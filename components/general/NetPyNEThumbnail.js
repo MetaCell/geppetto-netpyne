@@ -11,8 +11,6 @@ export default class NetPyNEThumbnail extends React.Component {
       dialogOpen: false
     }
     this.handleClick = this.handleClick.bind(this);
-    this.handleHoverIn = this.handleHoverIn.bind(this);
-    this.handleHoverOut = this.handleHoverOut.bind(this);
     this.handleDialogBox = this.handleDialogBox.bind(this);
   };
 
@@ -26,18 +24,6 @@ export default class NetPyNEThumbnail extends React.Component {
     }
   };
 
-  handleHoverIn() {
-    this.setState({
-      isHovered: true
-    });
-  };
-
-  handleHoverOut() {
-    this.setState({
-      isHovered: false
-    });
-  };
-
   handleDialogBox(response) {
     if(this.props.handleClick && response) {
       this.props.deleteMethod(this.props.name);
@@ -46,21 +32,38 @@ export default class NetPyNEThumbnail extends React.Component {
   }
 
   render() {
+      const { name, selected } = this.props;
+      const { dialogOpen, isHovered } = this.state;
+
+      let label;
+      if (isHovered && selected)  {
+        label = ""
+      }
+      else {
+        if (name.length > 14) {
+          label = name.slice(0,11)+"..."
+        }
+        else {
+          label = name
+        }
+      }
       return (
         <div>
           <FloatingActionButton 
-            id={this.props.name}
-            onMouseEnter={this.handleHoverIn}
-            onMouseLeave={this.handleHoverOut}
-            iconClassName={(this.state.isHovered && this.props.selected) ? "fa fa-trash-o" : ""} 
-            className={"actionButton " + (this.props.selected ? "selectedActionButton" : "")} 
-            onClick={this.handleClick}>
-            {(this.state.isHovered && this.props.selected) ? "" : this.props.name}
+            id={name}
+            onMouseEnter={() => this.setState({isHovered: true})}
+            onMouseLeave={() => this.setState({isHovered: false})}
+            data-tooltip={isHovered && name.length > 14 ? name : undefined}
+            iconClassName={(this.state.isHovered && selected) ? "fa fa-trash-o" : ""} 
+            className={"actionButton " + (selected ? "selectedActionButton" : "")} 
+            onClick={()=>this.handleClick()}
+          >
+            {label}
           </FloatingActionButton>
           <DeleteDialogBox
-            open={this.state.dialogOpen}
+            open={dialogOpen}
             onDialogResponse={this.handleDialogBox}
-            textForDialog={this.props.name} />
+            textForDialog={name} />
         </div>
       );
   };
