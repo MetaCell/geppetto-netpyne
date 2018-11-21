@@ -137,8 +137,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
   }
 
   deleteConnectivityRule(name) {
-    var parameter = "connParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['connParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedConnectivityRule: undefined, deletedConnectivityRule: name});

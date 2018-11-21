@@ -111,8 +111,7 @@ export default class NetPyNEStimulationSources extends React.Component {
   };
 
   deleteStimulationSource(name) {
-    var parameter = "stimSourceParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedStimulationSource: undefined, deletedStimulationSource: name});
