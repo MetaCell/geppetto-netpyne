@@ -95,7 +95,7 @@ export default class NetPyNEPopulation extends React.Component {
         Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { 
           this.renaming = false
           GEPPETTO.trigger('populations_change');
-	});
+	      });
         this.renaming = true;
       });
     }
@@ -141,14 +141,20 @@ export default class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <PythonControlledTextField
-              callback={(newValue) => GEPPETTO.trigger('cellType_change')}
+              callback={(newValue, oldValue) => {
+                Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
+                GEPPETTO.trigger('cellType_change')
+              }}
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.popParams.cellModel" >
             <PythonControlledTextField
-              callback={(newValue) => GEPPETTO.trigger('cellModel_change')}
+              callback={(newValue, oldValue) => {
+                Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellModel', newValue, oldValue])
+                GEPPETTO.trigger('cellModel_change')
+              }}
               model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
             />
           </NetPyNEField>
