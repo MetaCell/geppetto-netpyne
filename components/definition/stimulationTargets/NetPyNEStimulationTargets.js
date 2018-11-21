@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
-export default class NetPyNEStimulationTargets extends React.Component {
+
+
+export default class NetPyNEStimulationTargets extends Component {
 
   constructor(props) {
     super(props);
@@ -173,14 +177,13 @@ export default class NetPyNEStimulationTargets extends React.Component {
         </div>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
-            <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-              iconButtonElement={
-                <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+            <NetPyNEHome
+              selection={this.state.selectedStimulationTarget}
+              handleClick={()=> this.setState({selectedStimulationTarget: undefined})}
+            />
+            
+            <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+
           </div>
           <div style={{ clear: "both" }}></div>
           {StimulationTargets}

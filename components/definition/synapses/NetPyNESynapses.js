@@ -1,15 +1,16 @@
-import React from 'react';
-import IconMenu from 'material-ui/IconMenu';
+import React,{ Component }  from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 
-export default class NetPyNESynapses extends React.Component {
+export default class NetPyNESynapses extends Component {
 
   constructor(props) {
     super(props);
@@ -181,14 +182,11 @@ export default class NetPyNESynapses extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNEHome
+                selection={this.state.selectedSynapse}
+                handleClick={()=> this.setState({selectedSynapse: undefined})}
+              />
+              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
             </div>
             <div style={{ clear: "both" }}></div>
             {Synapses}

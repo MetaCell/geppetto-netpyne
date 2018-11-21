@@ -102,21 +102,23 @@ export default class NetPyNESection extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined
+      ? <Dialog
+          title={title}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {children}
+        </Dialog> 
+      : undefined
+    );
 
     var content;
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
         <div>
-      
           <TextField
             id={"cellParamsSectionName"}
             onChange={this.handleRenameChange}
@@ -124,16 +126,6 @@ export default class NetPyNESection extends React.Component {
             floatingLabelText="The name of the section"
             className={"netpyneField"}
           />
-          <br /><br />
-          <IconButton
-            id={"cellParamsGoMechsButton"}
-            className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
-            onClick={() => that.props.selectPage("mechanisms")}
-          >
-            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
-            <span className={"gearThumbLabel"}>Mechanisms</span>
-          </IconButton>
-          {dialogPop}
         </div>
       )
     }
