@@ -50,6 +50,17 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
 	render() {
     const { name, selected } = this.props;
     const { dialogOpen, isHovered } = this.state;
+    let label;
+    if (isHovered && selected) {
+      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={styles.trash}/> 
+    }
+    else {
+      label = (
+        <span className={"gearThumbLabel"}>
+          {name.length > 14 ? `${name.slice(0,10)}...` : name}
+        </span>
+      )
+    }
     return (
       <div style={styles.main}>
         <IconButton
@@ -61,12 +72,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
           onClick={ (e, v) => this.handleClick(v) }
         >
           <div>
-            {(isHovered && selected) 
-              ? <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={styles.trash}/> 
-              : <span className={"gearThumbLabel"}>
-                  {name.length > 14 ? `${name.slice(0,10)}...` : name}
-                </span>
-            }
+            { label }
             <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear"/>
           </div>
         </IconButton>

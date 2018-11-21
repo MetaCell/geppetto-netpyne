@@ -34,9 +34,11 @@ export default class NetPyNENewMechanism extends React.Component {
     };
   };
   
-  async componentDidMount() {
-    const response = await Utils.evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
-    this.setState({mechanisms: response})
+  componentDidMount() {
+    Utils.evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
+    .then(response => {
+      this.setState({mechanisms: response})
+    })
   };
   
   handleClick = (value) => {
@@ -52,19 +54,42 @@ export default class NetPyNENewMechanism extends React.Component {
     handleHierarchyClick();
   };
 
-  render() {
+  createTooltip(){
     const { disabled, blockButton } = this.props;
+    if (disabled) {
+      return "No section selected"
+    }
+    else {
+      if (blockButton) {
+        return "Explore mechanisms" 
+      }
+      else {
+        return "Add new mechanism"
+      }
+    }
+  }
+
+  createLabel(){
+    const { disabled, blockButton } = this.props;
+    if (disabled) {
+      return ""
+    }
+    else {
+      if (blockButton) {
+        return <NavigationMoreHoriz />
+      }
+      else {
+        return <ContentAdd/>
+      }
+    }
+  }
+  render() {
+    const { disabled } = this.props;
     const { open, anchorEl, mechanisms } = this.state;
     
     return <div>
       <IconButton
-        data-tooltip={
-          disabled 
-            ? "No section selected" 
-            : blockButton 
-              ? "Explore mechanisms" 
-              : "Add new mechanism"
-        }
+        data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
         disabled={disabled}
@@ -76,13 +101,7 @@ export default class NetPyNENewMechanism extends React.Component {
           color={changeColor} 
           hoverColor={hoverColor} 
         />
-        
-        {disabled 
-          ? "" 
-          : blockButton
-            ? <NavigationMoreHoriz />
-            : <ContentAdd/>
-        }
+        { this.createLabel() }
       </IconButton>
 
       <Popover

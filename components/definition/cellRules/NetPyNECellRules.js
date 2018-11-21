@@ -1,6 +1,4 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
@@ -14,11 +12,10 @@ import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import { pink400, cyan500 } from 'material-ui/styles/colors';
-import { HomeIcon } from '../../general/CustomIcons';
 import Dialog from 'material-ui/Dialog/Dialog';
 
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 
 const styles = {
 	rightArrow : {
@@ -322,17 +319,17 @@ export default class NetPyNECellRules extends React.Component {
   }
 
 	handleHierarchyClick = (nextPage) => {
-		const { page, selectedCellRule, value } = this.state;
-		if (nextPage===page) {
-			switch (page) {
-				case "main": 
-					this.handleNewCellRule({ 'CellRule': {'conds':{}, 'secs':{}} });
-					break;
-				case "sections":
-					this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
-					break;
-				default:
-					break;
+    const { page, selectedCellRule, value } = this.state;
+    // with this herarchy navigation, the tree buttons in the breadclumb can behave  in 2 different ways
+    // they can move the view to a different level (cellRule -> section) (seccions --> mechanisms) 
+    // or they can add a new cellRule ( or section or mechanims) 
+    // here we chech if we want to jump to a different level or if we want to create a new rule in the current level
+		if (nextPage===page) { 
+      if (page === "main") {
+        this.handleNewCellRule({ 'CellRule': {'conds':{}, 'secs':{}} });
+      }
+      else if (page === "section") {
+        this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
 			}
 		}
 		else {
@@ -418,10 +415,107 @@ export default class NetPyNECellRules extends React.Component {
     return true;
   };
 
+  createTooltip(rule) {
+    const { value: model, page, selectedCellRule, selectedSection } = this.state;
+
+    switch (rule) {
+      case 'cellRule':
+        if (page!=='main') {
+          if (selectedCellRule && selectedCellRule.length > 8 ) {
+            return selectedCellRule
+          }
+          else {
+            return 'Go back to rule'
+          }
+        }
+        else {
+          return 'Create rule'
+        }
+
+      case 'section':
+        if (page ==='mechanisms') {
+          if (!!selectedSection && selectedSection.length > 9 ) {
+            return selectedSection
+          }
+          else{
+            return 'Go back to section'
+          }
+        }
+        else {
+          if (page == "sections") {
+            return 'Create a section'
+          }
+          else {
+            if (!!selectedCellRule){
+              if (!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0) {
+                return "Explore sections"
+              }
+              else {
+                return "Create first section"
+              }
+            }
+            else {
+              return "No rule selected" 
+            }
+          }
+        }
+    }
+  }
+
+  createLabel(rule){
+    const { value: model, page, selectedCellRule, selectedSection } = this.state;
+    switch (rule) {
+      case 'cellRule':
+        if (page !== 'main'){
+          if (selectedCellRule.length > 8 ){
+            return selectedCellRule.slice(0,7)+'...'
+          }
+          else {
+            return selectedCellRule
+          }
+        }
+        else {
+          return <ContentAdd/>
+        }
+
+      case 'sections':
+        if ( page==='mechanisms' ) {
+          if (selectedSection != undefined) {
+            if (selectedSection.length > 9 ) {
+              return selectedSection.slice(0,7) + "..."
+            }
+            else {
+              return selectedSection
+            }
+          }
+          else {
+            return ''
+          }
+        }
+        else {
+          if (page == "sections" ) {
+            return <ContentAdd style={{height: '100%'}} color="white"/>
+          }
+          else {
+            if (!!selectedCellRule) {
+              if (!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0){
+                return <NavigationMoreHoriz style={{height: '100%'}} color="white"/>
+              }
+              else return <ContentAdd style={{height: '100%'}} color="white"/>
+            }
+            else {
+              return ''
+            }
+          }
+        }
+    }
+  }
+
   render() {
 
 		const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
-		var selectedCellRuleContainer = undefined;
+    let selection = null;
+    let container = null;
 
 		const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
 
@@ -439,7 +533,7 @@ export default class NetPyNECellRules extends React.Component {
 
 		if (page == 'main') {
 			if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
-				selectedCellRuleContainer = (
+				selection = (
 					<NetPyNECellRule
 						name={selectedCellRule}
 						selectPage={this.selectPage}
@@ -449,7 +543,7 @@ export default class NetPyNECellRules extends React.Component {
 				)
 			}
 			if (model != undefined) {
-				var cellRulesContainer = Object.keys(model).map( cellRuleName => 
+				container = Object.keys(model).map( cellRuleName => 
 					<NetPyNEThumbnail
 						id={cellRuleName}
 						name={cellRuleName}
@@ -462,10 +556,9 @@ export default class NetPyNECellRules extends React.Component {
 			}
 		}
 		else if (page == "sections") {
-			var selectedSectionContainer = undefined;
 			const sectionsModel = model[selectedCellRule].secs;
 			if ( selectedSection !== undefined && Object.keys(sectionsModel).indexOf(selectedSection) > -1 ) {
-				selectedSectionContainer = (
+				selection = (
 					<NetPyNESection
 						name={selectedSection}
 						cellRule={selectedCellRule}
@@ -475,7 +568,7 @@ export default class NetPyNECellRules extends React.Component {
 					/>
 				)
 			}
-			var sectionsContainer = Object.keys(sectionsModel).map( sectionName => 
+			container = Object.keys(sectionsModel).map( sectionName => 
 				<NetPyNESectionThumbnail 
 					key={sectionName} 
 					name={sectionName}
@@ -486,10 +579,9 @@ export default class NetPyNECellRules extends React.Component {
 			)
 		}
 		else if (page == "mechanisms") {
-			var selectedMechanismContainer = undefined;
 			const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
 			if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
-				selectedMechanismContainer = (
+				selection = (
 					<NetPyNEMechanism 
 						cellRule={selectedCellRule}
 						section={selectedSection} 
@@ -498,7 +590,7 @@ export default class NetPyNECellRules extends React.Component {
 					/>
 				)
 			}
-			var mechanismsContainer = Object.keys(mechanismsModel).map( mechName => 
+			container = Object.keys(mechanismsModel).map( mechName => 
 				<NetPyNEMechanismThumbnail 
 					name={mechName} 
 					key={mechName} 
@@ -508,44 +600,27 @@ export default class NetPyNECellRules extends React.Component {
 					handleClick={this.selectMechanism} 
 				/>
 			)
-		}
-		
+    }
+    
 		const content = (
 			<CardText className={"tabContainer"} expandable={true}>
 				<div className={"thumbnails"}>
 					<div className="breadcrumb">
-						<IconButton
-							style={styles.home.container}
-							data-tooltip={ page != "main" ? "Go back to main" : undefined }
-							iconStyle={{color: page != 'main' ? cyan500 : pink400, ...styles.home.icon}}
-							onClick={ () => this.setState({page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined})}
-						>
-							<HomeIcon/>
-						</IconButton>
-
-						<NavigationChevronRight style={styles.rightArrow}/>
+            <NetPyNEHome
+              selection={selectedCellRule}
+              handleClick={() => this.setState({page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined})}
+            />
 
 						<FloatingActionButton
 							zDepth={1}
 							id="newCellRuleButton"
 							style={styles.cellRule}
-							className={"actionButton smallActionButton"}
-							secondary={ page != 'main' }
-							data-tooltip={ 
-								page != 'main'
-									? selectedCellRule && selectedCellRule.length > 8 
-										? selectedCellRule 
-										: "Go back to rule"
-									: "Create rule"
-								}
+              secondary={ page != 'main' }
+              data-tooltip={ this.createTooltip('cellRule')}
+              className={"actionButton smallActionButton"}
 							onClick={() => this.handleHierarchyClick('main')}
 						>
-							{ page != 'main' 
-								? selectedCellRule.length > 8 
-									? (selectedCellRule.slice(0,7)+'...') 
-									: selectedCellRule 
-								: <ContentAdd/>
-							}
+							{ this.createLabel('cellRule')}
 						</FloatingActionButton>
 						
 						<NavigationChevronRight style={styles.rightArrow}/>
@@ -559,51 +634,27 @@ export default class NetPyNECellRules extends React.Component {
 							secondary={ page == 'mechanisms' }
 							disabled={ selectedCellRule == undefined }
 							onClick={ () => this.handleHierarchyClick('sections') }
-							data-tooltip={ page == 'mechanisms' 
-								? !!selectedSection && selectedSection.length > 9 
-									? selectedSection 
-									: "Go back to section"
-								: page == "sections" 
-									? "Create a section" 
-									: !!selectedCellRule
-										?	!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0
-											? "Explore sections"
-											: "Create first section"
-										: "No rule selected" 
-							}
+							data-tooltip={ this.createTooltip('section')}
 						>
 							<p style={{color: 'white', height: '100%'}}>
-								{page == "mechanisms" 
-									? selectedSection != undefined 
-										? selectedSection.length > 9 
-											? selectedSection.slice(0,7) + "..."
-											: selectedSection 
-										: ""
-									: page == "sections" 
-										? <ContentAdd style={{height: '100%'}} color="white"/>
-										: !!selectedCellRule
-											? !!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0
-												? <NavigationMoreHoriz style={{height: '100%'}} color="white"/>
-												: <ContentAdd style={{height: '100%'}} color="white"/>
-											: ""
-								}
+								{this.createLabel('sections')}
 							</p>
 						</RaisedButton>
 
 						<NavigationChevronRight style={styles.rightArrow}/>
 
 						<NetPyNENewMechanism
-							blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
 							handleClick={this.handleNewMechanism}
-							handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
-							disabled={selectedSection == undefined || page == 'main'}
+              disabled={selectedSection == undefined || page == 'main'}
+              handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
+							blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
 						/> 
 					</div>
 					<div style={{ clear: "both" }}/>
-					{ page == "main" ? cellRulesContainer : page == "sections" ? sectionsContainer : mechanismsContainer }
+					{ container }
 				</div>
 				<div className="details">
-					{ page == "main" ? selectedCellRuleContainer : page == "sections" ? selectedSectionContainer : selectedMechanismContainer }
+					{ selection }
 				</div>
 			</CardText>
 		);

@@ -1,8 +1,9 @@
 import React from 'react';
+import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import { pink400 } from 'material-ui/styles/colors';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import { HomeIcon } from './CustomIcons';
+
 
 export default ({handleClick, selection}) => (
   <span>
@@ -12,7 +13,7 @@ export default ({handleClick, selection}) => (
       iconStyle={{color: pink400, ...styles.home.icon}}
       onClick={ () => handleClick()}
     >
-      <HomeIcon/>
+      <FontIcon className="fa fa-home"/>
     </IconButton>
     <NavigationChevronRight style={styles.rightArrow}/>
   </span>
