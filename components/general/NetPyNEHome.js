@@ -13,7 +13,7 @@ export default ({handleClick, selection}) => (
       iconStyle={{color: pink400, ...styles.home.icon}}
       onClick={ () => handleClick()}
     >
-      <FontIcon className="fa fa-home"/>
+      <FontIcon className="fa fa-home customHome"/>
     </IconButton>
     <NavigationChevronRight style={styles.rightArrow}/>
   </span>

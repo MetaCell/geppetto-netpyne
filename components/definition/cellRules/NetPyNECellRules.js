@@ -1,8 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-=======
-import IconButton from 'material-ui/IconButton';
->>>>>>> aca1c3e443a8b028fbeffa5ad6d49b86f93b7908
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
@@ -332,7 +328,7 @@ export default class NetPyNECellRules extends React.Component {
       if (page === "main") {
         this.handleNewCellRule({ 'CellRule': {'conds':{}, 'secs':{}} });
       }
-      else if (page === "section") {
+      else if (page === "sections") {
         this.handleNewSection({ 'Section': {'geom': {}, 'topol': {}, 'mechs': {}} });
 			}
 		}

@@ -35,18 +35,17 @@ export default class NetPyNESectionThumbnail extends React.Component {
     this.setState({dialogOpen: false});
   };
 
-  createLabel(){
-    if (isHovered && selected) {
-      return <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"/> 
-    }
-    else {
-      return name.length > 14 ? `${name.slice(0,10)}...` : name
-    }
-  }
-
   render() {
     const { name, selected } = this.props;
     const { isHovered, dialogOpen } = this.state;
+
+    let label;
+    if (isHovered && selected) {
+      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"/> 
+    }
+    else {
+      label = name.length > 14 ? `${name.slice(0,10)}...` : name
+    }
     return (
       <div>
       <RaisedButton
@@ -60,7 +59,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
         className={"rectangularActionButton " + (selected ? "selectedRectangularActionButton " : "")} 
         onClick={() => this.handleClick()}
       >
-        { this.createLabel() }
+        { label }
       </RaisedButton>
       <DeleteDialogBox
             open={dialogOpen}
