@@ -1,4 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
+=======
+import IconButton from 'material-ui/IconButton';
+>>>>>>> aca1c3e443a8b028fbeffa5ad6d49b86f93b7908
 import RaisedButton from 'material-ui/RaisedButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
@@ -18,40 +22,40 @@ import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 
 const styles = {
-	rightArrow : {
-		float: 'left',
-		color: 'grey',
-		fontSize: "20px",
-		marginLeft: '15px'
-	},
-	home: {
-		container : {
-			float: 'left',
-			height: '36px',
-			width: '36px',
-			padding: '0px'
-		},
-		icon: {
-			width: '36px',
-			height: '36px'
-		}
-	},
-	cellRule: {
-		marginTop: "15px",
-		float: "left",
-		textAlign: 'center'
-	},
-	sections: {
-		container: {
-			marginLeft: '15px',
-			float: 'left',
-			borderRadius: 25,
-			boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.19)'
-		},
-		icon: {
-			borderRadius: 25 
-		}
-	}
+  rightArrow : {
+    float: 'left',
+    color: 'grey',
+    fontSize: "20px",
+    marginLeft: '15px'
+  },
+  home: {
+    container : {
+      float: 'left',
+      height: '36px',
+      width: '36px',
+      padding: '0px'
+    },
+    icon: {
+      width: '36px',
+      height: '36px'
+    }
+  },
+  cellRule: {
+    marginTop: "15px",
+    float: "left",
+    textAlign: 'center'
+  },
+  sections: {
+    container: {
+      marginLeft: '15px',
+      float: 'left',
+      borderRadius: 25,
+      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.19)'
+    },
+    icon: {
+      borderRadius: 25 
+    }
+  }
 }
 
 export default class NetPyNECellRules extends React.Component {
@@ -110,9 +114,9 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     this.setState({
       value: model,
-			selectedCellRule: cellRuleId,
-			selectedSection: undefined,
-			selectedMechanism: undefined
+      selectedCellRule: cellRuleId,
+      selectedSection: undefined,
+      selectedMechanism: undefined
     });
   }
 
@@ -122,8 +126,8 @@ export default class NetPyNECellRules extends React.Component {
 
   handleNewSection(defaultSectionValues) {
     let key = Object.keys(defaultSectionValues)[0];
-		let value = defaultSectionValues[key];
-		const { value: model, selectedCellRule } = this.state;
+    let value = defaultSectionValues[key];
+    const { value: model, selectedCellRule } = this.state;
     
     // Get New Available ID
     var sectionId = Utils.getAvailableKey(model[selectedCellRule]['secs'], key);
@@ -137,8 +141,8 @@ export default class NetPyNECellRules extends React.Component {
     // Update state
     this.setState({
       value: model,
-			selectedSection: sectionId,
-			selectedMechanism: undefined
+      selectedSection: sectionId,
+      selectedMechanism: undefined
     });
   }
 
@@ -147,7 +151,7 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleNewMechanism(mechanism) {
-		const {value: model, selectedCellRule, selectedSection } = this.state;
+    const {value: model, selectedCellRule, selectedSection } = this.state;
     
     // Create Mechanism Client side
     if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
@@ -300,12 +304,12 @@ export default class NetPyNECellRules extends React.Component {
                 model2[n]['secs'][newValue2] = model2[n]['secs'][s];
                 delete model2[n]['secs'][s];
                 this.setState({ value: model2,
-									errorMessage: "Error",
-									errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
-									s + " has been renamed " + newValue2},
-									function() {
-										Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {});
-									}.bind(this));
+                  errorMessage: "Error",
+                  errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
+                  s + " has been renamed " + newValue2},
+                  function() {
+                    Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {});
+                  }.bind(this));
               }
             }
           }
@@ -517,7 +521,7 @@ export default class NetPyNECellRules extends React.Component {
     let selection = null;
     let container = null;
 
-		const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
+    const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
 
     const dialogPop = (errorMessage != undefined 
 			? <Dialog
