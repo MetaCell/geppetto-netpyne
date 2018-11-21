@@ -15,7 +15,6 @@ export default class ListComponent extends Component {
             children: (props.realType == 'dict' || props.realType == 'dict(dict())') ? {} : [],
             newItemValue: ''
         };
-
         this.addChild = this.addChild.bind(this);
         this.handleNewItemChange = this.handleNewItemChange.bind(this);
     }

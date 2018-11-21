@@ -33,31 +33,17 @@ export default class NetPyNESynapse extends React.Component {
   };
   
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
-    if(newValue != event.target.value) {
-      // if the new value has been changed by the function Utils.nameValidation means that the name convention
-      // has not been respected, so we need to open the dialog and inform the user.
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Leading digits or whitespaces are not allowed in Synapses names."});
-    } else {
-      this.setState({ currentName: newValue });
-    }
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Synapses");
 
-    if(updateCondition) {
-      this.triggerUpdate(function () {
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-        that.renaming=true;
+        Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { this.renaming=false;});
+        this.renaming=true;
       });
-    } else if(!(updateCondition) && !(newValue != event.target.value)) {
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Name collision detected, the name "+newValue+
-                                    " is already used in this model, please pick another name."});
     }
   }
 
