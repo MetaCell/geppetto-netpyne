@@ -75,9 +75,7 @@ export default class NetPyNEPopulations extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
           }
         }
       }
@@ -113,12 +111,13 @@ export default class NetPyNEPopulations extends React.Component {
     // Create Population Client side
     Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
 
+    
     // Update state
     model[populationId] = newPopulation;
     this.setState({
       value: model,
       selectedPopulation: populationId
-    });
+    }, ()=> GEPPETTO.trigger('populations_change'));
 
   }
 
@@ -128,11 +127,12 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   deletePopulation(name) {
-    var parameter = "popParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
-      var model = this.state.value;
-      delete model[name];
-      this.setState({value: model, selectedPopulation: undefined, populationDeleted: name});
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then((response) =>{
+      if (response) {
+        var model = this.state.value;
+        delete model[name];
+        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> GEPPETTO.trigger('populations_change'));
+      }
     });
   }
 

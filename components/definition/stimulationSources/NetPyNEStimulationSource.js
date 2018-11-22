@@ -46,7 +46,10 @@ export default class NetPyNEStimulationSource extends React.Component {
 
     if(triggerCondition) {
       this.triggerUpdate(() => {
-        Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => { this.renaming = false });
+        Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false
+          GEPPETTO.trigger('stimSources_change');
+        });
         this.renaming = true;
       });
     }
@@ -87,6 +90,7 @@ export default class NetPyNEStimulationSource extends React.Component {
   handleStimSourceTypeChange(event, index, value) {
     Utils.execPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
     this.setState({ sourceType: value });
+    GEPPETTO.trigger('stimSources_change', this.state.currentName);
   };
 
   render() {

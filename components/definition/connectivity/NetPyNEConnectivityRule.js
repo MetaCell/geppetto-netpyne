@@ -30,6 +30,24 @@ export default class NetPyNEConnectivityRule extends React.Component {
     };
   }
 
+  componentDidMount(){
+    GEPPETTO.on('populations_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellType_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellModel_change', () => {
+      this.forceUpdate();
+    })
+  }
+
+  componentWillUnmount(){
+    GEPPETTO.off('populations_change')
+    GEPPETTO.off('cellType_change')
+    GEPPETTO.off('cellModel_change')
+  }  
+
   handleRenameChange = (event) => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);

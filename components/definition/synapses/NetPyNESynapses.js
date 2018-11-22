@@ -45,7 +45,7 @@ export default class NetPyNESynapses extends Component {
     this.setState({
       value: model,
       selectedSynapse: SynapseId
-    });
+    }, ()=> GEPPETTO.trigger('synapses_change'));
   };
 
   hasSelectedSynapseBeenRenamed(prevState, currentState) {
@@ -90,9 +90,7 @@ export default class NetPyNESynapses extends Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Synapses names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => GEPPETTO.trigger('synapses_change')));
           }
         }
       }
@@ -113,11 +111,10 @@ export default class NetPyNESynapses extends Component {
   };
 
   deleteSynapse(name) {
-    var parameter = "synMechParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['synMechParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedSynapse: undefined, deletedSynapse: name});
+      this.setState({value: model, selectedSynapse: undefined, deletedSynapse: name}, ()=> GEPPETTO.trigger('synapses_change'));
     });
   }
 
