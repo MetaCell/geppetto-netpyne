@@ -51,6 +51,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
         }
       });
     })
+    GEPPETTO.on('synapses_change', () => {
+      this.forceUpdate();
+    })
   }
 
   componentWillUnmount(){

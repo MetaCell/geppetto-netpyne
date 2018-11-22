@@ -41,7 +41,10 @@ export default class NetPyNESynapse extends React.Component {
     if(triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { this.renaming=false;});
+        Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => {
+          this.renaming=false;
+          GEPPETTO.trigger('synapses_change');
+        });
         this.renaming=true;
         // Update layout has been inserted in the triggerUpdate since this will have to query the backend
         // So we need to delay this along with the rename, differently we will face a key issue with netpyne
