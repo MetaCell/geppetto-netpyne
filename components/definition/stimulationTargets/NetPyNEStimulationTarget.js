@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CardText from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -38,12 +38,22 @@ export default class NetPyNEStimulationTarget extends React.Component {
     GEPPETTO.on('populations_change', () => {
       this.forceUpdate();
     })
+    GEPPETTO.on('cellType_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellModel_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('stimSources_change', () => {
+      this.forceUpdate();
+    })
   }
 
   componentWillUnmount(){
-    GEPPETTO.off('populations_change', () => {
-      this.forceUpdate();
-    })
+    GEPPETTO.off('populations_change')
+    GEPPETTO.off('cellType_change')
+    GEPPETTO.off('cellModel_change')
+    GEPPETTO.off('stimSources_change')
   }
   
   componentWillReceiveProps(nextProps) {

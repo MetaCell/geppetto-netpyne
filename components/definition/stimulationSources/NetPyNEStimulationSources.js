@@ -44,7 +44,7 @@ export default class NetPyNEStimulationSources extends Component {
     this.setState({
       value: model,
       selectedStimulationSource: StimulationSourceId
-    });
+    }, ()=> GEPPETTO.trigger('stimSources_change'));
   };
 
   hasSelectedStimulationSourceBeenRenamed(prevState, currentState) {
@@ -89,9 +89,7 @@ export default class NetPyNEStimulationSources extends Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => GEPPETTO.trigger('stimSources_change')));
           }
         }
       }
@@ -115,7 +113,7 @@ export default class NetPyNEStimulationSources extends Component {
     Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedStimulationSource: undefined, deletedStimulationSource: name});
+      this.setState({value: model, selectedStimulationSource: undefined, deletedStimulationSource: name}, ()=> GEPPETTO.trigger('stimSources_change'));
     });
   }
 
