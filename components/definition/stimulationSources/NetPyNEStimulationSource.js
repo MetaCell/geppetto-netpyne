@@ -51,6 +51,9 @@ export default class NetPyNEStimulationSource extends React.Component {
           GEPPETTO.trigger('stimSources_change');
         });
         this.renaming = true;
+        // Update layout has been inserted in the triggerUpdate since this will have to query the backend
+        // So we need to delay this along with the rename, differently we will face a key issue with netpyne
+        this.updateLayout();
       });
     }
   };
@@ -64,12 +67,6 @@ export default class NetPyNEStimulationSource extends React.Component {
 
   componentDidMount() {
     this.updateLayout();
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
-      this.updateLayout();
-    };
   };
 
   updateLayout() {
