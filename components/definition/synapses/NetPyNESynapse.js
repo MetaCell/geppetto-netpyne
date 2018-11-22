@@ -43,6 +43,9 @@ export default class NetPyNESynapse extends React.Component {
         // Rename the population in Python
         Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => { this.renaming=false;});
         this.renaming=true;
+        // Update layout has been inserted in the triggerUpdate since this will have to query the backend
+        // So we need to delay this along with the rename, differently we will face a key issue with netpyne
+        this.updateLayout();
       });
     }
   }
@@ -59,12 +62,6 @@ export default class NetPyNESynapse extends React.Component {
     this.updateLayout();
   };
 
-  componentDidUpdate(prevProps, prevState) {
-      if (this.state.currentName != prevState.currentName) {
-          this.updateLayout();
-      };
-  };
-  
   updateLayout() {
     Utils
       .evalPythonMessage("[value == netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]")
