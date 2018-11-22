@@ -75,9 +75,7 @@ export default class NetPyNEPopulations extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change'));
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
           }
         }
       }

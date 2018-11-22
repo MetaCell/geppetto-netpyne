@@ -291,9 +291,7 @@ export default class NetPyNECellRules extends React.Component {
                   errorMessage: "Error",
                   errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                   s + " has been renamed " + newValue2},
-                  function() {
-                    Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {});
-                  }.bind(this));
+                  () => Utils.renameKey('netParams.cellParams["'+n+'"]["secs"]', s, newValue2, (response, newValue) => {}));
               }
             }
           }

@@ -94,9 +94,7 @@ export default class NetPyNEStimulationTargets extends Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.stimTargetParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.stimTargetParams', m, newValue, (response, newValue) => {}));
           }
         }
       }

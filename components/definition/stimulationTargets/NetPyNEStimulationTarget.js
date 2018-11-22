@@ -44,8 +44,12 @@ export default class NetPyNEStimulationTarget extends React.Component {
     GEPPETTO.on('cellModel_change', () => {
       this.forceUpdate();
     })
-    GEPPETTO.on('stimSources_change', () => {
-      this.forceUpdate();
+    GEPPETTO.on('stimSources_change', (stimulationSourceId) => {
+      this.forceUpdate(()=>{
+        if (stimulationSourceId !== undefined && stimulationSourceId !== ''){
+          this.handleSelection(stimulationSourceId)
+        }
+      });
     })
   }
 
