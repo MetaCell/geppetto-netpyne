@@ -1,6 +1,5 @@
 import React from 'react';
 import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import { cyan500 } from 'material-ui/styles/colors';
 import Transition from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -164,7 +163,7 @@ export default class NetPyNE extends React.Component {
 			return (
 				<div style={{height: '100%', width:'100%'}} >
 					<div style={{position: 'relative', zIndex: '100'}}>
-						<Toolbar id="appBar" style={{backgroundColor: cyan500, width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
+						<Toolbar id="appBar" style={{backgroundColor: '#543a73', width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
 							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >
 								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
 							</ToolbarGroup>						
