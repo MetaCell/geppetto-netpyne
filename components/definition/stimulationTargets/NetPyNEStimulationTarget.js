@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CardText from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -9,6 +9,8 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import StimulationConditions from './StimulationConditions';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -22,13 +24,44 @@ export default class NetPyNEStimulationTarget extends React.Component {
       currentName: props.name,
       sourceTypeNetStim: false,
       selectedIndex: 0,
-      sectionId: "General"
+      sectionId: "General",
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
     this.postProcessMenuItems4SynMech = this.postProcessMenuItems4SynMech.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
     this.select = this.select.bind(this);
   };
+  
+  componentDidMount(){
+    GEPPETTO.on('populations_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellType_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellModel_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('stimSources_change', (stimulationSourceId) => {
+      this.forceUpdate(()=>{
+        if (stimulationSourceId !== undefined && stimulationSourceId !== ''){
+          this.handleSelection(stimulationSourceId)
+        }
+      });
+    })
+    GEPPETTO.on('synapses_change', () => {
+      this.forceUpdate();
+    })
+  }
+
+  componentWillUnmount(){
+    GEPPETTO.off('populations_change')
+    GEPPETTO.off('cellType_change')
+    GEPPETTO.off('cellModel_change')
+    GEPPETTO.off('stimSources_change')
+  }
   
   componentWillReceiveProps(nextProps) {
     if (this.state.currentName!=nextProps.name) {
@@ -37,14 +70,17 @@ export default class NetPyNEStimulationTarget extends React.Component {
   };
   
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
-    var newValue = event.target.value;
-    this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { that.renaming=false;});
-      that.renaming=true;
-    });
+    var newValue = Utils.nameValidation(event.target.value);
+    var updateCondition = this.props.renameHandler(newValue);
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationTarget");
+
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
+        Utils.renameKey('netParams.stimTargetParams', storedValue, newValue, (response, newValue) => { this.renaming=false;});
+        this.renaming=true;
+      });
+    }
   };
 
   triggerUpdate(updateMethod) {
@@ -56,7 +92,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
   handleSelection = (selection) => {
     Utils
-      .sendPythonMessage("'NetStim' == netParams.stimSourceParams['" + selection + "']['type']")
+      .evalPythonMessage("'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" + selection + "']['type']")
       .then((response) => {
         this.setState({sourceTypeNetStim: response});
       });
@@ -68,6 +104,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     };
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
@@ -78,6 +115,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   postProcessMenuItems4SynMech = (pythonData, selected) => {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         value={name}
         primaryText={name}
@@ -87,8 +125,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
   
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
   
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={icon}
@@ -97,6 +136,24 @@ export default class NetPyNEStimulationTarget extends React.Component {
   };
   
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
+
     if (this.state.sectionId == "General") {
       var content = (
         <div>
@@ -169,8 +226,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions', <CondsIcon/>)); 
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />, 'stimTargetGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions',<CondsIcon/>, 'stimTargetCondsTab')); 
     
     return (
       <div>
@@ -182,6 +239,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
         <br />
         {content}
         {extraContent}
+        {dialogPop}
       </div>
     );
   }

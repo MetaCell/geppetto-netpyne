@@ -9,6 +9,8 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
@@ -22,21 +24,43 @@ export default class NetPyNEConnectivityRule extends React.Component {
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
-      sectionId: "General"
+      sectionId: "General",
+      errorMessage: undefined,
+      errorDetails: undefined
     };
   }
 
-  handleRenameChange = (event) => {
-    var that = this;
-    var storedValue = this.props.name;
-    var newValue = event.target.value;
-    this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      // Rename the population in Python
-      Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { that.renaming = false; });
-      that.renaming = true;
-    });
+  componentDidMount(){
+    GEPPETTO.on('populations_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellType_change', () => {
+      this.forceUpdate();
+    })
+    GEPPETTO.on('cellModel_change', () => {
+      this.forceUpdate();
+    })
+  }
 
+  componentWillUnmount(){
+    GEPPETTO.off('populations_change')
+    GEPPETTO.off('cellType_change')
+    GEPPETTO.off('cellModel_change')
+  }  
+
+  handleRenameChange = (event) => {
+    var storedValue = this.props.name;
+    var newValue = Utils.nameValidation(event.target.value);
+    var updateCondition = this.props.renameHandler(newValue);
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "ConnectionRule");
+
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
+        // Rename the population in Python
+        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        this.renaming = true;
+      });
+    }
   }
 
   triggerUpdate(updateMethod) {
@@ -49,8 +73,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
@@ -62,6 +87,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
   postProcessMenuItems(pythonData, selected) {
     return pythonData.map((name) => (
       <MenuItem
+        id={name+"MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -76,10 +102,29 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
+
     if (this.state.sectionId == "General") {
       var content =
         <div>
           <TextField
+            id={"ConnectivityName"}
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
@@ -104,7 +149,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={(pythonData, selected) => {
-                return pythonData.map((name) => (<MenuItem key={name} value={name} primaryText={name} />));
+                return pythonData.map((name) => (<MenuItem id={name+"MenuItem"}key={name} value={name} primaryText={name} />));
               }}
             />
           </NetPyNEField>
@@ -150,7 +195,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={"netParams.connParams['" + this.props.name + "']['plasticity']"}
             />
           </NetPyNEField>
-
+          {dialogPop}
         </div>
     }
     else if (this.state.sectionId == "Pre Conditions") {
@@ -181,32 +226,35 @@ export default class NetPyNEConnectivityRule extends React.Component {
         </NetPyNEField>
 
         <NetPyNECoordsRange
+          id="xRangePreConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            { value: 'x', label: 'absolute' },
-            { value: 'xnorm', label: 'normalized' }
+            { value: 'x', label: 'Absolute' },
+            { value: 'xnorm', label: 'Normalized' }
           ]}
         />
 
         <NetPyNECoordsRange
+          id="yRangePreConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            { value: 'y', label: 'absolute' },
-            { value: 'ynorm', label: 'normalized' }
+            { value: 'y', label: 'Absolute' },
+            { value: 'ynorm', label: 'Normalized' }
           ]}
         />
 
         <NetPyNECoordsRange
+          id="zRangePreConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'preConds'}
           items={[
-            { value: 'z', label: 'absolute' },
-            { value: 'znorm', label: 'normalized' }
+            { value: 'z', label: 'Absolute' },
+            { value: 'znorm', label: 'Normalized' }
           ]}
         />
 
@@ -240,32 +288,35 @@ export default class NetPyNEConnectivityRule extends React.Component {
         </NetPyNEField>
 
         <NetPyNECoordsRange
+          id="xRangePostConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            { value: 'x', label: 'absolute' },
-            { value: 'xnorm', label: 'normalized' }
+            { value: 'x', label: 'Absolute' },
+            { value: 'xnorm', label: 'Normalized' }
           ]}
         />
 
         <NetPyNECoordsRange
+          id="yRangePostConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            { value: 'y', label: 'absolute' },
-            { value: 'ynorm', label: 'normalized' }
+            { value: 'y', label: 'Absolute' },
+            { value: 'ynorm', label: 'Normalized' }
           ]}
         />
 
         <NetPyNECoordsRange
+          id="zRangePostConn"
           name={this.props.name}
           model={'netParams.connParams'}
           conds={'postConds'}
           items={[
-            { value: 'z', label: 'absolute' },
-            { value: 'znorm', label: 'normalized' }
+            { value: 'z', label: 'Absolute' },
+            { value: 'znorm', label: 'Normalized' }
           ]}
         />
 
@@ -276,9 +327,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'generalConnTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left', "preCondsConnTab"));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right', 'postCondsConnTab'));
 
     return (
       <div>

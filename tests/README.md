@@ -13,6 +13,10 @@ To run the tests, navigate to geppetto-netpyne/tests folder and run the followin
 
 `casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs` 
 
+You can also get a more verbose output with the log level and verbose parameters: 
+
+`casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs --log-level=[debug|info|warning|error] --verbose`
+
 If you have an error similar to this one:
 `Gecko error: it seems /usr/bin/firefox is not compatible with SlimerJS.`
 It may be due to a new version of Firefox not supported by your current Slimer version. You have two options:

@@ -19,9 +19,24 @@ export default class NetPyNEAddNew extends React.Component {
 
   render() {
     return (
-      <FloatingActionButton id={this.props.id} mini={true} style={{ margin: 10, float: 'left' }} onClick={this.handleClick}>
+      <FloatingActionButton 
+        id={this.props.id}
+        style={styles.add}
+        onClick={this.handleClick}
+        data-tooltip="Create rule"
+        className={"actionButton smallActionButton"}
+      >
         <ContentAdd />
       </FloatingActionButton>
     );
   };
 };
+
+
+const styles = {
+  add: {
+    marginTop: "15px",
+    float: "left",
+    textAlign: 'center'
+  }
+}

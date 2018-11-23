@@ -8,6 +8,9 @@ import CardText from 'material-ui/Card';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+
 import Utils from '../../../../Utils';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -26,7 +29,9 @@ export default class NetPyNESection extends React.Component {
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
-      sectionId: "General"
+      sectionId: "General",
+      errorMessage: undefined,
+      errorDetails: undefined
     };
     this.setPage = this.setPage.bind(this);
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
@@ -39,15 +44,17 @@ export default class NetPyNESection extends React.Component {
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
-    var newValue = event.target.value;
-    this.setState({ currentName: newValue });
-    this.triggerUpdate(function () {
-      // Rename the population in Python
-      Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
-    });
+    var newValue = Utils.nameValidation(event.target.value);
+    var updateCondition = this.props.renameHandler(newValue, this.props.cellRule);
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Section");
 
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
+        // Rename the population in Python
+        Utils.renameKey("netParams.cellParams['" + this.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
+      });
+    }
   }
 
   triggerUpdate(updateMethod) {
@@ -58,9 +65,10 @@ export default class NetPyNESection extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 500);
   }
 
-  getBottomNavigationItem(index, sectionId, label, icon) {
+  getBottomNavigationItem(index, sectionId, label, icon, id) {
 
     return <BottomNavigationItem
+      id={id}
       key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
@@ -75,6 +83,7 @@ export default class NetPyNESection extends React.Component {
     if (pythonData[this.props.cellRule]!= undefined) {
       return pythonData[this.props.cellRule].map((name) => (
         <MenuItem
+          id={name+"MenuItem"}
           key={name}
           value={name}
           primaryText={name}
@@ -84,27 +93,39 @@ export default class NetPyNESection extends React.Component {
   };
       
   render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined
+      ? <Dialog
+          title={title}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {children}
+        </Dialog> 
+      : undefined
+    );
 
     var content;
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
         <div>
-      
-        <TextField
-          onChange={this.handleRenameChange}
-          value = {this.state.currentName}
-          floatingLabelText="The name of the section"
-          className={"netpyneField"}
-        />
-          <br /><br />
-          <IconButton
-            className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
-            onClick={() => that.props.selectPage("mechanisms")}
-          >
-            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
-            <span className={"gearThumbLabel"}>Mechanisms</span>
-          </IconButton>
+          <TextField
+            id={"cellParamsSectionName"}
+            onChange={this.handleRenameChange}
+            value = {this.state.currentName}
+            floatingLabelText="The name of the section"
+            className={"netpyneField"}
+          />
         </div>
       )
     }
@@ -164,9 +185,9 @@ export default class NetPyNESection extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'sectionGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Geometry', 'Geometry', 'fa-cube', 'sectionGeomTab'));
+    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Topology', 'Topology', 'fa-tree', 'sectionTopoTab'));
     
     return (
       <div>

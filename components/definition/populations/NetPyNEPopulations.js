@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -12,12 +14,16 @@ export default class NetPyNEPopulations extends React.Component {
     super(props);
     this.state = {
       drawerOpen: false,
-      selectedPopulation: undefined
+      selectedPopulation: undefined,
+      populationDeleted: undefined,
+      errorMessage: undefined,
+      errorDetails: undefined
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
     this.deletePopulation = this.deletePopulation.bind(this);
+    this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
@@ -43,26 +49,50 @@ export default class NetPyNEPopulations extends React.Component {
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   componentDidUpdate(prevProps, prevState) {
     //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newPopulationName = this.hasSelectedPopulationBeenRenamed(prevState, this.state);
-    if (newPopulationName) {
-      this.setState({ selectedPopulation: newPopulationName });
+    if (newPopulationName !== undefined) {
+      this.setState({
+        selectedPopulation: newPopulationName,
+        populationDeleted: undefined });
+    } else if((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+      // logic into this if to check if the user added a new object from the python backend and
+      // if the name convention pass the checks, differently rename this and open dialog to inform.
+      var model = this.state.value;
+      for(var m in model) {
+        if((prevState.value !== "") && (!(m in prevState.value))) {
+          var newValue = Utils.nameValidation(model[m].name);
+          if(newValue != model[m].name) {
+            newValue = Utils.getAvailableKey(model, newValue);
+            model[newValue] = model[m];
+            model[newValue].name = newValue;
+            delete model[m];
+            this.setState({ value: model,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
+                                          m + " has been renamed " + newValue},
+                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
+          }
+        }
+      }
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState) != false;
+    var itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
-    return newModel || newItemCreated || itemRenamed || selectionChanged;
+    // check if the dialog has been triggered due name convention or name collision errors.
+    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
+    return newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
   }
 
   handleNewPopulation() {
@@ -79,14 +109,15 @@ export default class NetPyNEPopulations extends React.Component {
     var newPopulation = Object.assign({ name: populationId }, value);
 
     // Create Population Client side
-    Utils.execPythonCommand('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
+    Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
 
+    
     // Update state
     model[populationId] = newPopulation;
     this.setState({
       value: model,
       selectedPopulation: populationId
-    });
+    }, ()=> GEPPETTO.trigger('populations_change'));
 
   }
 
@@ -96,16 +127,46 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   deletePopulation(name) {
-    Utils.sendPythonMessage('netpyne_geppetto.deleteParam', ["popParams['" + name + "']"]).then((response) =>{
-      var model = this.state.value;
-      delete model[name];
-      this.setState({value: model, selectedPopulation: undefined});
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then((response) =>{
+      if (response) {
+        var model = this.state.value;
+        delete model[name];
+        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> GEPPETTO.trigger('populations_change'));
+      }
     });
   }
 
-  render() {
+  handleRenameChildren(childName) {
+    childName = childName.replace(/\s*$/,"");
+    var childrenList = Object.keys(this.state.value);
+    for(var i=0 ; childrenList.length > i ; i++) {
+      if(childName === childrenList[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-    if (this.state.value != undefined && this.state.value != "") {
+  render() {
+    var actions = [
+      <RaisedButton
+        primary
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    ];
+    var title = this.state.errorMessage;
+    var children = this.state.errorDetails;
+    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
+                                                              title={title}
+                                                              open={true}
+                                                              actions={actions}
+                                                              bodyStyle={{ overflow: 'auto' }}
+                                                              style={{ whiteSpace: "pre-wrap" }}>
+                                                              {children}
+                                                            </Dialog> : undefined;
+
+    if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
       for (var m in model) {
         model[m].name = m;
@@ -119,8 +180,8 @@ export default class NetPyNEPopulations extends React.Component {
           handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
-      if (this.state.selectedPopulation && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
-        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} />;
+      if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
+        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
       }
     }
 
@@ -139,19 +200,22 @@ export default class NetPyNEPopulations extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newPopulationButton"} handleClick={this.handleNewPopulation} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNEHome
+                selection={this.state.selectedPopulation}
+                handleClick={()=> this.setState({selectedPopulation: undefined})}
+              />
+
+              <NetPyNEAddNew 
+                id={"newPopulationButton"} 
+                handleClick={this.handleNewPopulation}
+              />
+
             </div>
             <div style={{ clear: "both" }}></div>
             {populations}
           </div>
         </CardText>
+        {dialogPop}
       </Card>
 
     );

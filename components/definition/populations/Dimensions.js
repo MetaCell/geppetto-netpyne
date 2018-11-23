@@ -41,8 +41,9 @@ export default class DimensionsComponent extends Component {
 
     updateLayout() {
         let requests = this.popDimensionsOptions.map((popDimensionsOption) => {
+            //FIXME Better to wrap calls rather than directly accessing objects
             return Utils
-                .sendPythonMessage("'" + popDimensionsOption.value + "' in netParams.popParams['" + this.state.modelName + "']");
+                .evalPythonMessage("'" + popDimensionsOption.value + "' in netpyne_geppetto.netParams.popParams['" + this.state.modelName + "']");
 
         });
 
@@ -63,13 +64,14 @@ export default class DimensionsComponent extends Component {
         return (
             <div>
                 <NetPyNEField id="netParams.popParams.numCells" className={"netpyneFieldNoWidth"} noStyle>
-                    <SelectField 
+                    <SelectField
+                        id={"popParamsDimensionsSelect"}
                         value={this.state.dimension}
                         onChange={(event, index, value) => this.setState({ dimension: value })}
                     >
                         {(this.popDimensionsOptions != undefined) ?
                             this.popDimensionsOptions.map(function (popDimensionsOption) {
-                                return (<MenuItem key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
+                                return (<MenuItem id={"popParamS"+popDimensionsOption.value} key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
                             }) : null}
                     </SelectField>
                 </NetPyNEField>
@@ -77,15 +79,15 @@ export default class DimensionsComponent extends Component {
                     this.state.dimension != undefined && this.state.dimension != "" ?
                         <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
                             <PythonControlledTextField
+                                id={"popParamsDimensions"}
                                 handleChange={function (event, value) {
                                     var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
                                     // Update State
                                     this.setState({ value: newValue });
-                                    var that = this;
-                                    this.triggerUpdate(function () {
+                                    this.triggerUpdate(() => {
                                         // Set Population Dimension Python Side
                                         Utils
-                                            .sendPythonMessage('netParams.popParams.setParam', [that.props.modelName, that.props.dimensionType, newValue])
+                                            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
                                             .then(function (response) {
                                                 console.log("Setting Pop Dimensions Parameters");
                                                 console.log("Response", response);
@@ -95,7 +97,6 @@ export default class DimensionsComponent extends Component {
                                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                                 modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
-                                id={"dimensions"}
                             />
                         </NetPyNEField>
                         : null

@@ -3,7 +3,7 @@ import Tree from '../../../../js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import { changeNodeAtPath, walk, addNodeUnderParent } from 'react-sortable-tree';
+import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from 'material-ui/Dialog';
 
 export default class FileBrowser extends React.Component {
@@ -19,9 +19,12 @@ export default class FileBrowser extends React.Component {
         if (rowInfo != undefined) {
             var path = rowInfo.node.path;
         }
+        else{
+            var path = ""
+        }
 
         Utils
-            .sendPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs])
+            .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
             .then((dirList) => {
                 if (treeData != [] && treeData.length > 0) {
                     rowInfo.node.children = dirList;
@@ -62,13 +65,14 @@ export default class FileBrowser extends React.Component {
         const actions = [
             <FlatButton
                 label={'CANCEL'}
-                onTouchTap={(event) => this.props.onRequestClose()}
+                onClick={(event) => this.props.onRequestClose()}
                 style={{ marginRight: 16 }}
             />,
             <RaisedButton
+								id="browserAccept"
                 primary
                 label={'SELECT'}
-                onTouchTap={(event) => this.props.onRequestClose(this.state.selection)}
+                onClick={(event) => this.props.onRequestClose(this.state.selection)}
                 disabled={!this.state.selection}
             />
         ];
@@ -102,6 +106,10 @@ export default class FileBrowser extends React.Component {
     }
 };
 
+FileBrowser.defaultProps = {
+    exploreOnlyDirs: false,
+    filterFiles: false
+};
 
 
 

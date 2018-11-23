@@ -12,10 +12,9 @@ export default class ListComponent extends Component {
         super(props);
         this.state = {
             model: props.model,
-            children: (props.realType=='dict' || props.realType=='dict(dict())')?{}:[],
+            children: (props.realType == 'dict' || props.realType == 'dict(dict())') ? {} : [],
             newItemValue: ''
         };
-
         this.addChild = this.addChild.bind(this);
         this.handleNewItemChange = this.handleNewItemChange.bind(this);
     }
@@ -34,36 +33,36 @@ export default class ListComponent extends Component {
                 });
                 break;
             case 'dict':
-                var valid = (value.match(/:/g)||[]).length==1 && !value.startsWith(':') && !value.endsWith(':');
+                var valid = (value.match(/:/g) || []).length == 1 && !value.startsWith(':') && !value.endsWith(':');
                 break;
             case 'dict(dict())':
                 var valid = true;
-                var value = this.state.newItemValue.replace(/[ "']/g,'');
-                
-                if ((value.match(/;/g)||[]).length!=0) {
+                var value = this.state.newItemValue.replace(/[ "']/g, '');
+
+                if ((value.match(/;/g) || []).length != 0) {
                     valid = false;
                 }
                 else {
-                    if ((value.match(/{/g)||[]).length!=1 || (value.match(/}/g)||[]).length!=1) {
+                    if ((value.match(/{/g) || []).length != 1 || (value.match(/}/g) || []).length != 1) {
                         valid = false;
                     }
                     else {
-                        if (value.indexOf('{')>value.indexOf('}') || !value.endsWith('}')) {
+                        if (value.indexOf('{') > value.indexOf('}') || !value.endsWith('}')) {
                             valid = false;
                         }
                         else {
                             var subDict = value.match(/\{(.*?)\}/)[1];
-                            if ( (subDict.match(/:/g)||[]).length-1!=(subDict.match(/,/g)||[]).length ) {
+                            if ((subDict.match(/:/g) || []).length - 1 != (subDict.match(/,/g) || []).length)  {
                                 valid = false;
                             }
                             else {
                                 subDict.split(',').forEach(element => {
-                                    if ((element.match(/:/g)||[]).length!=1 || element.startsWith(':') || element.endsWith(':')) {
+                                    if ((element.match(/:/g) || []).length != 1 || element.startsWith(':') || element.endsWith(':')) {
                                         valid = false;
                                     }
                                 });
                                 var reminder = value.replace('{' + subDict + '}', '');
-                                if ((reminder.match(/:/g)||[]).length!=1 || !reminder.endsWith(':')) {
+                                if ((reminder.match(/:/g) || []).length != 1 || !reminder.endsWith(':')) {
                                     valid = false;
                                 }
                             }
@@ -148,8 +147,8 @@ export default class ListComponent extends Component {
 
     removeChild(childIndex) {
         var children = this.state.children;
-        if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
-            
+        if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
+
             delete children[childIndex];
         }
         else {
@@ -163,10 +162,10 @@ export default class ListComponent extends Component {
         // Update State
         this.setState({ children: children, newItemValue: '' });
 
-        if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
+        if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
             var newValue = children;
         }
-        else{
+        else {
             var newValue = this.state.children.map((child, i) => {
                 switch (this.props.realType) {
                     case 'list(float)':
@@ -182,7 +181,7 @@ export default class ListComponent extends Component {
                 return childConverted;
             })
         }
-        
+
         if (newValue != undefined && this.state.value != newValue && this.props.onChange != undefined) {
             this.props.onChange(null, null, newValue);
         }
@@ -190,18 +189,18 @@ export default class ListComponent extends Component {
 
     convertFromPython(prevProps, prevState, value) {
         if (value != undefined && prevProps.value != value && value != '') {
-            if (this.props.realType=='dict' || this.props.realType=='dict(dict())') {
+            if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
                 return (typeof value == 'string') ? JSON.parse(value) : value;
             }
             else {
-                if ( !Array.isArray(value) ){
+                if (!Array.isArray(value)) {
                     value = [value];
                 }
                 return value.map((child, i) => {
                     return (typeof child == 'string') ? child : JSON.stringify(child);
                 });
             }
-            
+
         }
     }
 
@@ -213,26 +212,27 @@ export default class ListComponent extends Component {
     }
 
     render() {
-        var childrenWithExtraProp = Object.keys(this.state.children).map((key) => {
+        var childrenWithExtraProp = Object.keys(this.state.children).map((key, index) => {
             key = key.toString();
-            if (this.props.realType=='dict') {
+            if (this.props.realType == 'dict') {
                 var value = key + ' : ' + JSON.stringify(this.state.children[key]);
             }
-            else if (this.props.realType=='dict(dict())') {
-                var value =  key + ':   ' + JSON.stringify(this.state.children[key]).replace(/"/g, '').replace(/,/g, ', ').replace(/:/g, ': ');
+            else if (this.props.realType == 'dict(dict())') {
+                var value = key + ':   ' + JSON.stringify(this.state.children[key]).replace(/["']/g, '').replace(/[:]/g, ': ').replace(/[,]/g, ', ');
             }
             else {
                 var value = this.state.children[key];
             }
-            return <div key={key} style={this.props.realType!='dict(dict())'?{ marginRight: 30, float: 'left' }:{ marginRight: 30}}>
+            return <div key={key} style={this.props.realType != 'dict(dict())' ? { marginRight: 30, float: 'left' } : { marginRight: 30 }}>
                 <TextField
                     value={value}
-                    id={key}
-                    style={{ width: this.props.realType=='dict(dict())'?400:100}}
-                    inputStyle={{color:'rgb(2, 188, 212)'}}
+                    id={this.props.id + index}
+                    style={{ width: value.length * 10 }}
+                    inputStyle={{ color: 'rgb(2, 188, 212)' }}
                     disabled
                 />
                 <IconButton
+                    id={this.props.id + index + "RemoveButton"}
                     iconStyle={{ width: 7, height: 7 }}
                     className={'listButtonSmall'}
                     onClick={() => this.removeChild(key)}
@@ -246,14 +246,17 @@ export default class ListComponent extends Component {
         return (
             <div>
                 <TextField
+                    id={this.props.id}
                     floatingLabelText={this.props.floatingLabelText ? 'Add new ' + this.props.floatingLabelText : 'Add new item'}
                     onChange={this.handleNewItemChange}
+                    onKeyPress={(e) => e.key === 'Enter' ? this.addChild() : null }
                     value={this.state.newItemValue}
                     style={{ width: '100%' }}
                     errorText={this.state.newItemErrorText}
                 />
                 {!this.state.newItemErrorText &&
                     <IconButton
+                        id={this.props.id + "AddButton"}
                         iconStyle={{ width: 25, height: 25 }}
                         className={'listButtonLarge'}
                         onClick={this.addChild}
@@ -264,7 +267,7 @@ export default class ListComponent extends Component {
                     </IconButton>
                 }
 
-                {childrenWithExtraProp.length > 0 && <div style={{marginTop:'15px', marginLeft: '50px', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}
+                {childrenWithExtraProp.length > 0 && <div style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}
             </div>
         )
     }

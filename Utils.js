@@ -1,14 +1,7 @@
-import GeppettoJupyterUtils from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import React from 'react';
 
 const Utils = {
-
-    sendPythonMessage: function (command, parameters) {
-        return GeppettoJupyterUtils.sendPythonMessage(command, parameters);
-    },
-
-    execPythonCommand: function (command) {
-        return GeppettoJupyterUtils.execPythonCommand(command);
-    },
 
     getAvailableKey: function (model, prefix) {
         if (model == undefined) {
@@ -18,7 +11,7 @@ const Utils = {
         var id = prefix;
         var i = 2;
         while (model[id] != undefined) {
-            id = prefix + " " + i++;
+            id = prefix + i++;
         }
         return id;
     },
@@ -112,20 +105,72 @@ const Utils = {
     },
 
     renameKey(path, oldValue, newValue, callback) {
-        this.sendPythonMessage('netpyne_geppetto.rename', [path, oldValue, newValue])
+        this.execPythonMessage('netpyne_geppetto.rename("' + path + '","' + oldValue + '","' + newValue + '")')
             .then((response) => {
                 callback(response, newValue);
             })
     },
 
-    pauseSync(callback) {
-        this.sendPythonMessage('timer.pause', []).then(callback());
+    nameValidation(name) {
+        // Remove spaces
+        if((/\s/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
+        } 
+        // Remove number at the beginning
+        else if((/^[0-9]/.test(name))) {
+            name = name.replace(/\s+/g, "").replace(/^\d+/g, "");
+        }
+        return name;
+
+    },
+    
+    //FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
+    convertToJSON(data){
+        if (typeof data === 'string' || data instanceof String){
+            return JSON.parse(data.replace(/\\\\/g, '\\').replace(/\\'/g, '\''))
+        }
+        return data
     },
 
-    resumeSync(callback) {
-        this.sendPythonMessage('timer.resume', []).then(callback());
-    }
+    getErrorResponse(data){
+        var parsedData = this.convertToJSON(data)
+        if (parsedData.hasOwnProperty("type") && parsedData['type'] == 'ERROR'){
+            return {'message': parsedData['message'], 'details' : parsedData['details']}
+        }
+        return null;
+    },
 
+    parsePythonException(exception){
+        return <pre dangerouslySetInnerHTML={{__html: IPython.utils.fixConsole(exception)}}></pre>
+    },
+
+    handleUpdate(updateCondition, newValue, originalValue, context, componentName) {
+        if((updateCondition) && (newValue != originalValue)) {
+            // if the new value has been changed by the function Utils.nameValidation means that the name convention
+            // has not been respected, so we need to open the dialog and inform the user.
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in "+componentName+" names."});
+            return true;
+        } else if ((updateCondition) && (newValue == originalValue)){
+            context.setState({ currentName: newValue });
+            return true;
+        } else if (!(updateCondition) && (newValue == originalValue)) {
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Name collision detected, the name "+newValue+
+                                        " is already used in this model, please pick another name."});
+            return false;
+        } else if (!(updateCondition) && (newValue != originalValue)) {
+            context.setState({ currentName: newValue,
+                            errorMessage: "Error",
+                            errorDetails: "Leading digits or whitespaces are not allowed in "+componentName+" names."});
+            return false;
+        }
+    },
+
+    execPythonMessage: execPythonMessage,
+    evalPythonMessage: evalPythonMessage
 }
 
 export default Utils
