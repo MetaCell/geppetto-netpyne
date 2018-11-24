@@ -143,7 +143,8 @@ export default class NetPyNE extends React.Component {
 		if (this.state.model == null) {
 			return <div></div>
 		}
-		else {
+		else 
+		{
 			if (this.state.value=='define'){
 				var content =  <div>
 					<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />

@@ -98,15 +98,16 @@ export default class NetPyNEToolBar extends React.Component {
         onRequestChange={(open) => this.setState({ open })}
       >
         <div id="logoBackground">
-          <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 8, width: 205 }} src={NetPyNElogo} />
+          <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 0, width: 190 }} src={NetPyNElogo} />
+          <p style={{ fontSize:10, textAlign:"right", marginRight: 3, marginTop: -10, marginBottom: 0, color:"#543a73"}}>GUI Version 0.5</p>
         </div>
         <Divider />
-        <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon className='fa fa-plus' />} />
-        <MenuItem id="appBarOpen" primaryText="Open" onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
-        <MenuItem id="appBarSave" primaryText="Save" onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
-        <MenuItem id="appBarImportHLS" primaryText="Import" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />
-        <MenuItem id="appBarExportHLS" primaryText="Export" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
-        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell Template" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon />} />
+        <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-plus' />} />
+        <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-folder-open-o' />} />
+        <MenuItem id="appBarSave" primaryText="Save As..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-download' />} />
+        <MenuItem id="appBarImportHLS" primaryText="Import..." onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon color={'#543a73'} />} />
+        <MenuItem id="appBarExportHLS" primaryText="Export..." onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon color={'#543a73'} />} />
+        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell Template..." onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon color={'#543a73'} />} />
       </Drawer>
       {content}
     </div>
