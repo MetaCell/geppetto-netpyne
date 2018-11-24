@@ -228,7 +228,7 @@ export default class ListComponent extends Component {
                     value={value}
                     id={this.props.id + index}
                     style={{ width: value.length * 10 }}
-                    inputStyle={{ color: 'rgb(2, 188, 212)' }}
+                    inputStyle={{ color: 'rgb(84, 58, 115)' }}
                     disabled
                 />
                 <IconButton

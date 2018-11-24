@@ -87,7 +87,7 @@ export default class ImportExportHLS extends React.Component {
                             style={{width:'48%'}}
                             value={this.state.netParamsModuleName}
                             onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')} 
-                            floatingLabelText="NetParams file:"
+                            floatingLabelText="NetParams file: (click to select)"
                             underlineStyle={{borderWidth:'1px'}}
                             errorText={this.state.netParamsPath?'path: '+this.state.netParamsPath:''} 
                             errorStyle={{color: grey400}}
@@ -99,7 +99,7 @@ export default class ImportExportHLS extends React.Component {
                             style={{marginTop: 15, width:'48%'}}
                             value={this.state.simConfigModuleName} 
                             onClick={() => this.showExplorerDialog('simConfigPath', false, '.py')} 
-                            floatingLabelText="SimConfig file:"
+                            floatingLabelText="SimConfig file: (click to select)"
                             underlineStyle={{borderWidth:'1px'}}
                             errorText={this.state.simConfigPath?'path: '+this.state.simConfigPath:''} 
                             errorStyle={{color: grey400}}
@@ -116,8 +116,8 @@ export default class ImportExportHLS extends React.Component {
                                 value={this.state.loadMod}
                                 onChange={(event, index, value) => this.setState({loadMod: value})}
                             >
-                                <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-                                <MenuItem id="appBarImportRequiresModNo" value={false} primaryText="no, this model only requires NEURON build-in mods." />
+                                <MenuItem value={true} primaryText="Yes, this model requires custom mod files" />
+                                <MenuItem id="appBarImportRequiresModNo" value={false} primaryText="No, this model only requires NEURON built-in mod files" />
                             </SelectField>
                             <TextField 
                                 className="netpyneFieldNoWidth" 
@@ -147,7 +147,7 @@ export default class ImportExportHLS extends React.Component {
                     var command = 'netpyne_geppetto.importModel';
                     var message = 'IMPORTING MODEL';
                     var buttonLabel = 'Import'
-                    var title = 'Import python file'
+                    var title = 'Import from Python scripts'
                 break;
             case 'EXPORT':
                 var content = 
@@ -161,7 +161,7 @@ export default class ImportExportHLS extends React.Component {
                 var command = 'netpyne_geppetto.exportHLS';
                 var message = 'EXPORTING MODEL';
                 var buttonLabel = 'Export'
-                var title = 'Export as python file'
+                var title = 'Export as Python script'
                 break
         }
         return (

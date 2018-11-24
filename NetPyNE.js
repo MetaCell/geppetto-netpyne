@@ -157,7 +157,7 @@ export default class NetPyNE extends React.Component {
 				</div>
 			}
 			else {
-				var content =  <NetPyNEInstantiated ref={"simulate"} model={this.state.model} page={"simulate"} />
+				var content =  <NetPyNEInstantiated key={this.state.freezeInstance ? "FIXME" : "PLEASE"} ref={"simulate"} model={this.state.model} page={"simulate"} />
 			}
 			
 			return (

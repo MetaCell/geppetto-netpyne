@@ -50,8 +50,8 @@ export default class NetPyNETabs extends React.Component {
     render() {
 
         return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-            <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={'5e4081'} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
-            <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={'5e4081'} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
+            <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
+            <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
 								id="transit"
                 value={this.state.simulateTabLabel}

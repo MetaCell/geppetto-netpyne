@@ -102,11 +102,11 @@ export default class NetPyNEToolBar extends React.Component {
         </div>
         <Divider />
         <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon className='fa fa-plus' />} />
-        <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
-        <MenuItem id="appBarSave" primaryText="Save..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
+        <MenuItem id="appBarOpen" primaryText="Open" onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
+        <MenuItem id="appBarSave" primaryText="Save" onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
         <MenuItem id="appBarImportHLS" primaryText="Import" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />
         <MenuItem id="appBarExportHLS" primaryText="Export" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
-        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon />} />
+        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell Template" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon />} />
       </Drawer>
       {content}
     </div>
