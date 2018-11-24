@@ -86,7 +86,7 @@ export default class NetPyNEToolBar extends React.Component {
         tooltip={'File options'}
         style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden' }}
         iconStyle={{ color: '#ffffff', marginTop: -4, marginLeft: -4 }}
-        hoveredStyle={{ backgroundColor: '#26C6DA' }}
+        hoveredStyle={{ backgroundColor: '#634587' }}
         onClick={() => this.setState({ open: !this.state.open })}
       >
         <NavigationMenu />
@@ -97,14 +97,17 @@ export default class NetPyNEToolBar extends React.Component {
         open={this.state.open}
         onRequestChange={(open) => this.setState({ open })}
       >
-        <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 8, width: 205 }} src={NetPyNElogo} />
+        <div id="logoBackground">
+          <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 0, width: 190 }} src={NetPyNElogo} />
+          <p style={{ fontSize:10, textAlign:"right", marginRight: 3, marginTop: -10, marginBottom: 0, color:"#543a73"}}>GUI Version 0.5</p>
+        </div>
         <Divider />
-        <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon className='fa fa-plus' />} />
-        <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon className='fa fa-folder-open-o' />} />
-        <MenuItem id="appBarSave" primaryText="Save..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon className='fa fa-download' />} />
-        <MenuItem id="appBarImportHLS" primaryText="Import" onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon />} />
-        <MenuItem id="appBarExportHLS" primaryText="Export" onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon />} />
-        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell" onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon />} />
+        <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-plus' />} />
+        <MenuItem id="appBarOpen" primaryText="Open..." onClick={() => this.handleMenuItemClick('Load')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-folder-open-o' />} />
+        <MenuItem id="appBarSave" primaryText="Save As..." onClick={() => this.handleMenuItemClick('Save')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-download' />} />
+        <MenuItem id="appBarImportHLS" primaryText="Import..." onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon color={'#543a73'} />} />
+        <MenuItem id="appBarExportHLS" primaryText="Export..." onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon color={'#543a73'} />} />
+        <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell Template..." onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon color={'#543a73'} />} />
       </Drawer>
       {content}
     </div>

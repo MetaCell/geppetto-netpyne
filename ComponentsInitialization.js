@@ -2,6 +2,7 @@ define(function (require) {
     return function (GEPPETTO) {
         var ReactDOM = require('react-dom');
         var React = require('react');
+        var getMuiTheme = require('material-ui/styles/getMuiTheme').default;
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
         var NetPyNE = require('./NetPyNE').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
@@ -17,10 +18,20 @@ define(function (require) {
 
         injectTapEventPlugin();
 
+        const customTheme = {
+            palette: {
+                primary1Color: '#543a73',
+                primary2Color: '#eb557a',
+                primary3Color: '#ebd07a'
+            }
+        };
+        
+        const theme = getMuiTheme(customTheme);
+
         function App(data = {}) {
             return (
                 <div>
-                    <MuiThemeProvider>
+                    <MuiThemeProvider muiTheme={theme}>
                         <NetPyNE {...data}></NetPyNE>
                     </MuiThemeProvider>
 
@@ -41,7 +52,6 @@ define(function (require) {
         GEPPETTO.G.debug(true); //Change this to true to see messages on the Geppetto console while loading
         GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
-
 
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
             Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
