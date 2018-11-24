@@ -9,10 +9,10 @@ import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
 
 const loadOptions = [
-    {label: 'High level specs.', label2: 'netParams', state: 'loadNetParams'},
-    {label: 'High level specs.', label2: 'simConfig', state: 'loadSimCfg'},
-    {label: 'Cells', label2: 'Instanciated Network', state: 'loadNet'},
-    {label: 'Data', label2: 'Spikes, traces, etc.', state: 'loadSimData'}
+    {label: 'High-level Network Parameters (netParams)', label2: 'Cell rules, connectivity rules, etc', state: 'loadNetParams'},
+    {label: 'Simulation Configuration (simConfig)', label2: 'duration, recorded variables, etc', state: 'loadSimCfg'},
+    {label: 'Instantiated Network', label2: 'All cells, connections, etc', state: 'loadNet'},
+    {label: 'Simulation Data', label2: 'Spikes, traces, etc', state: 'loadSimData'}
 ]
 
 export default class LoadFile extends React.Component {
@@ -102,7 +102,7 @@ export default class LoadFile extends React.Component {
             errorStyle={{color: grey400}}
           />
           <List> 
-            {loadOptions.map((loadOption, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right'}}
+            {loadOptions.map((loadOption, index) => {return<ListItem  style={{height: 50, width:'49%', float:index%2==0?'left':'right', marginTop: index > 1 ? "20px" : "-10px"}}
               key={index}
               leftCheckbox= {<Checkbox onCheck={() => this.setState(({[loadOption.state]: oldState, ...others}) => {return {[loadOption.state]: !oldState}})} checked={this.state[loadOption.state]} />}
               primaryText={loadOption.label}
@@ -120,8 +120,8 @@ export default class LoadFile extends React.Component {
               value={this.state.areModFieldsRequired}
               onChange={(event, index, value) => this.setState({areModFieldsRequired: value})}
             >
-              <MenuItem value={true} primaryText="yes, this model requires custom mods." />
-              <MenuItem id="appBarLoadRequiresModNo" value={false} primaryText="no, only NEURON build-in mods." />
+              <MenuItem value={true} primaryText="Yes, this model requires custom mod files" />
+              <MenuItem id="appBarLoadRequiresModNo" value={false} primaryText="No, this model only requires NEURON built-in mod files" />
             </SelectField>
             <TextField 
               readOnly

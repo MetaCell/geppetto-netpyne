@@ -3,7 +3,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import FlatButton from 'material-ui/FlatButton';
-import { cyan500, cyan400 } from 'material-ui/styles/colors';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 
 
@@ -41,9 +40,9 @@ export default class NetPyNETabs extends React.Component {
     }
 
     getBackgroundStyle(label) {
-        var color = cyan500;
+        var color = '#543a73';
         if (label == this.state.label || (label == 'simulate' && this.state.transitionOptionsHovered)) {
-            color = cyan400;
+            color = '#634587';
         }
         return color;
     }
@@ -51,8 +50,8 @@ export default class NetPyNETabs extends React.Component {
     render() {
 
         return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-            <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={cyan400} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
-            <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={cyan400} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
+            <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
+            <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
             <IconMenu
 								id="transit"
                 value={this.state.simulateTabLabel}
