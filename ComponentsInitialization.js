@@ -50,7 +50,7 @@ define(function (require) {
 
         GEPPETTO.G.setIdleTimeOut(-1);
         GEPPETTO.G.debug(true); //Change this to true to see messages on the Geppetto console while loading
-        GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
+        GEPPETTO.Resources.COLORS.DEFAULT = "#6f54aa";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
