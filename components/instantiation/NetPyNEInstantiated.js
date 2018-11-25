@@ -193,7 +193,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     ref={"canvas"}
                     style={{ height: '100%', width: '100%' }}
                 />
-                <div id="controlpanel" style={{top: 10 }}>
+                <div id="controlpanel" style={{top: 0 }}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}
