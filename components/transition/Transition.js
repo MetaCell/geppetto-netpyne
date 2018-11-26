@@ -133,7 +133,7 @@ export default class Transition extends React.Component {
                 </IconButton>
             )
             var refreshSimulationButton = (
-                <IconButton iconStyle={{color: pink400}} id={"launchSimulationButton"} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 110, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"simulate"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginTop: -38, marginRight:10}}>
+                <IconButton iconStyle={{color: pink400}} id={"launchSimulationButton"} key={"refreshSimulationButton"} onClick={()=>this.setState({openDialog: true})} style={{position: 'absolute', right: 30, top: 110, width:'24px', height:'24px'}} tooltip={this.props.freezeSimulation?"You have already simulated your network":"Simulate your network"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{marginTop: -38, marginRight:10}}>
                     <RocketIcon />
                 </IconButton>    
             )

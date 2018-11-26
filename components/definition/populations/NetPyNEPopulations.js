@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -75,9 +75,7 @@ export default class NetPyNEPopulations extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
           }
         }
       }
@@ -113,12 +111,13 @@ export default class NetPyNEPopulations extends React.Component {
     // Create Population Client side
     Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
 
+    
     // Update state
     model[populationId] = newPopulation;
     this.setState({
       value: model,
       selectedPopulation: populationId
-    });
+    }, ()=> GEPPETTO.trigger('populations_change'));
 
   }
 
@@ -128,11 +127,12 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   deletePopulation(name) {
-    var parameter = "popParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
-      var model = this.state.value;
-      delete model[name];
-      this.setState({value: model, selectedPopulation: undefined, populationDeleted: name});
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then((response) =>{
+      if (response) {
+        var model = this.state.value;
+        delete model[name];
+        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> GEPPETTO.trigger('populations_change'));
+      }
     });
   }
 
@@ -200,14 +200,16 @@ export default class NetPyNEPopulations extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newPopulationButton"} handleClick={this.handleNewPopulation} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNEHome
+                selection={this.state.selectedPopulation}
+                handleClick={()=> this.setState({selectedPopulation: undefined})}
+              />
+
+              <NetPyNEAddNew 
+                id={"newPopulationButton"} 
+                handleClick={this.handleNewPopulation}
+              />
+
             </div>
             <div style={{ clear: "both" }}></div>
             {populations}

@@ -15,7 +15,6 @@ export default class ListComponent extends Component {
             children: (props.realType == 'dict' || props.realType == 'dict(dict())') ? {} : [],
             newItemValue: ''
         };
-
         this.addChild = this.addChild.bind(this);
         this.handleNewItemChange = this.handleNewItemChange.bind(this);
     }
@@ -229,7 +228,7 @@ export default class ListComponent extends Component {
                     value={value}
                     id={this.props.id + index}
                     style={{ width: value.length * 10 }}
-                    inputStyle={{ color: 'rgb(2, 188, 212)' }}
+                    inputStyle={{ color: 'rgb(84, 58, 115)' }}
                     disabled
                 />
                 <IconButton

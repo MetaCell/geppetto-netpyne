@@ -16,38 +16,63 @@ export default class NetPyNECoordsRange extends Component {
     this.state = {
       rangeType: undefined,
     };
+
+    this._isMounted = false;
   };
- 
+
+  triggerUpdate(updateMethod) {
+    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+    if (this.updateTimer != undefined) {
+      clearTimeout(this.updateTimer);
+    }
+    this.updateTimer = setTimeout(updateMethod, 1000);
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.name != prevProps.name || this.props.conds!=prevProps.conds) {
+    if (this.props.name != prevProps.name)  {
+      this.triggerUpdate(() => {
+        var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds!=undefined)?"['" + this.props.conds + "']" : "");
+        Utils
+          .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
+          .then((response) => {
+            if (response[0] && this._isMounted === true) {
+              this.setState({rangeType: this.props.items[0].value});
+            }
+            else if (response[1] && this._isMounted === true){
+              this.setState({rangeType: this.props.items[1].value});
+            }
+            else if (this._isMounted === true) {
+              this.setState({rangeType: undefined});
+            }
+        });
+      });
+    } else if (this.props.conds!=prevProps.conds) {
       this.updateLayout();
     };
   };
- 
+
   componentDidMount() {
+    this._isMounted = true;
     this.updateLayout();
   };
 
   updateLayout() {
-    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']";
-    if (this.props.conds!=undefined) {
-      message = message + "['" + this.props.conds + "']";
-    };
+    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds!=undefined)?"['" + this.props.conds + "']":"");
     Utils
       .evalPythonMessage("[key in "+message+" for key in ['"+this.props.items[0].value+"', '"+this.props.items[1].value+"']]")
       .then((response) => {
-        if (response[0]) {
+        if (response[0] && this._isMounted === true) {
           this.setState({rangeType: this.props.items[0].value});
         }
-        else if (response[1]){
+        else if (response[1] && this._isMounted === true){
           this.setState({rangeType: this.props.items[1].value});
         }
-        else {
+        else if (this._isMounted === true) {
           this.setState({rangeType: undefined});
         }
     });
   };
-  
+
   createMenuItems = () => {
     return this.props.items.map((obj) => (
       <MenuItem
@@ -58,7 +83,11 @@ export default class NetPyNECoordsRange extends Component {
       />
     ));
   };
-   
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
     if (this.props.conds!=undefined) {
       var meta = this.props.model + "." + this.props.conds + "." + this.props.items[0].value;
@@ -86,7 +115,7 @@ export default class NetPyNECoordsRange extends Component {
             <PythonControlledAdapterComponent
               model={path}
               convertToPython={(state) => {
-                if (!state[state.lastUpdated].toString().endsWith(".") && 
+                if (!state[state.lastUpdated].toString().endsWith(".") &&
                 ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
                   return [parseFloat(state[min]), parseFloat(state[max])];
                 }}

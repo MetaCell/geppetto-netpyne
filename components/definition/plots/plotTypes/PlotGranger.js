@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import TimeRange from '../TimeRange'
-import NetPyNEInclude from '../NetPyNEInclude';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -21,19 +20,13 @@ export default class PlotGranger extends React.Component {
     var tags = "simConfig.analysis['granger']"
     var content = (
       <div>
-        <NetPyNEInclude
-          id={"simConfig.analysis.granger.cells1"}
-          model={tags+ "['cells1']"} 
-          defaultOptions={['all', 'allCells', 'allNetStims']}
-          initialValue={'all'}
-        />
+        <NetPyNEField id="simConfig.analysis.granger.cells1" className="listStyle" >
+          <PythonControlledListComponent model={tags + "['cells1']"} />
+        </NetPyNEField>
         
-        <NetPyNEInclude
-          id={"simConfig.analysis.granger.cells2"}
-          model={tags+ "['cells2']"} 
-          defaultOptions={['all', 'allCells', 'allNetStims']}
-          initialValue={'all'}
-        />
+        <NetPyNEField id="simConfig.analysis.granger.cells2" className="listStyle" >
+          <PythonControlledListComponent model={tags + "['cells2']"} />
+        </NetPyNEField>
         
         <NetPyNEField id="simConfig.analysis.granger.spks1" className="listStyle" >
           <PythonControlledListComponent model={tags + "['spks1']"} />

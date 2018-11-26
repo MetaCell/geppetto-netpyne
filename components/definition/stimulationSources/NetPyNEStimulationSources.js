@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+
 import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationSource from './NetPyNEStimulationSource';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
-export default class NetPyNEStimulationSources extends React.Component {
+export default class NetPyNEStimulationSources extends Component {
 
   constructor(props) {
     super(props);
@@ -43,7 +44,7 @@ export default class NetPyNEStimulationSources extends React.Component {
     this.setState({
       value: model,
       selectedStimulationSource: StimulationSourceId
-    });
+    }, ()=> GEPPETTO.trigger('stimSources_change'));
   };
 
   hasSelectedStimulationSourceBeenRenamed(prevState, currentState) {
@@ -88,9 +89,7 @@ export default class NetPyNEStimulationSources extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => GEPPETTO.trigger('stimSources_change')));
           }
         }
       }
@@ -111,11 +110,10 @@ export default class NetPyNEStimulationSources extends React.Component {
   };
 
   deleteStimulationSource(name) {
-    var parameter = "stimSourceParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedStimulationSource: undefined, deletedStimulationSource: name});
+      this.setState({value: model, selectedStimulationSource: undefined, deletedStimulationSource: name}, ()=> GEPPETTO.trigger('stimSources_change'));
     });
   }
 
@@ -172,14 +170,14 @@ export default class NetPyNEStimulationSources extends React.Component {
         </div>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
-            <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-              iconButtonElement={
-                <NetPyNEAddNew id={"newStimulationSourceButton"} handleClick={this.handleNewStimulationSource} />
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-            </IconMenu>
+            <NetPyNEHome
+              selection={this.state.selectedStimulationSource}
+              handleClick={()=> this.setState({selectedStimulationSource: undefined})}
+            />
+            <NetPyNEAddNew 
+              id={"newStimulationSourceButton"} 
+              handleClick={this.handleNewStimulationSource}
+            />
           </div>
           <div style={{ clear: "both" }}></div>
           {StimulationSources}

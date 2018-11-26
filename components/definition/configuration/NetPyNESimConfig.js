@@ -145,6 +145,21 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledTextField model={"simConfig.backupCfgFile"} />
             </NetPyNEField>
 
+          </div>
+
+          <div style={{ float: 'right', width: '45%', marginTop:50, marginLeft:50}}>
+          <NetPyNEField id="simConfig.saveJson" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.saveJson"} />
+            </NetPyNEField>
+            
+            <NetPyNEField id="simConfig.savePickle" className={"netpyneCheckbox"}>
+              <PythonControlledCheckbox model={"simConfig.savePickle"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="simConfig.saveMat" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.saveMat"} />
+            </NetPyNEField>
+
             <NetPyNEField id="simConfig.saveCellSecs" className={"netpyneCheckbox "}>
               <PythonControlledCheckbox model={"simConfig.saveCellSecs"} />
             </NetPyNEField>
@@ -156,22 +171,8 @@ export default class NetPyNESimConfig extends React.Component {
             <NetPyNEField id="simConfig.timestampFilename" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.timestampFilename"} />
             </NetPyNEField>
-          </div>
 
-          <div style={{ float: 'right', width: '45%', marginTop:50, marginLeft:50}}>
-            <NetPyNEField id="simConfig.savePickle" className={"netpyneCheckbox"}>
-              <PythonControlledCheckbox model={"simConfig.savePickle"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveJson" className={"netpyneCheckbox"} >
-              <PythonControlledCheckbox model={"simConfig.saveJson"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveMat" className={"netpyneCheckbox"} >
-              <PythonControlledCheckbox model={"simConfig.saveMat"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveHDF5" className={"netpyneCheckbox"} >
+            {/* <NetPyNEField id="simConfig.saveHDF5" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveHDF5"} />
             </NetPyNEField>
 
@@ -185,7 +186,7 @@ export default class NetPyNESimConfig extends React.Component {
 
             <NetPyNEField id="simConfig.saveCSV" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveCSV"} />
-            </NetPyNEField>
+            </NetPyNEField> */}
 
             <NetPyNEField id="simConfig.saveTiming" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveTiming"} />

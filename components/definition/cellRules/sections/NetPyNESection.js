@@ -44,30 +44,16 @@ export default class NetPyNESection extends React.Component {
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue, this.props.cellRule);
-    if(newValue != event.target.value) {
-      // if the new value has been changed by the function Utils.nameValidation means that the name convention
-      // has not been respected, so we need to open the dialog and inform the user.
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Leading digits or whitespaces are not allowed in Section names."});
-    } else {
-      this.setState({ currentName: newValue });
-    }
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Section");
 
-    if(updateCondition) {
-      this.triggerUpdate(function () {
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey("netParams.cellParams['" + that.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
+        Utils.renameKey("netParams.cellParams['" + this.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
       });
-    } else if(!(updateCondition) && !(newValue != event.target.value)) {
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Name collision detected, the name "+newValue+
-                                    " is already used in this model, please pick another name."});
     }
   }
 
@@ -116,21 +102,23 @@ export default class NetPyNESection extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined
+      ? <Dialog
+          title={title}
+          open={true}
+          actions={actions}
+          bodyStyle={{ overflow: 'auto' }}
+          style={{ whiteSpace: "pre-wrap" }}>
+          {children}
+        </Dialog> 
+      : undefined
+    );
 
     var content;
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
         <div>
-      
           <TextField
             id={"cellParamsSectionName"}
             onChange={this.handleRenameChange}
@@ -138,16 +126,6 @@ export default class NetPyNESection extends React.Component {
             floatingLabelText="The name of the section"
             className={"netpyneField"}
           />
-          <br /><br />
-          <IconButton
-            id={"cellParamsGoMechsButton"}
-            className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
-            onClick={() => that.props.selectPage("mechanisms")}
-          >
-            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
-            <span className={"gearThumbLabel"}>Mechanisms</span>
-          </IconButton>
-          {dialogPop}
         </div>
       )
     }

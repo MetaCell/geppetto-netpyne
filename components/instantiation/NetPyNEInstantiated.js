@@ -53,7 +53,7 @@ const plots = [
     {id: 'rasterPlot',          primaryText: 'Raster plot',             plotName: 'Raster Plot',            plotMethod: 'plotRaster',           plotType: false},
     {id: 'spikePlot',           primaryText: 'Spike histogram',         plotName: 'Spike Hist Plot',        plotMethod: 'plotSpikeHist',        plotType: false},
     {id: 'spikeStatsPlot',      primaryText: 'Spike stats',             plotName: 'Spike Stats Plot',       plotMethod: 'plotSpikeStats',       plotType: false},
-    {id: 'ratePSDPlot',         primaryText: 'Rate PSD"',               plotName: 'Rate PSD Plot',          plotMethod: 'plotRatePSD',          plotType: false},
+    {id: 'ratePSDPlot',         primaryText: 'Rate PSD',               plotName: 'Rate PSD Plot',          plotMethod: 'plotRatePSD',          plotType: false},
     {id: 'LFPTimeSeriesPlot',   primaryText: 'LFP time-series',         plotName: 'LFP Time Series Plot',   plotMethod: 'plotLFP',              plotType: 'timeSeries'},
     {id: 'LFPLocationsPlot',    primaryText: 'LFP PSD',                 plotName: 'LFP PSD Plot',           plotMethod: 'plotLFP',              plotType: 'PSD'},
     {id: 'LFPSpectrogramPlot',  primaryText: 'LFP spectrogram',         plotName: 'LFP Spectrogram Plot',   plotMethod: 'plotLFP',              plotType: 'spectrogram'},
@@ -193,7 +193,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     ref={"canvas"}
                     style={{ height: '100%', width: '100%' }}
                 />
-                <div id="controlpanel" style={{top: 10 }}>
+                <div id="controlpanel" style={{top: 0 }}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}

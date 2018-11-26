@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
+import Dialog from 'material-ui/Dialog/Dialog';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
-import IconMenu from 'material-ui/IconMenu';
-
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
-import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
-import Utils from '../../../Utils';
-
-export default class NetPyNEConnectivityRules extends React.Component {
+export default class NetPyNEConnectivityRules extends Component {
 
   constructor(props) {
     super(props);
@@ -137,8 +135,7 @@ export default class NetPyNEConnectivityRules extends React.Component {
   }
 
   deleteConnectivityRule(name) {
-    var parameter = "connParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['connParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
       this.setState({value: model, selectedConnectivityRule: undefined, deletedConnectivityRule: name});
@@ -199,14 +196,13 @@ export default class NetPyNEConnectivityRules extends React.Component {
         <CardText className={"tabContainer"} expandable={true}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNEHome
+                selection={this.state.selectedConnectivityRule}
+                handleClick={()=> this.setState({selectedConnectivityRule: undefined})}
+              />
+              
+              <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+              
             </div>
             <div style={{ clear: "both" }}></div>
             {ConnectivityRules}

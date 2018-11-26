@@ -1,15 +1,16 @@
-import React from 'react';
-import IconMenu from 'material-ui/IconMenu';
+import React,{ Component }  from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
+
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
+import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 
-export default class NetPyNESynapses extends React.Component {
+export default class NetPyNESynapses extends Component {
 
   constructor(props) {
     super(props);
@@ -44,7 +45,7 @@ export default class NetPyNESynapses extends React.Component {
     this.setState({
       value: model,
       selectedSynapse: SynapseId
-    });
+    }, ()=> GEPPETTO.trigger('synapses_change'));
   };
 
   hasSelectedSynapseBeenRenamed(prevState, currentState) {
@@ -89,9 +90,7 @@ export default class NetPyNESynapses extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Synapses names.\n" +
                                           m + " has been renamed " + newValue},
-                            function() {
-                              Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => {});
-                            }.bind(this));
+                            () => Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => GEPPETTO.trigger('synapses_change')));
           }
         }
       }
@@ -112,11 +111,10 @@ export default class NetPyNESynapses extends React.Component {
   };
 
   deleteSynapse(name) {
-    var parameter = "synMechParams['" + name + "']"
-    Utils.execPythonMessage('netpyne_geppetto.deleteParam("' + parameter + '")').then((response) =>{
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['synMechParams', name]).then((response) =>{
       var model = this.state.value;
       delete model[name];
-      this.setState({value: model, selectedSynapse: undefined, deletedSynapse: name});
+      this.setState({value: model, selectedSynapse: undefined, deletedSynapse: name}, ()=> GEPPETTO.trigger('synapses_change'));
     });
   }
 
@@ -181,14 +179,11 @@ export default class NetPyNESynapses extends React.Component {
           </div>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNEHome
+                selection={this.state.selectedSynapse}
+                handleClick={()=> this.setState({selectedSynapse: undefined})}
+              />
+              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
             </div>
             <div style={{ clear: "both" }}></div>
             {Synapses}

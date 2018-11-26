@@ -39,30 +39,22 @@ export default class NetPyNEStimulationSource extends React.Component {
   };
 
   handleRenameChange = (event) => {
-    var that = this;
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
-    if(newValue != event.target.value) {
-      // if the new value has been changed by the function Utils.nameValidation means that the name convention
-      // has not been respected, so we need to open the dialog and inform the user.
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Leading digits or whitespaces are not allowed in StimulationSource names."});
-    } else {
-      this.setState({ currentName: newValue });
-    }
+    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationSource");
 
-    if(updateCondition) {
-      this.triggerUpdate(function () {
-        Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => { that.renaming = false });
-        that.renaming = true;
+    if(triggerCondition) {
+      this.triggerUpdate(() => {
+        Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false
+          GEPPETTO.trigger('stimSources_change');
+        });
+        this.renaming = true;
+        // Update layout has been inserted in the triggerUpdate since this will have to query the backend
+        // So we need to delay this along with the rename, differently we will face a key issue with netpyne
+        this.updateLayout();
       });
-    } else if(!(updateCondition) && !(newValue != event.target.value)){
-      this.setState({ currentName: newValue,
-                      errorMessage: "Error",
-                      errorDetails: "Name collision detected, the name "+newValue+
-                                    " is already used in this model, please pick another name."});
     }
   };
 
@@ -75,12 +67,6 @@ export default class NetPyNEStimulationSource extends React.Component {
 
   componentDidMount() {
     this.updateLayout();
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.currentName != prevState.currentName) {
-      this.updateLayout();
-    };
   };
 
   updateLayout() {
@@ -101,6 +87,7 @@ export default class NetPyNEStimulationSource extends React.Component {
   handleStimSourceTypeChange(event, index, value) {
     Utils.execPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
     this.setState({ sourceType: value });
+    GEPPETTO.trigger('stimSources_change', this.state.currentName);
   };
 
   render() {

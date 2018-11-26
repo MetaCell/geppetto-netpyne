@@ -133,19 +133,22 @@ export default class NetPyNEInclude extends Component {
     const numberOfCellsByPopulation = await Utils.evalPythonMessage("netpyne_geppetto.getGIDs", [])
     
 		if (numberOfCellsByPopulation) {
-			const dataInPythonFormat = await Utils.evalPythonMessage("netpyne_geppetto."+this.props.model)
-		
+			const dataInPythonFormat = await Utils.evalPythonMessage("netpyne_geppetto.getInclude", [this.props.model.split("'")[1]])
+      let included
 			if (dataInPythonFormat) {
-				const included = this.convertFromPython(dataInPythonFormat)
-				let clone = Object.assign({}, numberOfCellsByPopulation)
-				Object.keys(clone).forEach((key) => clone[key] = false)
-				this.setState({
-					include: included,
-					secondPopoverOpen: clone,
-					data: numberOfCellsByPopulation,
-					label: this.whoIsIncluded(included, numberOfCellsByPopulation)
-				})
-			}
+        included = this.convertFromPython(dataInPythonFormat)
+      }
+      else {
+        included = this.convertFromPython([this.props.initialValue])
+      }
+      let clone = Object.assign({}, numberOfCellsByPopulation)
+      Object.keys(clone).forEach((key) => clone[key] = false)
+      this.setState({
+        include: included,
+        secondPopoverOpen: clone,
+        data: numberOfCellsByPopulation,
+        label: this.whoIsIncluded(included, numberOfCellsByPopulation)
+      })
 		}
   }
     
@@ -344,7 +347,7 @@ export default class NetPyNEInclude extends Component {
       >
         {this.defaultMenus()}
         <Divider/>
-        {this.variableMenus('gids', this.state.data?this.state.data.gids:0, true)}
+        {this.variableMenus('gids', this.state.data ? this.state.data.gids : 0, true)}
         <Divider/>
         {this.otherMenus()}
       </Popover>
