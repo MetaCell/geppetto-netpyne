@@ -71,7 +71,7 @@ export default class NetPyNEInstantiated extends React.Component {
             controlPanelHidden: true,
             plotButtonOpen: false,
             openDialog: false,
-            bringItToFront: 1
+            bringItToFront: 0
         };
         
         this.widgets = [];
@@ -158,7 +158,7 @@ export default class NetPyNEInstantiated extends React.Component {
         this.refs.canvas.engine.setLinesThreshold(10000);
         this.refs.canvas.displayAllInstances();
         GEPPETTO.on(GEPPETTO.Events.Control_panel_close, ()=>{
-          this.setState({bringItToFront: 1})
+          this.setState({bringItToFront: 0})
         });
     }
 
@@ -209,7 +209,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     </ControlPanel>
                 </div>
                 <IconButton style={styles.controlpanelBtn}
-                    onClick={() => { $('#controlpanel').show(); this.setState({bringItToFront: 2})}}
+                    onClick={() => { $('#controlpanel').show(); this.setState({bringItToFront: 1})}}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>
