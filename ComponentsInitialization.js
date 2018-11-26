@@ -49,7 +49,7 @@ define(function (require) {
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
 
         GEPPETTO.G.setIdleTimeOut(-1);
-        GEPPETTO.G.debug(true); //Change this to true to see messages on the Geppetto console while loading
+        GEPPETTO.G.debug(false); //Change this to true to see messages on the Geppetto console while loading
         GEPPETTO.Resources.COLORS.DEFAULT = "#6f54aa";
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
