@@ -10,8 +10,8 @@ import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
 
 import Utils from '../../../../../Utils';
 
-const hoverColor = '#66d2e2!important';
-const changeColor = 'rgb(0, 188, 212)!important';
+const hoverColor = '#66d2e2';
+const changeColor = 'rgb(0, 188, 212)';
 
 const styles = {
   anchorOrigin: {
@@ -98,7 +98,6 @@ export default class NetPyNENewMechanism extends React.Component {
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
         <FontIcon 
-          id={disabled ? "hackToChangeColorWhenDisabled" : "normalcolor"}
           style={{position: 'absolute'}}
           className="gpt-fullgear"
           color={changeColor} 
