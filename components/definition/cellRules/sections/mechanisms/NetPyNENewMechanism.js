@@ -5,7 +5,6 @@ import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import { pink400 } from 'material-ui/styles/colors';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
 
 import Utils from '../../../../../Utils';
@@ -93,7 +92,7 @@ export default class NetPyNENewMechanism extends React.Component {
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
-        iconStyle={{color: pink400}}
+        iconStyle={{color: '#543a73'}}
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
