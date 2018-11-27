@@ -83,10 +83,10 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.clickCheckBox(this, test, "simConfig.savePickle");
     toolbox.clickCheckBox(this, test, "simConfig.saveJson");
     toolbox.clickCheckBox(this, test, "simConfig.saveMat");
-    toolbox.clickCheckBox(this, test, "simConfig.saveHDF5");
-    toolbox.clickCheckBox(this, test, "simConfig.saveDpk");
-    toolbox.clickCheckBox(this, test, "simConfig.saveDat");
-    toolbox.clickCheckBox(this, test, "simConfig.saveCSV");
+    // toolbox.clickCheckBox(this, test, "simConfig.saveHDF5");
+    // toolbox.clickCheckBox(this, test, "simConfig.saveDpk");
+    // toolbox.clickCheckBox(this, test, "simConfig.saveDat");
+    // toolbox.clickCheckBox(this, test, "simConfig.saveCSV");
     toolbox.clickCheckBox(this, test, "simConfig.saveTiming");
   })
 
@@ -180,10 +180,10 @@ function getSimConfigParams(casper, test, toolbox) {
     toolbox.testCheckBoxValue(this, test, "simConfig.savePickle", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveJson", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveMat", true);
-    toolbox.testCheckBoxValue(this, test, "simConfig.saveHDF5", true);
-    toolbox.testCheckBoxValue(this, test, "simConfig.saveDpk", true);
-    toolbox.testCheckBoxValue(this, test, "simConfig.saveDat", true);
-    toolbox.testCheckBoxValue(this, test, "simConfig.saveCSV", true);
+    // toolbox.testCheckBoxValue(this, test, "simConfig.saveHDF5", true);
+    // toolbox.testCheckBoxValue(this, test, "simConfig.saveDpk", true);
+    // toolbox.testCheckBoxValue(this, test, "simConfig.saveDat", true);
+    // toolbox.testCheckBoxValue(this, test, "simConfig.saveCSV", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveTiming", true);
   })
 
