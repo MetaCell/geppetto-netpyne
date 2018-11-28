@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-import ListComponent from '../../../general/List';
+import ListComponent from '../../../general/List'; 
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -23,13 +23,13 @@ export default class PlotShape extends React.Component {
     var tag = "simConfig.analysis['plotShape']"
     return <div>
       <NetPyNEField id="simConfig.analysis.plotShape.includePre" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePre']"} />
+          <PythonControlledListComponent model={tag + "['includePre']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.includePost" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePost']"} />
+          <PythonControlledListComponent model={tag + "['includePost']"} />
       </NetPyNEField>
-
+      
       <NetPyNEField id="simConfig.analysis.plotShape.synStyle" >
         <PythonControlledTextField model={tag + "['synStyle']"} />
       </NetPyNEField>

@@ -89,8 +89,7 @@ export default class DimensionsComponent extends Component {
                                         Utils
                                             .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
                                             .then(function (response) {
-                                                console.log("Setting Pop Dimensions Parameters");
-                                                console.log("Response", response);
+                                                GEPPETTO.trigger("population_update_dimension")
                                             });
                                     });
                                 }}
