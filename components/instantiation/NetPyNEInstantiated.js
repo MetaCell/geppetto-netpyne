@@ -155,13 +155,15 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     showWidgets(visible) {
-        this.getOpenedWidgets().forEach(widget => {
-            if (visible){
-                widget.show()
-            }
-            else{
-                widget.hide()
-            }
+        GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
+            controller.widgets.forEach(widget => {
+                if (visible){
+                    widget.show()
+                }
+                else{
+                    widget.hide()
+                }
+            })
         })
     }
 
