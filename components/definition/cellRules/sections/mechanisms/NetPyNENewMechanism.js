@@ -92,6 +92,7 @@ export default class NetPyNENewMechanism extends React.Component {
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
+        iconStyle={{color: '#543a73'}}
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >

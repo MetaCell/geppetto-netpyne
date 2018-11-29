@@ -70,7 +70,8 @@ export default class NetPyNEInstantiated extends React.Component {
             model: props.model,
             controlPanelHidden: true,
             plotButtonOpen: false,
-            openDialog: false
+            openDialog: false,
+            bringItToFront: 0
         };
         
         this.widgets = [];
@@ -153,9 +154,30 @@ export default class NetPyNEInstantiated extends React.Component {
         return this.widgets;
     }
 
+    showWidgets(visible) {
+        GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
+            controller.widgets.forEach(widget => {
+                if (visible){
+                    widget.show()
+                }
+                else{
+                    widget.hide()
+                }
+            })
+        })
+    }
+
     componentDidMount() {
         this.refs.canvas.engine.setLinesThreshold(10000);
         this.refs.canvas.displayAllInstances();
+        GEPPETTO.on(GEPPETTO.Events.Control_panel_close, ()=>{
+          this.setState({bringItToFront: 0})
+          this.showWidgets(true)
+        });
+    }
+
+    componentWillUnmount(){
+      GEPPETTO.off(GEPPETTO.Events.Control_panel_close)
     }
 
     handleClick(event) {
@@ -185,7 +207,7 @@ export default class NetPyNEInstantiated extends React.Component {
         }
 
         return (
-            <div id="instantiatedContainer" style={styles.instantiatedContainer}>
+            <div id="instantiatedContainer" style={{...styles.instantiatedContainer, zIndex: this.state.bringItToFront}}>
                 <Canvas
                     id="CanvasContainer"
                     name={"Canvas"}
@@ -193,7 +215,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     ref={"canvas"}
                     style={{ height: '100%', width: '100%' }}
                 />
-                <div id="controlpanel" style={{top: 10 }}>
+                <div id="controlpanel" style={{top: 0}}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}
@@ -201,7 +223,7 @@ export default class NetPyNEInstantiated extends React.Component {
                     </ControlPanel>
                 </div>
                 <IconButton style={styles.controlpanelBtn}
-                    onClick={() => { $('#controlpanel').show(); }}
+                    onClick={() => { $('#controlpanel').show(); this.showWidgets(false); this.setState({bringItToFront: 1})}}
                     icon={"fa-list"}
                     id={"ControlPanelButton"} />
                 <div>

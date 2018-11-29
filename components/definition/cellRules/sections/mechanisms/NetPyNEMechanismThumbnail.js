@@ -8,7 +8,7 @@ const changeColor = 'rgb(0, 188, 212)';
 
 const styles = {
   main: {
-    floar: 'left'
+    float: 'left'
   },
   trash: {
     zIndex:10,
