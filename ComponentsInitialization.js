@@ -39,7 +39,7 @@ define(function (require) {
                         <div id="footerHeader">
                             <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
                                 <Console />
-                                <PythonConsole pythonNotebookPath={"http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb"} />
+                                <PythonConsole pythonNotebookPath={"../notebooks/notebook.ipynb"} />
                             </TabbedDrawer>
                         </div>
                     </div>
