@@ -99,7 +99,7 @@ export default class NetPyNEToolBar extends React.Component {
       >
         <div id="logoBackground">
           <img style={{ marginLeft: 25, marginTop: 5, marginBottom: 0, width: 190 }} src={NetPyNElogo} />
-          <p style={{ fontSize:10, textAlign:"right", marginRight: 3, marginTop: -10, marginBottom: 0, color:"#543a73"}}>GUI Version 0.5.1</p>
+          <p style={{ fontSize:10, textAlign:"right", marginRight: 3, marginTop: -10, marginBottom: 0, color:"#543a73"}}>GUI Version 0.5.2</p>
         </div>
         <Divider />
         <MenuItem id="appBarNew" primaryText="New" onClick={() => this.handleMenuItemClick('NewModel')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-plus' />} />
