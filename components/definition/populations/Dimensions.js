@@ -5,7 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Utils from '../../../Utils';
 
 import NetPyNEField from '../../general/NetPyNEField';
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 /**
  * Population Dimensions Component

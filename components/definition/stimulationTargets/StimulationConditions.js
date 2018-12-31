@@ -5,7 +5,7 @@ import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 

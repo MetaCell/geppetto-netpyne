@@ -7,7 +7,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var geppettoConfig;
 try {
-    geppettoConfig = require('../../GeppettoConfiguration.json');
+    geppettoConfig = require('./GeppettoConfiguration.json');
     console.log('\nLoaded Geppetto config from file');
 } catch (e) {
     // Failed to load config file
@@ -16,17 +16,6 @@ try {
 
 var publicPath = ((geppettoConfig.contextPath == '/') ? geppettoConfig.contextPath : "/" + geppettoConfig.contextPath + "/") + "geppetto/build/";
 console.log("\nThe public path (used by the main bundle when including split bundles) is: " + publicPath);
-
-
-// // Get available extensions in order to copy static pages
-// var availableExtensions = [];
-// for (var extension in geppettoConfig.extensions) {
-//     if (geppettoConfig.extensions[extension]) {
-//         availableExtensions.push({ from: "/static/*", to: 'static', flatten: true });
-//     }
-// }
-// console.log("\nStatic pages coming from extensions are:");
-// console.log(availableExtensions);
 
 // Get available theme
 var availableTheme = "";
@@ -40,6 +29,11 @@ console.log(availableTheme);
 
 var isProduction = process.argv.indexOf('-p') >= 0;
 console.log("\n Building for a " + ((isProduction) ? "production" : "development") + " environment")
+
+const availableExtensions = [
+  { from: "node_modules/webapp/static/*", to: 'static', flatten: true },
+  { from: "static/*", to: 'static', flatten: true },
+];
 
 module.exports = function(env){
 
@@ -65,11 +59,9 @@ module.exports = function(env){
 	console.log('Geppetto configuration \n');
 	console.log(JSON.stringify(geppettoConfig, null, 2), '\n');
   
-  // main: "./js/pages/geppetto/main.js",
-  // admin: "./js/pages/admin/admin.js"
-
 	var entries = {
-        main: "./ComponentsInitialization.js",
+        main: path.resolve(__dirname, "ComponentsInitialization.js"),
+        admin: path.resolve(__dirname, "node_modules/webapp/js/pages/admin/admin.js"),
 	};
 
 	console.log("\nThe Webpack entries are:");
@@ -79,7 +71,7 @@ module.exports = function(env){
 	    entry: entries,
 	  
 	    output: {
-	        path: path.resolve(__dirname, '../../build'),
+	        path: path.resolve(__dirname, 'build'),
 	        filename: '[name].bundle.js',
 	        publicPath: publicPath
 	    },
@@ -88,10 +80,10 @@ module.exports = function(env){
 	        //     analyzerMode: 'static'
 	        // }),
 		    new webpack.optimize.CommonsChunkPlugin(['common']),
-	        // new CopyWebpackPlugin(availableExtensions),
+	        new CopyWebpackPlugin(availableExtensions),
 	        new HtmlWebpackPlugin({
 	            filename: 'geppetto.vm',
-	            template: '../../js/pages/geppetto/geppetto.ejs',
+	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/geppetto/geppetto.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            // chunks: ['main'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
@@ -100,7 +92,7 @@ module.exports = function(env){
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'admin.vm',
-	            template: '../../js/pages/admin/admin.ejs',
+	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/admin/admin.ejs'),
 	            // chunks: ['admin'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
 				// which we have errors
@@ -108,13 +100,13 @@ module.exports = function(env){
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'dashboard.vm',
-	            template: '../../js/pages/dashboard/dashboard.ejs',
+	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/dashboard/dashboard.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
 	        new HtmlWebpackPlugin({
-	            filename: '../../WEB-INF/web.xml',
-	            template: '../../WEB-INF/web.ejs',
+	            filename: '../WEB-INF/web.xml',
+	            template: path.resolve(__dirname, 'node_modules/webapp/WEB-INF/web.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
@@ -128,10 +120,16 @@ module.exports = function(env){
 	
 	    resolve: {
 	        alias: {
-	            geppetto: path.resolve(__dirname, '../../js/pages/geppetto/GEPPETTO.js'),
+              webapp: path.resolve(__dirname, 'node_modules/webapp'),
+	            geppetto: path.resolve(__dirname, 'node_modules/webapp/js/pages/geppetto/GEPPETTO.js'),
 	            handlebars: 'handlebars/dist/handlebars.js'
 	
-	        },
+          },
+          // symlinks: true,
+          modules: [
+            path.resolve(__dirname, 'node_modules/webapp/node_modules'), 
+            'node_modules'
+          ],
 	        extensions: ['*', '.js', '.json'],
 	    },
 	
@@ -139,7 +137,7 @@ module.exports = function(env){
 	        rules: [
 	            {
 	                test: /\.(js|jsx)$/,
-	                exclude: [/ami.min.js/, /node_modules/], 
+                  exclude: [/ami.min.js/, /node_modules/],
 	                loader: 'babel-loader',
 	                query: {
 	                    presets: [['babel-preset-env', { "modules": false }], 'stage-2', 'react']
@@ -159,7 +157,7 @@ module.exports = function(env){
 	            },
 	            {
 	                
-	                test: /\.css$/,
+                  test: /\.css$/,
 	                use: ExtractTextPlugin.extract({
 	                  fallback: "style-loader",
 	                  use: "css-loader"
@@ -167,8 +165,8 @@ module.exports = function(env){
 	                  
 	            },
 	            {
-	                test: /\.less$/,
-	                loader: 'style-loader!css-loader!less-loader?{"modifyVars":{"url":"\'../../../extensions/' + availableTheme + '\'"}}'
+                  test: /\.less$/,
+                  loader: 'style-loader!css-loader!less-loader?{"modifyVars":{"url":"\'' + path.resolve(__dirname, 'css/colors') + '\'"}}'
 	            },
 	            {
 	                test: /\.html$/,

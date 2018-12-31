@@ -13,7 +13,7 @@ import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated'
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
 
-var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
 var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);

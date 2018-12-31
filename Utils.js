@@ -1,4 +1,4 @@
-import {execPythonMessage, evalPythonMessage} from '../../js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {execPythonMessage, evalPythonMessage} from 'webapp/js/communication/geppettoJupyter/GeppettoJupyterUtils';
 import React from 'react';
 
 const Utils = {

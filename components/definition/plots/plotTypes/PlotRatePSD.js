@@ -5,7 +5,7 @@ import TimeRange from '../TimeRange'
 import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 

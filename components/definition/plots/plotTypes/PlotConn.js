@@ -3,7 +3,7 @@ import SelectField from 'material-ui/SelectField';
 import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 
 export default class plotConn extends React.Component {

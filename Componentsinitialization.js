@@ -1,9 +1,9 @@
 
 global.jQuery = require("jquery");
-global.GEPPETTO_CONFIGURATION = require('../../GeppettoConfiguration.json');
+global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 
 jQuery(function () {
-        require('../../js/pages/geppetto/main');
+        require('webapp/js/pages/geppetto/main');
 				var React = require('react');	
 				var ReactDOM = require('react-dom');
         
@@ -16,9 +16,9 @@ jQuery(function () {
         var injectTapEventPlugin = require('react-tap-event-plugin');
 
         var Utils = require('./Utils').default;
-        var Console = require('../../js/components/interface/console/Console');
-        var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
-        var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
+        var Console = require('webapp/js/components/interface/console/Console');
+        var TabbedDrawer = require('webapp/js/components/interface/drawer/TabbedDrawer');
+        var PythonConsole = require('webapp/js/components/interface/pythonConsole/PythonConsole');
         
         require('./css/netpyne.less');
         require('./css/material.less');
