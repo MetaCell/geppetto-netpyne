@@ -4,7 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 //var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+// <%=htmlWebpackPlugin.options.GEPPETTO_CONFIGURATION._webapp_folder%>
 var geppettoConfig;
 try {
     geppettoConfig = require('./GeppettoConfiguration.json');
@@ -31,12 +31,12 @@ var isProduction = process.argv.indexOf('-p') >= 0;
 console.log("\n Building for a " + ((isProduction) ? "production" : "development") + " environment")
 
 const availableExtensions = [
-  { from: "node_modules/webapp/static/*", to: 'static', flatten: true },
+  { from: path.resolve(__dirname, geppettoConfig._webapp_folder, "static/*"), to: 'static', flatten: true },
   { from: "static/*", to: 'static', flatten: true },
 ];
 
 module.exports = function(env){
-
+  //geppettoConfig._webapp_folder
 	if(env!=undefined){
 		console.log(env);
 		if(env.contextPath){
@@ -61,12 +61,12 @@ module.exports = function(env){
   
 	var entries = {
         main: path.resolve(__dirname, "ComponentsInitialization.js"),
-        admin: path.resolve(__dirname, "node_modules/webapp/js/pages/admin/admin.js"),
+        admin: path.resolve(__dirname, geppettoConfig._webapp_folder, "js/pages/admin/admin.js"),
 	};
 
 	console.log("\nThe Webpack entries are:");
-	console.log(entries);
-
+  console.log(entries);
+  
     return {
 	    entry: entries,
 	  
@@ -83,7 +83,7 @@ module.exports = function(env){
 	        new CopyWebpackPlugin(availableExtensions),
 	        new HtmlWebpackPlugin({
 	            filename: 'geppetto.vm',
-	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/geppetto/geppetto.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/geppetto/geppetto.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            // chunks: ['main'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
@@ -92,21 +92,22 @@ module.exports = function(env){
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'admin.vm',
-	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/admin/admin.ejs'),
-	            // chunks: ['admin'] Not specifying the chunk since its not possible
+	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/admin/admin.ejs'),
+              GEPPETTO_CONFIGURATION: geppettoConfig,
+              // chunks: ['admin'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
 				// which we have errors
 	            chunks: []
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'dashboard.vm',
-	            template: path.resolve(__dirname, 'node_modules/webapp/js/pages/dashboard/dashboard.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/dashboard/dashboard.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: '../WEB-INF/web.xml',
-	            template: path.resolve(__dirname, 'node_modules/webapp/WEB-INF/web.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'WEB-INF/web.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
@@ -117,17 +118,17 @@ module.exports = function(env){
 	        }),
 	        new ExtractTextPlugin("[name].css"),
 	    ],
-	
+      
 	    resolve: {
 	        alias: {
-              webapp: path.resolve(__dirname, 'node_modules/webapp'),
-	            geppetto: path.resolve(__dirname, 'node_modules/webapp/js/pages/geppetto/GEPPETTO.js'),
+              webapp: path.resolve(__dirname, geppettoConfig._webapp_folder),
+	            geppetto: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/geppetto/GEPPETTO.js'),
 	            handlebars: 'handlebars/dist/handlebars.js'
 	
           },
           // symlinks: true,
           modules: [
-            path.resolve(__dirname, 'node_modules/webapp/node_modules'), 
+            path.resolve(__dirname, geppettoConfig._webapp_folder, 'node_modules'), 
             'node_modules'
           ],
 	        extensions: ['*', '.js', '.json'],
@@ -137,7 +138,7 @@ module.exports = function(env){
 	        rules: [
 	            {
 	                test: /\.(js|jsx)$/,
-                  exclude: [/ami.min.js/, /node_modules/],
+                  exclude: [/ami.min.js/, /node_modules\/(?!(webapp00001)\/).*/], 
 	                loader: 'babel-loader',
 	                query: {
 	                    presets: [['babel-preset-env', { "modules": false }], 'stage-2', 'react']
