@@ -128,7 +128,7 @@ module.exports = function(env){
 	        rules: [
 	            {
 	                test: /\.(js|jsx)$/,
-                  exclude: [/ami.min.js/, /node_modules\/(?!(webapp00001)\/).*/], 
+                  exclude: [/ami.min.js/, /node_modules\/(?!(@geppettoengine\/geppetto-client)\/).*/], 
 	                loader: 'babel-loader',
 	                query: {
 	                    presets: [['babel-preset-env', { "modules": false }], 'stage-2', 'react']
