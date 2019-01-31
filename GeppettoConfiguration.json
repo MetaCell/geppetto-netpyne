@@ -1,15 +1,12 @@
 {
   "_README" : "http://docs.geppetto.org/en/latest/build.html",
-  "geppetto_client_path": "node_modules/webapp00001", 
+  "geppetto_client_path": "@geppettoengine/geppetto-client", 
   "contextPath": "org.geppetto.frontend",
   "useSsl": false,
   "embedded": false,
   "embedderURL": ["/"],
   "rootRedirect":"",
   "noTest": false,
-  "extensions": {
-      "geppetto-netpyne/ComponentsInitialization": true
-  },
   "themes": "css/colors",
   "properties": {
       "title" : "NetPyNE",

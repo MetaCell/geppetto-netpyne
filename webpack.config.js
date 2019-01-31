@@ -17,16 +17,6 @@ try {
 var publicPath = ((geppettoConfig.contextPath == '/') ? geppettoConfig.contextPath : "/" + geppettoConfig.contextPath + "/") + "geppetto/build/";
 console.log("\nThe public path (used by the main bundle when including split bundles) is: " + publicPath);
 
-// // Get available theme
-// var availableTheme = "";
-// for (var theme in geppettoConfig.themes) {
-//     if (geppettoConfig.themes[theme]) {
-//         availableTheme = theme;
-//     }
-// }
-// console.log("\nEnable theme:");
-// console.log(availableTheme);
-
 var isProduction = process.argv.indexOf('-p') >= 0;
 console.log("\n Building for a " + ((isProduction) ? "production" : "development") + " environment")
 
