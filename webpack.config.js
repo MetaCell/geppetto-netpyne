@@ -17,21 +17,21 @@ try {
 var publicPath = ((geppettoConfig.contextPath == '/') ? geppettoConfig.contextPath : "/" + geppettoConfig.contextPath + "/") + "geppetto/build/";
 console.log("\nThe public path (used by the main bundle when including split bundles) is: " + publicPath);
 
-// Get available theme
-var availableTheme = "";
-for (var theme in geppettoConfig.themes) {
-    if (geppettoConfig.themes[theme]) {
-        availableTheme = theme;
-    }
-}
-console.log("\nEnable theme:");
-console.log(availableTheme);
+// // Get available theme
+// var availableTheme = "";
+// for (var theme in geppettoConfig.themes) {
+//     if (geppettoConfig.themes[theme]) {
+//         availableTheme = theme;
+//     }
+// }
+// console.log("\nEnable theme:");
+// console.log(availableTheme);
 
 var isProduction = process.argv.indexOf('-p') >= 0;
 console.log("\n Building for a " + ((isProduction) ? "production" : "development") + " environment")
 
 const availableExtensions = [
-  { from: path.resolve(__dirname, geppettoConfig._webapp_folder, "static/*"), to: 'static', flatten: true },
+  { from: path.resolve(__dirname, geppettoConfig.geppetto_client_path, "static/*"), to: 'static', flatten: true },
   { from: "static/*", to: 'static', flatten: true },
 ];
 
@@ -61,7 +61,7 @@ module.exports = function(env){
   
 	var entries = {
         main: path.resolve(__dirname, "ComponentsInitialization.js"),
-        admin: path.resolve(__dirname, geppettoConfig._webapp_folder, "js/pages/admin/admin.js"),
+        admin: path.resolve(__dirname, geppettoConfig.geppetto_client_path, "js/pages/admin/admin.js"),
 	};
 
 	console.log("\nThe Webpack entries are:");
@@ -83,7 +83,7 @@ module.exports = function(env){
 	        new CopyWebpackPlugin(availableExtensions),
 	        new HtmlWebpackPlugin({
 	            filename: 'geppetto.vm',
-	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/geppetto/geppetto.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'js/pages/geppetto/geppetto.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            // chunks: ['main'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
@@ -92,7 +92,7 @@ module.exports = function(env){
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'admin.vm',
-	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/admin/admin.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'js/pages/admin/admin.ejs'),
               GEPPETTO_CONFIGURATION: geppettoConfig,
               // chunks: ['admin'] Not specifying the chunk since its not possible
 				// yet (need to go to Webpack2) to specify UTF-8 as charset without
@@ -101,13 +101,13 @@ module.exports = function(env){
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: 'dashboard.vm',
-	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/dashboard/dashboard.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'js/pages/dashboard/dashboard.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
 	        new HtmlWebpackPlugin({
 	            filename: '../WEB-INF/web.xml',
-	            template: path.resolve(__dirname, geppettoConfig._webapp_folder, 'WEB-INF/web.ejs'),
+	            template: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'WEB-INF/web.ejs'),
 	            GEPPETTO_CONFIGURATION: geppettoConfig,
 	            chunks: []
 	        }),
@@ -121,14 +121,14 @@ module.exports = function(env){
       
 	    resolve: {
 	        alias: {
-              webapp: path.resolve(__dirname, geppettoConfig._webapp_folder),
-	            geppetto: path.resolve(__dirname, geppettoConfig._webapp_folder, 'js/pages/geppetto/GEPPETTO.js'),
+              'geppetto-client': path.resolve(__dirname, geppettoConfig.geppetto_client_path),
+	            geppetto: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'js/pages/geppetto/GEPPETTO.js'),
 	            handlebars: 'handlebars/dist/handlebars.js'
 	
           },
           // symlinks: true,
           modules: [
-            path.resolve(__dirname, geppettoConfig._webapp_folder, 'node_modules'), 
+            path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'node_modules'), 
             'node_modules'
           ],
 	        extensions: ['*', '.js', '.json'],
@@ -167,7 +167,7 @@ module.exports = function(env){
 	            },
 	            {
                   test: /\.less$/,
-                  loader: 'style-loader!css-loader!less-loader?{"modifyVars":{"url":"\'' + path.resolve(__dirname, 'css/colors') + '\'"}}'
+                  loader: 'style-loader!css-loader!less-loader?{"modifyVars":{"url":"\'' + path.resolve(__dirname, geppettoConfig.themes) + '\'"}}'
 	            },
 	            {
 	                test: /\.html$/,

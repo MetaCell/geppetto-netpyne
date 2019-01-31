@@ -8,7 +8,7 @@ import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from 'material-ui/Dialog/Dialog';
 
-var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
 export default class NetPyNECellRule extends React.Component {

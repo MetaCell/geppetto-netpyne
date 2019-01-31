@@ -6,7 +6,7 @@ import Utils from '../../Utils';
 import NetPyNEField from './NetPyNEField';
 import AdapterComponent from './AdapterComponent';
 
-var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
  
 export default class NetPyNECoordsRange extends Component {

@@ -8,7 +8,7 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 
-var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);

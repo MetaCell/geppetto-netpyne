@@ -1,5 +1,5 @@
 import React from 'react';
-import Tree from 'webapp/js/components/interface/tree/Tree'
+import Tree from 'geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';

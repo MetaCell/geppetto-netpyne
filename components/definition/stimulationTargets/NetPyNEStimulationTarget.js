@@ -12,7 +12,7 @@ import StimulationConditions from './StimulationConditions';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
-var PythonControlledCapability = require('webapp/js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
