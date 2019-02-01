@@ -1,6 +1,5 @@
 {
   "_README" : "http://docs.geppetto.org/en/latest/build.html",
-  "geppetto_client_path": "node_modules/@geppettoengine/geppetto-client", 
   "contextPath": "org.geppetto.frontend",
   "useSsl": false,
   "embedded": false,
