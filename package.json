@@ -16,6 +16,6 @@
     "react-redux": "^5.1.0",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^4.0.1",
-    "@geppettoengine/geppetto-client": "0.0.3"
+    "@geppettoengine/geppetto-client": "0.0.4"
   }
 }
