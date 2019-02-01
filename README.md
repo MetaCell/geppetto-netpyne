@@ -16,7 +16,7 @@ This module contains a template to create Geppetto applications.
 - Run `npm install` inside `geppetto-client`.
 - Install `link` globally (if you don't have it already).
 - Run `sudo npm link` inside `geppetto-client`.
-- Go to your Geppetto appliation root directory (for instance: geppetto-application) and run `npm link`.
+- Go to your Geppetto appliation root directory (for instance: geppetto-application) and run `npm link @geppettoengine/geppetto-client`.
 - Run `npm run build-dev-noTest:watch` inside your Geppetto application and then both geppetto application/client files will be watched.
 
 
