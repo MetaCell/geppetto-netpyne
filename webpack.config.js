@@ -111,6 +111,7 @@ module.exports = function(env){
       
 	    resolve: {
 	        alias: {
+              'Application': path.resolve(__dirname),
               'geppetto-client': path.resolve(__dirname, geppettoConfig.geppetto_client_path),
 	            geppetto: path.resolve(__dirname, geppettoConfig.geppetto_client_path, 'js/pages/geppetto/GEPPETTO.js'),
 	            handlebars: 'handlebars/dist/handlebars.js'
