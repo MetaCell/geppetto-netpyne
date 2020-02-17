@@ -7,9 +7,7 @@ const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
 
 const styles = {
-  main: {
-    float: 'left'
-  },
+  main: { float: 'left' },
   trash: {
     zIndex:10,
     marginTop:37,
@@ -20,41 +18,40 @@ const styles = {
 }
 export default class NetPyNEMechanismThumbnail extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       isHovered: false,
       dialogOpen: false
     };
-  };
+  }
 
-  handleClick() {
+  handleClick () {
     const { isHovered } = this.state;
     const { name, selected, handleClick } = this.props;
     if (handleClick) {
-      if(selected && isHovered) {
-        this.setState({dialogOpen: true});
+      if (selected && isHovered) {
+        this.setState({ dialogOpen: true });
       } else {
         handleClick(name, true);
       }
     }
-  };
+  }
 
-  handleDialogBox(response) {
-    if(this.props.handleClick && response) {
+  handleDialogBox (response) {
+    if (this.props.handleClick && response) {
       this.props.deleteMethod(this.props.name);
     }
-    this.setState({dialogOpen: false});
-  };
+    this.setState({ dialogOpen: false });
+  }
 
-  render() {
+  render () {
     const { name, selected } = this.props;
     const { dialogOpen, isHovered } = this.state;
     let label;
     if (isHovered && selected) {
-      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"  style={styles.trash}/> 
-    }
-    else {
+      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white" style={styles.trash}/> 
+    } else {
       label = (
         <span className={"gearThumbLabel"}>
           {name.length > 14 ? `${name.slice(0,10)}...` : name}
@@ -65,8 +62,8 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
       <div style={styles.main}>
         <IconButton
           id={`mechThumb${name}`}
-          onMouseEnter={ () => this.setState({isHovered: true}) }
-          onMouseLeave={ () => this.setState({isHovered: false}) }
+          onMouseEnter={ () => this.setState({ isHovered: true }) }
+          onMouseLeave={ () => this.setState({ isHovered: false }) }
           data-tooltip={isHovered && name.length > 10 ? name : undefined}
           className={"gearThumbButton " + (selected ? "selectedGearButton" : "")}
           onClick={ (e, v) => this.handleClick(v) }

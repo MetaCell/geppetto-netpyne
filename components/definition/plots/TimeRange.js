@@ -7,16 +7,16 @@ var PythonControlledAdapterComponent = PythonControlledCapability.createPythonCo
  
 export default class TimeRange extends Component {
  
-  constructor(props) {
+  constructor (props) {
     super(props);
-  };
+  }
  
-  render() {
+  render () {
     return (
       <div className={"netpyneRightField"}>
         <PythonControlledAdapterComponent 
           model={this.props.model}
-          convertToPython={(state) => {
+          convertToPython={state => {
             if (state[state.lastUpdated].toString().endsWith(".")) {
               return undefined;
             }
@@ -30,10 +30,10 @@ export default class TimeRange extends Component {
             }
           }}
         >
-          <TextField floatingLabelText="Starting time" id="min" style={{marginLeft: 10}}/>
-          <TextField floatingLabelText="Ending time" id="max" style={{marginLeft: 10}}/>
+          <TextField floatingLabelText="Starting time" id="min" style={{ marginLeft: 10 }}/>
+          <TextField floatingLabelText="Ending time" id="max" style={{ marginLeft: 10 }}/>
         </PythonControlledAdapterComponent>
       </div>
     );
-  };
-};
+  }
+}

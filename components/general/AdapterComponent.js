@@ -9,54 +9,53 @@ import React, { Component } from 'react';
 
 export default class AdapterComponent extends Component {
 
-    constructor(props) {
-        super(props);
-        /** 
-         * the state is constructed dynamically from the id props of each children
-         * in this way we are declaring a controlled component that can handle his own
-         * state when this is modified by a new input or action of the user
-         **/
-        this.stateBuilder = {};
-        this.props.children.forEach( (child, index) => {
-            this.stateBuilder[child.props.id] = '';
-        });
-        this.state = this.stateBuilder;
+  constructor (props) {
+    super(props);
+    /** 
+     * the state is constructed dynamically from the id props of each children
+     * in this way we are declaring a controlled component that can handle his own
+     * state when this is modified by a new input or action of the user
+     *
+     */
+    this.stateBuilder = {};
+    this.props.children.forEach( (child, index) => {
+      this.stateBuilder[child.props.id] = '';
+    });
+    this.state = this.stateBuilder;
 
-        this.handleChildChange = this.handleChildChange.bind(this);
+    this.handleChildChange = this.handleChildChange.bind(this);
+  }
+  componentDidUpdate (prevProps, prevState) {
+    var newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
+    if (newValue != undefined){
+      this.setState(newValue);
     }
-    componentDidUpdate(prevProps, prevState) {
-        var newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
-        if (newValue != undefined){
-            this.setState(newValue);
-        }
+  }
+
+  handleChildChange (event, value) {
+    // Update State
+    var newState = this.state;
+    newState['lastUpdated'] = event.target.id;
+    newState[event.target.id] = value;
+    this.setState(newState)
+
+    // Call to conversion function
+    var newValue = this.props.convertToPython(this.state);
+    if (newValue != undefined && this.state.value != newValue){
+      this.props.onChange(null, null, newValue);
     }
+  }
 
-    handleChildChange(event, value) {
-        // Update State
-        var newState =this.state;
-        newState['lastUpdated']= event.target.id;
-        newState[event.target.id]=value;
-        this.setState(newState)
+  render () {
+    const childrenWithExtraProp = React.Children.map(this.props.children, child => React.cloneElement(child, {
+      onChange: this.handleChildChange,
+      value: this.state[child.props.id]
+    }));
 
-        // Call to conversion function
-        var newValue = this.props.convertToPython(this.state);
-        if (newValue != undefined && this.state.value != newValue){
-            this.props.onChange(null, null, newValue);
-        }
-    }
-
-    render() {
-        const childrenWithExtraProp = React.Children.map(this.props.children, child => {
-            return React.cloneElement(child, {
-                onChange: this.handleChildChange,
-                value: this.state[child.props.id]
-            });
-          });
-
-        return (
-            <div>
-                {childrenWithExtraProp}
-            </div>
-        )
-    }
+    return (
+      <div>
+        {childrenWithExtraProp}
+      </div>
+    )
+  }
 }

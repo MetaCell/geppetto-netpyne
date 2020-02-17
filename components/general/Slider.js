@@ -8,45 +8,43 @@ import TextField from 'material-ui/TextField';
  */
 export default class NetPyNESlider extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: 0.5
-        };
-    }
+  constructor (props) {
+    super(props);
+    this.state = { value: 0.5 };
+  }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.value != undefined && prevProps.value != this.props.value) {
-            this.setState({ value: this.props.value });
-        }
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.value != undefined && prevProps.value != this.props.value) {
+      this.setState({ value: this.props.value });
     }
+  }
 
     handleSlider = (event, value) => {
-        this.setState({ value: value });
+      this.setState({ value: value });
 
-        this.props.onChange(event, null, value);
+      this.props.onChange(event, null, value);
     };
 
-    render() {
-        return (
-            <div>
-                <p>
-                    <span>{this.props.label}</span>
-                </p>
-                <Slider
-                    {...this.props}
-                    style={{ float: 'left', width: '220px' }}
-                    value={this.state.value}
-                    onChange={this.handleSlider}
-                />
+    render () {
+      return (
+        <div>
+          <p>
+            <span>{this.props.label}</span>
+          </p>
+          <Slider
+            {...this.props}
+            style={{ float: 'left', width: '220px' }}
+            value={this.state.value}
+            onChange={this.handleSlider}
+          />
 
-                <TextField
-                    style={{ float: 'left', width: '40px', margin: '0 5px' }}
-                    value={this.state.value}
-                    onChange={(event) => this.handleSlider(event, event.target.value)}
-                />
+          <TextField
+            style={{ float: 'left', width: '40px', margin: '0 5px' }}
+            value={this.state.value}
+            onChange={event => this.handleSlider(event, event.target.value)}
+          />
 
-            </div>
-        );
+        </div>
+      );
     }
 }

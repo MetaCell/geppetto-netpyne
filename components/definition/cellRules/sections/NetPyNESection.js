@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import Utils from '../../../../Utils';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js//communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
@@ -23,7 +23,7 @@ const changeColor = 'rgb(0, 188, 212)';
 
 export default class NetPyNESection extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -37,19 +37,19 @@ export default class NetPyNESection extends React.Component {
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
   }
 
-  setPage(page) {
+  setPage (page) {
     this.setState({ page: page });
   }
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue, this.props.cellRule);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Section");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
         Utils.renameKey("netParams.cellParams['" + this.props.cellRule + "']['secs']", storedValue, newValue, (response, newValue) => { });
@@ -57,15 +57,15 @@ export default class NetPyNESection extends React.Component {
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 500);
   }
 
-  getBottomNavigationItem(index, sectionId, label, icon, id) {
+  getBottomNavigationItem (index, sectionId, label, icon, id) {
 
     return <BottomNavigationItem
       id={id}
@@ -75,24 +75,24 @@ export default class NetPyNESection extends React.Component {
       onClick={() => this.select(index, sectionId)}
     />
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentName: nextProps.name});
+  componentWillReceiveProps (nextProps) {
+    this.setState({ currentName: nextProps.name });
   }
   
-  postProcessMenuItems(pythonData, selected) {
-    if (pythonData[this.props.cellRule]!= undefined) {
-      return pythonData[this.props.cellRule].map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    if (pythonData[this.props.cellRule] != undefined) {
+      return pythonData[this.props.cellRule].map(name => (
         <MenuItem
-          id={name+"MenuItem"}
+          id={name + "MenuItem"}
           key={name}
           value={name}
           primaryText={name}
         />
       ));
     }
-  };
+  }
       
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -104,13 +104,13 @@ export default class NetPyNESection extends React.Component {
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined
       ? <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: 'auto' }}
-          style={{ whiteSpace: "pre-wrap" }}>
-          {children}
-        </Dialog> 
+        title={title}
+        open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: "pre-wrap" }}>
+        {children}
+      </Dialog> 
       : undefined
     );
 
@@ -128,8 +128,7 @@ export default class NetPyNESection extends React.Component {
           />
         </div>
       )
-    }
-    else if (this.state.sectionId == "Geometry") {
+    } else if (this.state.sectionId == "Geometry") {
 
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
@@ -154,8 +153,7 @@ export default class NetPyNESection extends React.Component {
         </NetPyNEField>
 
       </div>)
-    }
-    else if (this.state.sectionId == "Topology") {
+    } else if (this.state.sectionId == "Topology") {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.topol.parentSec" >
           <PythonMethodControlledSelectField

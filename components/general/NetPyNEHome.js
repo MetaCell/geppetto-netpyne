@@ -5,12 +5,12 @@ import { pink400 } from 'material-ui/styles/colors';
 import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 
 
-export default ({handleClick, selection}) => (
+export default ({ handleClick, selection }) => (
   <span>
     <IconButton
       style={styles.home.container}
       data-tooltip={selection ? "Unselect" : undefined}
-      iconStyle={{color: pink400, ...styles.home.icon}}
+      iconStyle={{ color: pink400, ...styles.home.icon }}
       onClick={ () => handleClick()}
     >
       <FontIcon className="fa fa-home customHome"/>

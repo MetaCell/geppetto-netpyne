@@ -17,7 +17,7 @@ var PythonControlledTextField = PythonControlledCapability.createPythonControlle
 
 export default class NetPyNEPopulation extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -28,17 +28,17 @@ export default class NetPyNEPopulation extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
   }
 
-  setPopulationDimension = (value) => {
-    //this.setState({ cellModel: value });
+  setPopulationDimension = value => {
+    // this.setState({ cellModel: value });
     this.triggerUpdate(() => {
       // Set Population Dimension Python Side
       Utils
         .evalPythonMessage('api.getParametersForCellModel', [value])
-        .then((response) => {
+        .then(response => {
 
           var cellModelFields = "";
           if (Object.keys(response).length != 0) {
@@ -47,13 +47,11 @@ export default class NetPyNEPopulation extends React.Component {
             // console.log("New Metadata", window.metadata);
             cellModelFields = [];
             // Get Fields for new metadata
-            cellModelFields = Utils.getFieldsFromMetadataTree(response, (key) => {
-              return (<NetPyNEField id={key} >
-                <PythonControlledTextField
-                  model={"netParams.popParams['" + this.state.currentName + "']['" + key.split(".").pop() + "']"}
-                />
-              </NetPyNEField>);
-            });
+            cellModelFields = Utils.getFieldsFromMetadataTree(response, key => (<NetPyNEField id={key} >
+              <PythonControlledTextField
+                model={"netParams.popParams['" + this.state.currentName + "']['" + key.split(".").pop() + "']"}
+              />
+            </NetPyNEField>));
           }
           this.setState({ cellModelFields: cellModelFields, cellModel: value });
         });
@@ -75,41 +73,41 @@ export default class NetPyNEPopulation extends React.Component {
     return modelParameters;
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.model == undefined ||
-      this.state.currentName != nextState.currentName ||
-      this.state.cellModelFields != nextState.cellModelFields ||
-      this.state.sectionId != nextState.sectionId ||
-      this.state.selectedIndex != nextState.selectedIndex;
+  shouldComponentUpdate (nextProps, nextState) {
+    return this.state.model == undefined
+      || this.state.currentName != nextState.currentName
+      || this.state.cellModelFields != nextState.cellModelFields
+      || this.state.sectionId != nextState.sectionId
+      || this.state.selectedIndex != nextState.selectedIndex;
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Population");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
         Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { 
           this.renaming = false
           GEPPETTO.trigger('populations_change');
-	      });
+        });
         this.renaming = true;
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -119,17 +117,17 @@ export default class NetPyNEPopulation extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
     if (this.state.sectionId == "General") {
-      var content =
-        <div id="populationMetadata">
+      var content
+        = <div id="populationMetadata">
           <TextField
             onChange={this.handleRenameChange}
             value={this.state.currentName}
@@ -162,17 +160,16 @@ export default class NetPyNEPopulation extends React.Component {
           <DimensionsComponent modelName={this.props.name} />
           {dialogPop}
         </div>
-    }
-    else if (this.state.sectionId == "SpatialDistribution") {
-      var content = 
-        <div>
+    } else if (this.state.sectionId == "SpatialDistribution") {
+      var content 
+        = <div>
           <NetPyNECoordsRange
             id={"xRangePopParams"}
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'xRange', label:'Absolute'}, 
-              {value: 'xnormRange', label:'Normalized'}
+              { value: 'xRange', label:'Absolute' }, 
+              { value: 'xnormRange', label:'Normalized' }
             ]}
           />
 
@@ -181,8 +178,8 @@ export default class NetPyNEPopulation extends React.Component {
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'yRange', label:'Absolute'}, 
-              {value: 'ynormRange', label:'Normalized'}
+              { value: 'yRange', label:'Absolute' }, 
+              { value: 'ynormRange', label:'Normalized' }
             ]}
           />
 
@@ -191,16 +188,14 @@ export default class NetPyNEPopulation extends React.Component {
             name={this.props.name} 
             model={'netParams.popParams'}
             items={[
-              {value: 'zRange', label:'Absolute'}, 
-              {value: 'znormRange', label:'Normalized'}
+              { value: 'zRange', label:'Absolute' }, 
+              { value: 'znormRange', label:'Normalized' }
             ]}
           />
         </div>
-    }
-    else if (this.state.sectionId == "CellList") {
+    } else if (this.state.sectionId == "CellList") {
       var content = <div>Option to provide individual list of cells. Coming soon ...</div>
-    }
-    else {
+    } else {
       var content = <div>{this.state.cellModelFields}</div>;
     }
 

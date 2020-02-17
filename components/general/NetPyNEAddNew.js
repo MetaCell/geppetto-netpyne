@@ -4,20 +4,19 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 export default class NetPyNEAddNew extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
-  };
+  }
 
-  handleClick() {
+  handleClick () {
     if (this.props.handleClick) {
       this.props.handleClick();
-    };
-  };
+    }
+  }
 
-  render() {
+  render () {
     return (
       <FloatingActionButton 
         id={this.props.id}
@@ -29,8 +28,8 @@ export default class NetPyNEAddNew extends React.Component {
         <ContentAdd />
       </FloatingActionButton>
     );
-  };
-};
+  }
+}
 
 
 const styles = {

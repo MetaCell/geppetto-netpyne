@@ -13,16 +13,16 @@ var PythonMethodControlledSelectField = PythonControlledCapability.createPythonC
 
 export default class NetPyNECellRule extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
       errorMessage: undefined,
       errorDetails: undefined
     };
-  };
+  }
 
-  componentDidMount(){
+  componentDidMount (){
     GEPPETTO.on('populations_change', () => {
       this.forceUpdate();
     })
@@ -34,43 +34,45 @@ export default class NetPyNECellRule extends React.Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount (){
     GEPPETTO.off('populations_change')
     GEPPETTO.off('cellType_change')
     GEPPETTO.off('cellModel_change')
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "CellRule");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false; 
+        });
         this.renaming = true;
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -78,9 +80,9 @@ export default class NetPyNECellRule extends React.Component {
         primaryText={name}
       />
     ));
-  };
+  }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -91,13 +93,13 @@ export default class NetPyNECellRule extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined ? <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: 'auto' }}
-          style={{ whiteSpace: "pre-wrap" }}>
-          {children}
-        </Dialog> 
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> 
       : undefined
     )
     return (
@@ -181,5 +183,5 @@ export default class NetPyNECellRule extends React.Component {
         {dialogPop}
       </div>
     );
-  };
-};
+  }
+}

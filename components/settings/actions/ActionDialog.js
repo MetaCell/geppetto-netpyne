@@ -4,13 +4,9 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import Utils from '../../../Utils';
 
-const styles = {
-    cancel: {
-        marginRight: 10
-    }
-}
+const styles = { cancel: { marginRight: 10 } }
 export default class ActionDialog extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       open: this.props.open,
@@ -21,28 +17,26 @@ export default class ActionDialog extends React.Component {
   
   componentDidUpdate = (prevProps, prevState) => {
     if (this.props.open != prevProps.open) {
-      this.setState({
-        open: this.props.open
-      });
+      this.setState({ open: this.props.open });
     }
   }
 
   performAction = () => {
     if (this.props.isFormValid === undefined || this.props.isFormValid()){
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-    this.closeDialog();
+      this.closeDialog();
       Utils
         .evalPythonMessage(this.props.command, [this.props.args])
         .then(response => {
           if (!this.processError(response)) {
-            if (this.props.args.tab!=undefined) {
+            if (this.props.args.tab != undefined) {
               this.props.changeTab(this.props.args.tab, this.props.args);
             }
-            if (this.props.args.tab=='simulate') {
+            if (this.props.args.tab == 'simulate') {
               GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
               GEPPETTO.Manager.loadModel(response);
               GEPPETTO.CommandController.log("The NetPyNE model " + this.props.args.tab + " was completed");
-              }
+            }
             if (this.props.args.action == "deleteModel") {
               GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
                 controller.widgets.forEach(widget => {
@@ -53,30 +47,30 @@ export default class ActionDialog extends React.Component {
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
             this.props.onRequestClose();
           }
-      });
+        });
     }
   }
   
   closeDialog = () => {
-    this.setState({ open: false, errorMessage: undefined, errorDetails: undefined})
+    this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
   }
 
   cancelDialog = () => {
-    this.setState({ open: false, errorMessage: undefined, errorDetails: undefined})
+    this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
     this.props.onRequestClose();
   }
 
-  processError = (response) => {
+  processError = response => {
     var parsedResponse = Utils.getErrorResponse(response);
     if (parsedResponse) {
       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-      this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details']})
+      this.setState({ open: true, errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] })
       return true;
     }
     return false;
   }
 
-  render() {
+  render () {
     if (this.state.open) {
       var cancelAction = <FlatButton label="CANCEL" primary={true} onClick={this.cancelDialog} style={styles.cancel}/>;
       if (this.state.errorMessage == undefined) {
@@ -86,8 +80,7 @@ export default class ActionDialog extends React.Component {
           <RaisedButton id="appBarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
         ];
         var content = this.props.children;
-      }
-      else {
+      } else {
         var actions = [
           cancelAction,
           <RaisedButton
@@ -107,7 +100,7 @@ export default class ActionDialog extends React.Component {
           open={this.state.open}
           bodyStyle={{ overflow: 'auto' }}
           style={{ whiteSpace: "pre-wrap" }}
-          onRequestClose={()=>this.closeDialog()}
+          onRequestClose={() => this.closeDialog()}
         >
           {content}   
         </Dialog>
@@ -115,4 +108,4 @@ export default class ActionDialog extends React.Component {
     }
     return null;
   }
-};
+}

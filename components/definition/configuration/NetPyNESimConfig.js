@@ -16,28 +16,26 @@ var PythonControlledListComponent = PythonControlledCapability.createPythonContr
 
 export default class NetPyNESimConfig extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       model: props.model,
       selectedIndex: 0,
       sectionId: "General"
     };
-  };
+  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      model: nextProps.model
-    });
-  };
+  componentWillReceiveProps (nextProps) {
+    this.setState({ model: nextProps.model });
+  }
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  render() {
+  render () {
     var content;
     if (this.state.sectionId == 'General') {
-      content =
-        <div style={{ float: 'left', width: '100%' }}>
+      content
+        = <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
 
             <NetPyNEField id="simConfig.duration" >
@@ -48,7 +46,7 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledTextField model={"simConfig.dt"} />
             </NetPyNEField>
 
-            <NetPyNEField id="simConfig.printRunTime"  >
+            <NetPyNEField id="simConfig.printRunTime" >
               <PythonControlledTextField model={"simConfig.printRunTime"} />
             </NetPyNEField>
 
@@ -63,7 +61,7 @@ export default class NetPyNESimConfig extends React.Component {
 
           </div>
 
-          <div style={{ float: 'right', width: '45%', marginTop:10}}>
+          <div style={{ float: 'right', width: '45%', marginTop:10 }}>
             <NetPyNEField id="simConfig.createNEURONObj" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.createNEURONObj"} />
             </NetPyNEField>
@@ -117,18 +115,17 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
           </div>
         </div>
-    }
-    else if (this.state.sectionId == 'SaveConfiguration') {
-      content =
-        <div style={{ float: 'left', width: '100%' }}>
+    } else if (this.state.sectionId == 'SaveConfiguration') {
+      content
+        = <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.simLabel" >
               <PythonControlledTextField model={"simConfig.simLabel"} />
             </NetPyNEField>
 
             {
-              !window.isDocker &&
-              <NetPyNEField id="simConfig.saveFolder" >
+              !window.isDocker
+              && <NetPyNEField id="simConfig.saveFolder" >
                 <PythonControlledTextField model={"simConfig.saveFolder"} />
               </NetPyNEField>
             }
@@ -147,8 +144,8 @@ export default class NetPyNESimConfig extends React.Component {
 
           </div>
 
-          <div style={{ float: 'right', width: '45%', marginTop:50, marginLeft:50}}>
-          <NetPyNEField id="simConfig.saveJson" className={"netpyneCheckbox"} >
+          <div style={{ float: 'right', width: '45%', marginTop:50, marginLeft:50 }}>
+            <NetPyNEField id="simConfig.saveJson" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.saveJson"} />
             </NetPyNEField>
             
@@ -194,8 +191,8 @@ export default class NetPyNESimConfig extends React.Component {
           </div>
         </div>
     } else if (this.state.sectionId == 'Record') {
-      content =
-        <div style={{ float: 'left', width: '100%' }}>
+      content
+        = <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.recordCells" className={"listStyle"} >
               <PythonControlledListComponent model={"simConfig.recordCells"} />
@@ -206,7 +203,7 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
             
             <NetPyNEField id="simConfig.recordTraces" className={"listStyle"} >
-              <PythonControlledListComponent model={"simConfig.recordTraces"}  />
+              <PythonControlledListComponent model={"simConfig.recordTraces"} />
             </NetPyNEField>
             
             <NetPyNEField id="simConfig.recordStep" >
@@ -215,34 +212,33 @@ export default class NetPyNESimConfig extends React.Component {
             
           </div>
 
-          <div style={{ float: 'right', width: '45%'}}>
-            <NetPyNEField id="simConfig.saveLFPCells" className={"netpyneCheckbox"} style={{marginTop: 25}}>
+          <div style={{ float: 'right', width: '45%' }}>
+            <NetPyNEField id="simConfig.saveLFPCells" className={"netpyneCheckbox"} style={{ marginTop: 25 }}>
               <PythonControlledCheckbox model={"simConfig.saveLFPCells"} />
             </NetPyNEField>
             
-            <NetPyNEField id="simConfig.recordStim" className={"netpyneCheckbox"} style={{marginTop: 25}}>
+            <NetPyNEField id="simConfig.recordStim" className={"netpyneCheckbox"} style={{ marginTop: 25 }}>
               <PythonControlledCheckbox model={"simConfig.recordStim"} />
             </NetPyNEField>
           </div>
         </div >
     } else if (this.state.sectionId == 'ErrorChecking') {
-      content =
-      <div style={{ float: 'left', width: '100%' }}>
-        <div style={{ float: 'left', width: '45%' }}>
-          <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.checkErrors"} />
-          </NetPyNEField>
+      content
+      = <div style={{ float: 'left', width: '100%' }}>
+          <div style={{ float: 'left', width: '45%' }}>
+            <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.checkErrors"} />
+            </NetPyNEField>
+          </div >
+          <div style={{ float: 'right', width: '45%' }}>
+            <NetPyNEField id="simConfig.checkErrorsVerbose" className={"netpyneCheckbox"} >
+              <PythonControlledCheckbox model={"simConfig.checkErrorsVerbose"} />
+            </NetPyNEField>
+          </div>
         </div >
-        <div style={{ float: 'right', width: '45%'}}>
-          <NetPyNEField id="simConfig.checkErrorsVerbose" className={"netpyneCheckbox"} >
-            <PythonControlledCheckbox model={"simConfig.checkErrorsVerbose"} />
-          </NetPyNEField>
-        </div>
-      </div >
-    }
-    else if (this.state.sectionId=='netParams') {
-      var content =
-        <div style={{ float: 'left', width: '100%' }}>
+    } else if (this.state.sectionId == 'netParams') {
+      var content
+        = <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="netParams.scale" >
               <PythonControlledTextField model={"netParams.scale"} />
@@ -268,35 +264,35 @@ export default class NetPyNESimConfig extends React.Component {
               <PythonControlledListComponent model={"netParams.scaleConnWeightModels"} />
             </NetPyNEField>
 
+          </div>
+
+          <div style={{ float: 'right', width: '45%' }}>
+            <NetPyNEField id="netParams.sizeX" >
+              <PythonControlledTextField model={"netParams.sizeX"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.sizeY" >
+              <PythonControlledTextField model={"netParams.sizeY"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.sizeZ" >
+              <PythonControlledTextField model={"netParams.sizeZ"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.propVelocity" >
+              <PythonControlledTextField model={"netParams.propVelocity"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.shape">
+              <PythonControlledSelectField model={"netParams.shape"} />
+            </NetPyNEField>
+
+            <NetPyNEField id="netParams.rotateCellsRandomly" >
+              <PythonControlledTextField model={"netParams.rotateCellsRandomly"} />
+            </NetPyNEField>
+
+          </div>
         </div>
-
-        <div style={{ float: 'right', width: '45%'}}>
-          <NetPyNEField id="netParams.sizeX" >
-            <PythonControlledTextField model={"netParams.sizeX"} />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.sizeY" >
-            <PythonControlledTextField model={"netParams.sizeY"} />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.sizeZ" >
-            <PythonControlledTextField model={"netParams.sizeZ"} />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.propVelocity" >
-            <PythonControlledTextField model={"netParams.propVelocity"} />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.shape">
-            <PythonControlledSelectField model={"netParams.shape"} />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.rotateCellsRandomly" >
-            <PythonControlledTextField model={"netParams.rotateCellsRandomly"} />
-          </NetPyNEField>
-
-        </div>
-      </div>
     }
 
     return (
@@ -324,5 +320,5 @@ export default class NetPyNESimConfig extends React.Component {
         </CardText >
       </Card >
     );
-  };
-};
+  }
+}

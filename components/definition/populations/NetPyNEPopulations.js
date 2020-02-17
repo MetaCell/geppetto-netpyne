@@ -10,7 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 export default class NetPyNEPopulations extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       drawerOpen: false,
@@ -29,15 +29,15 @@ export default class NetPyNEPopulations extends React.Component {
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
 
-  hasSelectedPopulationBeenRenamed(prevState, currentState) {
+  hasSelectedPopulationBeenRenamed (prevState, currentState) {
     var currentModel = prevState.value;
     var model = currentState.value;
-    //deal with rename
+    // deal with rename
     if (currentModel != undefined && model != undefined) {
       var oldP = Object.keys(currentModel);
       var newP = Object.keys(model);
       if (oldP.length == newP.length) {
-        //if it's the same lenght there could be a rename
+        // if it's the same lenght there could be a rename
         for (var i = 0; i < oldP.length; i++) {
           if (oldP[i] != newP[i]) {
             if (prevState.selectedPopulation != undefined) {
@@ -52,37 +52,42 @@ export default class NetPyNEPopulations extends React.Component {
     return undefined;
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    //we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
+  componentDidUpdate (prevProps, prevState) {
+    // we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newPopulationName = this.hasSelectedPopulationBeenRenamed(prevState, this.state);
     if (newPopulationName !== undefined) {
       this.setState({
         selectedPopulation: newPopulationName,
-        populationDeleted: undefined });
-    } else if((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
-      // logic into this if to check if the user added a new object from the python backend and
-      // if the name convention pass the checks, differently rename this and open dialog to inform.
+        populationDeleted: undefined 
+      });
+    } else if ((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+      /*
+       * logic into this if to check if the user added a new object from the python backend and
+       * if the name convention pass the checks, differently rename this and open dialog to inform.
+       */
       var model = this.state.value;
-      for(var m in model) {
-        if((prevState.value !== "") && (!(m in prevState.value))) {
+      for (var m in model) {
+        if ((prevState.value !== "") && (!(m in prevState.value))) {
           var newValue = Utils.nameValidation(model[m].name);
-          if(newValue != model[m].name) {
+          if (newValue != model[m].name) {
             newValue = Utils.getAvailableKey(model, newValue);
             model[newValue] = model[m];
             model[newValue].name = newValue;
             delete model[m];
-            this.setState({ value: model,
-                            errorMessage: "Error",
-                            errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
-                                          m + " has been renamed " + newValue},
-                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
+            this.setState({
+              value: model,
+              errorMessage: "Error",
+              errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n"
+                                          + m + " has been renamed " + newValue
+            },
+            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
           }
         }
       }
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     var itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
@@ -91,11 +96,11 @@ export default class NetPyNEPopulations extends React.Component {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
     // check if the dialog has been triggered due name convention or name collision errors.
-    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails) ? true : false;
+    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
     return newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
   }
 
-  handleNewPopulation() {
+  handleNewPopulation () {
     var defaultPopulationValues = { 'Population': { 'cellModel': '', 'cellType': '' } }
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
@@ -117,37 +122,37 @@ export default class NetPyNEPopulations extends React.Component {
     this.setState({
       value: model,
       selectedPopulation: populationId
-    }, ()=> GEPPETTO.trigger('populations_change'));
+    }, () => GEPPETTO.trigger('populations_change'));
 
   }
 
   /* Method that handles button click */
-  selectPopulation(populationName) {
-    this.setState({selectedPopulation: populationName});
+  selectPopulation (populationName) {
+    this.setState({ selectedPopulation: populationName });
   }
 
-  deletePopulation(name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then((response) =>{
+  deletePopulation (name) {
+    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then(response => {
       if (response) {
         var model = this.state.value;
         delete model[name];
-        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> GEPPETTO.trigger('populations_change'));
+        this.setState({ value: model, selectedPopulation: undefined, populationDeleted: name }, () => GEPPETTO.trigger('populations_change'));
       }
     });
   }
 
-  handleRenameChildren(childName) {
+  handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/,"");
     var childrenList = Object.keys(this.state.value);
-    for(var i=0 ; childrenList.length > i ; i++) {
-      if(childName === childrenList[i]) {
+    for (var i = 0 ; childrenList.length > i ; i++) {
+      if (childName === childrenList[i]) {
         return false;
       }
     }
     return true;
   }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -157,14 +162,14 @@ export default class NetPyNEPopulations extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
 
     if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
@@ -180,7 +185,7 @@ export default class NetPyNEPopulations extends React.Component {
           handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
-      if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
+      if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation) > -1) {
         selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
       }
     }
@@ -202,7 +207,7 @@ export default class NetPyNEPopulations extends React.Component {
             <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedPopulation}
-                handleClick={()=> this.setState({selectedPopulation: undefined})}
+                handleClick={() => this.setState({ selectedPopulation: undefined })}
               />
 
               <NetPyNEAddNew 

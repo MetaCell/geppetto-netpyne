@@ -19,7 +19,7 @@ var PythonControlledListComponent = PythonControlledCapability.createPythonContr
 
 export default class NetPyNEConnectivityRule extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -30,7 +30,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount (){
     GEPPETTO.on('populations_change', () => {
       this.forceUpdate();
     })
@@ -42,29 +42,31 @@ export default class NetPyNEConnectivityRule extends React.Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount (){
     GEPPETTO.off('populations_change')
     GEPPETTO.off('cellType_change')
     GEPPETTO.off('cellModel_change')
   }  
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "ConnectionRule");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false; 
+        });
         this.renaming = true;
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
@@ -73,7 +75,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  getBottomNavigationItem(index, sectionId, label, icon, id) {
+  getBottomNavigationItem (index, sectionId, label, icon, id) {
     return <BottomNavigationItem
       id={id}
       key={sectionId}
@@ -84,10 +86,10 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
 
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -97,11 +99,11 @@ export default class NetPyNEConnectivityRule extends React.Component {
     ));
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -111,18 +113,18 @@ export default class NetPyNEConnectivityRule extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
 
     if (this.state.sectionId == "General") {
-      var content =
-        <div>
+      var content
+        = <div>
           <TextField
             id={"ConnectivityName"}
             onChange={this.handleRenameChange}
@@ -148,9 +150,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             <PythonMethodControlledSelectField
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
-              postProcessItems={(pythonData, selected) => {
-                return pythonData.map((name) => (<MenuItem id={name+"MenuItem"}key={name} value={name} primaryText={name} />));
-              }}
+              postProcessItems={(pythonData, selected) => pythonData.map(name => (<MenuItem id={name + "MenuItem"}key={name} value={name} primaryText={name} />))}
             />
           </NetPyNEField>
 
@@ -197,8 +197,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
           {dialogPop}
         </div>
-    }
-    else if (this.state.sectionId == "Pre Conditions") {
+    } else if (this.state.sectionId == "Pre Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.preConds.pop"} >
           <PythonMethodControlledSelectField
@@ -259,8 +258,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
         />
 
       </div>
-    }
-    else if (this.state.sectionId == "Post Conditions") {
+    } else if (this.state.sectionId == "Post Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.postConds.pop"} >
           <PythonMethodControlledSelectField

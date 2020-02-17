@@ -14,7 +14,7 @@ var PythonControlledListComponent = PythonControlledCapability.createPythonContr
 
 export default class NetPyNEStimulationSource extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -30,67 +30,69 @@ export default class NetPyNEStimulationSource extends React.Component {
       { type: 'AlphaSynapse' }
     ];
     this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
-  };
+  }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
       this.setState({ currentName: nextProps.name, sourceType: null });
-    };
-  };
+    }
+  }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationSource");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => {
           this.renaming = false
           GEPPETTO.trigger('stimSources_change');
         });
         this.renaming = true;
-        // Update layout has been inserted in the triggerUpdate since this will have to query the backend
-        // So we need to delay this along with the rename, differently we will face a key issue with netpyne
+        /*
+         * Update layout has been inserted in the triggerUpdate since this will have to query the backend
+         * So we need to delay this along with the rename, differently we will face a key issue with netpyne
+         */
         this.updateLayout();
       });
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
-    };
+    }
     this.updateTimer = setTimeout(updateMethod, 1000);
-  };
+  }
 
-  componentDidMount() {
+  componentDidMount () {
     this.updateLayout();
-  };
+  }
 
-  updateLayout() {
-    var opts = this.stimSourceTypeOptions.map((option) => { return option.type });
+  updateLayout () {
+    var opts = this.stimSourceTypeOptions.map(option => option.type);
     Utils
-      .evalPythonMessage("[value == netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in "+JSON.stringify(opts)+"]")
-      .then((responses) => {
+      .evalPythonMessage("[value == netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in " + JSON.stringify(opts) + "]")
+      .then(responses => {
         if (responses.constructor.name == "Array"){
           responses.forEach( (response, index) => {
-            if (response && this.state.sourceType!=opts[index]) {
+            if (response && this.state.sourceType != opts[index]) {
               this.setState({ sourceType: opts[index] })
             }
           })
         }
-    });
-  };
+      });
+  }
 
-  handleStimSourceTypeChange(event, index, value) {
+  handleStimSourceTypeChange (event, index, value) {
     Utils.execPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + value + "'");
     this.setState({ sourceType: value });
     GEPPETTO.trigger('stimSources_change', this.state.currentName);
-  };
+  }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -100,14 +102,14 @@ export default class NetPyNEStimulationSource extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
@@ -235,8 +237,7 @@ export default class NetPyNEStimulationSource extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } 
-    else if (this.state.sourceType == 'SEClamp') {
+    } else if (this.state.sourceType == 'SEClamp') {
       var variableContent = (
         <div>
           <NetPyNEField id="netParams.stimSourceParams.vClampDur" className="listStyle">
@@ -259,10 +260,9 @@ export default class NetPyNEStimulationSource extends React.Component {
 
         </div>
       )
-    }
-    else {
+    } else {
       var variableContent = <div />
-    };
+    }
 
     return (
       <div>
@@ -283,9 +283,9 @@ export default class NetPyNEStimulationSource extends React.Component {
               value={this.state.sourceType}
               onChange={this.handleStimSourceTypeChange}
             >
-              {(this.stimSourceTypeOptions != undefined) ?
-                this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
-                  return (<MenuItem id={stimSourceTypeOption.type+"MenuItem"} key={stimSourceTypeOption.type} value={stimSourceTypeOption.type} primaryText={stimSourceTypeOption.type} />)
+              {(this.stimSourceTypeOptions != undefined)
+                ? this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
+                  return (<MenuItem id={stimSourceTypeOption.type + "MenuItem"} key={stimSourceTypeOption.type} value={stimSourceTypeOption.type} primaryText={stimSourceTypeOption.type} />)
                 }) : null
               }
             </SelectField>
@@ -295,5 +295,5 @@ export default class NetPyNEStimulationSource extends React.Component {
         {dialogPop}
       </div>
     );
-  };
-};
+  }
+}

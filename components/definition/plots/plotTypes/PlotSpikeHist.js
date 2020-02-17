@@ -6,25 +6,24 @@ import TimeRange from '../TimeRange'
 import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js//communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
 
 export default class PlotSpikeHist extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
-  };
+    this.state = {};
+  }
     
-  render() {
+  render () {
     var tag = "simConfig.analysis['plotSpikeHist']"
     return <div >
       <NetPyNEInclude
         id={"simConfig.analysis.plotSpikeHist.include"}
-        model={tag+"['include']"} 
+        model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
         initialValue={'all'}
       />
@@ -46,8 +45,8 @@ export default class PlotSpikeHist extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.overlay" className={"netpyneCheckbox"} >
-          <PythonControlledCheckbox model={tag + "['overlay']"} />
+        <PythonControlledCheckbox model={tag + "['overlay']"} />
       </NetPyNEField>
     </div>
-  };
-};
+  }
+}

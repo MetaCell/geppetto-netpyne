@@ -6,16 +6,16 @@ const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
 
 export default class NetPyNEPlotThumbnail extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-  };
+  }
 
-  handleClick() {
+  handleClick () {
     this.props.handleClick(this.props.name);
-  };
+  }
 
-  render() {
+  render () {
     return (
       <IconButton
         className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
@@ -25,5 +25,5 @@ export default class NetPyNEPlotThumbnail extends React.Component {
         <span className={"gearThumbLabel"}>{this.props.name}</span>
       </IconButton>
     );
-  };
-};
+  }
+}

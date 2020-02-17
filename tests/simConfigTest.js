@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------------//
-function setSimConfigParams(casper, test, toolbox) {
-  casper.then(function() {
-    this.waitUntilVisible('div[id="Configuration"]', function() {
+// ----------------------------------------------------------------------------//
+function setSimConfigParams (casper, test, toolbox) {
+  casper.then(function () {
+    this.waitUntilVisible('div[id="Configuration"]', function () {
       toolbox.active = {
         cardID: "Configuration",
         buttonID: "configGeneral",
@@ -15,7 +15,7 @@ function setSimConfigParams(casper, test, toolbox) {
     this.wait(1500)
   })
 
-  casper.then(function() {
+  casper.then(function () {
     toolbox.setInputValue(this, test, "simConfig.duration", "999");
     toolbox.setInputValue(this, test, "simConfig.dt", "0.0249");
     toolbox.getInputValue(this, test, "simConfig.printRunTime", "false");
@@ -26,10 +26,10 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.deleteListItem(this, test, "simConfig.seeds2");
     toolbox.addListItem(this, test, "simConfig.seeds", "fakeII: 654321")
   })
-  casper.then(function() {
+  casper.then(function () {
     this.wait(1000)
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.clickCheckBox(this, test, "simConfig.createNEURONObj");
     toolbox.clickCheckBox(this, test, "simConfig.createPyStruct");
     toolbox.clickCheckBox(this, test, "simConfig.addSynMechs");
@@ -45,14 +45,14 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.clickCheckBox(this, test, "simConfig.cvode_active");
   })
 
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
-  casper.thenClick("#configRecord", function() { //go to record tab
-    this.wait(2500); //let python populate fields
+  casper.thenClick("#configRecord", function () { // go to record tab
+    this.wait(2500); // let python populate fields
     toolbox.active.tabID = "configRecord"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.addListItem(this, test, "simConfig.recordCells", "22")
     toolbox.addListItem(this, test, "simConfig.recordLFP", "1,2,3")
     toolbox.addListItem(this, test, "simConfig.recordTraces", "Vsoma: {sec: soma, loc: 0.5, var: v}")
@@ -61,56 +61,58 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.clickCheckBox(this, test, "simConfig.recordStim");
   })
 
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
 
-  casper.thenClick("#configSaveConfiguration", function() { //go to saveConfig tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#configSaveConfiguration", function () { // go to saveConfig tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "configSaveConfiguration"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.assertExist(this, test, "simConfig.simLabel")
     toolbox.assertExist(this, test, "simConfig.saveDataInclude")
     toolbox.assertExist(this, test, "simConfig.backupCfgFile")
     toolbox.getInputValue(this, test, "simConfig.filename", "model_output");
     toolbox.getlistItemValues(this, test, "simConfig.saveDataInclude", ['netParams', 'netCells', 'netPops', 'simConfig', 'simData'])
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.clickCheckBox(this, test, "simConfig.saveCellSecs");
     toolbox.clickCheckBox(this, test, "simConfig.saveCellConns");
     toolbox.clickCheckBox(this, test, "simConfig.timestampFilename");
     toolbox.clickCheckBox(this, test, "simConfig.savePickle");
     toolbox.clickCheckBox(this, test, "simConfig.saveJson");
     toolbox.clickCheckBox(this, test, "simConfig.saveMat");
-    // toolbox.clickCheckBox(this, test, "simConfig.saveHDF5");
-    // toolbox.clickCheckBox(this, test, "simConfig.saveDpk");
-    // toolbox.clickCheckBox(this, test, "simConfig.saveDat");
-    // toolbox.clickCheckBox(this, test, "simConfig.saveCSV");
+    /*
+     * toolbox.clickCheckBox(this, test, "simConfig.saveHDF5");
+     * toolbox.clickCheckBox(this, test, "simConfig.saveDpk");
+     * toolbox.clickCheckBox(this, test, "simConfig.saveDat");
+     * toolbox.clickCheckBox(this, test, "simConfig.saveCSV");
+     */
     toolbox.clickCheckBox(this, test, "simConfig.saveTiming");
   })
 
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
 
-  casper.thenClick("#configErrorChecking", function() { //go to checkError tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#configErrorChecking", function () { // go to checkError tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "configErrorChecking"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.clickCheckBox(this, test, "simConfig.checkErrors");
     toolbox.clickCheckBox(this, test, "simConfig.checkErrorsVerbose");
   })
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
 
-  casper.thenClick("#confignetParams", function() { //go to network configuration tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#confignetParams", function () { // go to network configuration tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "confignetParams"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.assertExist(this, test, "netParams.scaleConnWeightModels")
     toolbox.setInputValue(this, test, "netParams.scale", "2");
     toolbox.setInputValue(this, test, "netParams.defaultWeight", "3");
@@ -125,18 +127,18 @@ function setSimConfigParams(casper, test, toolbox) {
     toolbox.getSelectFieldValue(this, test, "netParams.shape", "cuboid")
     toolbox.addListItem(this, test, "netParams.scaleConnWeightModels", "0: 0.001")
   })
-  casper.then(function() {
+  casper.then(function () {
     this.wait(3000)
   })
 }
 
-//----------------------------------------------------------------------------//
-function getSimConfigParams(casper, test, toolbox) {
-  casper.thenClick("#configGeneral", function() { //go to network configuration tab
-    this.wait(2500) //let python populate fields
+// ----------------------------------------------------------------------------//
+function getSimConfigParams (casper, test, toolbox) {
+  casper.thenClick("#configGeneral", function () { // go to network configuration tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "configGeneral"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.getInputValue(this, test, "simConfig.duration", "999");
     toolbox.getInputValue(this, test, "simConfig.dt", "0.0249");
     toolbox.getlistItemValues(this, test, "simConfig.hParams", ['celsius : 6.3', 'v_init : -65', "fake : 123456"])
@@ -156,11 +158,11 @@ function getSimConfigParams(casper, test, toolbox) {
     toolbox.testCheckBoxValue(this, test, "simConfig.cvode_active", true);
   })
 
-  casper.thenClick("#configRecord", function() { //go to record tab
-    this.wait(3500); //let python populate fields
+  casper.thenClick("#configRecord", function () { // go to record tab
+    this.wait(3500); // let python populate fields
     toolbox.active.tabID = "configRecord"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.getListItemValue(this, test, "simConfig.recordCells0", "22")
     toolbox.getListItemValue(this, test, "simConfig.recordLFP0", "[1,2,3]")
     toolbox.getListItemValue(this, test, "simConfig.recordTraces0", "Vsoma:   {sec: soma, loc: 0.5, var: v}")
@@ -169,38 +171,40 @@ function getSimConfigParams(casper, test, toolbox) {
     toolbox.testCheckBoxValue(this, test, "simConfig.recordStim", true);
   })
 
-  casper.thenClick("#configSaveConfiguration", function() { //go to saveConfig tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#configSaveConfiguration", function () { // go to saveConfig tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "configSaveConfiguration"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.testCheckBoxValue(this, test, "simConfig.saveCellSecs", false);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveCellConns", false);
     toolbox.testCheckBoxValue(this, test, "simConfig.timestampFilename", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.savePickle", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveJson", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.saveMat", true);
-    // toolbox.testCheckBoxValue(this, test, "simConfig.saveHDF5", true);
-    // toolbox.testCheckBoxValue(this, test, "simConfig.saveDpk", true);
-    // toolbox.testCheckBoxValue(this, test, "simConfig.saveDat", true);
-    // toolbox.testCheckBoxValue(this, test, "simConfig.saveCSV", true);
+    /*
+     * toolbox.testCheckBoxValue(this, test, "simConfig.saveHDF5", true);
+     * toolbox.testCheckBoxValue(this, test, "simConfig.saveDpk", true);
+     * toolbox.testCheckBoxValue(this, test, "simConfig.saveDat", true);
+     * toolbox.testCheckBoxValue(this, test, "simConfig.saveCSV", true);
+     */
     toolbox.testCheckBoxValue(this, test, "simConfig.saveTiming", true);
   })
 
-  casper.thenClick("#configErrorChecking", function() { //go to checkError tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#configErrorChecking", function () { // go to checkError tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "configErrorChecking"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.testCheckBoxValue(this, test, "simConfig.checkErrors", true);
     toolbox.testCheckBoxValue(this, test, "simConfig.checkErrorsVerbose", true);
   })
 
-  casper.thenClick("#confignetParams", function() { //go to network configuration tab
-    this.wait(2500) //let python populate fields
+  casper.thenClick("#confignetParams", function () { // go to network configuration tab
+    this.wait(2500) // let python populate fields
     toolbox.active.tabID = "confignetParams"
   });
-  casper.then(function() {
+  casper.then(function () {
     toolbox.getInputValue(this, test, "netParams.scale", "2");
     toolbox.getInputValue(this, test, "netParams.defaultWeight", "3");
     toolbox.getInputValue(this, test, "netParams.defaultDelay", "4");
@@ -214,7 +218,7 @@ function getSimConfigParams(casper, test, toolbox) {
   })
 }
 
-//----------------------------------------------------------------------------//
+// ----------------------------------------------------------------------------//
 module.exports = {
   getSimConfigParams: getSimConfigParams,
   setSimConfigParams: setSimConfigParams

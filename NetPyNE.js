@@ -1,5 +1,5 @@
 import React from 'react';
-import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import Transition from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -24,7 +24,7 @@ var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonContro
 
 export default class NetPyNE extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.widgets = {};
     this.state = {
@@ -40,154 +40,147 @@ export default class NetPyNE extends React.Component {
     this.handleDeactivateInstanceUpdate = this.handleDeactivateInstanceUpdate.bind(this);
     this.handleDeactivateSimulationUpdate = this.handleDeactivateSimulationUpdate.bind(this);
     this.handleTabChangedByToolBar = this.handleTabChangedByToolBar.bind(this)
-  }		
-
-  componentWillReceiveProps(nextProps) {
+  }
+ 
+  componentWillReceiveProps (nextProps) {
     if (this.props.data != nextProps.data) {
       console.log("Initialising NetPyNE Tabs")
       
       window.metadata = nextProps.data.metadata;
       window.currentFolder = nextProps.data.currentFolder;
       window.isDocker = nextProps.data.isDocker;
-
+ 
       this.setState({ model: nextProps.data })
     }
-  };
+  }
 
-  hideWidgetsFor = (value) => {
-		if (value != "define") {
-			var page = this.refs[value];
-			if (page) {
-				var widgets = page.getOpenedWidgets();
-				if (this.widgets[value]) {
-					widgets = widgets.concat(this.widgets[value]);
-				}
-				for (var w in widgets) {
-					if(!widgets[w].destroyed){
-						widgets[w].hide();
-					}
-					else{
-						delete widgets[w];
-					}
-				}
-				this.widgets[value] = widgets;
-			}
-		}
-  	}
+  hideWidgetsFor = value => {
+    if (value != "define") {
+      var page = this.refs[value];
+      if (page) {
+        var widgets = page.getOpenedWidgets();
+        if (this.widgets[value]) {
+          widgets = widgets.concat(this.widgets[value]);
+        }
+        for (var w in widgets) {
+          if (!widgets[w].destroyed){
+            widgets[w].hide();
+          } else {
+            delete widgets[w];
+          }
+        }
+        this.widgets[value] = widgets;
+      }
+    }
+  }
 
-	restoreWidgetsFor = (value, rename=false) => {
-		if (value != "define") {
-			if (this.widgets[value]) {
-				let widgets = this.widgets[value]
-				for (var w in widgets) {
-					if (rename && !widgets[w].getName().endsWith('(OLD)')) widgets[w].setName(widgets[w].getName()+' (OLD)')
-					widgets[w].show();
-				}
-			}
-		}
-	}
+  restoreWidgetsFor = (value, rename = false) => {
+    if (value != "define") {
+      if (this.widgets[value]) {
+        let widgets = this.widgets[value]
+        for (var w in widgets) {
+          if (rename && !widgets[w].getName().endsWith('(OLD)')) {
+            widgets[w].setName(widgets[w].getName() + ' (OLD)')
+          }
+          widgets[w].show();
+        }
+      }
+    }
+  }
+ 
+    handleChange = tab => {
+      this.hideWidgetsFor(this.state.value);
+      this.restoreWidgetsFor(tab, true);
+      this.setState( ({ value: pv, prevValue: xx, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others }) => ({
+        value: tab,
+        prevValue: pv, 
+        freezeInstance: pv == 'define' ? false : fi,
+        freezeSimulation: pv == 'define' ? false : fs,
+        tabClicked: !tc,
+      }))
+    };
 
-  	handleChange = (tab) => {
-		this.hideWidgetsFor(this.state.value);
-		this.restoreWidgetsFor(tab, true);
-		this.setState( ({value: pv, prevValue: xx, freezeInstance:fi, freezeSimulation:fs, tabClicked:tc, ...others}) => {
-			return {
-				value: tab,
-				prevValue: pv, 
-				freezeInstance: pv=='define'?false:fi,
-				freezeSimulation: pv=='define'?false:fs,
-				tabClicked: !tc,
-			}
-		})
-	};
+  handleTransitionOptionsChange = (e, v) => {
+    var state = { fastForwardInstantiation: false, fastForwardSimulation: false }
+    if (v == 'Create and Simulate Network') {
+      state = { fastForwardInstantiation: true, fastForwardSimulation: true }
+    } else if (v == 'Create Network') {
+      state = { fastForwardInstantiation: true, fastForwardSimulation: false }
+    }
+    this.setState(state)
+  }
 
-	handleTransitionOptionsChange = (e, v) => {
-		var state = {fastForwardInstantiation: false, fastForwardSimulation: false}
-		if (v=='Create and Simulate Network') {
-			state = {fastForwardInstantiation: true, fastForwardSimulation: true}
-		}
-		else if (v=='Create Network') {
-			state = {fastForwardInstantiation: true, fastForwardSimulation: false}
-		}
-		this.setState(state)
-	}
+  handleDeactivateInstanceUpdate = netInstanceWasUpdated => {
+    if (netInstanceWasUpdated) {
+      if (!this.state.freezeInstance) {
+        this.setState({ freezeInstance: true })
+      }
+    }
+  }
 
-	handleDeactivateInstanceUpdate = (netInstanceWasUpdated) => {
-		if (netInstanceWasUpdated) {
-			if (!this.state.freezeInstance) {
-				this.setState({freezeInstance: true})
-			}
-		}
-	}
+  handleDeactivateSimulationUpdate = netSimulationWasUpdated => {
+    if (netSimulationWasUpdated) {
+      if (!this.state.freezeSimulation) {
+        this.setState({ freezeSimulation: true, freezeInstance: true })
+      }
+    }
+  }
+  
+  handleTabChangedByToolBar = (tab, args) => {
+    this.setState(({ value: x, prevValue: xx, freezeInstance: fi, freezeSimulation: fs, ...others }) => ({
+      value: tab,
+      prevValue: tab, 
+      freezeInstance: args.freezeInstance != undefined ? args.freezeInstance : fi,
+      freezeSimulation: args.freezeSimulation != undefined ? args.freezeSimulation : fs,
+    }));
+  }
+  
+  render () {
+    if (this.state.model == null) {
+      return <div></div>
+    } else {
+      if (this.state.value == 'define'){
+        var content = <div>
+          <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
+          <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
+          <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+          <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+          <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+          <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
+          <NetPyNESimConfig model={this.state.model.simConfig} />
+          <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
+        </div>
+      } else {
+        var content = <NetPyNEInstantiated key={this.state.freezeInstance ? "FIXME" : "PLEASE"} ref={"simulate"} model={this.state.model} page={"simulate"} />
+      }
+      
+      return (
+        <div style={{ height: '100%', width:'100%' }} >
+          <div style={{ position: 'relative', zIndex: '100' }}>
+            <Toolbar id="appBar" style={{ backgroundColor: '#543a73', width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100 }}>
+              <ToolbarGroup firstChild={true} style={{ marginLeft: -12 }} >
+                <NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
+              </ToolbarGroup>
+              <ToolbarGroup lastChild={true} style={{ display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10 }}>
+                <NetPyNETabs label={this.state.value} handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
+              </ToolbarGroup>
+            </Toolbar>
+          </div>
+          
+          <Transition 
+            tab={this.state.value} 
+            clickOnTab={this.state.tabClicked}
+            handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
+            handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
+            freezeInstance={this.state.freezeInstance} 
+            freezeSimulation={this.state.freezeSimulation} 
+            fastForwardInstantiation={this.state.fastForwardInstantiation}
+            fastForwardSimulation={this.state.fastForwardSimulation}
+          />
 
-	handleDeactivateSimulationUpdate = (netSimulationWasUpdated) => {
-		if (netSimulationWasUpdated) {
-			if (!this.state.freezeSimulation) {
-				this.setState({freezeSimulation: true, freezeInstance: true})
-			}
-		}
-	}
-	
-	handleTabChangedByToolBar = (tab, args) => {
-		this.setState(({value: x, prevValue: xx, freezeInstance: fi, freezeSimulation: fs, ...others})=>{ 
-			return {
-				value: tab,
-				prevValue: tab, 
-				freezeInstance: args.freezeInstance != undefined ? args.freezeInstance : fi,
-				freezeSimulation: args.freezeSimulation != undefined ? args.freezeSimulation : fs,
-			}
-		});
-	}
-	
-	render() {
-		if (this.state.model == null) {
-			return <div></div>
-		}
-		else 
-		{
-			if (this.state.value=='define'){
-				var content =  <div>
-					<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
-					<PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
-					<PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
-					<PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
-					<PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
-					<PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
-					<NetPyNESimConfig model={this.state.model.simConfig} />
-					<PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
-				</div>
-			}
-			else {
-				var content =  <NetPyNEInstantiated key={this.state.freezeInstance ? "FIXME" : "PLEASE"} ref={"simulate"} model={this.state.model} page={"simulate"} />
-			}
-			
-			return (
-				<div style={{height: '100%', width:'100%'}} >
-					<div style={{position: 'relative', zIndex: '100'}}>
-						<Toolbar id="appBar" style={{backgroundColor: '#543a73', width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100}}>
-							<ToolbarGroup firstChild={true} style={{marginLeft: -12}} >
-								<NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
-							</ToolbarGroup>						
-        			<ToolbarGroup lastChild={true} style={{display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10}}>
-								<NetPyNETabs label={this.state.value} handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
-							</ToolbarGroup>
-						</Toolbar>
-					</div>
-					
-					<Transition 
-						tab={this.state.value} 
-						clickOnTab={this.state.tabClicked}
-						handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate} 
-						handleDeactivateSimulationUpdate={this.handleDeactivateSimulationUpdate}
-						freezeInstance={this.state.freezeInstance} 
-						freezeSimulation={this.state.freezeSimulation} 
-						fastForwardInstantiation={this.state.fastForwardInstantiation}
-						fastForwardSimulation={this.state.fastForwardSimulation}
-					/>
-
-					{content}
-				</div>
-			)
-		}
-  	}
+          {content}
+        </div>
+      )
+    }
+  }
 }

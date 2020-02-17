@@ -4,19 +4,18 @@ import TimeRange from '../TimeRange'
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js//communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotGranger extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
-  };
+    this.state = {};
+  }
   
-  render() {
+  render () {
     var tags = "simConfig.analysis['granger']"
     var content = (
       <div>
@@ -55,5 +54,5 @@ export default class PlotGranger extends React.Component {
     );
     
     return content;
-  };
-};
+  }
+}

@@ -26,64 +26,60 @@ const styles = {
 
 export default class NetPyNENewMechanism extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       open: false,
       mechanisms: []
     };
-  };
+  }
   
-  componentDidMount() {
+  componentDidMount () {
     Utils.evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
-    .then(response => {
-      this.setState({mechanisms: response})
-    })
-  };
+      .then(response => {
+        this.setState({ mechanisms: response })
+      })
+  }
   
-  handleClick = (value) => {
-    this.setState({open: false});
+  handleClick = value => {
+    this.setState({ open: false });
     this.props.handleClick(value);
   };
 
-  handleButtonClick = (anchor) => {
+  handleButtonClick = anchor => {
     const { blockButton, handleHierarchyClick } = this.props;
     if (!blockButton) {
-      this.setState({open: true, anchorEl: anchor})
-    };
+      this.setState({ open: true, anchorEl: anchor })
+    }
     handleHierarchyClick();
   };
 
-  createTooltip(){
+  createTooltip (){
     const { disabled, blockButton } = this.props;
     if (disabled) {
       return "No section selected"
-    }
-    else {
+    } else {
       if (blockButton) {
         return "Explore mechanisms" 
-      }
-      else {
+      } else {
         return "Add new mechanism"
       }
     }
   }
 
-  createLabel(){
+  createLabel (){
     const { disabled, blockButton } = this.props;
     if (disabled) {
       return ""
-    }
-    else {
+    } else {
       if (blockButton) {
         return <NavigationMoreHoriz />
-      }
-      else {
+      } else {
         return <ContentAdd/>
       }
     }
   }
-  render() {
+  render () {
     const { disabled } = this.props;
     const { open, anchorEl, mechanisms } = this.state;
     
@@ -92,12 +88,12 @@ export default class NetPyNENewMechanism extends React.Component {
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
-        iconStyle={{color: '#543a73'}}
+        iconStyle={{ color: '#543a73' }}
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
         <FontIcon 
-          style={{position: 'absolute'}}
+          style={{ position: 'absolute' }}
           className="gpt-fullgear"
           color={changeColor} 
           hoverColor={hoverColor} 
@@ -110,7 +106,7 @@ export default class NetPyNENewMechanism extends React.Component {
         anchorEl={anchorEl}
         anchorOrigin={styles.anchorOrigin}
         targetOrigin={styles.anchorTarget}
-        onRequestClose={ () => this.setState({open: false}) }
+        onRequestClose={ () => this.setState({ open: false }) }
       >
         <Menu onChange={ (e, v) => this.handleClick(v) }>
           {mechanisms.map( mechLabel => 
@@ -119,5 +115,5 @@ export default class NetPyNENewMechanism extends React.Component {
         </Menu>
       </Popover>
     </div>
-  };
-};
+  }
+}

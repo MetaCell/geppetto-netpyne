@@ -12,7 +12,7 @@ var PythonControlledTextField = PythonControlledCapability.createPythonControlle
 
 export default class NetPyNESynapse extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -21,72 +21,72 @@ export default class NetPyNESynapse extends React.Component {
       errorDetails: undefined
     };
     this.synMechModOptions = [
-      { mod: 'Exp2Syn' }, {mod: 'ExpSyn'} 
+      { mod: 'Exp2Syn' }, { mod: 'ExpSyn' } 
     ];
     this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
-  };
+  }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.currentName!=nextProps.name){
-      this.setState({ currentName: nextProps.name, synMechMod: null});      
-    };
-  };
+  componentWillReceiveProps (nextProps) {
+    if (this.state.currentName != nextProps.name){
+      this.setState({ currentName: nextProps.name, synMechMod: null });      
+    }
+  }
   
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "Synapses");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
         Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => {
-          this.renaming=false;
+          this.renaming = false;
           GEPPETTO.trigger('synapses_change');
         });
-        this.renaming=true;
-        // Update layout has been inserted in the triggerUpdate since this will have to query the backend
-        // So we need to delay this along with the rename, differently we will face a key issue with netpyne
+        this.renaming = true;
+        /*
+         * Update layout has been inserted in the triggerUpdate since this will have to query the backend
+         * So we need to delay this along with the rename, differently we will face a key issue with netpyne
+         */
         this.updateLayout();
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
-  };
+  }
   
-  componentDidMount() {
+  componentDidMount () {
     this.updateLayout();
-  };
+  }
 
-  updateLayout() {
+  updateLayout () {
     Utils
       .evalPythonMessage("[value == netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]")
-      .then((response) => { 
+      .then(response => { 
         if (response[0]) {
-          this.setState({synMechMod: "ExpSyn"})
-        }
-        else if(response[1]) {
-          this.setState({synMechMod: "Exp2Syn"})
-        }
-        else {
-          this.setState({synMechMod: ""})
+          this.setState({ synMechMod: "ExpSyn" })
+        } else if (response[1]) {
+          this.setState({ synMechMod: "Exp2Syn" })
+        } else {
+          this.setState({ synMechMod: "" })
         }
       });
-  };
+  }
   
-  handleSynMechModChange(event, index, value) {
+  handleSynMechModChange (event, index, value) {
     Utils.execPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
     this.setState({ synMechMod: value });
-  };
+  }
 
-  render() {
+  render () {
     var actions = [
       <RaisedButton
         primary
@@ -96,19 +96,18 @@ export default class NetPyNESynapse extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
 
-    if (this.state.synMechMod=='' || this.state.synMechMod==undefined) {
+    if (this.state.synMechMod == '' || this.state.synMechMod == undefined) {
       var content = <div/>
-    }
-    else { 
+    } else { 
       var content = (
         <div>
           <NetPyNEField id="netParams.synMechParams.tau1">
@@ -117,13 +116,13 @@ export default class NetPyNESynapse extends React.Component {
             />
           </NetPyNEField>
           
-          {(this.state.synMechMod=="Exp2Syn")?<div>
+          {(this.state.synMechMod == "Exp2Syn") ? <div>
             <NetPyNEField id="netParams.synMechParams.tau2">
               <PythonControlledTextField
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
             </NetPyNEField>
-            </div> : null}
+          </div> : null}
           
           <NetPyNEField id="netParams.synMechParams.e" >
             <PythonControlledTextField
@@ -156,5 +155,5 @@ export default class NetPyNESynapse extends React.Component {
         {dialogPop}
       </div>
     );
-  };
-};
+  }
+}

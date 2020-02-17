@@ -11,17 +11,16 @@ var PythonMethodControlledSelectField = PythonControlledCapability.createPythonC
 
 export default class StimulationConditions extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
-  };
+  }
   
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
@@ -29,9 +28,9 @@ export default class StimulationConditions extends React.Component {
         primaryText={name}
       />
     ));
-  };
+  }
   
-  render() {      
+  render () {      
     var content = (
       <div>
         <NetPyNEField id={"netParams.stimTargetParams.conds.pop"} >
@@ -67,8 +66,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'x', label:'Absolute'}, 
-            {value: 'xnorm', label:'Normalized'}
+            { value: 'x', label:'Absolute' }, 
+            { value: 'xnorm', label:'Normalized' }
           ]}
         />
         
@@ -78,8 +77,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'y', label:'Absolute'}, 
-            {value: 'ynorm', label:'Normalized'}
+            { value: 'y', label:'Absolute' }, 
+            { value: 'ynorm', label:'Normalized' }
           ]}
         />
 
@@ -89,8 +88,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'z', label:'Absolute'}, 
-            {value: 'znorm', label:'Normalized'}
+            { value: 'z', label:'Absolute' }, 
+            { value: 'znorm', label:'Normalized' }
           ]}
         />
         
@@ -103,5 +102,5 @@ export default class StimulationConditions extends React.Component {
     );
     
     return content;
-  };
-};
+  }
+}
