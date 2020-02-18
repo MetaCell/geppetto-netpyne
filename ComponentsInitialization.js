@@ -54,6 +54,9 @@ define(function (require) {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
+            let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
+            GEPPETTO.Manager.loadProject(project, false);
+            GEPPETTO.Manager.loadExperiment(1, [], []);
             Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
                 var data = Utils.convertToJSON(response)
