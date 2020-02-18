@@ -1,7 +1,7 @@
 import React from 'react';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
-import { List, ListItem } from 'material-ui/List';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import { List, ListItem } from '@material-ui/core';
 import Utils from '../../../Utils';
 import ActionDialog from './ActionDialog';
 

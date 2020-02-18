@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from '@material-ui/icons/Add';
+import FloatingActionButton from '@material-ui/core/Fab';
 
 export default class NetPyNEAddNew extends React.Component {
 

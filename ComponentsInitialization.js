@@ -5,18 +5,15 @@ define(function (require) {
     var getMuiTheme = require('material-ui/styles/getMuiTheme').default;
     var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
     var NetPyNE = require('./NetPyNE').default;
-    var injectTapEventPlugin = require('react-tap-event-plugin');
 
     var Utils = require('./Utils').default;
-    var Console = require('../../js/components/interface/console/Console');
-    var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
-    var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
+    var Console = require('geppetto-client/js/components/interface/console/Console');
+    var TabbedDrawer = require('geppetto-client/js/components/interface/drawer/TabbedDrawer');
+    var PythonConsole = require('geppetto-client/js/components/interface/pythonConsole/PythonConsole');
         
     require('./css/netpyne.less');
     require('./css/material.less');
     require('./css/traceback.less');
-
-    injectTapEventPlugin();
 
     const customTheme = {
       palette: {

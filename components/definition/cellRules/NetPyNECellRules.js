@@ -1,9 +1,9 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from '@material-ui/core/Button';
+import ContentAdd from '@material-ui/icons/Add';
+import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
+import FloatingActionButton from '@material-ui/core/Fab';
 import NetPyNECellRule from './NetPyNECellRule';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNESection from './sections/NetPyNESection';
@@ -11,8 +11,8 @@ import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
-import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import Dialog from 'material-ui/Dialog/Dialog';
+import NavigationChevronRight from '@material-ui/icons/ChevronRight';
+import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
@@ -493,7 +493,7 @@ export default class NetPyNECellRules extends React.Component {
     let selection = null;
     let container = null;
 
-    const actions = <RaisedButton primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
+    const actions = <Button variant="contained" primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
 
     const dialogPop = (errorMessage != undefined 
       ? <Dialog
@@ -577,7 +577,7 @@ export default class NetPyNECellRules extends React.Component {
     }
     
     const content = (
-      <CardText className={"tabContainer"} expandable={true}>
+      <CardContent className={"tabContainer"} expandable={true}>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
             <NetPyNEHome
@@ -599,8 +599,9 @@ export default class NetPyNECellRules extends React.Component {
             
             <NavigationChevronRight style={styles.rightArrow}/>
 
-            <RaisedButton
+            <Button
               id="newSectionButton"
+              variant="contained"
               style={styles.sections.container}
               disabledBackgroundColor="grey"
               buttonStyle={styles.sections.icon}
@@ -613,7 +614,7 @@ export default class NetPyNECellRules extends React.Component {
               <p style={{ color: 'white', height: '100%' }}>
                 {this.createLabel('sections')}
               </p>
-            </RaisedButton>
+            </Button>
 
             <NavigationChevronRight style={styles.rightArrow}/>
 
@@ -630,7 +631,7 @@ export default class NetPyNECellRules extends React.Component {
         <div className="details">
           { selection }
         </div>
-      </CardText>
+      </CardContent>
     );
 
     return (

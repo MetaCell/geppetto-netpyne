@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import IconButton from '@material-ui/core/IconButton';
+import FontIcon from '@material-ui/core/Icon';
 
 const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';

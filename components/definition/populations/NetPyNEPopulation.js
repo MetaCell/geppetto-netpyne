@@ -1,17 +1,17 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
-import { CardText } from 'material-ui/Card';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import FontIcon from 'material-ui/FontIcon';
+import TextField from '@material-ui/core/TextField';
+import { CardContent } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 
@@ -63,12 +63,12 @@ export default class NetPyNEPopulation extends React.Component {
     var select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId })
 
     var modelParameters = [];
-    modelParameters.push(<BottomNavigationItem id={'generalPopTab'} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
-    modelParameters.push(<BottomNavigationItem id={'spatialDistPopTab'} key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);
+    modelParameters.push(<BottomNavigationAction id={'generalPopTab'} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => select(0, 'General')} />);
+    modelParameters.push(<BottomNavigationAction id={'spatialDistPopTab'} key={'SpatialDistribution'} label={'Spatial Distribution'} icon={<FontIcon className={"fa fa-cube"} />} onClick={() => select(1, 'SpatialDistribution')} />);
     if (typeof this.state.cellModelFields != "undefined" && this.state.cellModelFields != '') {
-      modelParameters.push(<BottomNavigationItem key={this.state.cellModel} label={this.state.cellModel + " Model"} icon={<FontIcon className={"fa fa-balance-scale"} />} onClick={() => select(2, this.state.cellModel)} />);
+      modelParameters.push(<BottomNavigationAction key={this.state.cellModel} label={this.state.cellModel + " Model"} icon={<FontIcon className={"fa fa-balance-scale"} />} onClick={() => select(2, this.state.cellModel)} />);
     }
-    modelParameters.push(<BottomNavigationItem key={'CellList'} label={'Cell List'} icon={<FontIcon className={"fa fa-list"} />} onClick={() => select(3, 'CellList')} />);
+    modelParameters.push(<BottomNavigationAction key={'CellList'} label={'Cell List'} icon={<FontIcon className={"fa fa-list"} />} onClick={() => select(3, 'CellList')} />);
 
     return modelParameters;
   }
@@ -109,7 +109,8 @@ export default class NetPyNEPopulation extends React.Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -201,11 +202,11 @@ export default class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <CardText>
+        <CardContent>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {this.getModelParameters()}
           </BottomNavigation>
-        </CardText>
+        </CardContent>
         <br />
         {content}
       </div>

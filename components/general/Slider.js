@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Slider from 'material-ui/Slider';
-import TextField from 'material-ui/TextField';
+import Slider from '@material-ui/core/Slider';
+import TextField from '@material-ui/core/TextField';
 
 /**
  * The slider bar can have a set minimum and maximum, and the value can be

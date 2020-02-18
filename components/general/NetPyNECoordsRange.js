@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import SelectField from '@material-ui/core/Select';
 import Utils from '../../Utils';
 import NetPyNEField from './NetPyNEField';
 import AdapterComponent from './AdapterComponent';
 
-var PythonControlledCapability = require('../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
  
 export default class NetPyNECoordsRange extends Component {

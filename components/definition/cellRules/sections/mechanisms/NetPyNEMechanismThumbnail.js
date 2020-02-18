@@ -1,6 +1,6 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import IconButton from '@material-ui/core/IconButton';
+import FontIcon from '@material-ui/core/Icon';
 import DeleteDialogBox from '../../../../general/DeleteDialogBox';
 
 const hoverColor = '#66d2e2';

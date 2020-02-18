@@ -1,11 +1,14 @@
 import React from 'react';
-import Checkbox from 'material-ui/Checkbox';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import { orange500 , grey400 } from 'material-ui/styles/colors';
+import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import SelectField from '@material-ui/core/Select';
+import { orange , grey } from '@material-ui/core/colors';
 import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
+
+const orange500 = orange[500];
+const grey400 = grey[400];
 
 export default class ImportExportHLS extends React.Component {
   constructor (props) {

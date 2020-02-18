@@ -1,8 +1,8 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import Utils from '../../../../../Utils';
 
-var PythonControlledCapability = require('../geppetto-client/js//communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 export default class NetPyNEMechanism extends React.Component {

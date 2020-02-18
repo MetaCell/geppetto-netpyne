@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import AdapterComponent from '../../general/AdapterComponent';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
  
 export default class TimeRange extends Component {

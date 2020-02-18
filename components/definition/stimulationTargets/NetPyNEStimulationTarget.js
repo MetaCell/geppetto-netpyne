@@ -1,18 +1,18 @@
 import React from 'react';
-import CardText from 'material-ui/Card';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import CondsIcon from 'material-ui/svg-icons/maps/local-offer';
-import StimTargetIcon from 'material-ui/svg-icons/action/reorder';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import CardText from '@material-ui/core/Card';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import SelectField from '@material-ui/core/Select';
+import CondsIcon from '@material-ui/icons/LocalOffer';
+import StimTargetIcon from '@material-ui/icons/Reorder';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import StimulationConditions from './StimulationConditions';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 
@@ -125,8 +125,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
   
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
   
-  getBottomNavigationItem (index, sectionId, label, icon, id) {
-    return <BottomNavigationItem
+  getBottomNavigationAction (index, sectionId, label, icon, id) {
+    return <BottomNavigationAction
       id={id}
       key={sectionId}
       label={label}
@@ -137,8 +137,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
   
   render () {
     var actions = [
-      <RaisedButton
+      <Button
         primary
+        variant="contained"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
@@ -226,8 +227,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', <StimTargetIcon />, 'stimTargetGeneralTab'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Conditions', 'Conditions',<CondsIcon/>, 'stimTargetCondsTab')); 
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'General', 'General', <StimTargetIcon />, 'stimTargetGeneralTab'));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'Conditions', 'Conditions',<CondsIcon/>, 'stimTargetCondsTab')); 
     
     return (
       <div>

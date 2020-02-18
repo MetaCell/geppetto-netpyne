@@ -5,21 +5,20 @@ jQuery(function () {
   require('geppetto-client-initialization');
   var ReactDOM = require('react-dom');
   var React = require('react');
-  var getMuiTheme = require('material-ui/styles/getMuiTheme').default;
-  var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
+  var getMuiTheme = require('@material-ui/core/styles/createMuiTheme').default;
+  var MuiThemeProvider = require('@material-ui/core/styles/MuiThemeProvider').default;
   var NetPyNE = require('./NetPyNE').default;
-  var injectTapEventPlugin = require('react-tap-event-plugin');
+
 
   var Utils = require('./Utils').default;
-  var Console = require('../../js/components/interface/console/Console');
-  var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
-  var PythonConsole = require('../../js/components/interface/pythonConsole/PythonConsole');
+  var Console = require('geppetto-client/js/components/interface/console/Console');
+  var TabbedDrawer = require('geppetto-client/js/components/interface/drawer/TabbedDrawer');
+  var PythonConsole = require('geppetto-client/js/components/interface/pythonConsole/PythonConsole');
         
   require('./css/netpyne.less');
   require('./css/material.less');
   require('./css/traceback.less');
 
-  injectTapEventPlugin();
 
   const customTheme = {
     palette: {
@@ -34,7 +33,7 @@ jQuery(function () {
   function App (data = {}) {
     return (
       <div>
-        <MuiThemeProvider muiTheme={theme}>
+        <MuiThemeProvider theme={theme}>
           <NetPyNE {...data}></NetPyNE>
         </MuiThemeProvider>
 
@@ -57,6 +56,9 @@ jQuery(function () {
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
   GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
+    let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
+    GEPPETTO.Manager.loadProject(project, false);
+    GEPPETTO.Manager.loadExperiment(1, [], []);
     Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
     Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then(response => {
       var data = Utils.convertToJSON(response)

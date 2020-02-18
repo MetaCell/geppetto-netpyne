@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -154,7 +154,8 @@ export default class NetPyNEPopulations extends React.Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -199,7 +200,7 @@ export default class NetPyNEPopulations extends React.Component {
           showExpandableButton={true}
           id={"Populations"}
         />
-        <CardText className={"tabContainer"} expandable={true}>
+        <CardContent className={"tabContainer"} expandable={true}>
           <div className={"details"}>
             {selectedPopulation}
           </div>
@@ -219,7 +220,7 @@ export default class NetPyNEPopulations extends React.Component {
             <div style={{ clear: "both" }}></div>
             {populations}
           </div>
-        </CardText>
+        </CardContent>
         {dialogPop}
       </Card>
 

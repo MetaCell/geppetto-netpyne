@@ -1,9 +1,10 @@
 import React from 'react';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import { pink400 } from 'material-ui/styles/colors';
-import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+import FontIcon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import pink from '@material-ui/core/colors/pink';
+import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 
+const pink400 = pink[400];
 
 export default ({ handleClick, selection }) => (
   <span>

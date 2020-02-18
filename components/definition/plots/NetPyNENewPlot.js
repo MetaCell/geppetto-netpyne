@@ -1,34 +1,28 @@
 import React, { Component } from 'react';
-import Menu from 'material-ui/Menu';
-import Popover from 'material-ui/Popover';
-import MenuItem from 'material-ui/MenuItem';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Menu from '@material-ui/core/Menu';
+import Popover from '@material-ui/core/Popover';
+import MenuItem from '@material-ui/core/MenuItem';
+import ContentAdd from '@material-ui/icons/Add';
+import FloatingActionButton from '@material-ui/core/Fab';
 
 export default class NetPyNENewPlot extends React.Component {
 
   constructor (props) {
     super(props);
-    this.state = { open: false, };
     this.handleClick = this.handleClick.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
+    this.state = { anchorEl: null, };
   }
   
   handleButtonClick = event => {
     // This prevents ghost click.
     event.preventDefault();
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    });
+    this.setState({ anchorEl: event.currentTarget, });
   };
 
-  handleRequestClose = () => {
-    this.setState({ open: false, });
-  };
-  
+ 
   handleClick (event, value) {
-    this.handleRequestClose();
+    this.props.onClose();
     this.props.handleClick(value);
   }
   
@@ -38,13 +32,13 @@ export default class NetPyNENewPlot extends React.Component {
         <ContentAdd />
       </FloatingActionButton>
       <Popover
-        open={this.state.open}
+        open={Boolean(this.state.anchorEl)}
         anchorEl={this.state.anchorEl}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        onRequestClose={this.handleRequestClose}
+        onRequestClose={this.props.onClose}
       >
-        <Menu onChange={this.handleClick}>
+        <Menu onChange={this.handleClick} onClose={this.props.onClose} >
           <MenuItem key={"plotTraces"} value={"plotTraces"} primaryText={"Traces Plot"}/>
           <MenuItem key={"plotRaster"} value={"plotRaster"} primaryText={"Raster Plot"}/>
           <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"} primaryText={"Spike Histogram Plot"}/>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import Toolbar from '@material-ui/core/Toolbar';
 import Transition from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -13,7 +13,7 @@ import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated'
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
 
-var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
 var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
@@ -158,12 +158,12 @@ export default class NetPyNE extends React.Component {
         <div style={{ height: '100%', width:'100%' }} >
           <div style={{ position: 'relative', zIndex: '100' }}>
             <Toolbar id="appBar" style={{ backgroundColor: '#543a73', width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100 }}>
-              <ToolbarGroup firstChild={true} style={{ marginLeft: -12 }} >
+              <div style={{ marginLeft: -12 }} >
                 <NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
-              </ToolbarGroup>
-              <ToolbarGroup lastChild={true} style={{ display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10 }}>
+              </div>
+              <div lastChild={true} style={{ display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10 }}>
                 <NetPyNETabs label={this.state.value} handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
-              </ToolbarGroup>
+              </div>
             </Toolbar>
           </div>
           

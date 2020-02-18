@@ -1,18 +1,18 @@
 import React from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
+import SelectField from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import Utils from '../../../Utils';
-import FontIcon from 'material-ui/FontIcon';
-import CardText from 'material-ui/Card';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import FontIcon from '@material-ui/core/Icon';
+import CardContent from '@material-ui/core/CardContent';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
@@ -75,8 +75,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  getBottomNavigationItem (index, sectionId, label, icon, id) {
-    return <BottomNavigationItem
+  getBottomNavigationAction (index, sectionId, label, icon, id) {
+    return <BottomNavigationAction
       id={id}
       key={sectionId}
       label={label}
@@ -105,7 +105,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -325,17 +326,17 @@ export default class NetPyNEConnectivityRule extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'generalConnTab'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left', "preCondsConnTab"));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right', 'postCondsConnTab'));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'General', 'General', 'fa-bars', 'generalConnTab'));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left', "preCondsConnTab"));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right', 'postCondsConnTab'));
 
     return (
       <div>
-        <CardText>
+        <CardContent>
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
-        </CardText>
+        </CardContent>
         <br />
         {content}
       </div>

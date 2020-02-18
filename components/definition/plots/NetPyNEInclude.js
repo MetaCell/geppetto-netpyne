@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Menu from 'material-ui/Menu';
-import Divider from 'material-ui/Divider';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import Popover from 'material-ui/Popover/Popover';
+import Menu from '@material-ui/core/Menu';
+import Divider from '@material-ui/core/Divider';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Popover from '@material-ui/core/Popover/Popover';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 

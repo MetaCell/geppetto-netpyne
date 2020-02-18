@@ -1,10 +1,9 @@
 import React from 'react';
-import Tree from '../../../../js/components/interface/tree/Tree'
+import Tree from 'geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
-import FlatButton from 'material-ui/FlatButton/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Button from '@material-ui/core/Button';
 import { changeNodeAtPath } from 'react-sortable-tree';
-import Dialog from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 
 export default class FileBrowser extends React.Component {
 
@@ -59,13 +58,14 @@ export default class FileBrowser extends React.Component {
 
   render () {
     const actions = [
-      <FlatButton
+      <Button
         label={'CANCEL'}
         onClick={event => this.props.onRequestClose()}
         style={{ marginRight: 16 }}
       />,
-      <RaisedButton
+      <Button
         id="browserAccept"
+        variant="contained"
         primary
         label={'SELECT'}
         onClick={event => this.props.onRequestClose(this.state.selection)}

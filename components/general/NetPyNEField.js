@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import MenuItem from 'material-ui/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import FlatButton from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../Utils';
 
 export default class NetPyNEField extends Component {

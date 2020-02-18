@@ -1,12 +1,14 @@
 import React from 'react';
-import { List, ListItem } from 'material-ui/List';
-import { orange500, blue500, grey400 } from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+import { List, ListItem } from '@material-ui/core';
+import { orange, grey } from '@material-ui/core/colors';
+import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import SelectField from '@material-ui/core/Select';
 import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
+
+const orange500 = orange[500], grey400 = grey[400];
 
 const loadOptions = [
   { label: 'High-level Network Parameters (netParams)', label2: 'Cell rules, connectivity rules, etc', state: 'loadNetParams' },

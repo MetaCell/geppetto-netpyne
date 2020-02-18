@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import FontIcon from '@material-ui/core/Icon';
 
 /**
  * Generic List/Dict Component

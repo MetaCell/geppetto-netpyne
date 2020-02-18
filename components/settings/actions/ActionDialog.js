@@ -1,7 +1,6 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog/Dialog';
-import FlatButton from 'material-ui/FlatButton/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 
 const styles = { cancel: { marginRight: 10 } }
@@ -72,18 +71,19 @@ export default class ActionDialog extends React.Component {
 
   render () {
     if (this.state.open) {
-      var cancelAction = <FlatButton label="CANCEL" primary={true} onClick={this.cancelDialog} style={styles.cancel}/>;
+      var cancelAction = <Button label="CANCEL" primary={true} onClick={this.cancelDialog} style={styles.cancel}/>;
       if (this.state.errorMessage == undefined) {
         var title = this.props.title
         var actions = [
           cancelAction, 
-          <RaisedButton id="appBarPerformActionButton" primary label={this.props.buttonLabel} onClick={this.performAction}/>
+          <Button id="appBarPerformActionButton" variant="contained" primary label={this.props.buttonLabel} onClick={this.performAction}/>
         ];
         var content = this.props.children;
       } else {
         var actions = [
           cancelAction,
-          <RaisedButton
+          <Button
+            variant="contained"
             primary
             label={"BACK"}
             onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}

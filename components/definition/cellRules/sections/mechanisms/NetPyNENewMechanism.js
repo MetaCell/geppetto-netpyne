@@ -1,11 +1,10 @@
 import React from 'react';
-import Menu from 'material-ui/Menu';
-import Popover from 'material-ui/Popover';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
+import Menu from '@material-ui/core/Menu';
+import Popover from '@material-ui/core/Popover';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import ContentAdd from '@material-ui/icons/Add';
+import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import Utils from '../../../../../Utils';
 
@@ -92,10 +91,10 @@ export default class NetPyNENewMechanism extends React.Component {
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
-        <FontIcon 
-          style={{ position: 'absolute' }}
+        <i 
+          style={{ position: 'absolute', color: changeColor }}
           className="gpt-fullgear"
-          color={changeColor} 
+           
           hoverColor={hoverColor} 
         />
         { this.createLabel() }

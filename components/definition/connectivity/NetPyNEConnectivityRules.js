@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Dialog from 'material-ui/Dialog/Dialog';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
@@ -159,7 +159,8 @@ export default class NetPyNEConnectivityRules extends Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -197,7 +198,7 @@ export default class NetPyNEConnectivityRules extends Component {
 
       content = (
 
-        <CardText className={"tabContainer"} expandable={true}>
+        <CardContent className={"tabContainer"} expandable={true}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <NetPyNEHome
@@ -215,7 +216,7 @@ export default class NetPyNEConnectivityRules extends Component {
             {selectedConnectivityRule}
             {dialogPop}
           </div>
-        </CardText>);
+        </CardContent>);
     }
 
     return (

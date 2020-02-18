@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/IconMenu';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Utils from '../../../Utils';
 import PlotLFP from './plotTypes/PlotLFP';
 import PlotConn from './plotTypes/PlotConn';
@@ -125,17 +124,13 @@ export default class NetPyNEPlots extends React.Component {
           showExpandableButton={true}
           id="Plots"
         />
-        <CardText className={"tabContainer"} expandable={true}>
+        <CardContent className={"tabContainer"} expandable={true}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
-              <IconMenu style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                iconButtonElement={
-                  <NetPyNENewPlot handleClick={this.handleNewPlot} />
-                }
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              >
-              </IconMenu>
+              <NetPyNENewPlot style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
+                handleClick={this.handleNewPlot} />
+              />
+
             </div>
             <div style={{ clear: "both" }}></div>
             {plots}
@@ -143,7 +138,7 @@ export default class NetPyNEPlots extends React.Component {
           <div className={"details"}>
             {selectedPlot}
           </div>
-        </CardText>
+        </CardContent>
       </Card>
     );
   }

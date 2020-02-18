@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FloatingActionButton from '@material-ui/core/Fab';
 import DeleteDialogBox from './DeleteDialogBox';
 
 export default class NetPyNEThumbnail extends React.Component {

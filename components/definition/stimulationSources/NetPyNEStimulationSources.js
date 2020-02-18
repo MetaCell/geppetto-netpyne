@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationSource from './NetPyNEStimulationSource';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
 export default class NetPyNEStimulationSources extends Component {
 
@@ -134,7 +134,8 @@ export default class NetPyNEStimulationSources extends Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -168,7 +169,7 @@ export default class NetPyNEStimulationSources extends Component {
     }
     
     var content = (
-      <CardText className={"tabContainer"} expandable={true}>
+      <CardContent className={"tabContainer"} expandable={true}>
         <div className={"details"}>
           {selectedStimulationSource}
         </div>
@@ -186,7 +187,7 @@ export default class NetPyNEStimulationSources extends Component {
           <div style={{ clear: "both" }}></div>
           {StimulationSources}
         </div>
-      </CardText>
+      </CardContent>
     );
 
     return (

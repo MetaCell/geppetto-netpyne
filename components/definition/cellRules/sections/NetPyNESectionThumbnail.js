@@ -1,6 +1,6 @@
 import React from 'react';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 import DeleteDialogBox from '../../../general/DeleteDialogBox';
 
 const styles = { btn: { borderRadius: '25px' } };
@@ -43,7 +43,8 @@ export default class NetPyNESectionThumbnail extends React.Component {
     }
     return (
       <div>
-        <RaisedButton
+        <Button
+          variant="contained"
           id={name}
           primary={true} 
           style={ styles.btn }
@@ -55,7 +56,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
           onClick={() => this.handleClick()}
         >
           { label }
-        </RaisedButton>
+        </Button>
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={ r => this.handleDialogBox(r) }

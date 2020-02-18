@@ -1,14 +1,13 @@
 import React,{ Component } from 'react';
-import Card, { CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
 export default class NetPyNESynapses extends Component {
 
@@ -135,7 +134,8 @@ export default class NetPyNESynapses extends Component {
 
   render () {
     var actions = [
-      <RaisedButton
+      <Button
+        variant="contained"
         primary
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
@@ -177,7 +177,7 @@ export default class NetPyNESynapses extends Component {
           showExpandableButton={true}
           id={"Synapses"}
         />
-        <CardText className={"tabContainer"} expandable={true}>
+        <CardContent className={"tabContainer"} expandable={true}>
           <div className={"details"}>
             {selectedSynapse}
           </div>
@@ -193,7 +193,7 @@ export default class NetPyNESynapses extends Component {
             {Synapses}
             {dialogPop}
           </div>
-        </CardText>
+        </CardContent>
       </Card>
     );
   }
