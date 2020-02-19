@@ -5,6 +5,8 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
 
 export default class FileBrowser extends React.Component {
 
@@ -30,7 +32,12 @@ export default class FileBrowser extends React.Component {
                     rowInfo.node.children = dirList;
                     rowInfo.node.expanded = true;
                     rowInfo.node.load = true;
-                    var newTreeData = changeNodeAtPath({ treeData: treeData, path: rowInfo.path, newNode: rowInfo.node, getNodeKey: ({ treeIndex }) => treeIndex });
+                    var newTreeData = changeNodeAtPath({ 
+                        treeData: treeData, 
+                        path: rowInfo.path, 
+                        newNode: rowInfo.node, 
+                        getNodeKey: ({ treeIndex }) => treeIndex 
+                    });
                 }
                 else {
                     var newTreeData = dirList;
@@ -61,6 +68,17 @@ export default class FileBrowser extends React.Component {
         }
     }
 
+    handleMoveUp (reset=false) {
+        var path = this.refs.tree.state.treeData[0].path.split("/").slice(0, -2).join('/') || '/'
+        
+        if (reset) {
+            path = window.currentFolder
+        }
+
+        this.currentFolder = path
+        this.getDirList([], { node: { path }});
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -69,10 +87,10 @@ export default class FileBrowser extends React.Component {
                 style={{ marginRight: 16 }}
             />,
             <RaisedButton
-								id="browserAccept"
+                id="browserAccept"
                 primary
                 label={'SELECT'}
-                onClick={(event) => this.props.onRequestClose(this.state.selection)}
+                onClick={(event) => { this.props.onRequestClose(this.state.selection)}}
                 disabled={!this.state.selection}
             />
         ];
@@ -89,8 +107,33 @@ export default class FileBrowser extends React.Component {
                 <div style={{marginBottom: '15px'}}>
                     <b>{selectMessage}</b>
                     These paths are relative to:<br/>
-                    {window.isDocker ? " the folder you shared with docker (your mounted volume)" :
-                        <span style={{border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px"}}>{window.currentFolder}</span>}
+                    {
+                        window.isDocker 
+                            ? " the folder you shared with docker (your mounted volume)" 
+                            : (
+                                <div className="flex-row fx-center ">
+                                    <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+                                    <IconButton
+                                        disableTouchRipple
+                                        className='simple-icon mrg-2'
+                                        onClick={() => {this.handleMoveUp()}} 
+                                        tooltip='Enclosing Folder'
+                                        tooltipPosition={'top-right'}
+                                    >
+                                        <FontIcon className={'fa fa-level-up listIcon'} />
+                                    </IconButton>
+                                    <IconButton
+                                        disableTouchRipple
+                                        className='simple-icon mrg-2'
+                                        onClick={() => {this.handleMoveUp(true)}} 
+                                        tooltip='Home folder'
+                                        tooltipPosition={'top-right'}
+                                    >
+                                        <FontIcon className={'fa fa-home listIcon'} />
+                                    </IconButton>
+                                </div>
+                            )
+                    }
                 </div>
                 < Tree
                     id="TreeContainerCutting"
