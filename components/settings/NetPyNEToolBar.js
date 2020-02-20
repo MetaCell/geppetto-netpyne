@@ -35,6 +35,11 @@ export default class NetPyNEToolBar extends React.Component {
     this.setState({action:action, openDialogBox:true, open: false})   
   }
 
+  handleOpenSnackBar (message) {
+      this.snackBarMessage = message
+      this.setState({ openSnackBar: true }) 
+  }
+
   render() {
 
     if (this.state.openDialogBox){
@@ -74,6 +79,7 @@ export default class NetPyNEToolBar extends React.Component {
               open={this.state.openDialogBox}
               onRequestClose={() => this.setState({ openDialogBox: false })}
               changeTab={this.props.changeTab}
+              openSnackBar={message => { this.handleOpenSnackBar(message)} }
               mode ={"UPLOAD"}/>
           break;
         case 'DownloadFiles':
@@ -81,10 +87,7 @@ export default class NetPyNEToolBar extends React.Component {
               open={this.state.openDialogBox}
               onRequestClose={() => this.setState({ openDialogBox: false })}
               changeTab={this.props.changeTab}
-              openSnackBar={(message) => { 
-                this.snackBarMessage = message
-                this.setState({ openSnackBar: true }) 
-              }}
+              openSnackBar={message => { this.handleOpenSnackBar(message)} }
               mode ={"DOWNLOAD"}
           />
           break;

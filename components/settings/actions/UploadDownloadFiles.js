@@ -35,22 +35,24 @@ export default class UploadDownloadFile extends React.Component {
         return {
             open: true,
             openSnackBar: false,
-            filePath: '',
-            explorerDialogOpen: false
+            downloadPaths: [],
+            downloadPathsDisplayText: '',
+            explorerDialogOpen: false,
+            uploadFiles: ''
         }
     }
 
     async uploadFiles () {
-        const { files } = this.state
+        const { uploadFiles } = this.state
         const formData = new FormData()
         var data = {}
         
         this.setState({ open: false })
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'UPLOADING FILES');
 
-        if (files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                formData.append('file', files.item(i))
+        if (uploadFiles.length > 0) {
+            for (let i = 0; i < uploadFiles.length; i++) {
+                formData.append('file', uploadFiles.item(i))
             }
 
             try {
@@ -75,28 +77,53 @@ export default class UploadDownloadFile extends React.Component {
         }
     }
 
+    generateUrl () {
+        const { downloadPaths, downloadPathsDisplayText } = this.state
 
-    async downloadAsCSV () {
-        this.props.onRequestClose()
-        try {
-            var url = "/downloads"
-            var downloadFileName = "download.tar.gz"
-            this.state.multiPath.forEach((path, index) => url += `${index === 0 ? '?' : '&'}uri=${path}`)
-            
-            if (this.state.multiPath.length === 1) {
-                downloadFileName = this.state.multiPath[0].split('/').pop()
+        var url = "/downloads"
+        var downloadFileName = "download.tar.gz"
+
+        if (downloadPaths.length > 0) {
+            downloadPaths.forEach((path, index) => url += `${index === 0 ? '?' : '&'}uri=${path}`)
+            if (downloadPaths.length === 1) {
+                downloadFileName = downloadPaths[0].split('/').pop()
             }
+        }
+        else if (downloadPathsDisplayText) {
+            url += `?uri=${downloadPathsDisplayText}`
+        }
+        else {
+            url = ''
+            downloadFileName = ''
+        }
+        return { url, downloadFileName }
+    }
+
+    downloadBlob(blob, fileName) {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+    }
+
+
+    async downloadFiles () {
+        const { url, downloadFileName } = this.generateUrl()
+
+        if (!url) {
+            this.props.onRequestClose()
+            return
+        }
+        
+        try {
             const response = await fetch(url)
           
             if (response.status === 200) {
                 const blob = await response.blob()
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', downloadFileName);
-                document.body.appendChild(link);
-                link.click();
-                link.parentNode.removeChild(link);
+                this.downloadBlob(blob, downloadFileName)
                 this.message = "Files downloaded."
             }
             else if (response.status === 400) {
@@ -117,44 +144,49 @@ export default class UploadDownloadFile extends React.Component {
         }
     }
 
-    maxSelectFile () {
+    maxSelectFile (files) {
         return true
     }
     checkMimeType (files) {
         return true
     }
-    checkFileSize () {
+    checkFileSize (files) {
         return true
     }
 
-    onChangeHandler = event => {
+    onUploadFileArrayChange = event => {
         var files = event.target.files
         if(this.maxSelectFile(files) && this.checkMimeType(files) && this.checkFileSize(files)){ 
-            for (let i = 0; i < files.length; i++) {
-                console.log(files.item(i))
-            }
-            this.setState({ files })
+            this.setState({ uploadFiles: files })
         }
     }
 
-    onPathChange (filePath) {
-        this.setState({ filePath })
-    }
-
-    closeExplorerDialog(multiSelection) {
-        this.setState({ 
-            explorerDialogOpen: false, 
-            multiPath: Object.values(multiSelection).map(s => s.path)
-        })
+    closeExplorerDialog(selectedNodes) {
+        const state = { explorerDialogOpen: false }
+        if (selectedNodes) {
+            state.downloadPaths = Object.values(selectedNodes).map(s => s.path)
+            state.downloadPathsDisplayText = Object.values(selectedNodes).map(s => s.path.split('/').pop()).join(' - ')
+        } 
+        this.setState({ ...state })
     }
 
     showExplorerDialog(filterFiles='') {
         this.setState({ explorerDialogOpen: true, filterFiles })
     }
 
+    changeDownloadFilePathsDisplayText(text) {
+        this.setState({
+            downloadPaths: [text],
+            downloadPathsDisplayText: text
+
+        })
+    }
+    
+
     render() {
+        const { mode } = this.props
         
-        switch(this.props.mode) {
+        switch(mode) {
             case 'UPLOAD':
                 var content = 
                     <div>
@@ -165,15 +197,14 @@ export default class UploadDownloadFile extends React.Component {
                                     type="file" 
                                     style={{ ...styles.input }}
                                     className="form-control" 
-                                    onChange={this.onChangeHandler}
+                                    onChange={this.onUploadFileArrayChange}
                                 />
+                                
                             </div> 
                         </div>
-                        
-                        
+                        <p className="mt-2">Accept: .py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg</p>
                     </div>
-                var command = 'netpyne_geppetto.upload_files';
-                var message = 'UPLOADING FILES';
+
                 var buttonLabel = 'Upload'
                 var title = 'Upload files'
                 break;
@@ -191,8 +222,8 @@ export default class UploadDownloadFile extends React.Component {
                             </IconButton>
                             <TextField 
                                 className="netpyneFieldNoWidth fx-11 no-z-index"
-                                value={this.state.filePath}
-                                onChange={(event) => this.onPathChange(event.target.value)}
+                                value={this.state.downloadPathsDisplayText}
+                                onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
                                 floatingLabelText="Files:"
                                 underlineStyle={{borderWidth:'1px'}}
                                 errorText={"Select files to download"}
@@ -201,17 +232,8 @@ export default class UploadDownloadFile extends React.Component {
                             />
                             
                         </div>
-                        <FileBrowser 
-                            open={this.state.explorerDialogOpen}
-                            exploreOnlyDirs={false}
-                            filterFiles={this.state.filterFiles}
-                            toggleMode
-                            onRequestClose={(multiSelection) => this.closeExplorerDialog(multiSelection)}
-                        />
                     </div>
                     
-                var command = 'netpyne_geppetto.download_files';
-                var message = 'DOWNLOADING FILES';
                 var buttonLabel = 'DOWNLOAD'
                 var title = 'Download files'
                 break
@@ -228,8 +250,8 @@ export default class UploadDownloadFile extends React.Component {
                 primary
                 id="appBarPerformActionButton"
                 label={buttonLabel}
-                disabled={this.props.mode === 'UPLOAD' ? !this.state.files : !this.state.filePath}
-                onClick={() => this.props.mode === 'UPLOAD' ? this.uploadFiles() : this.downloadAsCSV()}
+                disabled={mode === 'UPLOAD' ? !this.state.uploadFiles : this.state.downloadPaths.lenght === 0 || !this.state.downloadPathsDisplayText}
+                onClick={() => mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles()}
             />
         ];
 
@@ -243,9 +265,16 @@ export default class UploadDownloadFile extends React.Component {
                     style={{ whiteSpace: "pre-wrap" }}
                     {...this.props}
                     open={this.props.open && this.state.open}
-                    >
+                >
                     {content}
                 </Dialog>
+                <FileBrowser 
+                    open={this.state.explorerDialogOpen}
+                    exploreOnlyDirs={false}
+                    filterFiles={this.state.filterFiles}
+                    toggleMode
+                    onRequestClose={(multiSelection) => this.closeExplorerDialog(multiSelection)}
+                />
             </div>
             
         )

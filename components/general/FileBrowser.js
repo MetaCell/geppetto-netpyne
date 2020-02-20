@@ -64,6 +64,9 @@ export default class FileBrowser extends React.Component {
 
     getSelectedFiles () {
         const nodes = {}
+        if (!this.refs.tree) {
+            return nodes
+        }
         walk({
             treeData: this.refs.tree.state.treeData,
             getNodeKey: ({ treeIndex }) => treeIndex,
@@ -95,6 +98,18 @@ export default class FileBrowser extends React.Component {
         this.getDirList([], { node: { path }});
     }
 
+    disableSelectButton () {
+        if (this.props.toggleMode) {
+            if (Object.keys(this.getSelectedFiles()).length > 0) {
+                return false
+            }
+        }
+        if (this.state.selection) {
+            return !this.state.selection.active
+        }
+        return true
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -107,7 +122,7 @@ export default class FileBrowser extends React.Component {
                 primary
                 label={'SELECT'}
                 onClick={(event) => { this.props.onRequestClose(this.props.toggleMode ? this.getSelectedFiles() : this.state.selection )}}
-                disabled={!this.state.selection}
+                disabled={this.disableSelectButton()}
             />
         ];
         
