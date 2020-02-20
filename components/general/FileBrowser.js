@@ -7,6 +7,7 @@ import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import { walk } from 'react-sortable-tree';
 
 export default class FileBrowser extends React.Component {
 
@@ -52,7 +53,6 @@ export default class FileBrowser extends React.Component {
             });
     }
 
-
     handleClickVisualize(event, rowInfo) {
         if (rowInfo.node.load == false) {
             this.getDirList(this.refs.tree.state.treeData, rowInfo);
@@ -60,6 +60,22 @@ export default class FileBrowser extends React.Component {
         else if (this.props.exploreOnlyDirs || (rowInfo.node.children == undefined && rowInfo.node.load == undefined)) {
             this.setState({ selection: rowInfo.node })
         }
+    }
+
+    getSelectedFiles () {
+        const nodes = {}
+        walk({
+            treeData: this.refs.tree.state.treeData,
+            getNodeKey: ({ treeIndex }) => treeIndex,
+            ignoreCollapsed: true,
+            callback: (rowInfoIter) => {
+                if (rowInfoIter.node.active) {
+                    nodes[rowInfoIter.treeIndex] = rowInfoIter.node
+                }
+            }
+        });
+
+        return nodes
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -90,7 +106,7 @@ export default class FileBrowser extends React.Component {
                 id="browserAccept"
                 primary
                 label={'SELECT'}
-                onClick={(event) => { this.props.onRequestClose(this.state.selection)}}
+                onClick={(event) => { this.props.onRequestClose(this.props.toggleMode ? this.getSelectedFiles() : this.state.selection )}}
                 disabled={!this.state.selection}
             />
         ];
@@ -141,6 +157,7 @@ export default class FileBrowser extends React.Component {
                     treeData={[]}
                     handleClick={this.handleClickVisualize}
                     rowHeight={30}
+                    toggleMode={!!this.props.toggleMode}
                     activateParentsNodeOnClick={this.props.exploreOnlyDirs}
                     ref="tree"
                 />

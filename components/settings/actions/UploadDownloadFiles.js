@@ -79,14 +79,21 @@ export default class UploadDownloadFile extends React.Component {
     async downloadAsCSV () {
         this.props.onRequestClose()
         try {
-            const response = await fetch(`/downloads?uri=${this.state.filePath}`)
+            var url = "/downloads"
+            var downloadFileName = "download.tar.gz"
+            this.state.multiPath.forEach((path, index) => url += `${index === 0 ? '?' : '&'}uri=${path}`)
+            
+            if (this.state.multiPath.length === 1) {
+                downloadFileName = this.state.multiPath[0].split('/').pop()
+            }
+            const response = await fetch(url)
           
             if (response.status === 200) {
                 const blob = await response.blob()
                 const url = window.URL.createObjectURL(new Blob([blob]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', `download.tar.gz`);
+                link.setAttribute('download', downloadFileName);
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode.removeChild(link);
@@ -134,8 +141,11 @@ export default class UploadDownloadFile extends React.Component {
         this.setState({ filePath })
     }
 
-    closeExplorerDialog(fieldValue) {
-        this.setState({ explorerDialogOpen: false, filePath: fieldValue.path })
+    closeExplorerDialog(multiSelection) {
+        this.setState({ 
+            explorerDialogOpen: false, 
+            multiPath: Object.values(multiSelection).map(s => s.path)
+        })
     }
 
     showExplorerDialog(filterFiles='') {
@@ -195,7 +205,8 @@ export default class UploadDownloadFile extends React.Component {
                             open={this.state.explorerDialogOpen}
                             exploreOnlyDirs={false}
                             filterFiles={this.state.filterFiles}
-                            onRequestClose={(selection) => this.closeExplorerDialog(selection)}
+                            toggleMode
+                            onRequestClose={(multiSelection) => this.closeExplorerDialog(multiSelection)}
                         />
                     </div>
                     
