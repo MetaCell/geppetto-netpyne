@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Divider from 'material-ui/Divider';
+import Snackbar from 'material-ui/Snackbar';
 import LoadFile from './actions/LoadFile';
 import SaveFile from './actions/SaveFile';
 import NewModel from './actions/NewModel';
@@ -23,9 +24,11 @@ export default class NetPyNEToolBar extends React.Component {
     super(props);
     this.state = {
       openDialogBox: false,
+      openSnackBar: false,
       open: false,
       action: null
     }
+    this.snackBarMessage = ""
   }
 
   handleMenuItemClick = (action) => {
@@ -78,6 +81,10 @@ export default class NetPyNEToolBar extends React.Component {
               open={this.state.openDialogBox}
               onRequestClose={() => this.setState({ openDialogBox: false })}
               changeTab={this.props.changeTab}
+              openSnackBar={(message) => { 
+                this.snackBarMessage = message
+                this.setState({ openSnackBar: true }) 
+              }}
               mode ={"DOWNLOAD"}
           />
           break;
@@ -130,6 +137,12 @@ export default class NetPyNEToolBar extends React.Component {
         <MenuItem id="appBarUploadFiles" primaryText="Upload..." onClick={() => this.handleMenuItemClick('UploadFiles')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-cloud-upload' />} />
         <MenuItem id="appBarDownloadFiles" primaryText="Download..." onClick={() => this.handleMenuItemClick('DownloadFiles')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-cloud-download' />} />
       </Drawer>
+      <Snackbar
+        message={this.snackBarMessage}
+        autoHideDuration={4000}
+        open={this.state.openSnackBar}
+        onRequestClose={() => this.setState({ openSnackBar: false })}
+      />
       {content}
     </div>
     }
