@@ -127,6 +127,7 @@ export default class ImportExportHLS extends React.Component {
                     <div>
                         <div className="flex-row">
                             <IconButton
+                                id="appBarImportFileName"
                                 className='flex-row-icon'
                                 onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')} 
                                 tooltip='File explorer'
@@ -135,7 +136,6 @@ export default class ImportExportHLS extends React.Component {
                                 <FontIcon className={'fa fa-folder-o listIcon'} />
                             </IconButton>
                             <TextField 
-                                id="appBarImportFileName"
                                 className="netpyneFieldNoWidth fx-11 no-z-index"
                                 value={this.state.netParamsFullPath}
                                 onChange={(event) => this.onNetParamsPathChange(event.target.value)}

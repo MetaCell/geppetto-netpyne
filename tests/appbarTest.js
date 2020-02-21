@@ -180,8 +180,8 @@ function importHLS(casper, test, toolbox, tut3=true) {
     })
   })
   casper.then(function() {
-    this.waitUntilVisible('input[id="appBarImportFileName"]', function(){
-      this.click('input[id="appBarImportFileName"]')
+    this.waitUntilVisible('button[id="appBarImportFileName"]', function(){
+      this.click('button[id="appBarImportFileName"]')
     })
   })
   casper.then(function(){
@@ -229,7 +229,7 @@ function importHLS(casper, test, toolbox, tut3=true) {
     this.wait(1000)
   })
   casper.then(function(){
-    test.assertExist('input[id="appBarImportFileName"]', "specify if mod files required before importing HLS OK")
+    test.assertExist('button[id="appBarImportFileName"]', "specify if mod files required before importing HLS OK")
   })
 
   casper.then(function() {
@@ -249,7 +249,7 @@ function importHLS(casper, test, toolbox, tut3=true) {
   })
 
   casper.then(function() {
-    this.waitWhileVisible('input[id="appBarImportFileName"]')
+    this.waitWhileVisible('button[id="appBarImportFileName"]')
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       test.assert(true, "Completed HLS import")
     }, 40000)

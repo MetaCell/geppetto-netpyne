@@ -135,7 +135,14 @@ const Utils = {
     getErrorResponse(data){
         var parsedData = this.convertToJSON(data)
         if (parsedData.hasOwnProperty("type") && parsedData['type'] == 'ERROR'){
-            return {'message': parsedData['message'], 'details' : parsedData['details']}
+            const error = {details: parsedData['details']}
+            if (parsedData.hasOwnProperty("message")) {
+                error["message"] = parsedData['message']
+            }
+            else if (parsedData.hasOwnProperty("websocket")) {
+                error["message"] = parsedData['websocket']
+            }
+            return error
         }
         return null;
     },
