@@ -86,8 +86,10 @@ export default class ActionDialog extends React.Component {
     var filename = this.createFileName('NetPyNE_Model_')
     
     if (jsonData.simConfig && jsonData.simConfig.filename) {
-      filename = this.createFileName('jsonData.simConfig.filename' + '_')
+      filename = this.createFileName(jsonData.simConfig.filename + '_')
     }
+
+    filename += '.json'
 
     const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type : 'application/json' });
     this.forceBlobDownload(blob, filename)
