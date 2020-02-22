@@ -138,33 +138,27 @@ export default class FileBrowser extends React.Component {
                 <div style={{marginBottom: '15px'}}>
                     <b>{selectMessage}</b>
                     These paths are relative to:<br/>
-                    {
-                        window.isDocker 
-                            ? " the folder you shared with docker (your mounted volume)" 
-                            : (
-                                <div className="flex-row fx-center ">
-                                    <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
-                                    <IconButton
-                                        disableTouchRipple
-                                        className='simple-icon mrg-2'
-                                        onClick={() => {this.handleMoveUp()}} 
-                                        tooltip='Enclosing Folder'
-                                        tooltipPosition={'top-right'}
-                                    >
-                                        <FontIcon className={'fa fa-level-up listIcon'} />
-                                    </IconButton>
-                                    <IconButton
-                                        disableTouchRipple
-                                        className='simple-icon mrg-2'
-                                        onClick={() => {this.handleMoveUp(true)}} 
-                                        tooltip='Home folder'
-                                        tooltipPosition={'top-right'}
-                                    >
-                                        <FontIcon className={'fa fa-home listIcon'} />
-                                    </IconButton>
-                                </div>
-                            )
-                    }
+                    <div className="flex-row fx-center ">
+                        <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+                        <IconButton
+                            disableTouchRipple
+                            className='simple-icon mrg-2'
+                            onClick={() => {this.handleMoveUp()}} 
+                            tooltip='Enclosing Folder'
+                            tooltipPosition={'top-right'}
+                        >
+                            <FontIcon className={'fa fa-level-up listIcon'} />
+                        </IconButton>
+                        <IconButton
+                            disableTouchRipple
+                            className='simple-icon mrg-2'
+                            onClick={() => {this.handleMoveUp(true)}} 
+                            tooltip='Home folder'
+                            tooltipPosition={'top-right'}
+                        >
+                            <FontIcon className={'fa fa-home listIcon'} />
+                        </IconButton>
+                    </div>
                 </div>
                 < Tree
                     id="TreeContainerCutting"
