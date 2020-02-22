@@ -110,11 +110,16 @@ export default class FileBrowser extends React.Component {
         return true
     }
 
+    onCancelFileBrowser () {
+        this.currentFolder = window.currentFolder
+        this.props.onRequestClose()
+    }
+
     render() {
         const actions = [
             <FlatButton
                 label={'CANCEL'}
-                onClick={(event) => this.props.onRequestClose()}
+                onClick={(event) => this.onCancelFileBrowser()}
                 style={{ marginRight: 16 }}
             />,
             <RaisedButton
@@ -141,6 +146,7 @@ export default class FileBrowser extends React.Component {
                     <div className="flex-row fx-center ">
                         <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
                         <IconButton
+                            id="file-browser-level-up"
                             disableTouchRipple
                             className='simple-icon mrg-2'
                             onClick={() => {this.handleMoveUp()}} 

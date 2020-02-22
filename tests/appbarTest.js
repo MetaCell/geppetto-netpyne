@@ -84,9 +84,19 @@ function importCellTemplate(casper, test, toolbox) {
   })
 
   casper.then(function() {
-    this.waitUntilVisible('input[id="importCellTemplateFile"]', function(){
-      this.click('input[id="importCellTemplateFile"]')
+    this.waitUntilVisible('button[id="importCellTemplateFile"]', function(){
+      this.click('button[id="importCellTemplateFile"]')
     })
+  })
+
+  casper.then(function(){
+    this.wait(500)
+  })
+
+  casper.thenClick('button[id="file-browser-level-up"]')
+  
+  casper.then(function(){
+    this.wait(500)
   })
 
   casper.then(function(){
@@ -114,9 +124,19 @@ function importCellTemplate(casper, test, toolbox) {
   })
 
   casper.then(function() {
-    this.waitUntilVisible('input[id="importCellTemplateModFile"]', function(){
-      this.click('input[id="importCellTemplateModFile"]')
+    this.waitUntilVisible('button[id="importCellTemplateModFile"]', function(){
+      this.click('button[id="importCellTemplateModFile"]')
     })
+  })
+
+  casper.then(function(){
+    this.wait(500)
+  })
+
+  casper.thenClick('button[id="file-browser-level-up"]')
+
+  casper.then(function(){
+    this.wait(500)
   })
 
   casper.then(function(){
@@ -184,6 +204,17 @@ function importHLS(casper, test, toolbox, tut3=true) {
       this.click('button[id="appBarImportFileName"]')
     })
   })
+
+  casper.then(function() {
+    this.wait(500)
+  })
+
+  casper.then(function() {
+    if (tut3) {
+      this.click('button[id="file-browser-level-up"]')
+    }
+  })
+
   casper.then(function(){
     this.wait(1000)
   })
@@ -394,8 +425,8 @@ function openNetwork(casper, test, toolbox) {
     this.wait(1000)
   })
   casper.then(function() {
-    this.waitUntilVisible('input[id="loadJsonFile"]', function() {
-      this.click('input[id="loadJsonFile"]')
+    this.waitUntilVisible('button[id="loadJsonFile"]', function() {
+      this.click('button[id="loadJsonFile"]')
     })
   })
   casper.then(function(){
@@ -417,7 +448,7 @@ function openNetwork(casper, test, toolbox) {
     })
   })
   casper.then(function() {
-    this.waitWhileVisible('input[id="loadJsonFile"]', function() {
+    this.waitWhileVisible('button[id="loadJsonFile"]', function() {
       test.assert(false, 'Trying to loaded a model without specifying if mod files are required')
     }, function (){
       this.echo("Check if mod files are required OK")
