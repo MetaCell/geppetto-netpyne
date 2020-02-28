@@ -57,7 +57,6 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
   
-
   casper.then(function() {
     toolbox.header(this, "load network")
     testLoadNetwork(test)
@@ -95,8 +94,7 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
       this.click('div[id="Populations"]')
     })
   })
-
-
+  
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test appbar")
     testAppbar(test);
@@ -563,11 +561,12 @@ function testSimConfigFields(test) {
  *                               load network                                  *
  ******************************************************************************/
 function testLoadNetwork(test) {
-  casper.then(function() {
-    this.reload(function() {
-      this.echo("reloading webpage", "INFO")
-    })
-  })
+  // casper.then(function() {
+  //   this.reload(function() {
+  //     this.echo("reloading webpage", "INFO")
+  //   })
+  // })
+
   casper.then(function() {
     this.waitWhileVisible('div[id="loading-spinner"]', function() {
       this.wait(5000, function() { //test some expected HTML elements in landing page
