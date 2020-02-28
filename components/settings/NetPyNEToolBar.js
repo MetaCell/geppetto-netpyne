@@ -6,10 +6,12 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Divider from 'material-ui/Divider';
+import Snackbar from 'material-ui/Snackbar';
 import LoadFile from './actions/LoadFile';
 import SaveFile from './actions/SaveFile';
 import NewModel from './actions/NewModel';
 import ImportExportHLS from './actions/ImportExportHLS';
+import UploadDownloadFiles from './actions/UploadDownloadFiles';
 import ImportCellParams from './actions/ImportCellParams'
 import NetPyNElogo from '../../components/general/NetPyNe_logo.png'
 
@@ -22,13 +24,20 @@ export default class NetPyNEToolBar extends React.Component {
     super(props);
     this.state = {
       openDialogBox: false,
+      openSnackBar: false,
       open: false,
       action: null
     }
+    this.snackBarMessage = ""
   }
 
   handleMenuItemClick = (action) => {
     this.setState({action:action, openDialogBox:true, open: false})   
+  }
+
+  handleOpenSnackBar (message) {
+      this.snackBarMessage = message
+      this.setState({ openSnackBar: true }) 
   }
 
   render() {
@@ -64,6 +73,26 @@ export default class NetPyNEToolBar extends React.Component {
               mode ={"EXPORT"}
           />
           break;
+
+        case 'UploadFiles':
+          var content = <UploadDownloadFiles 
+              open={this.state.openDialogBox}
+              onRequestClose={() => this.setState({ openDialogBox: false })}
+              changeTab={this.props.changeTab}
+              openSnackBar={message => { this.handleOpenSnackBar(message)} }
+              mode ={"UPLOAD"}/>
+          break;
+        case 'DownloadFiles':
+          var content = <UploadDownloadFiles 
+              open={this.state.openDialogBox}
+              onRequestClose={() => this.setState({ openDialogBox: false })}
+              changeTab={this.props.changeTab}
+              openSnackBar={message => { this.handleOpenSnackBar(message)} }
+              mode ={"DOWNLOAD"}
+          />
+          break;
+
+
         case 'ImportCellTemplate':
           var content = <ImportCellParams
               open={this.state.openDialogBox}
@@ -108,7 +137,15 @@ export default class NetPyNEToolBar extends React.Component {
         <MenuItem id="appBarImportHLS" primaryText="Import..." onClick={() => this.handleMenuItemClick('ImportHLS')} leftIcon={<ImportIcon color={'#543a73'} />} />
         <MenuItem id="appBarExportHLS" primaryText="Export..." onClick={() => this.handleMenuItemClick('ExportHLS')} leftIcon={<ExportIcon color={'#543a73'} />} />
         <MenuItem id="appBarImportCellTemplate" primaryText="Import Cell Template..." onClick={() => this.handleMenuItemClick('ImportCellTemplate')} leftIcon={<CellTemplateIcon color={'#543a73'} />} />
+        <MenuItem id="appBarUploadFiles" primaryText="Upload..." onClick={() => this.handleMenuItemClick('UploadFiles')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-cloud-upload' />} />
+        <MenuItem id="appBarDownloadFiles" primaryText="Download..." onClick={() => this.handleMenuItemClick('DownloadFiles')} leftIcon={<FontIcon color={'#543a73'} className='fa fa-cloud-download' />} />
       </Drawer>
+      <Snackbar
+        message={this.snackBarMessage}
+        autoHideDuration={4000}
+        open={this.state.openSnackBar}
+        onRequestClose={() => this.setState({ openSnackBar: false })}
+      />
       {content}
     </div>
     }
