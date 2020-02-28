@@ -1,5 +1,4 @@
 import React,{ Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
@@ -169,32 +168,23 @@ export default class NetPyNESynapses extends Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Synaptic mechanisms"
-          subtitle="Define here the synaptic mechanisms available in your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-          id={"Synapses"}
-        />
-        <CardContent className={"tabContainer"} expandable={true}>
-          <div className={"details"}>
-            {selectedSynapse}
+      <React.Fragment>
+        <div className={"details"}>
+          {selectedSynapse}
+        </div>
+        <div className={"thumbnails"}>
+          <div className="breadcrumb">
+            <NetPyNEHome
+              selection={this.state.selectedSynapse}
+              handleClick={() => this.setState({ selectedSynapse: undefined })}
+            />
+            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
           </div>
-          <div className={"thumbnails"}>
-            <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedSynapse}
-                handleClick={() => this.setState({ selectedSynapse: undefined })}
-              />
-              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-            </div>
-            <div style={{ clear: "both" }}></div>
-            {Synapses}
-            {dialogPop}
-          </div>
-        </CardContent>
-      </Card>
+          <div style={{ clear: "both" }}></div>
+          {Synapses}
+          {dialogPop}
+        </div>
+      </React.Fragment>
     );
   }
 }

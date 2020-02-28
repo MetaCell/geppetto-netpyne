@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+
 import FloatingActionButton from '@material-ui/core/Fab';
 import NetPyNECellRule from './NetPyNECellRule';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -576,8 +576,8 @@ export default class NetPyNECellRules extends React.Component {
       )
     }
     
-    const content = (
-      <CardContent className={"tabContainer"} expandable={true}>
+    return (
+      <React.Fragment>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
             <NetPyNEHome
@@ -631,21 +631,9 @@ export default class NetPyNECellRules extends React.Component {
         <div className="details">
           { selection }
         </div>
-      </CardContent>
+        {dialogPop}
+      </React.Fragment>
     );
 
-    return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          id="CellRules"
-          title="Cell rules"
-          subtitle="Define here the rules to set the biophysics and morphology of the cells in your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-        />
-        {content}
-        {dialogPop}
-      </Card>
-    );
   }
 }

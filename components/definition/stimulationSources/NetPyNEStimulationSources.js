@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
-
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
@@ -168,8 +166,8 @@ export default class NetPyNEStimulationSources extends Component {
       selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
     }
     
-    var content = (
-      <CardContent className={"tabContainer"} expandable={true}>
+    return (
+      <React.Fragment>
         <div className={"details"}>
           {selectedStimulationSource}
         </div>
@@ -187,21 +185,10 @@ export default class NetPyNEStimulationSources extends Component {
           <div style={{ clear: "both" }}></div>
           {StimulationSources}
         </div>
-      </CardContent>
+        {dialogPop}
+      </React.Fragment>
     );
 
-    return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Stimulation sources"
-          subtitle="Define here the sources of stimulation in your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-          id={"StimulationSources"}
-        />
-        {content}
-        {dialogPop}
-      </Card>
-    );
+   
   }
 }

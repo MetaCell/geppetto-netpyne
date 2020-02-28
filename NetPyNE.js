@@ -1,5 +1,9 @@
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+
 import Transition from './components/transition/Transition';
 import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
@@ -140,16 +144,7 @@ export default class NetPyNE extends React.Component {
       return <div></div>
     } else {
       if (this.state.value == 'define'){
-        var content = <div>
-          <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
-          <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
-          <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
-          <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
-          <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
-          <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
-          <NetPyNESimConfig model={this.state.model.simConfig} />
-          <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
-        </div>
+        var content = this.renderModelConfiguration()
       } else {
         var content = <NetPyNEInstantiated key={this.state.freezeInstance ? "FIXME" : "PLEASE"} ref={"simulate"} model={this.state.model} page={"simulate"} />
       }
@@ -182,5 +177,51 @@ export default class NetPyNE extends React.Component {
         </div>
       )
     }
+  }
+
+
+  renderModelConfiguration () {
+    const Expandable = ({ title, subtitle, children }) => <ExpansionPanel key={title} style={{ clear: 'both' }}>
+      <ExpansionPanelSummary
+        id="CellRules"
+        expandIcon={<ExpandMoreIcon />}
+      >
+        <div>
+          <Typography variant="h2">{title}</Typography>
+          <Typography variant="subtitle1">{subtitle}</Typography>
+        </div>
+      </ExpansionPanelSummary>
+      {children}
+    </ExpansionPanel>;
+    
+
+    return <div>
+      <Expandable title="Populations" subtitle="Define here the populations of your network">
+        <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
+      </Expandable>
+      <Expandable title="Cell rules" subtitle="Define here the rules to set the biophysics and morphology of the cells in your network">
+        <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
+      </Expandable>
+      <Expandable title="Synaptic mechanisms" subtitle="Define here the synaptic mechanisms available in your network">
+        <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />
+      </Expandable>
+      <Expandable title="Connectivity rules" subtitle="Define here the rules to generate the connections in your network">
+        <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
+      </Expandable>
+      <Expandable title="Stimulation sources" subtitle="Define here the sources of stimulation in your network">
+        <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+      </Expandable>
+      <Expandable title="Stimulation target rules" subtitle="Define here the rules to connect stimulation sources to targets in your network">
+        <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
+      </Expandable>
+      <Expandable title="Simulation configuration" subtitle="Define here the configuration options for the simulation">
+        <NetPyNESimConfig model={this.state.model.simConfig} />
+      </Expandable> 
+      <Expandable title="Plots configuration" subtitle="Define here the options to customize the plots">
+        <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
+      </Expandable> 
+
+      
+    </div>;
   }
 }

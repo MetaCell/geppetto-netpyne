@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
-
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
@@ -168,8 +166,9 @@ export default class NetPyNEStimulationTargets extends Component {
       selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
     }
 
-    var content = (
-      <CardContent className={"tabContainer"} expandable={true}>
+    return (
+      <React.Fragment>
+      
         <div className={"details"}>
           {selectedStimulationTarget}
         </div>
@@ -186,21 +185,10 @@ export default class NetPyNEStimulationTargets extends Component {
           <div style={{ clear: "both" }}></div>
           {StimulationTargets}
         </div>
-      </CardContent>
+        {dialogPop}
+      </React.Fragment>
     );
 
-    return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Stimulation target rules"
-          subtitle="Define here the rules to connect stimulation sources to targets in your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-          id="StimulationTargets"
-        />
-        {content}
-        {dialogPop}
-      </Card>
-    );
+
   }
 }

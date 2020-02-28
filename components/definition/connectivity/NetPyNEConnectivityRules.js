@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
@@ -177,9 +176,7 @@ export default class NetPyNEConnectivityRules extends Component {
       {children}
     </Dialog> : undefined;
 
-    var that = this;
     var model = this.state.value;
-    var content;
     if (this.state.page == 'main') {
 
       var ConnectivityRules = [];
@@ -196,9 +193,8 @@ export default class NetPyNEConnectivityRules extends Component {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
       }
 
-      content = (
-
-        <CardContent className={"tabContainer"} expandable={true}>
+      return (
+        <React.Fragment>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <NetPyNEHome
@@ -216,19 +212,8 @@ export default class NetPyNEConnectivityRules extends Component {
             {selectedConnectivityRule}
             {dialogPop}
           </div>
-        </CardContent>);
+        </React.Fragment>
+      );
     }
-
-    return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Connectivity rules"
-          subtitle="Define here the rules to generate the connections in your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-          id="Connections"
-        />
-        {content}
-      </Card>);
   }
 }

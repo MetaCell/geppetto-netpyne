@@ -1,6 +1,12 @@
+<<<<<<< Updated upstream
 *.DS_Store
 .DS_Store
 node_modules
 build
 geppetto-client
 .idea/
+=======
+.DS_Store
+/node_modules
+/geppetto-client
+>>>>>>> Stashed changes

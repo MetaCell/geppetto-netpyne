@@ -211,8 +211,7 @@ export default class ListComponent extends Component {
         <TextField
           value={value}
           id={this.props.id + index}
-          style={{ width: value.length * 10 }}
-          inputStyle={{ color: 'rgb(84, 58, 115)' }}
+          style={{ width: value.length * 10, color: 'rgb(84, 58, 115)' }}
           disabled
         />
         <IconButton

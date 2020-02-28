@@ -192,37 +192,29 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Populations"
-          subtitle="Define here the populations of your network"
-          actAsExpander={true}
-          showExpandableButton={true}
-          id={"Populations"}
-        />
-        <CardContent className={"tabContainer"} expandable={true}>
-          <div className={"details"}>
-            {selectedPopulation}
-          </div>
-          <div className={"thumbnails"}>
-            <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedPopulation}
-                handleClick={() => this.setState({ selectedPopulation: undefined })}
-              />
+      <React.Fragment>
+        <div className={"details"}>
+          {selectedPopulation}
+        </div>
+        <div className={"thumbnails"}>
+          <div className="breadcrumb">
+            <NetPyNEHome
+              selection={this.state.selectedPopulation}
+              handleClick={() => this.setState({ selectedPopulation: undefined })}
+            />
 
-              <NetPyNEAddNew 
-                id={"newPopulationButton"} 
-                handleClick={this.handleNewPopulation}
-              />
+            <NetPyNEAddNew 
+              id={"newPopulationButton"} 
+              handleClick={this.handleNewPopulation}
+            />
 
-            </div>
-            <div style={{ clear: "both" }}></div>
-            {populations}
           </div>
-        </CardContent>
+          <div style={{ clear: "both" }}></div>
+          {populations}
+        </div>
+       
         {dialogPop}
-      </Card>
+      </React.Fragment>
 
     );
   }
