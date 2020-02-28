@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import TimeRange from '../TimeRange'
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -20,7 +20,7 @@ export default class PlotRatePSD extends React.Component {
   render() {
     var tag = "simConfig.analysis['plotRatePSD']"
     return <div>
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plotRatePSD.include"}
         model={tag+"['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

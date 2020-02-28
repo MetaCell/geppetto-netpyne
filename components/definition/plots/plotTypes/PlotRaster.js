@@ -3,7 +3,7 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import TimeRange from '../TimeRange'
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
@@ -28,7 +28,7 @@ export default class PlotRaster extends React.Component {
   render() {
     var tag = "simConfig.analysis['plotRaster']"
     return <div>
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plotRaster.include"}
         model={tag+"['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

@@ -4,7 +4,10 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import NetPyNECellRule from './NetPyNECellRule';
+
+// import NetPyNECellRule from './NetPyNECellRule';
+import NetPyNECellRuleConnection from '../../../redux/reduxconnect/NetPyNECellRuleConnection';
+
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNESection from './sections/NetPyNESection';
 import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
@@ -517,7 +520,7 @@ export default class NetPyNECellRules extends React.Component {
     if (page == 'main') {
       if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
         selection = (
-          <NetPyNECellRule
+          <NetPyNECellRuleConnection
             name={selectedCellRule}
             selectPage={this.selectPage}
             model={model[selectedCellRule]}

@@ -57,6 +57,46 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testLandingPage(test);
   });
   
+
+  casper.then(function() {
+    toolbox.header(this, "load network")
+    testLoadNetwork(test)
+  })
+
+  casper.then(function() { //test explore network tab functionality
+    toolbox.header(this, "Explore Network Functionality")
+    testExploreNetwork(test);
+  });
+
+  casper.then(function() { //test simulate network tab functionality
+    toolbox.header(this, "Simulate Network Functionality")
+    testSimulateNetwork(test);
+  });
+
+  toolbox.message(casper, "delete model")
+  casper.then(function(){
+    appbarTest.clearModel(this, test, toolbox)
+  })
+
+  casper.then(function () {
+    this.waitWhileVisible('div[id="loading-spinner"]', function() {
+      this.wait(5000, function() { //test some expected HTML elements in landing page
+        this.echo("I've waited for netpyne to load.");
+        test.assertTitle("NetPyNE", "NetPyNE title is ok");
+        test.assertExists('div[id="widgetContainer"]', "NetPyNE loads the initial widgetsContainer");
+        test.assertExists('div[id="mainContainer"]', "NetPyNE loads the initial mainContainer");
+      });
+    }, null, 40000)
+  })
+
+  // close Poplulation card after deleting model
+  casper.then(function() {
+    this.waitUntilVisible('div[id="Populations"]', function(){
+      this.click('div[id="Populations"]')
+    })
+  })
+
+
   casper.then(function() { // test adding a population using UI  
     toolbox.header(this, "test appbar")
     testAppbar(test);
@@ -97,20 +137,6 @@ casper.test.begin('NetPyNE projects tests', function suite(test) {
     testSimConfigFields(test);
   });
   
-  casper.then(function() {
-    toolbox.header(this, "load network")
-    testLoadNetwork(test)
-  })
-  
-  casper.then(function() { //test explore network tab functionality
-    toolbox.header(this, "Explore Network Functionality")
-    testExploreNetwork(test);
-  });
-  
-  casper.then(function() { //test simulate network tab functionality
-    toolbox.header(this, "Simulate Network Functionality")
-    testSimulateNetwork(test);
-  });
   casper.run(function() {
     test.done();
   });

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Card, { CardHeader, CardText } from 'material-ui/Card';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
-import NetPyNEPopulation from './NetPyNEPopulation';
+import NetPyNEPopulationConnection from '../../../redux/reduxconnect/NetPyNEPopulationConnection';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from 'material-ui/Dialog/Dialog';
@@ -75,7 +75,9 @@ export default class NetPyNEPopulations extends React.Component {
                             errorMessage: "Error",
                             errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n" +
                                           m + " has been renamed " + newValue},
-                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => GEPPETTO.trigger('populations_change')));
+                            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => {
+                              this.updateCards()
+                            }));
           }
         }
       }
@@ -117,7 +119,9 @@ export default class NetPyNEPopulations extends React.Component {
     this.setState({
       value: model,
       selectedPopulation: populationId
-    }, ()=> GEPPETTO.trigger('populations_change'));
+    }, ()=> {
+      this.props.updateCards()
+    });
 
   }
 
@@ -131,7 +135,9 @@ export default class NetPyNEPopulations extends React.Component {
       if (response) {
         var model = this.state.value;
         delete model[name];
-        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> GEPPETTO.trigger('populations_change'));
+        this.setState({value: model, selectedPopulation: undefined, populationDeleted: name}, ()=> {
+          this.props.updateCards()
+        });
       }
     });
   }
@@ -181,7 +187,7 @@ export default class NetPyNEPopulations extends React.Component {
       }
       var selectedPopulation = undefined;
       if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation)>-1) {
-        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
+        selectedPopulation = <NetPyNEPopulationConnection name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
       }
     }
 

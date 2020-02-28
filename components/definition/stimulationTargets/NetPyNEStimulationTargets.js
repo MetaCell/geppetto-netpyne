@@ -6,7 +6,10 @@ import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
+
+// import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
+import NetPyNEStimulationTargetConnection from '../../../redux/reduxconnect/NetPyNEStimulationTargetConnection';
+
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
@@ -164,7 +167,7 @@ export default class NetPyNEStimulationTargets extends Component {
     };
     var selectedStimulationTarget = undefined;
     if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget)>-1) {
-      selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
+      selectedStimulationTarget = <NetPyNEStimulationTargetConnection name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
     };
 
     var content = (

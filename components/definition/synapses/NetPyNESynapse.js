@@ -43,7 +43,7 @@ export default class NetPyNESynapse extends React.Component {
         // Rename the population in Python
         Utils.renameKey('netParams.synMechParams', storedValue, newValue, (response, newValue) => {
           this.renaming=false;
-          GEPPETTO.trigger('synapses_change');
+          this.props.updateCards()
         });
         this.renaming=true;
         // Update layout has been inserted in the triggerUpdate since this will have to query the backend

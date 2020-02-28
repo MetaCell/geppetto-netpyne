@@ -59,6 +59,17 @@ export default class DimensionsComponent extends Component {
         });
     }
 
+    handleChange (event, value) {
+        var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
+        // Update State
+        this.setState({ value: newValue });
+        
+        // Set Population Dimension Python Side
+        Utils
+            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
+            .then(() => this.props.callback())
+    }
+
     render() {
 
         return (
@@ -80,22 +91,11 @@ export default class DimensionsComponent extends Component {
                         <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
                             <PythonControlledTextField
                                 id={"popParamsDimensions"}
-                                handleChange={function (event, value) {
-                                    var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
-                                    // Update State
-                                    this.setState({ value: newValue });
-                                    this.triggerUpdate(() => {
-                                        // Set Population Dimension Python Side
-                                        Utils
-                                            .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
-                                            .then(function (response) {
-                                                GEPPETTO.trigger("population_update_dimension")
-                                            });
-                                    });
-                                }}
+                                handleChange={this.handleChange}
                                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                                 modelName={this.state.modelName}
                                 dimensionType={this.state.dimension}
+                                callback={(newValue, oldValue) => { this.props.updateCards()}}
                             />
                         </NetPyNEField>
                         : null

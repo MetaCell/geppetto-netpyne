@@ -1,11 +1,20 @@
 import React from 'react';
 import {Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import Transition from './components/transition/Transition';
-import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
+
+// import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
+import PythonControlledNetPyNEPopulations from './redux/reduxconnect/NetPyNEPopulationsConnection';
+
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
-import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+
+// import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import PythonControlledNetPyNESynapses from './redux/reduxconnect/NetPyNESynapsesConnection';
+
 import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
-import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+
+// import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+import PythonControlledNetPyNEStimulationSources from './redux/reduxconnect/NetPyNEStimulationSourcesConnection';
+
 import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
 import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
@@ -13,12 +22,15 @@ import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated'
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
 
+import { Provider } from "react-redux";
+import configureStore from './redux/store';
+
 var PythonControlledCapability = require('../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
+// var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
-var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
+// var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
 var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
-var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
+// var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
 var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
 
@@ -146,7 +158,7 @@ export default class NetPyNE extends React.Component {
 		else 
 		{
 			if (this.state.value=='define'){
-				var content =  <div>
+				var content =  <div style={{marginBottom: "50px"}}>
 					<PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
 					<PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
 					<PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />

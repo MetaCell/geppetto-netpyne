@@ -6,7 +6,9 @@ define(function (require) {
         var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
         var NetPyNE = require('./NetPyNE').default;
         var injectTapEventPlugin = require('react-tap-event-plugin');
-
+        const Provider = require("react-redux").Provider;
+        
+        const configureStore = require('./redux/store').default;
         var Utils = require('./Utils').default;
         var Console = require('../../js/components/interface/console/Console');
         var TabbedDrawer = require('../../js/components/interface/drawer/TabbedDrawer');
@@ -28,22 +30,30 @@ define(function (require) {
         
         const theme = getMuiTheme(customTheme);
 
+        
+        const store = configureStore();
+
         function App(data = {}) {
             return (
                 <div>
+                    
                     <MuiThemeProvider muiTheme={theme}>
-                        <NetPyNE {...data}></NetPyNE>
+                        <Provider store={store}>
+                            <NetPyNE {...data}></NetPyNE>
+                        </Provider>
                     </MuiThemeProvider>
+                    
 
                     <div id="footer">
                         <div id="footerHeader">
-                            <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
+                            <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} anchor="appBar">
                                 <Console />
                                 <PythonConsole pythonNotebookPath={"../notebooks/notebook.ipynb"} />
                             </TabbedDrawer>
                         </div>
                     </div>
                 </div>
+                
             );
         }
         ReactDOM.render(<App />, document.querySelector('#mainContainer'));
@@ -54,9 +64,6 @@ define(function (require) {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
         GEPPETTO.on('jupyter_geppetto_extension_ready',  (data) => {
-            let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
-            GEPPETTO.Manager.loadProject(project, false);
-            GEPPETTO.Manager.loadExperiment(1, [], []);
             Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
             Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then((response) => {
                 var data = Utils.convertToJSON(response)

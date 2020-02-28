@@ -12,6 +12,7 @@ import StimulationConditions from './StimulationConditions';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
+import PythonMethodControlledSelectFieldConnection from '../../../redux/reduxconnect/PythonMethodControlledSelectFieldConnection'
 var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
@@ -22,7 +23,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceTypeNetStim: false,
+      isSourceTypeNetStim: false,
       selectedIndex: 0,
       sectionId: "General",
       errorMessage: undefined,
@@ -30,37 +31,21 @@ export default class NetPyNEStimulationTarget extends React.Component {
     };
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
     this.postProcessMenuItems4SynMech = this.postProcessMenuItems4SynMech.bind(this);
-    this.handleSelection = this.handleSelection.bind(this);
     this.select = this.select.bind(this);
   };
   
   componentDidMount(){
-    GEPPETTO.on('populations_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellType_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellModel_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('stimSources_change', (stimulationSourceId) => {
-      this.forceUpdate(()=>{
-        if (stimulationSourceId !== undefined && stimulationSourceId !== ''){
-          this.handleSelection(stimulationSourceId)
-        }
-      });
-    })
-    GEPPETTO.on('synapses_change', () => {
-      this.forceUpdate();
-    })
+    
+    this.isStimSourceTypeNetStim()
   }
 
-  componentWillUnmount(){
-    GEPPETTO.off('populations_change')
-    GEPPETTO.off('cellType_change')
-    GEPPETTO.off('cellModel_change')
-    GEPPETTO.off('stimSources_change')
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.name !== prevProps.name || this.props.updates !== prevProps.updates) {
+      this.isStimSourceTypeNetStim()
+    }
+    if (prevProps.updates !== this.props.updates) {
+      this.forceUpdate()
+    }
   }
   
   componentWillReceiveProps(nextProps) {
@@ -90,17 +75,35 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   };
 
-  handleSelection = (selection) => {
-    Utils
-      .evalPythonMessage("'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" + selection + "']['type']")
-      .then((response) => {
-        this.setState({sourceTypeNetStim: response});
-      });
+  async handleStimSourceSelection (selectedStimSourceName) {
+    return await Utils.evalPythonMessage("'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" + selectedStimSourceName + "']['type']")
   };
+
+  async isStimSourceTypeNetStim (stimSourceName) {
+    var isNetStim = false
+    if (stimSourceName === undefined) {
+      try {
+        stimSourceName = await Utils.evalPythonMessage("netpyne_geppetto.netParams.stimTargetParams['" + this.props.name + "']['source']")
+      }
+      catch (error){
+        console.log(error)
+      }
+      
+    }
+
+    if (stimSourceName !== '') {
+      isNetStim = await Utils.evalPythonMessage("'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" + stimSourceName + "']['type']")
+    }
+     
+    if (isNetStim != this.state.isSourceTypeNetStim) {
+      this.setState({ isSourceTypeNetStim: isNetStim })
+    }
+  }
   
-  postProcessMenuItems = (pythonData, selected) => {
-    if (selected!=Object & selected!='') {
-      this.handleSelection(selected);
+  
+  postProcessMenuItems = (pythonData, selectedStimSourceName) => {
+    if (selectedStimSourceName != Object & selectedStimSourceName != '') {
+      this.isStimSourceTypeNetStim(selectedStimSourceName);
     };
     return pythonData.map((name) => (
       <MenuItem
@@ -167,7 +170,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           <br/>
           
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -187,11 +190,11 @@ export default class NetPyNEStimulationTarget extends React.Component {
           </NetPyNEField>
         </div>
       );
-      if (this.state.sourceTypeNetStim) {
+      if (this.state.isSourceTypeNetStim) {
         var extraContent = (
           <div>
           <NetPyNEField id={"netParams.stimTargetParams.synMech"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={this.postProcessMenuItems4SynMech}
