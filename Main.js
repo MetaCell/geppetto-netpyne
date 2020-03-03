@@ -22,9 +22,27 @@ jQuery(function () {
 
   const customTheme = {
     palette: {
-      primary1Color: '#543a73',
-      primary2Color: '#eb557a',
-      primary3Color: '#ebd07a'
+      type: 'light',
+      primary: {
+        main: '#543a73',
+        light: '#634587',
+        dark: '#5e4081',
+        contrastText: '#fff'
+      },
+      secondary: {
+        main: '#eb557a',
+        light: '#66d2e2',
+        contrastText: '#fff'
+      },
+      text: {
+        primary: '#333',
+        secondary: '#333'
+      }
+      
+    },
+    typography: {
+      htmlFontSize: 16,
+      fontFamily: ["Roboto", "Helvetica", "Arial", "sans-serif"]
     }
   };
         

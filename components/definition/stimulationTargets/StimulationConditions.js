@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../base/SelectField';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
@@ -25,8 +25,9 @@ export default class StimulationConditions extends React.Component {
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
-        primaryText={name}
-      />
+      >
+        {name}
+      </MenuItem>
     ));
   }
   

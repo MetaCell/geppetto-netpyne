@@ -70,7 +70,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
         >
           <div>
             { label }
-            <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear"/>
+            <FontIcon style={{ color: changeColor, '&:hover': { color: hoverColor } }} className="gpt-fullgear"/>
           </div>
         </IconButton>
         <DeleteDialogBox

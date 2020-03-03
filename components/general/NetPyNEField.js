@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import FlatButton from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Utils from '../../Utils';
 
 export default class NetPyNEField extends Component {
@@ -58,20 +63,27 @@ export default class NetPyNEField extends Component {
     render () {
       var help = Utils.getMetadataField(this.props.id, "help");
       if (help != undefined && help != '') {
-        var helpComponent = <div className="helpIcon" onClick={() => this.handleOpenHelp(help)}><i className="fa fa-question" aria-hidden="true"></i>
+        var helpComponent = <div className="helpIcon" ><i className="fa fa-question" aria-hidden="true" onClick={() => this.handleOpenHelp(help)} ></i>
           <Dialog
-            title="NetPyNE Help"
-            actions={<FlatButton
-              label="Got it"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.handleCloseHelp}
-            />}
-            modal={true}
             open={this.state.openHelp}
-            onRequestClose={this.handleCloseHelp}
+            onClose={this.handleCloseHelp}
           >
-            {this.state.helpText}
+
+            <DialogTitle id="alert-dialog-title">NetPyNE Help</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {this.state.helpText}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <FlatButton
+                label=""
+                color="primary"
+                keyboardFocused={true}
+                onClick={this.handleCloseHelp}
+              >Got it</FlatButton>
+            </DialogActions>
+            
           </Dialog>
         </div>
       }
@@ -88,12 +100,8 @@ export default class NetPyNEField extends Component {
           }
         }
             
-        var floatingLabelText = Utils.getMetadataField(this.props.id, "label");
-        extraProps['label'] = floatingLabelText;
-
-        if (child.type.name != "Checkbox") {
-          extraProps['floatingLabelText'] = floatingLabelText;
-        }
+        var label = Utils.getMetadataField(this.props.id, "label");
+        extraProps['label'] = label;
 
         var type = Utils.getHTMLType(this.props.id);
         if (type != '') {
@@ -107,7 +115,7 @@ export default class NetPyNEField extends Component {
 
         var hintText = Utils.getMetadataField(this.props.id, "hintText");
         if (hintText != '') {
-          extraProps['hintText'] = hintText;
+          extraProps['label'] = hintText;
         }
 
         var default_value = Utils.getMetadataField(this.props.id, "default");
@@ -122,12 +130,22 @@ export default class NetPyNEField extends Component {
               id={name}
               key={name}
               value={name}
-              primaryText={name}
-            />
+            >
+              {name}
+            </MenuItem>
           ));
         }
-
-        return React.cloneElement(child, extraProps);
+        if (extraProps.realType == 'bool') {
+          return <FormControlLabel
+            control={
+              child
+            }
+            label={label}
+          />
+        } else {
+          return React.cloneElement(child, extraProps)
+        }
+        
       });
 
       var classes = [];

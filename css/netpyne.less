@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
   background: white !important;
+  font-size: 16px;
 }
 
 #footer {
@@ -19,30 +20,19 @@ body {
   height: 100% !important;
 }
 
-.actionButton {
+button.actionButton {
   font-size: 15px;
   margin: 10px;
   width: 120px;
   height: 120px;
   float: left;
   cursor: pointer;
-}
-
-.actionButton button {
   overflow: visible!important;
-  width: 120px !important;
-  height: 120px !important;
   color: white;
   :hover {
     border-radius: 120px;
   }
-}
 
-
-.actionButton span {
-  width: 120px !important;
-  height: 120px !important;
-  display: table-cell;
   vertical-align: middle;
   text-align: center;
 }
@@ -54,7 +44,6 @@ body {
   width: 70px !important;
   height: 70px !important;
   overflow: visible !important;
-  margin-top: 10px !important;
 }
 
 .smallActionButton button {
@@ -63,7 +52,7 @@ body {
   height: 70px !important;
 }
 
-.smallActionButton div {
+.smallActionButton .MuiFab-label {
   border-radius: 40px;
   width: 69px !important;
   height: 70px !important;
@@ -132,8 +121,6 @@ body {
   height: 24px !important;
   width: 24px !important;
   position: absolute !important;
-  top: 11px !important;
-  left: 12px !important;
   pointer-events: none;
 }
 .gearAddLabel {

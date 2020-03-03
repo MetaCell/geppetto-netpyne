@@ -1,5 +1,9 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 
@@ -44,7 +48,7 @@ export default class ActionDialog extends React.Component {
               })
             }
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.props.onRequestClose();
+            this.props.onClose();
           }
         });
     }
@@ -56,7 +60,7 @@ export default class ActionDialog extends React.Component {
 
   cancelDialog = () => {
     this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
-    this.props.onRequestClose();
+    this.props.onClose();
   }
 
   processError = response => {
@@ -71,12 +75,12 @@ export default class ActionDialog extends React.Component {
 
   render () {
     if (this.state.open) {
-      var cancelAction = <Button label="CANCEL" primary={true} onClick={this.cancelDialog} style={styles.cancel}/>;
+      var cancelAction = <Button color="primary" onClick={this.cancelDialog} style={styles.cancel}>CANCEL</Button>;
       if (this.state.errorMessage == undefined) {
         var title = this.props.title
         var actions = [
           cancelAction, 
-          <Button id="appBarPerformActionButton" variant="contained" primary label={this.props.buttonLabel} onClick={this.performAction}/>
+          <Button id="appBarPerformActionButton" variant="contained" color="primary" onClick={this.performAction}>{this.props.buttonLabel}</Button>
         ];
         var content = this.props.children;
       } else {
@@ -84,25 +88,29 @@ export default class ActionDialog extends React.Component {
           cancelAction,
           <Button
             variant="contained"
-            primary
-            label={"BACK"}
+            color="primary"
             onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-          />
+          >BACK</Button>
         ];
         var title = this.state.errorMessage;
         var content = Utils.parsePythonException(this.state.errorDetails);
       }
       return (
         <Dialog
-          title={title}
-          modal={true}
-          actions={actions}
           open={this.state.open}
-          bodyStyle={{ overflow: 'auto' }}
           style={{ whiteSpace: "pre-wrap" }}
-          onRequestClose={() => this.closeDialog()}
+          onClose={() => this.closeDialog()}
         >
-          {content}   
+          <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+          <DialogContent style={{ overflow: 'auto' }}>
+            <DialogContentText id="alert-dialog-slide-description">
+              {content} 
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            {actions}
+          </DialogActions>
+            
         </Dialog>
       );
     }

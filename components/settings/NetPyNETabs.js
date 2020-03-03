@@ -26,24 +26,8 @@ export default class NetPyNETabs extends React.Component {
   }
 
   handleTransitionOptionsChange (e, v) {
-    this.setState({ simulateTabLabel: v });
+    this.setState({ simulateTabLabel: v, anchorEl: null });
     this.props.handleTransitionOptionsChange(e, v)
-  }
-
-  getLabelStyle (label) {
-    var style = { color: 'white', fontWeight: 400 }
-    if (label == this.state.label) {
-      style['fontWeight'] = 600;
-    }
-    return style;
-  }
-
-  getBackgroundStyle (label) {
-    var color = '#543a73';
-    if (label == this.state.label || (label == 'simulate' && this.state.transitionOptionsHovered)) {
-      color = '#634587';
-    }
-    return color;
   }
 
   handleClick = event => {
@@ -57,27 +41,32 @@ export default class NetPyNETabs extends React.Component {
   render () {
 
     return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-      <FlatButton id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('define')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('define')} label="Define your Network" />
-      <FlatButton id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} backgroundColor={this.getBackgroundStyle('simulate')} hoverColor={'#5e4081'} labelStyle={this.getLabelStyle('simulate')} label={this.state.simulateTabLabel} />
+      <FlatButton variant="contained" disableElevation color="primary" id={"defineNetwork"} onClick={() => this.props.handleChange('define')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} >
+      Define your Network
+      </FlatButton>
+      <FlatButton variant="contained" disableElevation color="primary" id={"simulateNetwork"} onClick={() => this.props.handleChange('simulate')} style={{ flex: 1, borderRadius: 10, marginLeft: 5 }} >
+        { this.state.simulateTabLabel }
+
+      </FlatButton>
       <IconButton onClick={this.handleClick} 
         onMouseEnter={() => this.setState({ transitionOptionsHovered: true })} 
         onMouseLeave={() => this.setState({ transitionOptionsHovered: false })}
-        style={{ color: '#ffffff' }}
       >
-        <NavigationExpandMoreIcon />
+        <NavigationExpandMoreIcon style={{ color: "white" }} />
       </IconButton>
       
       <Menu
         id="transit"
         value={this.state.simulateTabLabel}
+        anchorEl={this.state.anchorEl}
         open={Boolean(this.state.anchorEl)}
         style={{ position: 'absolute', top: '6px', right: '28px' }}
-        onChange={this.handleTransitionOptionsChange}
+        
         onClose={this.handleClose}
       >
-        <MenuItem id="transitCreate" primaryText="Create Network" value="Create Network" />
-        <MenuItem id="transitSimulate" primaryText="Create and Simulate Network" value="Create and Simulate Network" />
-        <MenuItem id="transitExplore" primaryText="Explore Existing Network" value="Explore Existing Network" />
+        <MenuItem id="transitCreate" onClick={e => this.handleTransitionOptionsChange(e, "Create Network")} >Create Network</MenuItem>
+        <MenuItem id="transitSimulate" onClick={e => this.handleTransitionOptionsChange(e, "Create and Simulate Network")} >Create and Simulate Network</MenuItem>
+        <MenuItem id="transitExplore" onClick={e => this.handleTransitionOptionsChange(e, "Explore Existing Network")}>Explore Existing Network</MenuItem>
       </Menu>
     </div>
   }

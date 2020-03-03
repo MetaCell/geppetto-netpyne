@@ -32,11 +32,11 @@ export default class AdapterComponent extends Component {
     }
   }
 
-  handleChildChange (event, value) {
+  handleChildChange (event) {
     // Update State
     var newState = this.state;
     newState['lastUpdated'] = event.target.id;
-    newState[event.target.id] = value;
+    newState[event.target.id] = event.target.value ;
     this.setState(newState)
 
     // Call to conversion function

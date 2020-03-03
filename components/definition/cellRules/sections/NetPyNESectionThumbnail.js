@@ -37,7 +37,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
 
     let label;
     if (isHovered && selected) {
-      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white"/> 
+      label = <FontIcon className="fa fa-trash-o" style={{ color: "white" }}/> 
     } else {
       label = name.length > 14 ? `${name.slice(0,10)}...` : name
     }
@@ -46,9 +46,8 @@ export default class NetPyNESectionThumbnail extends React.Component {
         <Button
           variant="contained"
           id={name}
-          primary={true} 
+          color="primary" 
           style={ styles.btn }
-          buttonStyle={ styles.btn }
           onMouseEnter={ () => this.setState({ isHovered: true }) }
           onMouseLeave={ () => this.setState({ isHovered: false }) }
           data-tooltip={isHovered && name.length > 14 ? name : undefined}

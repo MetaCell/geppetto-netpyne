@@ -77,7 +77,7 @@ export default class ImportCellParams extends React.Component {
         <TextField
           value={label}
           id="importCellTemplateName"
-          floatingLabelText="Cell rule label"
+          label="Cell rule label"
           onChange={event => this.setState({ label: event.target.value })}
         />
         <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
@@ -107,7 +107,7 @@ export default class ImportCellParams extends React.Component {
         </NetPyNEField>
 
         <div className="listStyle netpyneField">
-          <ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+          <ListComponent realType="dict" label="Cell Template Parameters (key:value pair)" ref="cellArgs" />
         </div>
 
         <div style={styles.mods.container}>
@@ -116,7 +116,7 @@ export default class ImportCellParams extends React.Component {
               <Checkbox
                 checked={importSynMechs}
                 style={styles.mods.checkbox}
-                onCheck={() => this.updateCheck('importSynMechs')}
+                onChange={() => this.updateCheck('importSynMechs')}
               />
             </NetPyNEField>
           </div>
@@ -127,7 +127,7 @@ export default class ImportCellParams extends React.Component {
                 checked={compileMod}
                 style={styles.mods.checkbox}
                 id="importCellTemplateCompileMods"
-                onCheck={() => this.updateCheck('compileMod')}
+                onChange={() => this.updateCheck('compileMod')}
               />
             </NetPyNEField>
           </div>
@@ -136,7 +136,7 @@ export default class ImportCellParams extends React.Component {
         <FileBrowser 
           open={explorerDialogOpen} 
           exploreOnlyDirs={exploreOnlyDirs} 
-          onRequestClose={selection => this.closeExplorerDialog(selection)}
+          onClose={selection => this.closeExplorerDialog(selection)}
         />
 
       </ActionDialog>

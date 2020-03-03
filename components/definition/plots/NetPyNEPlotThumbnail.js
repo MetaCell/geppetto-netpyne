@@ -21,7 +21,7 @@ export default class NetPyNEPlotThumbnail extends React.Component {
         className={"gearThumbButton " + (this.props.selected ? "selectedGearButton" : "")}
         onClick={this.handleClick}
       >
-        <FontIcon color={changeColor} hoverColor={hoverColor} className="gpt-fullgear" />
+        <FontIcon style={{ color: changeColor, '&:hover': { color: hoverColor } }} className="gpt-fullgear" />
         <span className={"gearThumbLabel"}>{this.props.name}</span>
       </IconButton>
     );

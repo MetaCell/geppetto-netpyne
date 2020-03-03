@@ -1,12 +1,16 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../base/SelectField';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
@@ -77,8 +81,7 @@ export default class NetPyNECellRule extends React.Component {
         insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
-        primaryText={name}
-      />
+      >{name}</MenuItem>
     ));
   }
 
@@ -86,7 +89,7 @@ export default class NetPyNECellRule extends React.Component {
     var actions = [
       <Button
         variant="contained"
-        primary
+        color="primary"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
@@ -94,12 +97,18 @@ export default class NetPyNECellRule extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined ? <Dialog
-      title={title}
       open={true}
-      actions={actions}
-      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      {children}
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogContent style={{ overflow: "auto" }}>
+        <DialogContentText id="alert-dialog-description">
+          {children}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        { actions }
+      </DialogActions>
+      
     </Dialog> 
       : undefined
     )
@@ -111,7 +120,7 @@ export default class NetPyNECellRule extends React.Component {
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
-            floatingLabelText="The name of the cell rule"
+            label="The name of the cell rule"
             className={"netpyneField"}
             id={"cellRuleName"}
           />

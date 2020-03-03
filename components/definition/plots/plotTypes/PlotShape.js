@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../../base/SelectField';
 import ListComponent from '../../../general/List'; 
 import NetPyNEField from '../../../general/NetPyNEField';
 

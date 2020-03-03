@@ -156,7 +156,7 @@ export default class NetPyNE extends React.Component {
               <div style={{ marginLeft: -12 }} >
                 <NetPyNEToolBar changeTab={this.handleTabChangedByToolBar} />
               </div>
-              <div lastChild={true} style={{ display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10 }}>
+              <div style={{ display: 'flex', flexFlow: 'rows', width:'100%', marginRight: -10 }}>
                 <NetPyNETabs label={this.state.value} handleChange={this.handleChange} handleTransitionOptionsChange={this.handleTransitionOptionsChange}/>
               </div>
             </Toolbar>

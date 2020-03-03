@@ -25,7 +25,7 @@ export default class NetPyNEMechanism extends React.Component {
     } else {
       var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentName + "']"
       return this.state.mechFields.map((name, i) =>
-        <PythonControlledTextField id={"mechName" + name} name={name} key={name} model={tag + "['" + name + "']"} floatingLabelText={name} realType={"float"} style={{ width:'100%' }}/>
+        <PythonControlledTextField id={"mechName" + name} name={name} key={name} model={tag + "['" + name + "']"} label={name} realType={"float"} style={{ width:'100%' }}/>
       )
     }
   };
@@ -49,7 +49,7 @@ export default class NetPyNEMechanism extends React.Component {
           id={"singleMechName"}
           key="netpyneField"
           value={this.state.currentName}
-          floatingLabelText="Mechanism"
+          label="Mechanism"
           className={"netpyneField"}
           disabled={true}
         />

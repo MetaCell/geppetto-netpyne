@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../base/SelectField';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
@@ -297,7 +297,7 @@ export default class NetPyNESimConfig extends React.Component {
     return (
 
       <div>
-        <BottomNavigation selectedIndex={this.state.selectedIndex}>
+        <BottomNavigation value={this.state.selectedIndex} showLabels>
           <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
           <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />

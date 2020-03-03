@@ -5,6 +5,10 @@ import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNEStimulationTarget from './NetPyNEStimulationTarget';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 
@@ -135,7 +139,7 @@ export default class NetPyNEStimulationTargets extends Component {
     var actions = [
       <Button
         variant="contained"
-        primary
+        color="primary"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
@@ -143,12 +147,17 @@ export default class NetPyNEStimulationTargets extends Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
-      title={title}
       open={true}
-      actions={actions}
-      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      {children}
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogContent style={{ overflow: 'auto' }}>
+        <DialogContentText id="alert-dialog-description">
+          {children}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        { actions }
+      </DialogActions>
     </Dialog> : undefined;
 
     var model = this.state.value;

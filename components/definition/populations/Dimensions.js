@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../base/SelectField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../../Utils';
 
 import NetPyNEField from '../../general/NetPyNEField';
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(() => <TextField />);
+var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
 /**
  * Population Dimensions Component
@@ -68,11 +68,11 @@ export default class DimensionsComponent extends Component {
           <SelectField
             id={"popParamsDimensionsSelect"}
             value={this.state.dimension}
-            onChange={(event, index, value) => this.setState({ dimension: value })}
+            onChange={event => this.setState({ dimension: event.target.value })}
           >
             {(this.popDimensionsOptions != undefined)
               ? this.popDimensionsOptions.map(function (popDimensionsOption) {
-                return (<MenuItem id={"popParamS" + popDimensionsOption.value} key={popDimensionsOption.value} value={popDimensionsOption.value} primaryText={popDimensionsOption.label} />)
+                return (<MenuItem id={"popParamS" + popDimensionsOption.value} key={popDimensionsOption.value} value={popDimensionsOption.value} >{popDimensionsOption.label}</MenuItem>)
               }) : null}
           </SelectField>
         </NetPyNEField>
@@ -81,8 +81,8 @@ export default class DimensionsComponent extends Component {
             ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
               <PythonControlledTextField
                 id={"popParamsDimensions"}
-                handleChange={function (event, value) {
-                  var newValue = (event.target.type == 'number') ? parseFloat(value) : value;
+                handleChange={function (event) {
+                  var newValue = (event.target.type == 'number') ? parseFloat(event.target.value) : event.target.value;
                   // Update State
                   this.setState({ value: newValue });
                   this.triggerUpdate(() => {

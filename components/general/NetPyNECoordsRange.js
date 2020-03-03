@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../base/SelectField';
 import Utils from '../../Utils';
 import NetPyNEField from './NetPyNEField';
 import AdapterComponent from './AdapterComponent';
@@ -72,8 +72,9 @@ export default class NetPyNECoordsRange extends Component {
       id={this.props.id + obj.label + 'MenuItem'}
       key={obj.value}
       value={obj.value}
-      primaryText={obj.label}
-    />
+    >
+      {obj.label}
+    </MenuItem>
   ));
 
   componentWillUnmount () {
@@ -95,9 +96,9 @@ export default class NetPyNECoordsRange extends Component {
         <NetPyNEField id={meta} >
           <SelectField
             id={this.props.id + 'Select'}
-            floatingLabelText={"Range type"}
+            label={"Range type"}
             value={this.state.rangeType}
-            onChange={(event, index, value) => this.setState({ rangeType: value })}
+            onChange={event => this.setState({ rangeType: event.target.value })}
           >
             {this.createMenuItems()}
           </SelectField>
@@ -123,8 +124,8 @@ export default class NetPyNECoordsRange extends Component {
               }
               }
             >
-              <TextField floatingLabelText="Minimum" id={min} style={{ marginLeft: 10 }}/>
-              <TextField floatingLabelText="Maximum" id={max} style={{ marginLeft: 10 }}/>
+              <TextField label="Minimum" id={min} style={{ marginLeft: 10 }}/>
+              <TextField label="Maximum" id={max} style={{ marginLeft: 10 }}/>
             </PythonControlledAdapterComponent>
           </div>
           : null}

@@ -216,7 +216,6 @@ export default class ListComponent extends Component {
         />
         <IconButton
           id={this.props.id + index + "RemoveButton"}
-          iconStyle={{ width: 7, height: 7 }}
           className={'listButtonSmall'}
           onClick={() => this.removeChild(key)}
           tooltip='Remove item from the list'
@@ -230,23 +229,22 @@ export default class ListComponent extends Component {
       <div>
         <TextField
           id={this.props.id}
-          floatingLabelText={this.props.floatingLabelText ? 'Add new ' + this.props.floatingLabelText : 'Add new item'}
+          label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
           onChange={this.handleNewItemChange}
           onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
           value={this.state.newItemValue}
           style={{ width: '100%' }}
-          errorText={this.state.newItemErrorText}
+          error={Boolean(this.state.newItemErrorText)}
+          helperText={this.state.newItemErrorText}
         />
         {!this.state.newItemErrorText
                     && <IconButton
                       id={this.props.id + "AddButton"}
-                      iconStyle={{ width: 25, height: 25 }}
                       className={'listButtonLarge'}
                       onClick={this.addChild}
                       tooltip='Add item to the list'
-                      tooltipPosition={'top-left'}
                     >
-                      <FontIcon className={'fa fa-plus-circle listIcon'} />
+                      <FontIcon style={{ width: 25, height: 25 }} className={'fa fa-plus-circle listIcon'} />
                     </IconButton>
         }
 

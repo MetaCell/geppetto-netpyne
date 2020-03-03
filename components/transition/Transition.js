@@ -1,5 +1,9 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
@@ -114,29 +118,29 @@ export default class Transition extends React.Component {
           children = (
             <div>
               <div>We are about to instantiate and simulate your network, this could take some time.</div>
-              <Checkbox label="Run parallel simulation" checked={this.state.parallelSimulation} onCheck={() => this.setState(oldState => ({ parallelSimulation: !oldState.parallelSimulation }))} style={{ marginTop: '35px' }} id="runParallelSimulation" />
-              <TextField floatingLabelText="Number of cores" onChange={event => this.setState({ cores: event.target.value })} className="netpyneRightField" type="number"/>
+              <Checkbox label="Run parallel simulation" checked={this.state.parallelSimulation} onChange={() => this.setState(oldState => ({ parallelSimulation: !oldState.parallelSimulation }))} style={{ marginTop: '35px' }} id="runParallelSimulation" />
+              <TextField label="Number of cores" onChange={event => this.setState({ cores: event.target.value })} className="netpyneRightField" type="number"/>
             </div>
           )
-          var actions = [<FlatButton label="CANCEL" onClick={() => {
+          var actions = [<FlatButton onClick={() => {
             this.closeTransition()
-          }} primary={true} key={"cancelActionBtn"} />, <FlatButton label="Simulate" onClick={() => this.simulate()} id={"okRunSimulation"} primary={true} keyboardFocused={true} key={"runSimulationButton"} />];
+          }} color="primary" key={"cancelActionBtn"} >CANCEL</FlatButton>, <FlatButton onClick={() => this.simulate()} id={"okRunSimulation"} color="primary" keyboardFocused={true} key={"runSimulationButton"} >Simulate</FlatButton>];
         } else {
-          var actions = <FlatButton label="CANCEL" onClick={() => {
+          var actions = <FlatButton onClick={() => {
             this.closeTransition()
-          }} key={"cancelActionBtn"} primary={true} />
+          }} key={"cancelActionBtn"} color="primary" >CANCEL</FlatButton>
         }     
       }
 
       if (this.props.tab == 'simulate' ) {
         var refreshInstanceButton = (
-          <IconButton iconStyle={{ color: pink400 }} id={"refreshInstanciatedNetworkButton"} key={"refreshInstanceButton"} onClick={() => this.instantiate({ usePrevInst: false })} style={{ position: 'absolute', right: 30, top: 60, width:'24px', height:'24px' }} tooltip={this.props.freezeInstance ? "Your network is in sync" : "Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{ marginTop: -37, marginRight:10 }}>
-            <FontIcon className="fa fa-refresh"/>
+          <IconButton id={"refreshInstanciatedNetworkButton"} key={"refreshInstanceButton"} onClick={() => this.instantiate({ usePrevInst: false })} style={{ position: 'absolute', right: 30, top: 60, width:'24px', height:'24px' }} tooltip={this.props.freezeInstance ? "Your network is in sync" : "Synchronise network"} tooltipPosition="bottom-left" disabled={this.props.freezeInstance} tooltipStyles={{ marginTop: -37, marginRight:10 }}>
+            <FontIcon color="secondary" className="fa fa-refresh"/>
           </IconButton>
         )
         var refreshSimulationButton = (
-          <IconButton iconStyle={{ color: pink400 }} id={"launchSimulationButton"} key={"refreshSimulationButton"} onClick={() => this.setState({ openDialog: true })} style={{ position: 'absolute', right: 30, top: 110, width:'24px', height:'24px' }} tooltip={this.props.freezeSimulation ? "You have already simulated your network" : "Simulate your network"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{ marginTop: -38, marginRight:10 }}>
-            <RocketIcon />
+          <IconButton id={"launchSimulationButton"} key={"refreshSimulationButton"} onClick={() => this.setState({ openDialog: true })} style={{ position: 'absolute', right: 30, top: 110, width:'24px', height:'24px' }} tooltip={this.props.freezeSimulation ? "You have already simulated your network" : "Simulate your network"} tooltipPosition="bottom-left" disabled={this.props.freezeSimulation} tooltipStyles={{ marginTop: -38, marginRight:10 }}>
+            <RocketIcon color="secondary" />
           </IconButton>    
         )
       }
@@ -146,15 +150,20 @@ export default class Transition extends React.Component {
           {refreshInstanceButton}
           {refreshSimulationButton}
           <Dialog
-            title={title}
-            actions={actions}
-            modal={true}
             open={this.state.openDialog}
-            onRequestClose={this.closeTransition}
-            bodyStyle={{ overflow: 'auto' }}
+            onClose={this.closeTransition}
             style={{ whiteSpace: "pre-wrap" }}
           >
-            {children}
+            <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+            <DialogContent style={{ overflow: 'auto' }}>
+              <DialogContentText id="alert-dialog-slide-description">
+                {children}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              {actions}
+            </DialogActions>
+            
           </Dialog>
         </div>
       )

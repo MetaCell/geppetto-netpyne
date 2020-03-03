@@ -30,8 +30,8 @@ export default class TimeRange extends Component {
             }
           }}
         >
-          <TextField floatingLabelText="Starting time" id="min" style={{ marginLeft: 10 }}/>
-          <TextField floatingLabelText="Ending time" id="max" style={{ marginLeft: 10 }}/>
+          <TextField label="Starting time" id="min" style={{ marginLeft: 10 }}/>
+          <TextField label="Ending time" id="max" style={{ marginLeft: 10 }}/>
         </PythonControlledAdapterComponent>
       </div>
     );

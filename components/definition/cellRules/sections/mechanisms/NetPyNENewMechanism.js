@@ -28,8 +28,8 @@ export default class NetPyNENewMechanism extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      open: false,
-      mechanisms: []
+      mechanisms: [],
+      anchorEl: null
     };
   }
   
@@ -41,7 +41,7 @@ export default class NetPyNENewMechanism extends React.Component {
   }
   
   handleClick = value => {
-    this.setState({ open: false });
+    this.setState({ anchorEl: null });
     this.props.handleClick(value);
   };
 
@@ -80,39 +80,32 @@ export default class NetPyNENewMechanism extends React.Component {
   }
   render () {
     const { disabled } = this.props;
-    const { open, anchorEl, mechanisms } = this.state;
+    const { anchorEl, mechanisms } = this.state;
     
     return <div>
       <IconButton
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
-        iconStyle={{ color: '#543a73' }}
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
         <i 
-          style={{ position: 'absolute', color: changeColor }}
+          style={{ position: 'absolute', color: changeColor, '&:hover': { color: hoverColor } }}
           className="gpt-fullgear"
-           
-          hoverColor={hoverColor} 
         />
         { this.createLabel() }
       </IconButton>
 
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={styles.anchorOrigin}
-        targetOrigin={styles.anchorTarget}
-        onRequestClose={ () => this.setState({ open: false }) }
-      >
-        <Menu onChange={ (e, v) => this.handleClick(v) }>
-          {mechanisms.map( mechLabel => 
-            <MenuItem id={mechLabel} key={mechLabel} value={mechLabel} primaryText={mechLabel}/>)
-          }
-        </Menu>
-      </Popover>
+      <Menu onClose={ e => this.setState({ anchorEl: null }) } 
+        open={Boolean(anchorEl)} 
+        anchorEl={anchorEl}>
+        {mechanisms.map( mechLabel => 
+          <MenuItem id={mechLabel} key={mechLabel} value={mechLabel} onClick={e => this.handleClick(mechLabel)}>
+            {mechLabel}
+          </MenuItem>)
+        }
+      </Menu>
     </div>
   }
 }

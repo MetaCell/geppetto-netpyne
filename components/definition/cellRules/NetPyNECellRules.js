@@ -13,6 +13,10 @@ import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
@@ -493,16 +497,21 @@ export default class NetPyNECellRules extends React.Component {
     let selection = null;
     let container = null;
 
-    const actions = <Button variant="contained" primary label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
+    const actions = <Button variant="contained" color="primary" label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
 
     const dialogPop = (errorMessage != undefined 
       ? <Dialog
-        title={errorMessage}
         open={true}
-        actions={actions}
-        bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: "pre-wrap" }}>
-        {errorDetails}
+        <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          { actions }
+        </DialogActions>
       </Dialog> 
       : undefined
     );
@@ -586,10 +595,10 @@ export default class NetPyNECellRules extends React.Component {
             />
 
             <FloatingActionButton
-              zDepth={1}
+              style={{ "zIndex": 1 }}
               id="newCellRuleButton"
               style={styles.cellRule}
-              secondary={ page != 'main' }
+              color ={ page != 'main' ? 'secondary' : 'primary' }
               data-tooltip={ this.createTooltip('cellRule')}
               className={"actionButton smallActionButton"}
               onClick={() => this.handleHierarchyClick('main')}
@@ -602,18 +611,15 @@ export default class NetPyNECellRules extends React.Component {
             <Button
               id="newSectionButton"
               variant="contained"
-              style={styles.sections.container}
-              disabledBackgroundColor="grey"
-              buttonStyle={styles.sections.icon}
-              primary={ page != 'mechanisms' }
-              secondary={ page == 'mechanisms' }
+              style={{ ...styles.sections.container, ...styles.sections.icon }}
+              color={ page != 'mechanisms' ? "primary" : "secondary"}
               disabled={ selectedCellRule == undefined }
               onClick={ () => this.handleHierarchyClick('sections') }
               data-tooltip={ this.createTooltip('section')}
             >
-              <p style={{ color: 'white', height: '100%' }}>
+              <div style={{ color: 'white', height: '100%' }}>
                 {this.createLabel('sections')}
-              </p>
+              </div>
             </Button>
 
             <NavigationChevronRight style={styles.rightArrow}/>

@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../base/SelectField';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -80,16 +84,16 @@ export default class NetPyNESynapse extends React.Component {
       });
   }
   
-  handleSynMechModChange (event, index, value) {
-    Utils.execPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
-    this.setState({ synMechMod: value });
+  handleSynMechModChange (event) {
+    Utils.execPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + event.target.value + "'");
+    this.setState({ synMechMod: event.target.value });
   }
 
   render () {
     var actions = [
       <Button
         variant="contained"
-        primary
+        color="primary"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
@@ -100,9 +104,11 @@ export default class NetPyNESynapse extends React.Component {
       title={title}
       open={true}
       actions={actions}
-      bodyStyle={{ overflow: 'auto' }}
+      
       style={{ whiteSpace: "pre-wrap" }}>
-      {children}
+      <div style={{ overflow: 'auto' }}>
+        {children}
+      </div>
     </Dialog> : undefined;
 
     if (this.state.synMechMod == '' || this.state.synMechMod == undefined) {

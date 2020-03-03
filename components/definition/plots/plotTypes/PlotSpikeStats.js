@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '@material-ui/core/Select';
+import SelectField from '../../../base/SelectField';
 import TimeRange from '../TimeRange'
 import NetPyNEInclude from '../NetPyNEInclude';
 import ListComponent from '../../../general/List';

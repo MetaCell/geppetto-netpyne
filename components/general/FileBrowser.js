@@ -4,6 +4,10 @@ import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
 import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default class FileBrowser extends React.Component {
 
@@ -60,15 +64,17 @@ export default class FileBrowser extends React.Component {
     const actions = [
       <Button
         label={'CANCEL'}
-        onClick={event => this.props.onRequestClose()}
+        key="CANCEL"
+        onClick={event => this.props.onClose()}
         style={{ marginRight: 16 }}
       />,
       <Button
         id="browserAccept"
         variant="contained"
-        primary
+        key="SELECT"
+        color="primary"
         label={'SELECT'}
-        onClick={event => this.props.onRequestClose(this.state.selection)}
+        onClick={event => this.props.onClose(this.state.selection)}
         disabled={!this.state.selection}
       />
     ];
@@ -78,25 +84,36 @@ export default class FileBrowser extends React.Component {
             
       <Dialog
         open={this.props.open}
-        onRequestClose={this.props.onRequestClose}
-        bodyStyle={{ overflow: 'auto' }}
-        actions={actions}
+        onClose={this.props.onClose}
       >
-        <div style={{ marginBottom: '15px' }}>
-          <b>{selectMessage}</b>
+
+
+        <DialogTitle id="alert-dialog-title">{selectMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+        
+          <DialogContentText id="alert-dialog-description">
+            <div style={{ marginBottom: '15px' }}>
                     These paths are relative to:<br/>
-          {window.isDocker ? " the folder you shared with docker (your mounted volume)"
-            : <span style={{ border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px" }}>{window.currentFolder}</span>}
-        </div>
-        < Tree
-          id="TreeContainerCutting"
-          style={{ width: "100%", height: "400px", float: 'left' }}
-          treeData={[]}
-          handleClick={this.handleClickVisualize}
-          rowHeight={30}
-          activateParentsNodeOnClick={this.props.exploreOnlyDirs}
-          ref="tree"
-        />
+              {window.isDocker ? " the folder you shared with docker (your mounted volume)"
+                : <span style={{ border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px" }}>{window.currentFolder}</span>}
+            </div>
+       
+          </DialogContentText>
+          < Tree
+            id="TreeContainerCutting"
+            style={{ width: "100%", height: "400px", float: 'left' }}
+            treeData={[]}
+            handleClick={this.handleClickVisualize}
+            rowHeight={30}
+            activateParentsNodeOnClick={this.props.exploreOnlyDirs}
+            ref="tree"
+          />
+        </DialogContent>
+        <DialogActions>
+          { actions }
+        </DialogActions>
+
+       
       </Dialog>
     )
   }

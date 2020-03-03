@@ -1,5 +1,9 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import FlatButton from '@material-ui/core/Button';
 import Canvas from 'geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
@@ -195,9 +199,11 @@ export default class NetPyNEInstantiated extends React.Component {
       if (this.props.page == 'simulate') {
         controls = (
           <Menu>
-            {plots.map((plot, index) => <MenuItem id={plot.id} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText={plot.primaryText} onClick={() => {
+            {plots.map((plot, index) => <MenuItem id={plot.id} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} onClick={() => {
               this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)
-            }} />)}
+            }} >
+              {plot.primaryText}
+            </MenuItem>)}
           </Menu>
         );
       }
@@ -236,28 +242,32 @@ export default class NetPyNEInstantiated extends React.Component {
               open={this.state.plotButtonOpen}
               anchorEl={this.state.anchorEl}
               anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-              onRequestClose={this.handleRequestClose}
+              transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+              onClose={this.handleRequestClose}
             >
               {controls}
             </Popover>
           </div>
           <Dialog
-            title={this.state.dialogTitle}
-            modal={true}
-            actions={<FlatButton
-              id="netPyneDialog"
-              label="Ok"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.handleCloseDialog}
-            />}
-            bodyStyle={{ overflow: 'auto' }}
             style={{ whiteSpace: "pre-wrap" }}
             open={this.state.openDialog}
-            onRequestClose={this.handleCloseDialog}
+            onClose={this.handleCloseDialog}
           >
-            {this.state.dialogMessage}
+            <DialogTitle id="alert-dialog-title">{this.state.dialogTitle}</DialogTitle>
+            <DialogContent style={{ overflow: 'auto' }}>
+              <DialogContentText id="alert-dialog-description">
+                {this.state.dialogMessage}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <FlatButton
+                id="netPyneDialog"
+                color="primary"
+                keyboardFocused={true}
+                onClick={this.handleCloseDialog}
+              >OK</FlatButton>
+            </DialogActions>
+            
           </Dialog>
         </div>
 

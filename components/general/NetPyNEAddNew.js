@@ -20,6 +20,7 @@ export default class NetPyNEAddNew extends React.Component {
     return (
       <FloatingActionButton 
         id={this.props.id}
+        color="primary"
         style={styles.add}
         onClick={this.handleClick}
         data-tooltip="Create rule"
@@ -34,7 +35,6 @@ export default class NetPyNEAddNew extends React.Component {
 
 const styles = {
   add: {
-    marginTop: "15px",
     float: "left",
     textAlign: 'center'
   }

@@ -212,12 +212,13 @@ export default class NetPyNEInclude extends Component {
     var mainMenus = this.props.defaultOptions.map(name => <MenuItem  
       key={name}
       value={name} 
-      primaryText={name}
       insetChildren={true}
       onClick={e => this.handleMainMenusClick(name, name == 'all' ? 'exclusive' : 'groups')}
       checked={!!(this.state.include.exclusive == name || this.state.include.groups.indexOf(name) > -1)}
       onMouseEnter={e => this.closeSecondPopover()}
-    />)
+    >
+      {name}
+    </MenuItem>);
     return <Menu>
       {mainMenus}
     </Menu>
@@ -229,20 +230,22 @@ export default class NetPyNEInclude extends Component {
       key={name + index} 
       value={index}
       insetChildren={true}
-      primaryText={"cell " + index}
       onClick={e => this.handleSecondaryMenusClick(name == 'gids' ? 'gids' : 'popids', name, index)}
       checked={this.IsSecondaryMenuChecked(name == 'gids' ? 'gids' : 'popids', name, index)}
-    />)
+    >
+      {"cell " + index}
+    </MenuItem>);
     return <div key={name + "div"}>
       <MenuItem 
         key={name} 
         value={name}
-        primaryText={name}
         insetChildren={true}
         checked={name != 'gids' ? this.state.include['groups'].indexOf(name) > -1 : false}
         onClick={name != 'gids' ? e => this.handleMainMenusClick(name, 'groups') : e => {}}
         onMouseEnter={e => this.handleSecondPopoverOpen(name, true, e.preventDefault(), e.currentTarget)}
-      />
+      >
+        {name}
+      </MenuItem>))
       <Popover
         style={{ height: size < 6 ? 48 * size : 240, width:170 }}
         key={name + "Popover"}
@@ -250,7 +253,7 @@ export default class NetPyNEInclude extends Component {
         open={this.state.secondPopoverOpen ? this.state.secondPopoverOpen[name] : false}
         anchorEl={this.state.anchorEl2}
         anchorOrigin={{ "horizontal":"right", "vertical":"top" }}
-        targetOrigin={{ "horizontal":"left", "vertical":"top" }}
+        transformOrigin={{ "horizontal":"left", "vertical":"top" }}
       >
         {menuItems}
       </Popover>
@@ -328,7 +331,7 @@ export default class NetPyNEInclude extends Component {
     return <div>
       <NetPyNEField id={this.props.id}>
         <TextField
-          floatingLabelText="Include in the plot"
+          label="Include in the plot"
           value={this.state.label}
           onClick={e => this.handleMainPopoverOpen(true, e.preventDefault(), e.currentTarget)} 
         />
@@ -336,9 +339,9 @@ export default class NetPyNEInclude extends Component {
       <Popover 
         open={this.state.mainPopoverOpen}
         anchorEl={this.state.anchorEl}
-        onRequestClose={e => this.handleMainPopoverOpen(false)}
+        onClose={e => this.handleMainPopoverOpen(false)}
         anchorOrigin={{ "horizontal":"left","vertical":"bottom" }}
-        targetOrigin={{ "horizontal":"left","vertical":"top" }}
+        transformOrigin={{ "horizontal":"left","vertical":"top" }}
       >
         {this.defaultMenus()}
         <Divider/>
