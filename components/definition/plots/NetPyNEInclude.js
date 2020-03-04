@@ -3,7 +3,6 @@ import Menu from '@material-ui/core/Menu';
 import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Popover from '@material-ui/core/Popover/Popover';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 
@@ -219,9 +218,7 @@ export default class NetPyNEInclude extends Component {
     >
       {name}
     </MenuItem>);
-    return <Menu>
-      {mainMenus}
-    </Menu>
+    return mainMenus;
   }
   
   variableMenus = (name, size) => {
@@ -245,18 +242,18 @@ export default class NetPyNEInclude extends Component {
         onMouseEnter={e => this.handleSecondPopoverOpen(name, true, e.preventDefault(), e.currentTarget)}
       >
         {name}
-      </MenuItem>))
-      <Popover
+      </MenuItem>
+      <Menu
         style={{ height: size < 6 ? 48 * size : 240, width:170 }}
         key={name + "Popover"}
         useLayerForClickAway={false}
-        open={this.state.secondPopoverOpen ? this.state.secondPopoverOpen[name] : false}
+        open={Boolean(this.state.anchorEl2)}
         anchorEl={this.state.anchorEl2}
         anchorOrigin={{ "horizontal":"right", "vertical":"top" }}
         transformOrigin={{ "horizontal":"left", "vertical":"top" }}
       >
         {menuItems}
-      </Popover>
+      </Menu>
     </div>
   }
   
@@ -302,7 +299,7 @@ export default class NetPyNEInclude extends Component {
     if (clone['groups'].indexOf('allCells') > -1 && name != 'allNetStims') {
       clone['groups'].splice( clone['groups'].indexOf('allCells'), 1 );
     }
-    this.setState({ include: clone })
+    this.setState({ include: clone, anchorEl2: null })
   }
   
   IsSecondaryMenuChecked = (group, name, index) => {
@@ -336,7 +333,7 @@ export default class NetPyNEInclude extends Component {
           onClick={e => this.handleMainPopoverOpen(true, e.preventDefault(), e.currentTarget)} 
         />
       </NetPyNEField >
-      <Popover 
+      <Menu 
         open={this.state.mainPopoverOpen}
         anchorEl={this.state.anchorEl}
         onClose={e => this.handleMainPopoverOpen(false)}
@@ -348,7 +345,7 @@ export default class NetPyNEInclude extends Component {
         {this.variableMenus('gids', this.state.data ? this.state.data.gids : 0, true)}
         <Divider/>
         {this.otherMenus()}
-      </Popover>
+      </Menu>
     </div>
   }
 }

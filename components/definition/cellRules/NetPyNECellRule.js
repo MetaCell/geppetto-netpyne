@@ -79,7 +79,7 @@ export default class NetPyNECellRule extends React.Component {
         id={name + "MenuItem"}
         key={name}
         insetChildren={true}
-        checked={selected.indexOf(name) > -1}
+        checked={selected && selected.indexOf(name) > -1}
         value={name}
       >{name}</MenuItem>
     ));

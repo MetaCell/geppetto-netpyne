@@ -20,57 +20,55 @@ export default class NetPyNENewPlot extends React.Component {
     this.setState({ anchorEl: event.currentTarget, });
   };
 
- 
-  handleClick (event) {
-    this.props.onClose();
-    this.props.handleClick(event.target.value );
+  handleRequestClose = () => {
+    this.setState({ anchorEl: null, });
+  };
+
+  handleClick (value) {
+    this.handleRequestClose();
+    this.props.handleClick(value );
   }
   
   render () {
     return <div>
-      <FloatingActionButton size="small" style={{ margin: 10, float: 'left' }} onClick={this.handleButtonClick}>
+      <FloatingActionButton color="primary" size="small" style={{ margin: 10, float: 'left' }} onClick={this.handleButtonClick}>
         <ContentAdd />
       </FloatingActionButton>
-      <Popover
-        open={Boolean(this.state.anchorEl)}
-        anchorEl={this.state.anchorEl}
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-        onClose={this.props.onClose}
-      >
-        <Menu onChange={this.handleClick} onClose={this.props.onClose} >
-          <MenuItem key={"plotTraces"} value={"plotTraces"} >
+
+      <Menu onClose={this.props.onClose} open={Boolean(this.state.anchorEl)}
+        anchorEl={this.state.anchorEl}>
+        <MenuItem key={"plotTraces"} value={"plotTraces"} onClick={e => this.handleClick("plotTraces")} >
         Traces Plot
-          </MenuItem>
-          <MenuItem key={"plotRaster"} value={"plotRaster"}>
+        </MenuItem>
+        <MenuItem key={"plotRaster"} value={"plotRaster"} onClick={e => this.handleClick("plotRaster")}>
         Raster Plot
-          </MenuItem>
-          <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"}>
+        </MenuItem>
+        <MenuItem key={"plotSpikeHist"} value={"plotSpikeHist"} onClick={e => this.handleClick("plotSpikeHist")}>
         Spike Histogram Plot
-          </MenuItem>
-          <MenuItem key={"plotSpikeStats"} value={"plotSpikeStats"}>
+        </MenuItem>
+        <MenuItem key={"plotSpikeStats"} value={"plotSpikeStats"} onClick={e => this.handleClick("plotSpikeStats")}>
         Spike Stats Plot
-          </MenuItem>
-          <MenuItem key={"plotRatePSD"} value={"plotRatePSD"}>
+        </MenuItem>
+        <MenuItem key={"plotRatePSD"} value={"plotRatePSD"} onClick={e => this.handleClick("plotRatePSD")}>
         PSD Rate Plot
-          </MenuItem>
-          <MenuItem key={"plotLFP"} value={"plotLFP"}>
+        </MenuItem>
+        <MenuItem key={"plotLFP"} value={"plotLFP"} onClick={e => this.handleClick("plotLFP")}>
         LFP Plot
-          </MenuItem>
-          <MenuItem key={"plotShape"} value={"plotShape"}>
+        </MenuItem>
+        <MenuItem key={"plotShape"} value={"plotShape"} onClick={e => this.handleClick("plotShape")}>
         3D Cell Shape Plot
-          </MenuItem>
-          <MenuItem key={"plot2Dnet"} value={"plot2Dnet"}>
+        </MenuItem>
+        <MenuItem key={"plot2Dnet"} value={"plot2Dnet"} onClick={e => this.handleClick("plot2Dnet")}>
         2D Network Plot
-          </MenuItem>
-          <MenuItem key={"plotConn"} value={"plotConn"}>
+        </MenuItem>
+        <MenuItem key={"plotConn"} value={"plotConn"} onClick={e => this.handleClick("plotConn")}>
         Network Connectivity Plot
-          </MenuItem>
-          <MenuItem key={"granger"} value={"granger"}>
+        </MenuItem>
+        <MenuItem key={"granger"} value={"granger"} onClick={e => this.handleClick("granger")}>
         Granger Causality Plot
-          </MenuItem>
-        </Menu>
-      </Popover>
+        </MenuItem>
+      </Menu>
+
     </div>
   }
 }
