@@ -40,8 +40,8 @@ export default class NetPyNEToolBar extends React.Component {
   }
 
   handleOpenSnackBar (message) {
-      this.snackBarMessage = message
-      this.setState({ openSnackBar: true })
+    this.snackBarMessage = message
+    this.setState({ openSnackBar: true })
   }
 
   render () {
@@ -90,21 +90,25 @@ export default class NetPyNEToolBar extends React.Component {
           changeTab={this.props.changeTab}
         />
         break;
-    case 'UploadFiles':
+      case 'UploadFiles':
         var content = <UploadDownloadFiles
-        open={this.state.openDialogBox}
-        onRequestClose={() => this.setState({ openDialogBox: false })}
-        changeTab={this.props.changeTab}
-        openSnackBar={message => { this.handleOpenSnackBar(message)} }
-        mode ={"UPLOAD"}/>
+          open={this.state.openDialogBox}
+          onRequestClose={() => this.setState({ openDialogBox: false })}
+          changeTab={this.props.changeTab}
+          openSnackBar={message => {
+            this.handleOpenSnackBar(message)
+          } }
+          mode ={"UPLOAD"}/>
         break;
-    case 'DownloadFiles':
+      case 'DownloadFiles':
         var content = <UploadDownloadFiles
-        open={this.state.openDialogBox}
-        onRequestClose={() => this.setState({ openDialogBox: false })}
-        changeTab={this.props.changeTab}
-        openSnackBar={message => { this.handleOpenSnackBar(message)} }
-        mode ={"DOWNLOAD"}
+          open={this.state.openDialogBox}
+          onRequestClose={() => this.setState({ openDialogBox: false })}
+          changeTab={this.props.changeTab}
+          openSnackBar={message => {
+            this.handleOpenSnackBar(message)
+          } }
+          mode ={"DOWNLOAD"}
         />
         break;
       }
@@ -153,14 +157,14 @@ export default class NetPyNEToolBar extends React.Component {
           <ListItemIcon><CellTemplateIcon color="primary" /></ListItemIcon>
           <ListItemText primary="Import Cell Template..." />
         </ListItem>
-          <ListItem id="appBarUploadFiles" onClick={() => this.handleListItemClick('UploadFiles')} >
-            <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-upload' /></ListItemIcon>
+        <ListItem id="appBarUploadFiles" onClick={() => this.handleListItemClick('UploadFiles')} >
+          <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-upload' /></ListItemIcon>
           <ListItemText primary="Upload..." />
-          </ListItem>
-          <ListItem id="appBarImportCellTemplate" onClick={() => this.handleListItemClick('DownloadFiles')} >
-  <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-download' /></ListItemIcon>
+        </ListItem>
+        <ListItem id="appBarImportCellTemplate" onClick={() => this.handleListItemClick('DownloadFiles')} >
+          <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-download' /></ListItemIcon>
           <ListItemText primary="Download..." />
-          </ListItem>
+        </ListItem>
       </Drawer>
       <Snackbar
         message={this.snackBarMessage}

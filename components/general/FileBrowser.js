@@ -2,6 +2,8 @@ import React from 'react';
 import Tree from 'geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import FontIcon from '@material-ui/core/Icon';
 import { walk, changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -25,32 +27,30 @@ export default class FileBrowser extends React.Component {
       var path = ""
     }
 
-        Utils
-            .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
-            .then((dirList) => {
-                if (treeData != [] && treeData.length > 0) {
-                    rowInfo.node.children = dirList;
-                    rowInfo.node.expanded = true;
-                    rowInfo.node.load = true;
-                    var newTreeData = changeNodeAtPath({
-                        treeData: treeData,
-                        path: rowInfo.path,
-                        newNode: rowInfo.node,
-                        getNodeKey: ({ treeIndex }) => treeIndex
-                    });
-                }
-                else {
-                    var newTreeData = dirList;
-                }
-                if (!this.props.exploreOnlyDirs || rowInfo == undefined){
-                    this.setState({ selection: undefined })
-                }
-                else{
-                    this.setState({ selection: rowInfo.node })
-                }
-                this.refs.tree.updateTreeData(newTreeData);
-            });
-    }
+    Utils
+      .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
+      .then(dirList => {
+        if (treeData != [] && treeData.length > 0) {
+          rowInfo.node.children = dirList;
+          rowInfo.node.expanded = true;
+          rowInfo.node.load = true;
+          var newTreeData = changeNodeAtPath({
+            treeData: treeData,
+            path: rowInfo.path,
+            newNode: rowInfo.node,
+            getNodeKey: ({ treeIndex }) => treeIndex
+          });
+        } else {
+          var newTreeData = dirList;
+        }
+        if (!this.props.exploreOnlyDirs || rowInfo == undefined){
+          this.setState({ selection: undefined })
+        } else {
+          this.setState({ selection: rowInfo.node })
+        }
+        this.refs.tree.updateTreeData(newTreeData);
+      });
+  }
 
 
   handleClickVisualize (event, rowInfo) {
@@ -66,53 +66,53 @@ export default class FileBrowser extends React.Component {
       this.getDirList([]);
     }
   }
-    getSelectedFiles () {
-        const nodes = {}
-        if (!this.refs.tree) {
-            return nodes
+  getSelectedFiles () {
+    const nodes = {}
+    if (!this.refs.tree) {
+      return nodes
+    }
+    walk({
+      treeData: this.refs.tree.state.treeData,
+      getNodeKey: ({ treeIndex }) => treeIndex,
+      ignoreCollapsed: true,
+      callback: rowInfoIter => {
+        if (rowInfoIter.node.active) {
+          nodes[rowInfoIter.treeIndex] = rowInfoIter.node
         }
-        walk({
-            treeData: this.refs.tree.state.treeData,
-            getNodeKey: ({ treeIndex }) => treeIndex,
-            ignoreCollapsed: true,
-            callback: (rowInfoIter) => {
-                if (rowInfoIter.node.active) {
-                    nodes[rowInfoIter.treeIndex] = rowInfoIter.node
-                }
-            }
-        });
+      }
+    });
 
-        return nodes
+    return nodes
+  }
+
+
+  handleMoveUp (reset = false) {
+    var path = this.refs.tree.state.treeData[0].path.split("/").slice(0, -2).join('/') || '/'
+
+    if (reset) {
+      path = window.currentFolder
     }
 
+    this.currentFolder = path
+    this.getDirList([], { node: { path } });
+  }
 
-    handleMoveUp (reset=false) {
-        var path = this.refs.tree.state.treeData[0].path.split("/").slice(0, -2).join('/') || '/'
-
-        if (reset) {
-            path = window.currentFolder
-        }
-
-        this.currentFolder = path
-        this.getDirList([], { node: { path }});
+  disableSelectButton () {
+    if (this.props.toggleMode) {
+      if (Object.keys(this.getSelectedFiles()).length > 0) {
+        return false
+      }
     }
-
-    disableSelectButton () {
-        if (this.props.toggleMode) {
-            if (Object.keys(this.getSelectedFiles()).length > 0) {
-                return false
-            }
-        }
-        if (this.state.selection) {
-            return !this.state.selection.active
-        }
-        return true
+    if (this.state.selection) {
+      return !this.state.selection.active
     }
+    return true
+  }
 
-    onCancelFileBrowser () {
-        this.currentFolder = window.currentFolder
-        this.props.onRequestClose()
-    }
+  onCancelFileBrowser () {
+    this.currentFolder = window.currentFolder
+    this.props.onRequestClose()
+  }
 
   render () {
     const actions = [
@@ -146,32 +146,36 @@ export default class FileBrowser extends React.Component {
         <DialogContent style={{ overflow: 'auto' }}>
 
           <DialogContentText id="alert-dialog-description">
-          <div style={{marginBottom: '15px'}}>
-  <b>{selectMessage}</b>
+            <div style={{ marginBottom: '15px' }}>
+              <b>{selectMessage}</b>
       These paths are relative to:<br/>
-      <div className="flex-row fx-center ">
-          <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
-          <IconButton
-      id="file-browser-level-up"
-      disableTouchRipple
-      className='simple-icon mrg-2'
-      onClick={() => {this.handleMoveUp()}}
-      tooltip='Enclosing Folder'
-      tooltipPosition={'top-right'}
-          >
-          <FontIcon className={'fa fa-level-up listIcon'} />
-      </IconButton>
-      <IconButton
-      disableTouchRipple
-      className='simple-icon mrg-2'
-      onClick={() => {this.handleMoveUp(true)}}
-      tooltip='Home folder'
-      tooltipPosition={'top-right'}
-          >
-          <FontIcon className={'fa fa-home listIcon'} />
-      </IconButton>
-      </div>
-      </div>
+              <div className="flex-row fx-center ">
+                <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+                <IconButton
+                  id="file-browser-level-up"
+                  disableTouchRipple
+                  className='simple-icon mrg-2'
+                  onClick={() => {
+                    this.handleMoveUp()
+                  }}
+                  tooltip='Enclosing Folder'
+                  tooltipPosition={'top-right'}
+                >
+                  <FontIcon className={'fa fa-level-up listIcon'} />
+                </IconButton>
+                <IconButton
+                  disableTouchRipple
+                  className='simple-icon mrg-2'
+                  onClick={() => {
+                    this.handleMoveUp(true)
+                  }}
+                  tooltip='Home folder'
+                  tooltipPosition={'top-right'}
+                >
+                  <FontIcon className={'fa fa-home listIcon'} />
+                </IconButton>
+              </div>
+            </div>
           </DialogContentText>
           < Tree
             id="TreeContainerCutting"
@@ -179,7 +183,7 @@ export default class FileBrowser extends React.Component {
             treeData={[]}
             handleClick={this.handleClickVisualize}
             rowHeight={30}
-      toggleMode={!!this.props.toggleMode}
+            toggleMode={!!this.props.toggleMode}
             activateParentsNodeOnClick={this.props.exploreOnlyDirs}
             ref="tree"
           />

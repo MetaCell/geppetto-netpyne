@@ -34,11 +34,10 @@ export default class ActionDialog extends React.Component {
           if (!this.processError(response)) {
             if (this.props.command == "netpyne_geppetto.exportModel") {
               this.downloadJsonResponse(response)
-            }
-            else if (this.props.command == 'netpyne_geppetto.exportHLS') {
+            } else if (this.props.command == 'netpyne_geppetto.exportHLS') {
               this.downloadPythonResponse(response)
             }
-            if (this.props.args.tab!=undefined) {
+            if (this.props.args.tab != undefined) {
               this.props.changeTab(this.props.args.tab, this.props.args);
             }
             if (this.props.args.tab == 'simulate') {
@@ -93,9 +92,9 @@ export default class ActionDialog extends React.Component {
 
   }
 
-  unescapeText(text) {
+  unescapeText (text) {
     text = text.replace(/\\\\/g, '\\').replace(/\\\'/g, "'").replace(/\\\"/g, '"').split('\\n').join('\n').substring(1)
-    return text.substring(0, text.length -1)
+    return text.substring(0, text.length - 1)
   }
 
   downloadPythonResponse (textData) {
@@ -108,11 +107,11 @@ export default class ActionDialog extends React.Component {
     return name + this.getTimeStamp()
   }
 
-  getTimeStamp() {
+  getTimeStamp () {
     return new Date().toGMTString().replace(",", '').replace(/[ ,:]/g, '_')
   }
 
-  forceBlobDownload(blob, filename) {
+  forceBlobDownload (blob, filename) {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -121,7 +120,7 @@ export default class ActionDialog extends React.Component {
     link.click();
     link.parentNode.removeChild(link);
   }
-  render() {
+  render () {
     if (this.state.open) {
       var cancelAction = <Button color="primary" onClick={this.cancelDialog} style={styles.cancel}>CANCEL</Button>;
       if (this.state.errorMessage == undefined) {
