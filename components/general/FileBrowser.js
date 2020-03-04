@@ -2,7 +2,7 @@ import React from 'react';
 import Tree from 'geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
-import { changeNodeAtPath } from 'react-sortable-tree';
+import { walk, changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -25,25 +25,32 @@ export default class FileBrowser extends React.Component {
       var path = ""
     }
 
-    Utils
-      .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
-      .then(dirList => {
-        if (treeData != [] && treeData.length > 0) {
-          rowInfo.node.children = dirList;
-          rowInfo.node.expanded = true;
-          rowInfo.node.load = true;
-          var newTreeData = changeNodeAtPath({ treeData: treeData, path: rowInfo.path, newNode: rowInfo.node, getNodeKey: ({ treeIndex }) => treeIndex });
-        } else {
-          var newTreeData = dirList;
-        }
-        if (!this.props.exploreOnlyDirs || rowInfo == undefined){
-          this.setState({ selection: undefined })
-        } else {
-          this.setState({ selection: rowInfo.node })
-        }
-        this.refs.tree.updateTreeData(newTreeData);
-      });
-  }
+        Utils
+            .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
+            .then((dirList) => {
+                if (treeData != [] && treeData.length > 0) {
+                    rowInfo.node.children = dirList;
+                    rowInfo.node.expanded = true;
+                    rowInfo.node.load = true;
+                    var newTreeData = changeNodeAtPath({
+                        treeData: treeData,
+                        path: rowInfo.path,
+                        newNode: rowInfo.node,
+                        getNodeKey: ({ treeIndex }) => treeIndex
+                    });
+                }
+                else {
+                    var newTreeData = dirList;
+                }
+                if (!this.props.exploreOnlyDirs || rowInfo == undefined){
+                    this.setState({ selection: undefined })
+                }
+                else{
+                    this.setState({ selection: rowInfo.node })
+                }
+                this.refs.tree.updateTreeData(newTreeData);
+            });
+    }
 
 
   handleClickVisualize (event, rowInfo) {
@@ -59,6 +66,53 @@ export default class FileBrowser extends React.Component {
       this.getDirList([]);
     }
   }
+    getSelectedFiles () {
+        const nodes = {}
+        if (!this.refs.tree) {
+            return nodes
+        }
+        walk({
+            treeData: this.refs.tree.state.treeData,
+            getNodeKey: ({ treeIndex }) => treeIndex,
+            ignoreCollapsed: true,
+            callback: (rowInfoIter) => {
+                if (rowInfoIter.node.active) {
+                    nodes[rowInfoIter.treeIndex] = rowInfoIter.node
+                }
+            }
+        });
+
+        return nodes
+    }
+
+
+    handleMoveUp (reset=false) {
+        var path = this.refs.tree.state.treeData[0].path.split("/").slice(0, -2).join('/') || '/'
+
+        if (reset) {
+            path = window.currentFolder
+        }
+
+        this.currentFolder = path
+        this.getDirList([], { node: { path }});
+    }
+
+    disableSelectButton () {
+        if (this.props.toggleMode) {
+            if (Object.keys(this.getSelectedFiles()).length > 0) {
+                return false
+            }
+        }
+        if (this.state.selection) {
+            return !this.state.selection.active
+        }
+        return true
+    }
+
+    onCancelFileBrowser () {
+        this.currentFolder = window.currentFolder
+        this.props.onRequestClose()
+    }
 
   render () {
     const actions = [
@@ -78,7 +132,7 @@ export default class FileBrowser extends React.Component {
         disabled={!this.state.selection}
       />
     ];
-        
+
     var selectMessage = this.props.exploreOnlyDirs ? "Select a folder. " : "Select a file. ";
     return (
             
@@ -90,14 +144,34 @@ export default class FileBrowser extends React.Component {
 
         <DialogTitle id="alert-dialog-title">{selectMessage}</DialogTitle>
         <DialogContent style={{ overflow: 'auto' }}>
-        
+
           <DialogContentText id="alert-dialog-description">
-            <div style={{ marginBottom: '15px' }}>
-                    These paths are relative to:<br/>
-              {window.isDocker ? " the folder you shared with docker (your mounted volume)"
-                : <span style={{ border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px" }}>{window.currentFolder}</span>}
-            </div>
-       
+          <div style={{marginBottom: '15px'}}>
+  <b>{selectMessage}</b>
+      These paths are relative to:<br/>
+      <div className="flex-row fx-center ">
+          <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+          <IconButton
+      id="file-browser-level-up"
+      disableTouchRipple
+      className='simple-icon mrg-2'
+      onClick={() => {this.handleMoveUp()}}
+      tooltip='Enclosing Folder'
+      tooltipPosition={'top-right'}
+          >
+          <FontIcon className={'fa fa-level-up listIcon'} />
+      </IconButton>
+      <IconButton
+      disableTouchRipple
+      className='simple-icon mrg-2'
+      onClick={() => {this.handleMoveUp(true)}}
+      tooltip='Home folder'
+      tooltipPosition={'top-right'}
+          >
+          <FontIcon className={'fa fa-home listIcon'} />
+      </IconButton>
+      </div>
+      </div>
           </DialogContentText>
           < Tree
             id="TreeContainerCutting"
@@ -105,6 +179,7 @@ export default class FileBrowser extends React.Component {
             treeData={[]}
             handleClick={this.handleClickVisualize}
             rowHeight={30}
+      toggleMode={!!this.props.toggleMode}
             activateParentsNodeOnClick={this.props.exploreOnlyDirs}
             ref="tree"
           />
@@ -113,7 +188,7 @@ export default class FileBrowser extends React.Component {
           { actions }
         </DialogActions>
 
-       
+
       </Dialog>
     )
   }

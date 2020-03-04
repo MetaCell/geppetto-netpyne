@@ -9,10 +9,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Snackbar from '@material-ui/core/Snackbar';
 import LoadFile from './actions/LoadFile';
 import SaveFile from './actions/SaveFile';
 import NewModel from './actions/NewModel';
 import ImportExportHLS from './actions/ImportExportHLS';
+import UploadDownloadFiles from './actions/UploadDownloadFiles';
 import ImportCellParams from './actions/ImportCellParams'
 import NetPyNElogo from '../../components/general/NetPyNe_logo.png'
 
@@ -26,13 +28,20 @@ export default class NetPyNEToolBar extends React.Component {
     super(props);
     this.state = {
       openDialogBox: false,
+      openSnackBar: false,
       open: false,
       action: null
     }
+    this.snackBarMessage = ""
   }
 
   handleListItemClick = action => {
-    this.setState({ action:action, openDialogBox:true, open: false })   
+    this.setState({ action:action, openDialogBox:true, open: false })
+  }
+
+  handleOpenSnackBar (message) {
+      this.snackBarMessage = message
+      this.setState({ openSnackBar: true })
   }
 
   render () {
@@ -48,20 +57,20 @@ export default class NetPyNEToolBar extends React.Component {
         break;
       case 'Save':
         var content = <SaveFile
-          open={this.state.openDialogBox}    
+          open={this.state.openDialogBox}
           onClose={() => this.setState({ openDialogBox: false })}
           changeTab={this.props.changeTab}
         />
         break;
       case 'ImportHLS':
-        var content = <ImportExportHLS 
+        var content = <ImportExportHLS
           open={this.state.openDialogBox}
           onClose={() => this.setState({ openDialogBox: false })}
           changeTab={this.props.changeTab}
           mode ={"IMPORT"}/>
         break;
       case 'ExportHLS':
-        var content = <ImportExportHLS 
+        var content = <ImportExportHLS
           open={this.state.openDialogBox}
           onClose={() => this.setState({ openDialogBox: false })}
           changeTab={this.props.changeTab}
@@ -79,6 +88,23 @@ export default class NetPyNEToolBar extends React.Component {
           open={this.state.openDialogBox}
           onClose={() => this.setState({ openDialogBox: false })}
           changeTab={this.props.changeTab}
+        />
+        break;
+    case 'UploadFiles':
+        var content = <UploadDownloadFiles
+        open={this.state.openDialogBox}
+        onRequestClose={() => this.setState({ openDialogBox: false })}
+        changeTab={this.props.changeTab}
+        openSnackBar={message => { this.handleOpenSnackBar(message)} }
+        mode ={"UPLOAD"}/>
+        break;
+    case 'DownloadFiles':
+        var content = <UploadDownloadFiles
+        open={this.state.openDialogBox}
+        onRequestClose={() => this.setState({ openDialogBox: false })}
+        changeTab={this.props.changeTab}
+        openSnackBar={message => { this.handleOpenSnackBar(message)} }
+        mode ={"DOWNLOAD"}
         />
         break;
       }
@@ -127,7 +153,21 @@ export default class NetPyNEToolBar extends React.Component {
           <ListItemIcon><CellTemplateIcon color="primary" /></ListItemIcon>
           <ListItemText primary="Import Cell Template..." />
         </ListItem>
+          <ListItem id="appBarUploadFiles" onClick={() => this.handleListItemClick('UploadFiles')} >
+            <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-upload' /></ListItemIcon>
+          <ListItemText primary="Upload..." />
+          </ListItem>
+          <ListItem id="appBarImportCellTemplate" onClick={() => this.handleListItemClick('DownloadFiles')} >
+  <ListItemIcon><FontIcon color="primary" className='fa fa-cloud-download' /></ListItemIcon>
+          <ListItemText primary="Download..." />
+          </ListItem>
       </Drawer>
+      <Snackbar
+        message={this.snackBarMessage}
+        autoHideDuration={4000}
+        open={this.state.openSnackBar}
+        onRequestClose={() => this.setState({ openSnackBar: false })}
+      />
       {content}
     </div>
   }

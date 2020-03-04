@@ -32,7 +32,13 @@ export default class ActionDialog extends React.Component {
         .evalPythonMessage(this.props.command, [this.props.args])
         .then(response => {
           if (!this.processError(response)) {
-            if (this.props.args.tab != undefined) {
+            if (this.props.command == "netpyne_geppetto.exportModel") {
+              this.downloadJsonResponse(response)
+            }
+            else if (this.props.command == 'netpyne_geppetto.exportHLS') {
+              this.downloadPythonResponse(response)
+            }
+            if (this.props.args.tab!=undefined) {
               this.props.changeTab(this.props.args.tab, this.props.args);
             }
             if (this.props.args.tab == 'simulate') {
@@ -73,7 +79,49 @@ export default class ActionDialog extends React.Component {
     return false;
   }
 
-  render () {
+  downloadJsonResponse (jsonData) {
+    var filename = this.createFileName('NetPyNE_Model_')
+
+    if (jsonData.simConfig && jsonData.simConfig.filename) {
+      filename = this.createFileName(jsonData.simConfig.filename + '_')
+    }
+
+    filename += '.json'
+
+    const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type : 'application/json' });
+    this.forceBlobDownload(blob, filename)
+
+  }
+
+  unescapeText(text) {
+    text = text.replace(/\\\\/g, '\\').replace(/\\\'/g, "'").replace(/\\\"/g, '"').split('\\n').join('\n').substring(1)
+    return text.substring(0, text.length -1)
+  }
+
+  downloadPythonResponse (textData) {
+    var filename = this.createFileName('NetPyNE_init_') + '.py'
+    const blob = new Blob([this.unescapeText(textData)], { type : 'text/plain;charset=utf-8' });
+    this.forceBlobDownload(blob, filename)
+  }
+
+  createFileName (name) {
+    return name + this.getTimeStamp()
+  }
+
+  getTimeStamp() {
+    return new Date().toGMTString().replace(",", '').replace(/[ ,:]/g, '_')
+  }
+
+  forceBlobDownload(blob, filename) {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  }
+  render() {
     if (this.state.open) {
       var cancelAction = <Button color="primary" onClick={this.cancelDialog} style={styles.cancel}>CANCEL</Button>;
       if (this.state.errorMessage == undefined) {
@@ -104,13 +152,13 @@ export default class ActionDialog extends React.Component {
           <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
           <DialogContent style={{ overflow: 'auto' }}>
             <DialogContentText id="alert-dialog-slide-description">
-              {content} 
+              {content}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             {actions}
           </DialogActions>
-            
+
         </Dialog>
       );
     }
