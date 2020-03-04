@@ -247,7 +247,7 @@ export default class NetPyNEInclude extends Component {
         style={{ height: size < 6 ? 48 * size : 240, width:170 }}
         key={name + "Popover"}
         useLayerForClickAway={false}
-        open={Boolean(this.state.anchorEl2)}
+        open={Boolean(this.state.anchorEl2) && size > 0}
         anchorEl={this.state.anchorEl2}
         anchorOrigin={{ "horizontal":"right", "vertical":"top" }}
         transformOrigin={{ "horizontal":"left", "vertical":"top" }}
