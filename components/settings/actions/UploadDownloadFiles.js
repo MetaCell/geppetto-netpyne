@@ -56,7 +56,7 @@ export default class UploadDownloadFile extends React.Component {
             }
 
             try {
-                const response = await fetch('/uploads', { method: "POST", body: formData })
+                const response = await fetch('uploads', { method: "POST", body: formData })
                 if (response.status === 200) {
                     this.message = response.statusText
                 }
@@ -80,7 +80,7 @@ export default class UploadDownloadFile extends React.Component {
     generateUrl () {
         const { downloadPaths, downloadPathsDisplayText } = this.state
 
-        var url = "/downloads"
+        var url = "downloads"
         var downloadFileName = "download.tar.gz"
 
         if (downloadPaths.length > 0) {
