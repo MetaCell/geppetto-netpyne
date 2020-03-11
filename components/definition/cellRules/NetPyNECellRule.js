@@ -1,28 +1,29 @@
 import React from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import RaisedButton from 'material-ui/RaisedButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+
+import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
+import Select from '../../general/Select';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
-import Dialog from 'material-ui/Dialog/Dialog';
+import Dialog from '@material-ui/core/Dialog/Dialog';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 
 export default class NetPyNECellRule extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
       errorMessage: undefined,
       errorDetails: undefined
     };
-  };
+  }
 
-  componentDidMount(){
+  componentDidMount (){
     GEPPETTO.on('populations_change', () => {
       this.forceUpdate();
     })
@@ -34,56 +35,59 @@ export default class NetPyNECellRule extends React.Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount (){
     GEPPETTO.off('populations_change')
     GEPPETTO.off('cellType_change')
     GEPPETTO.off('cellModel_change')
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "CellRule");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        Utils.renameKey('netParams.cellParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false; 
+        });
         this.renaming = true;
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
-        insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
-        primaryText={name}
-      />
+      >
+        {name}
+      </MenuItem>
     ));
-  };
+  }
 
-  render() {
+  render () {
     var actions = [
-      <RaisedButton
-        primary
+      <Button
+        variant="contained"
+        color="primary"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
@@ -91,13 +95,13 @@ export default class NetPyNECellRule extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined ? <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: 'auto' }}
-          style={{ whiteSpace: "pre-wrap" }}>
-          {children}
-        </Dialog> 
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> 
       : undefined
     )
     return (
@@ -108,7 +112,7 @@ export default class NetPyNECellRule extends React.Component {
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
-            floatingLabelText="The name of the cell rule"
+            label="The name of the cell rule"
             className={"netpyneField"}
             id={"cellRuleName"}
           />
@@ -181,5 +185,5 @@ export default class NetPyNECellRule extends React.Component {
         {dialogPop}
       </div>
     );
-  };
-};
+  }
+}

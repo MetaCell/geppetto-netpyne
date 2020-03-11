@@ -1,25 +1,25 @@
 import React from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import Utils from '../../../Utils';
-import FontIcon from 'material-ui/FontIcon';
-import CardText from 'material-ui/Card';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import FontIcon from '@material-ui/core/Icon';
+import CardContent from '@material-ui/core/CardContent';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import NetPyNEField from '../../general/NetPyNEField';
 import ListComponent from '../../general/List';
+import Select from '../../general/Select';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
-import Dialog from 'material-ui/Dialog/Dialog';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class NetPyNEConnectivityRule extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -30,7 +30,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount (){
     GEPPETTO.on('populations_change', () => {
       this.forceUpdate();
     })
@@ -42,29 +42,31 @@ export default class NetPyNEConnectivityRule extends React.Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount (){
     GEPPETTO.off('populations_change')
     GEPPETTO.off('cellType_change')
     GEPPETTO.off('cellModel_change')
   }  
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
     var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "ConnectionRule");
 
-    if(triggerCondition) {
+    if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
-        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => { this.renaming = false; });
+        Utils.renameKey('netParams.connParams', storedValue, newValue, (response, newValue) => {
+          this.renaming = false; 
+        });
         this.renaming = true;
       });
     }
   }
 
-  triggerUpdate(updateMethod) {
-    //common strategy when triggering processing of a value change, delay it, every time there is a change we reset
+  triggerUpdate (updateMethod) {
+    // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
@@ -73,8 +75,8 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  getBottomNavigationItem(index, sectionId, label, icon, id) {
-    return <BottomNavigationItem
+  getBottomNavigationAction (index, sectionId, label, icon, id) {
+    return <BottomNavigationAction
       id={id}
       key={sectionId}
       label={label}
@@ -84,52 +86,53 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
 
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
-        insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
-        primaryText={name}
-      />
+      >
+        {name}
+      </MenuItem>
     ));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
-  render() {
+  render () {
     var actions = [
-      <RaisedButton
-        primary
+      <Button
+        variant="contained"
+        color="primary"
         label={"BACK"}
         onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
       />
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined)? <Dialog
-                                                              title={title}
-                                                              open={true}
-                                                              actions={actions}
-                                                              bodyStyle={{ overflow: 'auto' }}
-                                                              style={{ whiteSpace: "pre-wrap" }}>
-                                                              {children}
-                                                            </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
+      open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
+      style={{ whiteSpace: "pre-wrap" }}>
+      {children}
+    </Dialog> : undefined;
 
     if (this.state.sectionId == "General") {
-      var content =
+      var content = (
         <div>
           <TextField
             id={"ConnectivityName"}
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
-            floatingLabelText="The name of the connectivity rule"
-            className={"netpyneField"}
+            label="The name of the connectivity rule"
+            className="netpyneField"
           />
 
           <NetPyNEField id="netParams.connParams.sec" className="listStyle">
@@ -148,9 +151,15 @@ export default class NetPyNEConnectivityRule extends React.Component {
             <PythonMethodControlledSelectField
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
-              postProcessItems={(pythonData, selected) => {
-                return pythonData.map((name) => (<MenuItem id={name+"MenuItem"}key={name} value={name} primaryText={name} />));
-              }}
+              postProcessItems={(pythonData, selected) => pythonData.map(name => (
+                <MenuItem 
+                  id={name + "MenuItem"}
+                  key={name}
+                  value={name}
+                >
+                  {name} 
+                </MenuItem>
+              ))}
             />
           </NetPyNEField>
 
@@ -197,15 +206,15 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
           {dialogPop}
         </div>
-    }
-    else if (this.state.sectionId == "Pre Conditions") {
+      )
+    } else if (this.state.sectionId == "Pre Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.preConds.pop"} >
           <PythonMethodControlledSelectField
             model={"netParams.connParams['" + this.props.name + "']['preConds']['pop']"}
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.preConds.cellModel"} >
@@ -213,7 +222,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             model={"netParams.connParams['" + this.props.name + "']['preConds']['cellModel']"}
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.preConds.cellType"} >
@@ -221,7 +230,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             model={"netParams.connParams['" + this.props.name + "']['preConds']['cellType']"}
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
 
@@ -259,15 +268,14 @@ export default class NetPyNEConnectivityRule extends React.Component {
         />
 
       </div>
-    }
-    else if (this.state.sectionId == "Post Conditions") {
+    } else if (this.state.sectionId == "Post Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.postConds.pop"} >
           <PythonMethodControlledSelectField
             model={"netParams.connParams['" + this.props.name + "']['postConds']['pop']"}
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.postConds.cellModel"} >
@@ -275,7 +283,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             model={"netParams.connParams['" + this.props.name + "']['postConds']['cellModel']"}
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.postConds.cellType"} >
@@ -283,7 +291,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             model={"netParams.connParams['" + this.props.name + "']['postConds']['cellType']"}
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
 
@@ -327,17 +335,17 @@ export default class NetPyNEConnectivityRule extends React.Component {
     // Generate Menu
     var index = 0;
     var bottomNavigationItems = [];
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'General', 'General', 'fa-bars', 'generalConnTab'));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left', "preCondsConnTab"));
-    bottomNavigationItems.push(this.getBottomNavigationItem(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right', 'postCondsConnTab'));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'General', 'General', 'fa-bars', 'generalConnTab'));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'Pre Conditions', 'Pre-synaptic cells conditions', 'fa-caret-square-o-left', "preCondsConnTab"));
+    bottomNavigationItems.push(this.getBottomNavigationAction(index++, 'Post Conditions', 'Post-synaptic cells conditions', 'fa-caret-square-o-right', 'postCondsConnTab'));
 
     return (
       <div>
-        <CardText>
-          <BottomNavigation selectedIndex={this.state.selectedIndex}>
+        <CardContent>
+          <BottomNavigation value={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
-        </CardText>
+        </CardContent>
         <br />
         {content}
       </div>

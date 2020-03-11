@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+import TextField from '@material-ui/core/TextField';
+import Select from '../../../general/Select';
 import TimeRange from '../TimeRange'
 import NetPyNEInclude from '../NetPyNEInclude';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotSpikeStats extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
-  };
+    this.state = {};
+  }
     
-  render() {
+  render () {
     var tag = "simConfig.analysis['plotSpikeStats']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotSpikeStats.include"}
-        model={tag+"['include']"} 
+        model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
         initialValue={'all'}
       />
@@ -45,5 +44,5 @@ export default class PlotSpikeStats extends React.Component {
         <PythonControlledSelectField model={tag + "['stats']"} />
       </NetPyNEField>
     </div>
-  };
-};
+  }
+}

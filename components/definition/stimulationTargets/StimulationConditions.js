@@ -1,37 +1,36 @@
 import React, { Component } from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '../../general/Select';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
-var PythonControlledCapability = require('../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 
 export default class StimulationConditions extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
-  };
+  }
   
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
-        id={name+"MenuItem"}
+        id={name + "MenuItem"}
         key={name}
-        insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
-        primaryText={name}
-      />
+      >
+        {name}
+      </MenuItem>
     ));
-  };
+  }
   
-  render() {      
+  render () {      
     var content = (
       <div>
         <NetPyNEField id={"netParams.stimTargetParams.conds.pop"} >
@@ -67,8 +66,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'x', label:'Absolute'}, 
-            {value: 'xnorm', label:'Normalized'}
+            { value: 'x', label:'Absolute' }, 
+            { value: 'xnorm', label:'Normalized' }
           ]}
         />
         
@@ -78,8 +77,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'y', label:'Absolute'}, 
-            {value: 'ynorm', label:'Normalized'}
+            { value: 'y', label:'Absolute' }, 
+            { value: 'ynorm', label:'Normalized' }
           ]}
         />
 
@@ -89,8 +88,8 @@ export default class StimulationConditions extends React.Component {
           model={'netParams.stimTargetParams'}
           conds={"conds"}
           items={[
-            {value: 'z', label:'Absolute'}, 
-            {value: 'znorm', label:'Normalized'}
+            { value: 'z', label:'Absolute' }, 
+            { value: 'znorm', label:'Normalized' }
           ]}
         />
         
@@ -103,5 +102,5 @@ export default class StimulationConditions extends React.Component {
     );
     
     return content;
-  };
-};
+  }
+}
