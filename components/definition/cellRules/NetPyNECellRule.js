@@ -1,19 +1,16 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../base/SelectField';
+
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
+import Select from '../../general/Select';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 
 export default class NetPyNECellRule extends React.Component {
 
@@ -69,7 +66,7 @@ export default class NetPyNECellRule extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
@@ -78,10 +75,11 @@ export default class NetPyNECellRule extends React.Component {
       <MenuItem
         id={name + "MenuItem"}
         key={name}
-        insetChildren={true}
-        checked={selected && selected.indexOf(name) > -1}
+        checked={selected.indexOf(name) > -1}
         value={name}
-      >{name}</MenuItem>
+      >
+        {name}
+      </MenuItem>
     ));
   }
 
@@ -97,18 +95,12 @@ export default class NetPyNECellRule extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined ? <Dialog
+      title={title}
       open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: "auto" }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
-      
+      {children}
     </Dialog> 
       : undefined
     )

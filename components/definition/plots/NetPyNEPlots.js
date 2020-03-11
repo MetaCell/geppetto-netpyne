@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Utils from '../../../Utils';
 import PlotLFP from './plotTypes/PlotLFP';
 import PlotConn from './plotTypes/PlotConn';
@@ -115,19 +116,30 @@ export default class NetPyNEPlots extends React.Component {
     }
 
     return (
-      <React.Fragment>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
-            <NetPyNENewPlot style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-              handleClick={this.handleNewPlot} />
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          title="Plots configuration"
+          subheader="Define here the options to customize the plots"
+          id="Plots"
+        />
+        <CardContent className={"tabContainer"} >
+          <div className={"thumbnails"}>
+            <div className="breadcrumb">
+              <NetPyNENewPlot 
+                style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
+                handleClick={this.handleNewPlot} 
+              />
+            />
+
+            </div>
+            <div style={{ clear: "both" }}></div>
+            {plots}
           </div>
-          <div style={{ clear: "both" }}></div>
-          {plots}
-        </div>
-        <div className={"details"}>
-          {selectedPlot}
-        </div>
-      </React.Fragment>
+          <div className={"details"}>
+            {selectedPlot}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 }

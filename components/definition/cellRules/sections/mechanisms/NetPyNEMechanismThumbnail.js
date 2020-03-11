@@ -50,7 +50,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     const { dialogOpen, isHovered } = this.state;
     let label;
     if (isHovered && selected) {
-      label = <FontIcon className="fa fa-trash-o" color="white" hoverColor="white" style={styles.trash}/> 
+      label = <FontIcon className="fa fa-trash-o" style={styles.trash}/> 
     } else {
       label = (
         <span className={"gearThumbLabel"}>
@@ -70,7 +70,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
         >
           <div>
             { label }
-            <FontIcon style={{ color: changeColor, '&:hover': { color: hoverColor } }} className="gpt-fullgear"/>
+            <FontIcon color="primary" className="gpt-fullgear"/>
           </div>
         </IconButton>
         <DeleteDialogBox

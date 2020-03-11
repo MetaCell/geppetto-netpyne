@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
@@ -172,21 +169,17 @@ export default class NetPyNEConnectivityRules extends Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
       open={true}
-      
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: 'auto' }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
+      {children}
     </Dialog> : undefined;
 
+    var that = this;
     var model = this.state.value;
+    var content;
     if (this.state.page == 'main') {
 
       var ConnectivityRules = [];
@@ -203,8 +196,9 @@ export default class NetPyNEConnectivityRules extends Component {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
       }
 
-      return (
-        <React.Fragment>
+      content = (
+
+        <CardContent className={"tabContainer"}>
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <NetPyNEHome
@@ -222,8 +216,17 @@ export default class NetPyNEConnectivityRules extends Component {
             {selectedConnectivityRule}
             {dialogPop}
           </div>
-        </React.Fragment>
-      );
+        </CardContent>);
     }
+
+    return (
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          title="Connectivity rules"
+          subheader="Define here the rules to generate the connections in your network"
+          id="Connections"
+        />
+        {content}
+      </Card>);
   }
 }

@@ -1,10 +1,6 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FlatButton from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Canvas from 'geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
@@ -12,6 +8,12 @@ import Popover from '@material-ui/core/Popover';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../Utils';
+
+
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = {
   modal: {
@@ -40,7 +42,7 @@ const styles = {
   controlpanelBtn: {
     position: 'absolute', 
     left: 34, 
-    top: 16 
+    top: 280 
   },
   plotBtn: {
     position: 'absolute', 
@@ -195,19 +197,6 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     render () {
-      var controls;
-      if (this.props.page == 'simulate') {
-        controls = (
-          <Menu>
-            {plots.map((plot, index) => <MenuItem id={plot.id} key={index} style={styles.menuItem} innerDivStyle={styles.menuItemDiv} onClick={() => {
-              this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)
-            }} >
-              {plot.primaryText}
-            </MenuItem>)}
-          </Menu>
-        );
-      }
-
       return (
         <div id="instantiatedContainer" style={{ ...styles.instantiatedContainer, zIndex: this.state.bringItToFront }}>
           <Canvas
@@ -219,7 +208,7 @@ export default class NetPyNEInstantiated extends React.Component {
           />
           <div id="controlpanel" style={{ top: 0 }}>
             <ControlPanel
-              icon={"styles.Modal"}
+              icon={styles.Modal}
               useBuiltInFilters={false}
             >
             </ControlPanel>
@@ -238,36 +227,42 @@ export default class NetPyNEInstantiated extends React.Component {
               icon={"fa-bar-chart"}
               id="PlotButton"
             />
-            <Popover
+            <Menu
               open={this.state.plotButtonOpen}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-              transformOrigin={{ horizontal: 'left', vertical: 'top' }}
               onClose={this.handleRequestClose}
+              anchorEl={this.state.anchorEl}
             >
-              {controls}
-            </Popover>
+              {plots.map((plot, index) => (
+                <MenuItem 
+                  id={plot.id} 
+                  key={index}
+                  style={styles.menuItem}
+                  onClick={() => this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}
+                >
+                  {plot.primaryText}
+                </MenuItem>
+              ))}
+            </Menu>
           </div>
+
           <Dialog
-            style={{ whiteSpace: "pre-wrap" }}
             open={this.state.openDialog}
             onClose={this.handleCloseDialog}
+            style={{ whiteSpace: "pre-wrap" }}
           >
-            <DialogTitle id="alert-dialog-title">{this.state.dialogTitle}</DialogTitle>
-            <DialogContent style={{ overflow: 'auto' }}>
-              <DialogContentText id="alert-dialog-description">
+            <DialogTitle>{this.state.dialogTitle}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
                 {this.state.dialogMessage}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <FlatButton
+              <Button
                 id="netPyneDialog"
                 color="primary"
-                keyboardFocused={true}
                 onClick={this.handleCloseDialog}
-              >OK</FlatButton>
+              >Ok</Button>
             </DialogActions>
-            
           </Dialog>
         </div>
 

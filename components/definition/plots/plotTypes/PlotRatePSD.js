@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '../../../general/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import TimeRange from '../TimeRange'
 import NetPyNEInclude from '../NetPyNEInclude';

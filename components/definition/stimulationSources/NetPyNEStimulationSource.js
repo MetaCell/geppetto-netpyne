@@ -1,15 +1,11 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../base/SelectField';
 import Utils from '../../../Utils';
+import Select from '../../general/Select';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -22,7 +18,7 @@ export default class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: '',
+      sourceType: 'IClamp',
       errorMessage: undefined,
       errorDetails: undefined
     };
@@ -36,9 +32,9 @@ export default class NetPyNEStimulationSource extends React.Component {
     this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
-      this.setState({ currentName: nextProps.name, sourceType: null });
+      this.setState({ currentName: nextProps.name, sourceType: '' });
     }
   }
 
@@ -107,20 +103,17 @@ export default class NetPyNEStimulationSource extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
-      open={true}
-      
-      style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: 'auto' }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
-    </Dialog> : undefined;
+    var dialogPop = (this.state.errorMessage != undefined) ? (
+      <Dialog
+        title={title}
+        open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: "pre-wrap" }}>
+        {children}
+      </Dialog> 
+    )
+      : undefined;
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
@@ -284,11 +277,12 @@ export default class NetPyNEStimulationSource extends React.Component {
             disabled={this.renaming}
             className={"netpyneField"}
             id={"sourceName"}
+            label="Stimulation source name"
           />
           <br />
 
           <NetPyNEField id="netParams.stimSourceParams.type" className={"netpyneFieldNoWidth"} noStyle>
-            <SelectField
+            <Select
               id={"stimSourceSelect"}
               label="stimulation type"
               value={this.state.sourceType}
@@ -296,12 +290,18 @@ export default class NetPyNEStimulationSource extends React.Component {
             >
               {(this.stimSourceTypeOptions != undefined)
                 ? this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
-                  return (<MenuItem id={stimSourceTypeOption.type + "MenuItem"} key={stimSourceTypeOption.type} value={stimSourceTypeOption.type}>
-                    {stimSourceTypeOption.type}
-                  </MenuItem>)
+                  return (
+                    <MenuItem
+                      id={stimSourceTypeOption.type + "MenuItem"}
+                      key={stimSourceTypeOption.type}
+                      value={stimSourceTypeOption.type}
+                    >
+                      {stimSourceTypeOption.type}
+                    </MenuItem>
+                  )
                 }) : null
               }
-            </SelectField>
+            </Select>
           </NetPyNEField>
         </div>
         {variableContent}

@@ -1,11 +1,12 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
+import Utils from '../../../Utils';
+
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Utils from '../../../Utils';
 
 const styles = { cancel: { marginRight: 10 } }
 export default class ActionDialog extends React.Component {
@@ -53,7 +54,7 @@ export default class ActionDialog extends React.Component {
               })
             }
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-            this.props.onClose();
+            this.props.onRequestClose();
           }
         });
     }
@@ -65,7 +66,7 @@ export default class ActionDialog extends React.Component {
 
   cancelDialog = () => {
     this.setState({ open: false, errorMessage: undefined, errorDetails: undefined })
-    this.props.onClose();
+    this.props.onRequestClose();
   }
 
   processError = response => {
@@ -80,7 +81,7 @@ export default class ActionDialog extends React.Component {
 
   downloadJsonResponse (jsonData) {
     var filename = this.createFileName('NetPyNE_Model_')
-
+    
     if (jsonData.simConfig && jsonData.simConfig.filename) {
       filename = this.createFileName(jsonData.simConfig.filename + '_')
     }
@@ -89,7 +90,7 @@ export default class ActionDialog extends React.Component {
 
     const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type : 'application/json' });
     this.forceBlobDownload(blob, filename)
-
+    
   }
 
   unescapeText (text) {
@@ -120,14 +121,28 @@ export default class ActionDialog extends React.Component {
     link.click();
     link.parentNode.removeChild(link);
   }
+
   render () {
     if (this.state.open) {
-      var cancelAction = <Button color="primary" onClick={this.cancelDialog} style={styles.cancel}>CANCEL</Button>;
+      var cancelAction = (
+        <Button 
+          color="primary" 
+          onClick={this.cancelDialog} 
+          style={styles.cancel}
+          key="CANCEL" 
+        >CANCEL</Button>
+      );
       if (this.state.errorMessage == undefined) {
         var title = this.props.title
         var actions = [
           cancelAction, 
-          <Button id="appBarPerformActionButton" variant="contained" color="primary" onClick={this.performAction}>{this.props.buttonLabel}</Button>
+          <Button 
+            id="appBarPerformActionButton"
+            key="appBarPerformActionButton"
+            variant="contained"
+            color="primary"
+            onClick={this.performAction}
+          >{this.props.buttonLabel}</Button>
         ];
         var content = this.props.children;
       } else {
@@ -136,6 +151,7 @@ export default class ActionDialog extends React.Component {
           <Button
             variant="contained"
             color="primary"
+            key="BACK"
             onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
           >BACK</Button>
         ];
@@ -143,21 +159,18 @@ export default class ActionDialog extends React.Component {
         var content = Utils.parsePythonException(this.state.errorDetails);
       }
       return (
+
         <Dialog
           open={this.state.open}
-          style={{ whiteSpace: "pre-wrap" }}
           onClose={() => this.closeDialog()}
         >
-          <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
-          <DialogContent style={{ overflow: 'auto' }}>
-            <DialogContentText id="alert-dialog-slide-description">
-              {content}
-            </DialogContentText>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogContent>
+            {content}   
           </DialogContent>
           <DialogActions>
             {actions}
           </DialogActions>
-
         </Dialog>
       );
     }

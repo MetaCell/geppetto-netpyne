@@ -35,8 +35,15 @@ export default class AdapterComponent extends Component {
   handleChildChange (event) {
     // Update State
     var newState = this.state;
+    var value = event.target.value
+    if (value === '') {
+      value = 0
+    } else if (isNaN(parseFloat(value))) {
+      return ''
+    }
+
     newState['lastUpdated'] = event.target.id;
-    newState[event.target.id] = event.target.value ;
+    newState[event.target.id] = value;
     this.setState(newState)
 
     // Call to conversion function

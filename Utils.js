@@ -132,18 +132,17 @@ const Utils = {
 
   getErrorResponse (data){
     var parsedData = this.convertToJSON(data)
-    if (parsedData['type'] == 'ERROR'){
+    if (parsedData.type && parsedData['type'] == 'ERROR') {
       const error = { details: parsedData['details'] }
-      if (parsedData.message) {
+      if (Object.prototype.hasOwnProperty.call(parsedData, "message")) {
         error["message"] = parsedData['message']
-      } else if (parsedData.websocket) {
+      } else if (Object.prototype.hasOwnProperty.call(parsedData, "websocket")) {
         error["message"] = parsedData['websocket']
       }
       return error
     }
     return null;
   },
-
 
   parsePythonException (exception){
     return <pre dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>

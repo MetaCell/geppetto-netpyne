@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../base/SelectField';
+import SelectField from './Select';
 import Utils from '../../Utils';
 import NetPyNEField from './NetPyNEField';
 import AdapterComponent from './AdapterComponent';
@@ -13,7 +13,7 @@ export default class NetPyNECoordsRange extends Component {
  
   constructor (props) {
     super(props);
-    this.state = { rangeType: undefined, };
+    this.state = { rangeType: undefined };
 
     this._isMounted = false;
   }
@@ -96,8 +96,8 @@ export default class NetPyNECoordsRange extends Component {
         <NetPyNEField id={meta} >
           <SelectField
             id={this.props.id + 'Select'}
-            label={"Range type"}
-            value={this.state.rangeType}
+            label="Range type"
+            value={this.state.rangeType || ''}
             onChange={event => this.setState({ rangeType: event.target.value })}
           >
             {this.createMenuItems()}

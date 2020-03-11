@@ -3,9 +3,15 @@ import Menu from '@material-ui/core/Menu';
 import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import Popover from '@material-ui/core/Popover/Popover';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CheckIcon from '@material-ui/icons/Check';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
 export default class NetPyNEInclude extends Component {
  
   constructor (props) {
@@ -208,52 +214,66 @@ export default class NetPyNEInclude extends Component {
   
   defaultMenus = () => {
     // [all, allCells,  allNetStims]
-    var mainMenus = this.props.defaultOptions.map(name => <MenuItem  
-      key={name}
-      value={name} 
-      insetChildren={true}
-      onClick={e => this.handleMainMenusClick(name, name == 'all' ? 'exclusive' : 'groups')}
-      checked={!!(this.state.include.exclusive == name || this.state.include.groups.indexOf(name) > -1)}
-      onMouseEnter={e => this.closeSecondPopover()}
-    >
-      {name}
-    </MenuItem>);
-    return mainMenus;
+    var mainMenus = this.props.defaultOptions.map(name => (
+      <MenuItem  
+        key={name}
+        value={name} 
+        onClick={e => this.handleMainMenusClick(name, name == 'all' ? 'exclusive' : 'groups')}
+        checked={!!(this.state.include.exclusive == name || this.state.include.groups.indexOf(name) > -1)}
+        onMouseEnter={e => this.closeSecondPopover()}
+      >
+        {name}
+      </MenuItem>
+    ))
+    return mainMenus
   }
   
   variableMenus = (name, size) => {
     // size: how many sub-menuItems does the menuItem has
-    var menuItems = Array.from(Array(size).keys()).map(index => <MenuItem 
-      key={name + index} 
-      value={index}
-      insetChildren={true}
-      onClick={e => this.handleSecondaryMenusClick(name == 'gids' ? 'gids' : 'popids', name, index)}
-      checked={this.IsSecondaryMenuChecked(name == 'gids' ? 'gids' : 'popids', name, index)}
-    >
-      {"cell " + index}
-    </MenuItem>);
+    var menuItems = Array.from(Array(size).keys()).map(index => (
+      <ListItem 
+        key={name + index} 
+        value={index}
+        button
+        onClick={e => this.handleSecondaryMenusClick(name == 'gids' ? 'gids' : 'popids', name, index)}
+        checked={this.IsSecondaryMenuChecked(name == 'gids' ? 'gids' : 'popids', name, index)}
+      >
+        {this.IsSecondaryMenuChecked(name == 'gids' ? 'gids' : 'popids', name, index) 
+          ? <ListItemIcon>
+            <CheckIcon/>
+          </ListItemIcon>
+          : <ListItemIcon><span/></ListItemIcon>
+        }
+        <ListItemText>{'cell ' + index}</ListItemText>
+        
+      </ListItem>
+    ))
     return <div key={name + "div"}>
       <MenuItem 
         key={name} 
         value={name}
-        insetChildren={true}
         checked={name != 'gids' ? this.state.include['groups'].indexOf(name) > -1 : false}
         onClick={name != 'gids' ? e => this.handleMainMenusClick(name, 'groups') : e => {}}
         onMouseEnter={e => this.handleSecondPopoverOpen(name, true, e.preventDefault(), e.currentTarget)}
       >
         {name}
       </MenuItem>
-      <Menu
-        style={{ height: size < 6 ? 48 * size : 240, width:170 }}
+      <Popover
+        style={{ height: size < 6 ? 48 * size : 240, width:200 }}
         key={name + "Popover"}
-        useLayerForClickAway={false}
-        open={Boolean(this.state.anchorEl2) && size > 0}
+        elevarion={1}
+        hideBackdrop
+        open={this.state.secondPopoverOpen ? this.state.secondPopoverOpen[name] : false}
         anchorEl={this.state.anchorEl2}
         anchorOrigin={{ "horizontal":"right", "vertical":"top" }}
         transformOrigin={{ "horizontal":"left", "vertical":"top" }}
+        onClose={() => this.closeSecondPopover()}
+        onMouseLeave={() => this.closeSecondPopover()}
       >
-        {menuItems}
-      </Menu>
+        <List style={{ width: 200 }}>
+          {menuItems}
+        </List>
+      </Popover>
     </div>
   }
   
@@ -299,7 +319,7 @@ export default class NetPyNEInclude extends Component {
     if (clone['groups'].indexOf('allCells') > -1 && name != 'allNetStims') {
       clone['groups'].splice( clone['groups'].indexOf('allCells'), 1 );
     }
-    this.setState({ include: clone, anchorEl2: null })
+    this.setState({ include: clone })
   }
   
   IsSecondaryMenuChecked = (group, name, index) => {
@@ -333,7 +353,7 @@ export default class NetPyNEInclude extends Component {
           onClick={e => this.handleMainPopoverOpen(true, e.preventDefault(), e.currentTarget)} 
         />
       </NetPyNEField >
-      <Menu 
+      <Popover 
         open={this.state.mainPopoverOpen}
         anchorEl={this.state.anchorEl}
         onClose={e => this.handleMainPopoverOpen(false)}
@@ -345,7 +365,7 @@ export default class NetPyNEInclude extends Component {
         {this.variableMenus('gids', this.state.data ? this.state.data.gids : 0, true)}
         <Divider/>
         {this.otherMenus()}
-      </Menu>
+      </Popover>
     </div>
   }
 }

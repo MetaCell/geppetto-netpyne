@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import FontIcon from '@material-ui/core/Icon';
+import Icon from '@material-ui/core/Icon';
 
 /**
  * Generic List/Dict Component
@@ -207,22 +207,26 @@ export default class ListComponent extends Component {
       } else {
         var value = this.state.children[key];
       }
-      return <div key={key} style={this.props.realType != 'dict(dict())' ? { marginRight: 30, float: 'left' } : { marginRight: 30 }}>
-        <TextField
-          value={value}
-          id={this.props.id + index}
-          style={{ width: value.length * 10, color: 'rgb(84, 58, 115)' }}
-          disabled
-        />
-        <IconButton
-          id={this.props.id + index + "RemoveButton"}
-          className={'listButtonSmall'}
-          onClick={() => this.removeChild(key)}
-          tooltip='Remove item from the list'
+      return (
+        <div 
+          key={key} 
+          style={this.props.realType != 'dict(dict())' ? { marginRight: 30, float: 'left' } : { marginRight: 30 }}
         >
-          <FontIcon className={'fa fa-minus-circle listIcon'} />
-        </IconButton>
-      </div>
+          <TextField
+            value={value}
+            id={this.props.id + index}
+            disabled
+          />
+          <IconButton
+            id={this.props.id + index + "RemoveButton"}
+            className={'listButtonSmall'}
+            onClick={() => this.removeChild(key)}
+            tooltip-data='Remove item from the list'
+          >
+            <Icon className={'fa fa-minus-circle listIcon'} />
+          </IconButton>
+        </div>
+      )
     });
 
     return (
@@ -234,18 +238,19 @@ export default class ListComponent extends Component {
           onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
           value={this.state.newItemValue}
           style={{ width: '100%' }}
-          error={Boolean(this.state.newItemErrorText)}
           helperText={this.state.newItemErrorText}
         />
-        {!this.state.newItemErrorText
-                    && <IconButton
-                      id={this.props.id + "AddButton"}
-                      className={'listButtonLarge'}
-                      onClick={this.addChild}
-                      tooltip='Add item to the list'
-                    >
-                      <FontIcon style={{ width: 25, height: 25 }} className={'fa fa-plus-circle listIcon'} />
-                    </IconButton>
+        {!this.state.newItemErrorText 
+          && (
+            <IconButton
+              id={this.props.id + "AddButton"}
+              className={'listButtonLarge'}
+              onClick={this.addChild}
+              data-tooltip='Add item to the list'
+            >
+              <Icon className={'fa fa-plus-circle listIcon'} />
+            </IconButton>
+          )
         }
 
         {childrenWithExtraProp.length > 0 && <div style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}

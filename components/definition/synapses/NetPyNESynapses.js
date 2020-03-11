@@ -1,4 +1,5 @@
 import React,{ Component } from 'react';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
 import NetPyNESynapse from './NetPyNESynapse';
@@ -6,10 +7,6 @@ import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 export default class NetPyNESynapses extends Component {
@@ -150,10 +147,9 @@ export default class NetPyNESynapses extends Component {
       title={title}
       open={true}
       actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <div style={{ overflow: 'auto' }}>
-        {children}
-      </div>
+      {children}
     </Dialog> : undefined;
 
     var model = this.state.value;
@@ -173,23 +169,30 @@ export default class NetPyNESynapses extends Component {
     }
 
     return (
-      <React.Fragment>
-        <div className={"details"}>
-          {selectedSynapse}
-        </div>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
-            <NetPyNEHome
-              selection={this.state.selectedSynapse}
-              handleClick={() => this.setState({ selectedSynapse: undefined })}
-            />
-            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          title="Synaptic mechanisms"
+          subheader="Define here the synaptic mechanisms available in your network"
+          id={"Synapses"}
+        />
+        <CardContent className={"tabContainer"}>
+          <div className={"details"}>
+            {selectedSynapse}
           </div>
-          <div style={{ clear: "both" }}></div>
-          {Synapses}
-          {dialogPop}
-        </div>
-      </React.Fragment>
+          <div className={"thumbnails"}>
+            <div className="breadcrumb">
+              <NetPyNEHome
+                selection={this.state.selectedSynapse}
+                handleClick={() => this.setState({ selectedSynapse: undefined })}
+              />
+              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+            </div>
+            <div style={{ clear: "both" }}></div>
+            {Synapses}
+            {dialogPop}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 }

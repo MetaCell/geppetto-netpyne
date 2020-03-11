@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
-
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import FloatingActionButton from '@material-ui/core/Fab';
 import NetPyNECellRule from './NetPyNECellRule';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -13,10 +13,6 @@ import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
@@ -38,9 +34,8 @@ const styles = {
       marginLeft: '15px',
       float: 'left',
       borderRadius: 25,
-      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.19)'
-    },
-    icon: { borderRadius: 25 }
+      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.19)',
+    }
   }
 }
 
@@ -475,13 +470,13 @@ export default class NetPyNECellRules extends React.Component {
         }
       } else {
         if (page == "sections" ) {
-          return <ContentAdd style={{ height: '100%' }} color="white"/>
+          return <ContentAdd style={{ height: '100%' }}/>
         } else {
           if (selectedCellRule) {
             if (!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0){
-              return <NavigationMoreHoriz style={{ height: '100%' }} color="white"/>
+              return <NavigationMoreHoriz style={{ height: '100%' }}/>
             } else {
-              return <ContentAdd style={{ height: '100%' }} color="white"/>
+              return <ContentAdd style={{ height: '100%' }} />
             }
           } else {
             return ''
@@ -497,21 +492,23 @@ export default class NetPyNECellRules extends React.Component {
     let selection = null;
     let container = null;
 
-    const actions = <Button variant="contained" color="primary" label={"BACK"} onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}/>
+    const actions = (
+      <Button 
+        variant="contained"
+        color="primary"
+        label={"BACK"}
+        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+      />
+    )
 
     const dialogPop = (errorMessage != undefined 
       ? <Dialog
+        title={errorMessage}
         open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: "pre-wrap" }}>
-        <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
-        <DialogContent style={{ overflow: 'auto' }}>
-          <DialogContentText id="alert-dialog-description">
-            {errorDetails}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          { actions }
-        </DialogActions>
+        {errorDetails}
       </Dialog> 
       : undefined
     );
@@ -585,8 +582,8 @@ export default class NetPyNECellRules extends React.Component {
       )
     }
     
-    return (
-      <React.Fragment>
+    const content = (
+      <CardContent className={"tabContainer"}>
         <div className={"thumbnails"}>
           <div className="breadcrumb">
             <NetPyNEHome
@@ -595,10 +592,9 @@ export default class NetPyNECellRules extends React.Component {
             />
 
             <FloatingActionButton
-              style={{ "zIndex": 1 }}
               id="newCellRuleButton"
               style={styles.cellRule}
-              color ={ page != 'main' ? 'secondary' : 'primary' }
+              color={ page == 'main' ? 'primary' : 'secondary'}
               data-tooltip={ this.createTooltip('cellRule')}
               className={"actionButton smallActionButton"}
               onClick={() => this.handleHierarchyClick('main')}
@@ -611,15 +607,15 @@ export default class NetPyNECellRules extends React.Component {
             <Button
               id="newSectionButton"
               variant="contained"
-              style={{ ...styles.sections.container, ...styles.sections.icon }}
-              color={ page != 'mechanisms' ? "primary" : "secondary"}
+              style={styles.sections.container}
+              color={ page === 'mechanisms' ? 'secondary' : 'primary'}
               disabled={ selectedCellRule == undefined }
               onClick={ () => this.handleHierarchyClick('sections') }
               data-tooltip={ this.createTooltip('section')}
             >
-              <div style={{ color: 'white', height: '100%' }}>
+              <p style={{ color: 'white', height: '100%' }}>
                 {this.createLabel('sections')}
-              </div>
+              </p>
             </Button>
 
             <NavigationChevronRight style={styles.rightArrow}/>
@@ -637,9 +633,19 @@ export default class NetPyNECellRules extends React.Component {
         <div className="details">
           { selection }
         </div>
-        {dialogPop}
-      </React.Fragment>
+      </CardContent>
     );
 
+    return (
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          id="CellRules"
+          title="Cell rules"
+          subheader="Define here the rules to set the biophysics and morphology of the cells in your network"
+        />
+        {content}
+        {dialogPop}
+      </Card>
+    );
   }
 }
