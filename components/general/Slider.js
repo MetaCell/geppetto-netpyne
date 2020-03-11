@@ -19,10 +19,10 @@ export default class NetPyNESlider extends Component {
     }
   }
 
-    handleSlider = event => {
-      this.setState({ value: event.target.value });
+    handleSlider = (event, value) => {
+      this.setState({ value: value });
 
-      this.props.onChange(event, null, event.target.value );
+      this.props.onChange(event, null, value);
     };
 
     render () {

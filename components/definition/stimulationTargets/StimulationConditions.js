@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import SelectField from '../../base/SelectField';
+import Select from '../../general/Select';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 
 export default class StimulationConditions extends React.Component {
 
@@ -22,7 +22,6 @@ export default class StimulationConditions extends React.Component {
       <MenuItem
         id={name + "MenuItem"}
         key={name}
-        insetChildren={true}
         checked={selected.indexOf(name) > -1}
         value={name}
       >

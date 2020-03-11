@@ -2,14 +2,15 @@ import React from 'react';
 import Tree from 'geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import FontIcon from '@material-ui/core/Icon';
-import { walk, changeNodeAtPath } from 'react-sortable-tree';
+import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
+
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import { walk } from 'react-sortable-tree';
 
 export default class FileBrowser extends React.Component {
 
@@ -34,11 +35,11 @@ export default class FileBrowser extends React.Component {
           rowInfo.node.children = dirList;
           rowInfo.node.expanded = true;
           rowInfo.node.load = true;
-          var newTreeData = changeNodeAtPath({
-            treeData: treeData,
-            path: rowInfo.path,
-            newNode: rowInfo.node,
-            getNodeKey: ({ treeIndex }) => treeIndex
+          var newTreeData = changeNodeAtPath({ 
+            treeData: treeData, 
+            path: rowInfo.path, 
+            newNode: rowInfo.node, 
+            getNodeKey: ({ treeIndex }) => treeIndex 
           });
         } else {
           var newTreeData = dirList;
@@ -61,11 +62,6 @@ export default class FileBrowser extends React.Component {
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (prevProps.open == false && this.props.open) {
-      this.getDirList([]);
-    }
-  }
   getSelectedFiles () {
     const nodes = {}
     if (!this.refs.tree) {
@@ -85,10 +81,15 @@ export default class FileBrowser extends React.Component {
     return nodes
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.open == false && this.props.open) {
+      this.getDirList([]);
+    }
+  }
 
   handleMoveUp (reset = false) {
     var path = this.refs.tree.state.treeData[0].path.split("/").slice(0, -2).join('/') || '/'
-
+    
     if (reset) {
       path = window.currentFolder
     }
@@ -114,69 +115,58 @@ export default class FileBrowser extends React.Component {
     this.props.onRequestClose()
   }
 
+
   render () {
     const actions = [
       <Button
-        label={'CANCEL'}
-        key="CANCEL"
-        onClick={event => this.props.onClose()}
+        key='cancel'
+        onClick={event => this.onCancelFileBrowser()}
         style={{ marginRight: 16 }}
-      />,
+      >cancel</Button>,
       <Button
         id="browserAccept"
+        key="select"
         variant="contained"
-        key="SELECT"
         color="primary"
-        label={'SELECT'}
-        onClick={event => this.props.onClose(this.state.selection)}
-        disabled={!this.state.selection}
-      />
+        onClick={event => {
+          this.props.onRequestClose(this.props.toggleMode ? this.getSelectedFiles() : this.state.selection )
+        }}
+        disabled={this.disableSelectButton()}
+      >select</Button>
     ];
-
+        
     var selectMessage = this.props.exploreOnlyDirs ? "Select a folder. " : "Select a file. ";
     return (
-            
       <Dialog
         open={this.props.open}
-        onClose={this.props.onClose}
+        onClose={() => this.props.onRequestClose()}
       >
-
-
-        <DialogTitle id="alert-dialog-title">{selectMessage}</DialogTitle>
-        <DialogContent style={{ overflow: 'auto' }}>
-
-          <DialogContentText id="alert-dialog-description">
-            <div style={{ marginBottom: '15px' }}>
-              <b>{selectMessage}</b>
-      These paths are relative to:<br/>
-              <div className="flex-row fx-center ">
-                <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
-                <IconButton
-                  id="file-browser-level-up"
-                  disableTouchRipple
-                  className='simple-icon mrg-2'
-                  onClick={() => {
-                    this.handleMoveUp()
-                  }}
-                  tooltip='Enclosing Folder'
-                  tooltipPosition={'top-right'}
-                >
-                  <FontIcon className={'fa fa-level-up listIcon'} />
-                </IconButton>
-                <IconButton
-                  disableTouchRipple
-                  className='simple-icon mrg-2'
-                  onClick={() => {
-                    this.handleMoveUp(true)
-                  }}
-                  tooltip='Home folder'
-                  tooltipPosition={'top-right'}
-                >
-                  <FontIcon className={'fa fa-home listIcon'} />
-                </IconButton>
-              </div>
+        <DialogContent>
+          <div style={{ marginBottom: '15px' }}>
+            <b>{selectMessage}</b>
+            These paths are relative to:<br/>
+            <div className="flex-row fx-center ">
+              <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+              <IconButton
+                id="file-browser-level-up"
+                disableTouchRipple
+                className='simple-icon mrg-2'
+                onClick={() => this.handleMoveUp()} 
+                tooltip-data='Enclosing Folder'
+              >
+                <Icon className={'fa fa-level-up listIcon'} />
+              </IconButton>
+              <IconButton
+                disableTouchRipple
+                className='simple-icon mrg-2'
+                onClick={() => this.handleMoveUp(true)} 
+                tooltip-data='Home folder'
+              >
+                <Icon className={'fa fa-home listIcon'} />
+              </IconButton>
             </div>
-          </DialogContentText>
+            
+          </div>
           < Tree
             id="TreeContainerCutting"
             style={{ width: "100%", height: "400px", float: 'left' }}
@@ -189,10 +179,8 @@ export default class FileBrowser extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          { actions }
+          {actions}
         </DialogActions>
-
-
       </Dialog>
     )
   }

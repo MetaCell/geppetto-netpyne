@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import FloatingActionButton from '@material-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
 import DeleteDialogBox from './DeleteDialogBox';
+import Icon from '@material-ui/core/Icon';
 
 export default class NetPyNEThumbnail extends React.Component {
 
@@ -46,20 +47,17 @@ export default class NetPyNEThumbnail extends React.Component {
       }
     }
     return (
-      <div className="thumb">
-        <FloatingActionButton 
+      <div>
+        <Fab 
           id={name}
           onMouseEnter={() => this.setState({ isHovered: true })}
           onMouseLeave={() => this.setState({ isHovered: false })}
           data-tooltip={isHovered && name.length > 14 ? name : undefined}
-          className={"actionButton " + (selected ? "selectedActionButton" : "") } 
+          className={"actionButton " + (selected ? "selectedActionButton" : "")} 
           onClick={() => this.handleClick()}
-          color={selected ? "secondary" : "primary"}
         >
-          {(this.state.isHovered && selected) 
-            ? <i className="fa fa-trash-o" /> 
-            : label}
-        </FloatingActionButton>
+          {(this.state.isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}}
+        </Fab>
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}

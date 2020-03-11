@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import SelectField from '../../../base/SelectField';
+import Checkbox from '../../../general/Checkbox';
+import Select from '../../../general/Select';
 import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
 
 export default class Plot2Dnet extends React.Component {
 

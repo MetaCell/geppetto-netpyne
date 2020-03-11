@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../base/SelectField';
+import Select from '../../general/Select';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -19,7 +15,7 @@ export default class NetPyNESynapse extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      synMechMod: '',
+      synMechMod: 'Exp2Syn',
       errorMessage: undefined,
       errorDetails: undefined
     };
@@ -29,9 +25,9 @@ export default class NetPyNESynapse extends React.Component {
     this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name){
-      this.setState({ currentName: nextProps.name, synMechMod: null });      
+      this.setState({ currentName: nextProps.name, synMechMod: '' });      
     }
   }
   
@@ -79,14 +75,15 @@ export default class NetPyNESynapse extends React.Component {
         } else if (response[1]) {
           this.setState({ synMechMod: "Exp2Syn" })
         } else {
-          this.setState({ synMechMod: "" })
+          this.setState({ synMechMod: "Exp2Syn" })
         }
       });
   }
   
   handleSynMechModChange (event) {
-    Utils.execPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + event.target.value + "'");
-    this.setState({ synMechMod: event.target.value });
+    const value = event.target.value
+    Utils.execPythonMessage("netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] = '" + value + "'");
+    this.setState({ synMechMod: value });
   }
 
   render () {
@@ -104,11 +101,9 @@ export default class NetPyNESynapse extends React.Component {
       title={title}
       open={true}
       actions={actions}
-      
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <div style={{ overflow: 'auto' }}>
-        {children}
-      </div>
+      {children}
     </Dialog> : undefined;
 
     if (this.state.synMechMod == '' || this.state.synMechMod == undefined) {
@@ -147,15 +142,16 @@ export default class NetPyNESynapse extends React.Component {
           value = {this.state.currentName}
           disabled={this.renaming}
           className={"netpyneField"}
+          label="Synapse name"
         />
         <br/>
         <NetPyNEField id="netParams.synMechParams.mod" className={"netpyneFieldNoWidth"} noStyle>
-          <SelectField 
+          <Select 
             id={"synapseModSelect"}
             value={this.state.synMechMod}
             onChange={this.handleSynMechModChange}
           >
-          </SelectField>
+          </Select>
         </NetPyNEField>
         {content}
         {dialogPop}

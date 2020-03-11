@@ -15,7 +15,7 @@ export default class NetPyNEMechanism extends React.Component {
     };
   }
   
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
   

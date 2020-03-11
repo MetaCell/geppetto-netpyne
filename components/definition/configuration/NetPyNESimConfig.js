@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import FontIcon from '@material-ui/core/Icon';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../base/SelectField';
+import Select from '@material-ui/core/Select';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
+import Checkbox from '../../general/Checkbox';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
@@ -24,17 +25,17 @@ export default class NetPyNESimConfig extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ model: nextProps.model });
   }
 
   select = (index, sectionId) => this.setState({ selectedIndex: index, sectionId: sectionId });
 
   render () {
-    var content;
+    var content = <div/>;
     if (this.state.sectionId == 'General') {
-      content
-        = <div style={{ float: 'left', width: '100%' }}>
+      content = (
+        <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
 
             <NetPyNEField id="simConfig.duration" >
@@ -114,9 +115,10 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
           </div>
         </div>
+      )
     } else if (this.state.sectionId == 'SaveConfiguration') {
-      content
-        = <div style={{ float: 'left', width: '100%' }}>
+      content = (
+        <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.simLabel" >
               <PythonControlledTextField model={"simConfig.simLabel"} />
@@ -189,9 +191,10 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
           </div>
         </div>
+      )
     } else if (this.state.sectionId == 'Record') {
-      content
-        = <div style={{ float: 'left', width: '100%' }}>
+      content = (
+        <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.recordCells" className={"listStyle"} >
               <PythonControlledListComponent model={"simConfig.recordCells"} />
@@ -221,9 +224,10 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
           </div>
         </div >
+      )
     } else if (this.state.sectionId == 'ErrorChecking') {
-      content
-      = <div style={{ float: 'left', width: '100%' }}>
+      content = (
+        <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
               <PythonControlledCheckbox model={"simConfig.checkErrors"} />
@@ -235,9 +239,10 @@ export default class NetPyNESimConfig extends React.Component {
             </NetPyNEField>
           </div>
         </div >
+      )
     } else if (this.state.sectionId == 'netParams') {
-      var content
-        = <div style={{ float: 'left', width: '100%' }}>
+      var content = (
+        <div style={{ float: 'left', width: '100%' }}>
           <div style={{ float: 'left', width: '45%' }}>
             <NetPyNEField id="netParams.scale" >
               <PythonControlledTextField model={"netParams.scale"} />
@@ -292,22 +297,31 @@ export default class NetPyNESimConfig extends React.Component {
 
           </div>
         </div>
+      )
     }
 
     return (
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          title="Simulation configuration"
+          subheader="Define here the configuration options for the simulation"
+          id={"Configuration"}
+        />
 
-      <div>
-        <BottomNavigation value={this.state.selectedIndex} showLabels>
-          <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
-          <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
-          <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
-          <BottomNavigationAction id={"configErrorChecking"} key={'ErrorChecking'} label={'Error Checking'} icon={<FontIcon className={"fa fa-exclamation"} />} onClick={() => this.select(3, 'ErrorChecking')} />
-          <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(4, 'netParams')} />
-        </BottomNavigation>
-        <br />
-        {content}
-      </div>
-
+        <CardContent className={"tabContainer"}>
+          <div>
+            <BottomNavigation value={this.state.selectedIndex}>
+              <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
+              <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
+              <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
+              <BottomNavigationAction id={"configErrorChecking"} key={'ErrorChecking'} label={'Error Checking'} icon={<FontIcon className={"fa fa-exclamation"} />} onClick={() => this.select(3, 'ErrorChecking')} />
+              <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(4, 'netParams')} />
+            </BottomNavigation>
+            <br />
+            {content}
+          </div>
+        </CardContent >
+      </Card >
     );
   }
 }

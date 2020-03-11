@@ -28,8 +28,8 @@ export default class NetPyNENewMechanism extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      mechanisms: [],
-      anchorEl: null
+      open: false,
+      mechanisms: []
     };
   }
   
@@ -40,9 +40,9 @@ export default class NetPyNENewMechanism extends React.Component {
       })
   }
   
-  handleClick = value => {
-    this.setState({ anchorEl: null });
-    this.props.handleClick(value);
+  handleClick = event => {
+    this.setState({ open: false });
+    this.props.handleClick(event.target.innerText);
   };
 
   handleButtonClick = anchor => {
@@ -80,31 +80,39 @@ export default class NetPyNENewMechanism extends React.Component {
   }
   render () {
     const { disabled } = this.props;
-    const { anchorEl, mechanisms } = this.state;
+    const { open, anchorEl, mechanisms } = this.state;
     
     return <div>
       <IconButton
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
+        color='primary'
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
         <i 
-          style={{ position: 'absolute', color: changeColor, '&:hover': { color: hoverColor } }}
+          style={{ position: 'absolute', color: changeColor }}
           className="gpt-fullgear"
         />
         { this.createLabel() }
       </IconButton>
 
-      <Menu onClose={ e => this.setState({ anchorEl: null }) } 
-        open={Boolean(anchorEl)} 
-        anchorEl={anchorEl}>
+      <Menu 
+        open={open} 
+        anchorEl={anchorEl}
+        onClose={ () => this.setState({ open: false }) }
+      >
         {mechanisms.map( mechLabel => 
-          <MenuItem id={mechLabel} key={mechLabel} value={mechLabel} onClick={e => this.handleClick(mechLabel)}>
+          <MenuItem 
+            id={mechLabel}
+            key={mechLabel}
+            value={mechLabel}
+            onClick={ (event, index) => this.handleClick(event) }
+          >
             {mechLabel}
-          </MenuItem>)
-        }
+          </MenuItem>
+        )}
       </Menu>
     </div>
   }

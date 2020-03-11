@@ -1,81 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         id="WebApp_ID" version="3.0">
-
-    <display-name>org.geppetto.frontend</display-name>
-
-    <context-param>
-        <param-name>contextClass</param-name>
-        <param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
-    </context-param>
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/*.xml</param-value>
-    </context-param>
-
-    <listener>
-		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-	</listener>
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
-    </listener>
-
-    <servlet>
-        <servlet-name>springdispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextClass</param-name>
-            <param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
-        </init-param>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/*.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>springdispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-
-    <mime-mapping>
-   		<extension>json</extension>
-    	<mime-type>application/json</mime-type>
-	</mime-mapping>
-    <servlet>
-        <description></description>
-        <display-name>TestServlet</display-name>
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>org.geppetto.frontend.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/TestServlet</url-pattern>
-    </servlet-mapping>
-
-    <filter>
-        <filter-name>ShiroFilter</filter-name>
-        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
-
-    
-
-
-    
-
-</web-app>
+Html Webpack Plugin:
+<pre>
+  Error: Child compilation failed:
+  Module build failed (from ./node_modules/html-webpack-plugin/lib/loader.js):
+  Error: ENOENT: no such file or directory, open '/home/user/netpyne/webapp/WEB-  INF/web.ejs':
+  Error: ENOENT: no such file or directory, open '/home/user/netpyne/webapp/WEB-  INF/web.ejs'
+  
+  - compiler.js:79 
+    [webapp]/[html-webpack-plugin]/lib/compiler.js:79:16
+  
+  - Compiler.js:339 
+    [webapp]/[webpack]/lib/Compiler.js:339:11
+  
+  - Compiler.js:664 
+    [webapp]/[webpack]/lib/Compiler.js:664:15
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compiler.js:661 
+    [webapp]/[webpack]/lib/Compiler.js:661:31
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1395 
+    [webapp]/[webpack]/lib/Compilation.js:1395:35
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1386 
+    [webapp]/[webpack]/lib/Compilation.js:1386:32
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1381 
+    [webapp]/[webpack]/lib/Compilation.js:1381:36
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1377 
+    [webapp]/[webpack]/lib/Compilation.js:1377:32
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1314 Compilation.seal
+    [webapp]/[webpack]/lib/Compilation.js:1314:27
+  
+  - Compiler.js:658 
+    [webapp]/[webpack]/lib/Compiler.js:658:18
+  
+  - Compilation.js:1234 
+    [webapp]/[webpack]/lib/Compilation.js:1234:4
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [webapp]/[webpack]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1226 Compilation.finish
+    [webapp]/[webpack]/lib/Compilation.js:1226:28
+  
+  - Compiler.js:655 
+    [webapp]/[webpack]/lib/Compiler.js:655:17
+  
+  
+  - Compilation.js:1158 
+    [webapp]/[webpack]/lib/Compilation.js:1158:12
+  
+  - Compilation.js:1070 
+    [webapp]/[webpack]/lib/Compilation.js:1070:9
+  
+  - task_queues.js:79 processTicksAndRejections
+    internal/process/task_queues.js:79:11
+  
+</pre>

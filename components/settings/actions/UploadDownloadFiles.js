@@ -1,13 +1,15 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import FontIcon from '@material-ui/core/Icon';
+import Icon from '@material-ui/core/Icon';
 
+import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
+import DialogContent from '@material-ui/core/DialogContent';
+
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import FileBrowser from '../../general/FileBrowser';
 
 const styles = {
@@ -25,7 +27,7 @@ const styles = {
 export default class UploadDownloadFile extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { ...this.initialState() }
+    this.state = this.initialState()
     this.message = ''
   }
     
@@ -177,88 +179,85 @@ export default class UploadDownloadFile extends React.Component {
         
       switch (mode) {
       case 'UPLOAD':
-        var content 
-                    = <div>
-                      <div className="flex-row">
-                        <div >
-                          <input 
-                            multiple
-                            type="file" 
-                            style={{ ...styles.input }}
-                            className="form-control" 
-                            onChange={this.onUploadFileArrayChange}
-                          />
-                                
-                        </div> 
-                      </div>
-                      <p className="mt-2">Accept: .py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg</p>
-                    </div>
+        var content = (
+          <div>
+            <div className="flex-row">
+              <div >
+                <input 
+                  multiple
+                  type="file" 
+                  style={{ ...styles.input }}
+                  className="form-control" 
+                  onChange={this.onUploadFileArrayChange}
+                />
+                      
+              </div> 
+            </div>
+            <p className="mt-2">Accept: .py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg</p>
+          </div>
+        )
 
         var buttonLabel = 'Upload'
         var title = 'Upload files'
         break;
       case 'DOWNLOAD':
-        var content 
-                    = <div>
-                      <div className="flex-row">
-                        <IconButton
-                          className='flex-row-icon'
-                          onClick={() => this.showExplorerDialog('.py')} 
-                          tooltip='File explorer'
-                          tooltipPosition={'top-right'}
-                        >
-                          <FontIcon className={'fa fa-folder-o listIcon'} />
-                        </IconButton>
-                        <TextField 
-                          className="netpyneFieldNoWidth fx-11 no-z-index"
-                          value={this.state.downloadPathsDisplayText}
-                          onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
-                          label="Files:"
-                          underlineStyle={{ borderWidth:'1px' }}
-                          helperText={"Select files to download"}
-                        />
-                            
-                      </div>
-                    </div>
-                    
+        var content = (
+          <div>
+            <div className="flex-row">
+              <IconButton
+                className='flex-row-icon'
+                onClick={() => this.showExplorerDialog('.py')} 
+                tooltip-data='File explorer'
+              >
+                <Icon className={'fa fa-folder-o listIcon'} />
+              </IconButton>
+              <TextField 
+                className="netpyneFieldNoWidth fx-11 no-z-index"
+                value={this.state.downloadPathsDisplayText}
+                onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
+                label="Files:"
+                helperText="Select files to download"
+              />
+            </div>
+          </div>
+        )
+
         var buttonLabel = 'DOWNLOAD'
         var title = 'Download files'
         break
       }
 
-      var actions = [
-        <Button 
-          color="primary"
-          onClick={() => {
-            this.props.onRequestClose()
-          }}
-          style={{ marginRight: 10 }}
-        >CANCEL</Button>,
-        <Button
-          color="primary"
-          variant="contained"
-          id="appBarPerformActionButton"
-          disabled={mode === 'UPLOAD' ? !this.state.uploadFiles : this.state.downloadPaths.lenght === 0 || !this.state.downloadPathsDisplayText}
-          onClick={() => mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles()}
-        >{buttonLabel}</Button>
-      ];
-
+        
       return (
         <div>
           <Dialog
-            title={title}
-            
-            bodyStyle={{ overflow: 'auto' }}
-            style={{ whiteSpace: "pre-wrap" }}
-            {...this.props}
             open={this.props.open && this.state.open}
+            onClose={() => this.closeDialog()}
           >
-            <DialogTitle >{title}</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-              {content}
+              {content}   
             </DialogContent>
-            <DialogActions>{actions}</DialogActions>
+            <DialogActions>
+              <Button 
+                onClick={() => {
+                  this.props.onRequestClose()
+                }}
+                style={{ marginRight: 10 }}
+              >
+                        CANCEL
+              </Button>
+              <Button
+                color="primary"
+                id="appBarPerformActionButton"
+                disabled={mode === 'UPLOAD' ? !this.state.uploadFiles : this.state.downloadPaths.lenght === 0 || !this.state.downloadPathsDisplayText}
+                onClick={() => mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles()}
+              >
+                {buttonLabel}
+              </Button>
+            </DialogActions>
           </Dialog>
+
           <FileBrowser 
             open={this.state.explorerDialogOpen}
             exploreOnlyDirs={false}

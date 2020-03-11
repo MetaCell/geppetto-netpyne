@@ -2,23 +2,19 @@ import React from 'react';
 import CardText from '@material-ui/core/Card';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../base/SelectField';
 import CondsIcon from '@material-ui/icons/LocalOffer';
 import StimTargetIcon from '@material-ui/icons/Reorder';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import Utils from '../../../Utils';
+import Select from '../../general/Select';
 import NetPyNEField from '../../general/NetPyNEField';
 import StimulationConditions from './StimulationConditions';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
 
 export default class NetPyNEStimulationTarget extends React.Component {
 
@@ -67,7 +63,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     GEPPETTO.off('stimSources_change')
   }
   
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
       this.setState({ currentName: nextProps.name, selectedIndex:0, sectionId:'General' });
     }
@@ -153,17 +149,12 @@ export default class NetPyNEStimulationTarget extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
       open={true}
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: 'auto' }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
+      {children}
     </Dialog> : undefined;
 
     if (this.state.sectionId == "General") {
@@ -175,6 +166,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
             disabled={this.renaming}
             className={"netpyneField"}
             id={"targetName"}
+            label="Stimulation target name"
           />
           <br/>
           
@@ -244,7 +236,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     return (
       <div>
         <CardText>
-          <BottomNavigation value={this.state.selectedIndex} showLabels>
+          <BottomNavigation value={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
         </CardText>

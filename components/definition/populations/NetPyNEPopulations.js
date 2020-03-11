@@ -6,10 +6,6 @@ import NetPyNEPopulation from './NetPyNEPopulation';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 export default class NetPyNEPopulations extends React.Component {
@@ -168,18 +164,12 @@ export default class NetPyNEPopulations extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
       open={true}
-      
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: 'auto' }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
+      {children}
     </Dialog> : undefined;
 
     if (this.state.value != undefined && this.state.value !== '') {
@@ -202,29 +192,35 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <React.Fragment>
-        <div className={"details"}>
-          {selectedPopulation}
-        </div>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
-            <NetPyNEHome
-              selection={this.state.selectedPopulation}
-              handleClick={() => this.setState({ selectedPopulation: undefined })}
-            />
-
-            <NetPyNEAddNew 
-              id={"newPopulationButton"} 
-              handleClick={this.handleNewPopulation}
-            />
-
+      <Card style={{ clear: 'both' }}>
+        <CardHeader
+          title="Populations"
+          subheader="Define here the populations of your network"
+          id={"Populations"}
+        />
+        <CardContent className={"tabContainer"} >
+          <div className={"details"}>
+            {selectedPopulation}
           </div>
-          <div style={{ clear: "both" }}></div>
-          {populations}
-        </div>
-       
+          <div className={"thumbnails"}>
+            <div className="breadcrumb">
+              <NetPyNEHome
+                selection={this.state.selectedPopulation}
+                handleClick={() => this.setState({ selectedPopulation: undefined })}
+              />
+
+              <NetPyNEAddNew 
+                id={"newPopulationButton"} 
+                handleClick={this.handleNewPopulation}
+              />
+
+            </div>
+            <div style={{ clear: "both" }}></div>
+            {populations}
+          </div>
+        </CardContent>
         {dialogPop}
-      </React.Fragment>
+      </Card>
 
     );
   }

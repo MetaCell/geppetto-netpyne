@@ -8,10 +8,6 @@ import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 
@@ -32,7 +28,7 @@ export default class NetPyNEPopulation extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name, selectedIndex: 0, sectionId: "General" });
   }
 
@@ -123,18 +119,12 @@ export default class NetPyNEPopulation extends React.Component {
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
+      title={title}
       open={true}
-      
+      actions={actions}
+      bodyStyle={{ overflow: 'auto' }}
       style={{ whiteSpace: "pre-wrap" }}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent style={{ overflow: 'auto' }}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        { actions }
-      </DialogActions>
+      {children}
     </Dialog> : undefined;
     if (this.state.sectionId == "General") {
       var content
@@ -213,7 +203,7 @@ export default class NetPyNEPopulation extends React.Component {
     return (
       <div>
         <CardContent>
-          <BottomNavigation value={this.state.selectedIndex} showLabels>
+          <BottomNavigation value={this.state.selectedIndex}>
             {this.getModelParameters()}
           </BottomNavigation>
         </CardContent>

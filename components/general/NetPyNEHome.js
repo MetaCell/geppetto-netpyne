@@ -11,7 +11,7 @@ export default ({ handleClick, selection }) => (
     <IconButton
       style={styles.home.container}
       data-tooltip={selection ? "Unselect" : undefined}
-      color="secondary"
+      color='secondary'
       onClick={ () => handleClick()}
     >
       <FontIcon className="fa fa-home customHome"/>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import SelectField from '../../../base/SelectField';
+import Select from '../../../general/Select';
 import NetPyNEInclude from '../NetPyNEInclude';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
 
 export default class plotConn extends React.Component {
 

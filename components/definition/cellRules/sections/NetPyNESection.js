@@ -1,17 +1,13 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import SelectField from '../../../base/SelectField';
 import FontIcon from '@material-ui/core/Icon';
 import CardContent from '@material-ui/core/CardContent';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import Select from '../../../general/Select';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 import Utils from '../../../../Utils';
@@ -19,7 +15,10 @@ import Utils from '../../../../Utils';
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(SelectField);
+var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
+
+const hoverColor = '#66d2e2';
+const changeColor = 'rgb(0, 188, 212)';
 
 export default class NetPyNESection extends React.Component {
 
@@ -69,14 +68,13 @@ export default class NetPyNESection extends React.Component {
 
     return <BottomNavigationAction
       id={id}
-      key={index}
-      value={index}
+      key={sectionId}
       label={label}
       icon={(<FontIcon className={"fa " + icon}></FontIcon>)}
       onClick={() => this.select(index, sectionId)}
     />
   }
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
   
@@ -87,7 +85,6 @@ export default class NetPyNESection extends React.Component {
           id={name + "MenuItem"}
           key={name}
           value={name}
-          primaryText={name}
         >
           {name}
         </MenuItem>
@@ -108,23 +105,17 @@ export default class NetPyNESection extends React.Component {
     var children = this.state.errorDetails;
     var dialogPop = (this.state.errorMessage != undefined
       ? <Dialog
+        title={title}
         open={true}
-        
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: "pre-wrap" }}>
-        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-        <DialogContent style={{ overflow: 'auto' }}>
-          <DialogContentText id="alert-dialog-description">
-            {children}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          { actions }
-        </DialogActions>
+        {children}
       </Dialog> 
       : undefined
     );
 
-    var content;
+    var content = <div/>;
     var that = this;
     if (this.state.sectionId == "General") {
       content = (
@@ -200,8 +191,8 @@ export default class NetPyNESection extends React.Component {
     return (
       <div>
 
-        <CardContent style={{ "zIndex": 0 }}>
-          <BottomNavigation value={this.state.selectedIndex} showLabels>
+        <CardContent>
+          <BottomNavigation value={this.state.selectedIndex}>
             {bottomNavigationItems}
           </BottomNavigation>
         </CardContent>
