@@ -1,10 +1,12 @@
 var require = patchRequire(require);
 var rangeComponentTest = require('./rangeComponentTest')
-/*******************************************************************************
+/**
+ ******************************************************************************
  * ------------------------------- CONN-PARAMS -------------------------------- *
- ********************************************************************************/
-function populateConnRule(casper, test, toolbox) {
-  casper.then(function() {
+ *******************************************************************************
+ */
+function populateConnRule (casper, test, toolbox) {
+  casper.then(function () {
     toolbox.active = {
       cardID: "Connections",
       buttonID: "newConnectivityRuleButton",
@@ -12,10 +14,10 @@ function populateConnRule(casper, test, toolbox) {
     }
     toolbox.assertExist(this, test, "ConnectivityName", "input", "conn name exist")
   })
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
-  casper.then(function() { // check all fields exist
+  casper.then(function () { // check all fields exist
     toolbox.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "soma")
     toolbox.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'loc\']", "0.5")
     toolbox.addListItem(this, test, "netParams.connParams[\'ConnectivityRule\'][\'sec\']", "dend")
@@ -30,43 +32,43 @@ function populateConnRule(casper, test, toolbox) {
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'synMech\']", "SynapseMenuItem")
 
   })
-  casper.then(function() {
+  casper.then(function () {
     this.wait(2500)
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "preCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "div")
   })
 
-  casper.then(function() {
+  casper.then(function () {
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'pop\']", "PopulationMenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellModel\']", "IFMenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'preConds\'][\'cellType\']", "GCMenuItem")
     rangeComponentTest.populateRangeComponent(this, test, toolbox, "PreConn")
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "postCondsConnTab", "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "div")
   })
 
-  casper.then(function() {
+  casper.then(function () {
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'pop\']", "Population2MenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellModel\']", "IziMenuItem")
     toolbox.setSelectFieldValue(this, test, "netParams.connParams[\'ConnectivityRule\'][\'postConds\'][\'cellType\']", "BCMenuItem")
   })
-  casper.then(function() {
-    this.wait(2500) //let python receive values
+  casper.then(function () {
+    this.wait(2500) // let python receive values
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "generalConnTab", "ConnectivityName", "input")
   })
 }
-//----------------------------------------------------------------------------//
-function checkConnRuleValues(casper, test, toolbox, name="ConnectivityRule", empty=false) {
+// ----------------------------------------------------------------------------//
+function checkConnRuleValues (casper, test, toolbox, name = "ConnectivityRule", empty = false) {
   toolbox.active = {
     cardID: "Connections",
     buttonID: "newConnectivityRuleButton",
     tabID: false
   }
-  casper.then(function() { // check all fields exist
+  casper.then(function () { // check all fields exist
     if (empty) {
       test.assertDoesntExist('input[id="netParams.connParams[\'"' + name + '"\'][\'sec\']0"]', "sec list is empty")
       test.assertDoesntExist('input[id="netParams.connParams[\'"' + name + '"\'][\'loc\']0"]', "loc list is empty")
@@ -85,11 +87,11 @@ function checkConnRuleValues(casper, test, toolbox, name="ConnectivityRule", emp
     toolbox.getInputValue(this, test, "netParams.connParams[\'" + name + "\'][\'synsPerConn\']", !empty ? "4" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'synMech\']", !empty ? "Synapse" : "")
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "preCondsConnTab", "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", "div")
   })
 
-  casper.then(function() {
+  casper.then(function () {
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'pop\']", !empty ? "Population" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellModel\']", !empty ? "IF" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'preConds\'][\'cellType\']", !empty ? "GC" : "")
@@ -99,22 +101,22 @@ function checkConnRuleValues(casper, test, toolbox, name="ConnectivityRule", emp
       rangeComponentTest.testRangeComponent(this, test, toolbox, "PreConn")
     }
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "postCondsConnTab", "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", "div")
   })
 
-  casper.then(function() {
+  casper.then(function () {
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'pop\']", !empty ? "Population2" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellModel\']", !empty ? "Izi" : "")
     toolbox.getSelectFieldValue(this, test, "netParams.connParams[\'" + name + "\'][\'postConds\'][\'cellType\']", !empty ? "BC" : "")
     rangeComponentTest.checkRangeComponentIsEmpty(this, test, toolbox, "PostConn")
   })
-  casper.then(function() {
+  casper.then(function () {
     toolbox.moveToTab(this, test, "generalConnTab", "ConnectivityName", "input")
   })
 }
 
-//----------------------------------------------------------------------------//
+// ----------------------------------------------------------------------------//
 module.exports = {
   populateConnRule: populateConnRule,
   checkConnRuleValues: checkConnRuleValues

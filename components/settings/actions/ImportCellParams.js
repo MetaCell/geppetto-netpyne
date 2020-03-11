@@ -1,44 +1,31 @@
 import React from 'react';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
+import Checkbox from '../../general/Checkbox';
+import TextField from '@material-ui/core/TextField';
 import ActionDialog from './ActionDialog';
 import ListComponent from '../../general/List';
 import FileBrowser from '../../general/FileBrowser';
 import NetPyNEField from '../../general/NetPyNEField';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
 const styles = {
   card: {
-    main: {
-      padding: 10, float: 'left', width: '100%'
-    },
-    title: {
-      paddingBottom: 0
-    },
-    cancel: {
-      marginRight: 16
-    }
+    main: { padding: 10, float: 'left', width: '100%' },
+    title: { paddingBottom: 0 },
+    cancel: { marginRight: 16 }
   },
   mods: {
-    container: {
-      width: '100%', float: 'left', marginTop: '15px'
-    },
-    leftSubContainer: {
-      float: 'left', width: '50%'
-    },
-    rightSubContainer: {
-      float: 'right', width: '50%'
-    },
-    checkbox: {
-      width: '90%'
-    }
+    container: { width: '100%', float: 'left', marginTop: '15px' },
+    leftSubContainer: { float: 'left', width: '50%' },
+    rightSubContainer: { float: 'right', width: '50%' },
+    checkbox: { width: '90%' }
   }
 }
 
 export default class ImportCellParams extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       label: 'NewCellRule',
@@ -50,34 +37,34 @@ export default class ImportCellParams extends React.Component {
       explorerDialogOpen: false,
       exploreOnlyDirs: false,
     };
-  };
+  }
 
-  updateCheck(name) {
-    this.setState(({[name]: pv}) => ({ [name]: !pv}));
-  };
+  updateCheck (name) {
+    this.setState(({ [name]: pv }) => ({ [name]: !pv }));
+  }
 
-  showExplorerDialog(explorerParameter, exploreOnlyDirs) {
+  showExplorerDialog (explorerParameter, exploreOnlyDirs) {
     this.setState({ explorerDialogOpen: true, explorerParameter: explorerParameter, exploreOnlyDirs: exploreOnlyDirs });
-  };
+  }
 
-  closeExplorerDialog(fieldValue) {
+  closeExplorerDialog (fieldValue) {
     var newState = { explorerDialogOpen: false };
     if (fieldValue) {
       switch (this.state.explorerParameter) {
-        case "fileName":
-          newState["fileName"] = fieldValue.path;
-          break;
-        case "modFolder":
-          newState["modFolder"] = fieldValue.path;
-          break;
-        default:
-          throw ("Not a valid parameter!");
+      case "fileName":
+        newState["fileName"] = fieldValue.path;
+        break;
+      case "modFolder":
+        newState["modFolder"] = fieldValue.path;
+        break;
+      default:
+        throw ("Not a valid parameter!");
       }
     }
     this.setState(newState);
-  };
+  }
 
-  render() {
+  render () {
     const cellArgs = this.refs.cellArgs ? this.refs.cellArgs.state.children : {}
     const { label, fileName, cellName, modFolder, importSynMechs, compileMod, explorerDialogOpen, exploreOnlyDirs } = this.state;
     
@@ -90,11 +77,10 @@ export default class ImportCellParams extends React.Component {
         args={{ cellArgs, fileName, cellName, label, modFolder, importSynMechs, compileMod }}
         {...this.props}
       >
-        
         <TextField
           value={label}
           id="importCellTemplateName"
-          floatingLabelText="Cell rule label"
+          label="Cell rule label"
           onChange={event => this.setState({ label: event.target.value })}
         />
 
@@ -108,49 +94,46 @@ export default class ImportCellParams extends React.Component {
 
         <div className="flex-row">
           <IconButton
-              id="importCellTemplateFile"
-              className='flex-row-icon b-4'
-              onClick={() => this.showExplorerDialog('fileName', false)} 
-              tooltip='File explorer'
-              tooltipPosition={'top-right'}
+            id="importCellTemplateFile"
+            className='flex-row-icon b-4'
+            onClick={() => this.showExplorerDialog('fileName', false)} 
+            tooltip-data='File explorer'
           >
-              <FontIcon className={'fa fa-folder-o listIcon'} />
+            <Icon className='fa fa-folder-o listIcon' />
           </IconButton>
 
           <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
             <TextField 
-                className="netpyneFieldNoWidth fx-11 no-z-index"
-                value={fileName}
-                onChange={(event) => this.setState({fileName: event.target.value})}
+              className="netpyneFieldNoWidth fx-11 no-z-index"
+              value={fileName}
+              onChange={event => this.setState({ fileName: event.target.value })}
             />
           </NetPyNEField>
           
         </div>
 
-        
+
         <div className="flex-row">
           <IconButton
-              id="importCellTemplateModFile"
-              className='flex-row-icon b-4'
-              onClick={() => this.showExplorerDialog('modFolder', true)} 
-              tooltip='File explorer'
-              tooltipPosition={'top-right'}
+            id="importCellTemplateModFile"
+            className='flex-row-icon b-4'
+            onClick={() => this.showExplorerDialog('modFolder', true)} 
+            tooltip-data='File explorer'
           >
-              <FontIcon className={"fa fa-folder-o listIcon"} />
+            <Icon className="fa fa-folder-o listIcon" />
           </IconButton>
 
           <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
             <TextField 
-                className="netpyneFieldNoWidth fx-11 no-z-index"
-                value={modFolder} 
-                onChange={event => this.setState({modFolder: event.target.value})} 
+              value={modFolder}
+              className="netpyneFieldNoWidth fx-11 no-z-index"
+              onChange={event => this.setState({ modFolder: event.target.value })} 
             />
           </NetPyNEField>
-          
         </div>
 
         <div className="listStyle netpyneField">
-          <ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+          <ListComponent id="cellArgs" realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
         </div>
 
         <div style={styles.mods.container}>
@@ -159,7 +142,7 @@ export default class ImportCellParams extends React.Component {
               <Checkbox
                 checked={importSynMechs}
                 style={styles.mods.checkbox}
-                onCheck={() => this.updateCheck('importSynMechs')}
+                onChange={() => this.updateCheck('importSynMechs')}
               />
             </NetPyNEField>
           </div>
@@ -170,7 +153,7 @@ export default class ImportCellParams extends React.Component {
                 checked={compileMod}
                 style={styles.mods.checkbox}
                 id="importCellTemplateCompileMods"
-                onCheck={() => this.updateCheck('compileMod')}
+                onChange={() => this.updateCheck('compileMod')}
               />
             </NetPyNEField>
           </div>
@@ -184,5 +167,5 @@ export default class ImportCellParams extends React.Component {
 
       </ActionDialog>
     )
-  };
-};
+  }
+}

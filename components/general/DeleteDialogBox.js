@@ -7,54 +7,54 @@
  */
 
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default class DeleteDialogBox extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: props.open,
-            response: false
-        };
+  constructor (props) {
+    super(props);
+    this.state = {
+      open: props.open,
+      response: false
     };
+  }
 
-    componentDidUpdate(prevProps, prevState) {
-      if(prevProps.open != this.props.open) {
-        this.setState({open: this.props.open});
-      }
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.open != this.props.open) {
+      this.setState({ open: this.props.open });
     }
+  }
     
-    render() {
-        const actions = [
-          <FlatButton
+  render () {
+    return (
+      <Dialog
+        open={this.state.open}
+        onClose={this.handleClose}
+      >
+        <DialogTitle>{"Delete " + this.props.textForDialog}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {"Do you want to remove " + this.props.textForDialog + " ?"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
             id="confirmCancel"
-            label="Cancel"
-            primary={true}
             onClick={() => this.props.onDialogResponse(false)}
-          />,
-          <FlatButton
+          >Cancel</Button>
+          <Button
             id="confirmDeletion"
-            label="Confirm"
-            primary={true}
-            keyboardFocused={true}
+            color="primary"
             onClick={() => this.props.onDialogResponse(true)}
-          />,
-        ];
-    
-        return (
-          <div>
-            <Dialog
-              title={"Delete "+this.props.textForDialog}
-              actions={actions}
-              modal={true}
-              open={this.state.open}
-              onRequestClose={this.handleClose}>
-              {"Do you want to remove "+this.props.textForDialog+" ?"}
-            </Dialog>
-          </div>
-        );
-    };
+          >Confirm</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
 }

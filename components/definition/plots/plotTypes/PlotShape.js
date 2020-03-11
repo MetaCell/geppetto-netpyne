@@ -1,33 +1,32 @@
 import React, { Component } from 'react';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+import Checkbox from '../../../general/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import Select from '../../../general/Select';
 import ListComponent from '../../../general/List'; 
 import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('../../../../../../js/communication/geppettoJupyter/PythonControlledCapability');
+var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(SelectField);
+var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
 export default class PlotShape extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
-  };
+    this.state = {};
+  }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['plotShape']"
     return <div>
       <NetPyNEField id="simConfig.analysis.plotShape.includePre" className="listStyle" >
-          <PythonControlledListComponent model={tag + "['includePre']"} />
+        <PythonControlledListComponent model={tag + "['includePre']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.includePost" className="listStyle" >
-          <PythonControlledListComponent model={tag + "['includePost']"} />
+        <PythonControlledListComponent model={tag + "['includePost']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.synStyle" >
@@ -59,20 +58,20 @@ export default class PlotShape extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.iv" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag+"['iv']"} />
+        <PythonControlledCheckbox model={tag + "['iv']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.includeAxon" className={"netpyneCheckbox"} >
-          <PythonControlledCheckbox model={tag+"['includeAxon']"} />
+        <PythonControlledCheckbox model={tag + "['includeAxon']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.showSyns" className={"netpyneCheckbox"} >
-          <PythonControlledCheckbox model={tag+"['showSyncs']"} />
+        <PythonControlledCheckbox model={tag + "['showSyncs']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.showElectrodes" className={"netpyneCheckbox"} >
-          <PythonControlledCheckbox model={tag+"['showElectrodes']"} />
+        <PythonControlledCheckbox model={tag + "['showElectrodes']"} />
       </NetPyNEField>
     </div>
-  };
-};
+  }
+}

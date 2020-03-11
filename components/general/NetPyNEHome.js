@@ -1,16 +1,17 @@
 import React from 'react';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import { pink400 } from 'material-ui/styles/colors';
-import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+import FontIcon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import pink from '@material-ui/core/colors/pink';
+import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 
+const pink400 = pink[400];
 
-export default ({handleClick, selection}) => (
+export default ({ handleClick, selection }) => (
   <span>
     <IconButton
       style={styles.home.container}
       data-tooltip={selection ? "Unselect" : undefined}
-      iconStyle={{color: pink400, ...styles.home.icon}}
+      color='secondary'
       onClick={ () => handleClick()}
     >
       <FontIcon className="fa fa-home customHome"/>

@@ -1,11 +1,10 @@
 import React from 'react';
-import Menu from 'material-ui/Menu';
-import Popover from 'material-ui/Popover';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
+import Menu from '@material-ui/core/Menu';
+import Popover from '@material-ui/core/Popover';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import ContentAdd from '@material-ui/icons/Add';
+import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 
 import Utils from '../../../../../Utils';
 
@@ -26,64 +25,60 @@ const styles = {
 
 export default class NetPyNENewMechanism extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       open: false,
       mechanisms: []
     };
-  };
+  }
   
-  componentDidMount() {
+  componentDidMount () {
     Utils.evalPythonMessage("netpyne_geppetto.getAvailableMechs", [])
-    .then(response => {
-      this.setState({mechanisms: response})
-    })
-  };
+      .then(response => {
+        this.setState({ mechanisms: response })
+      })
+  }
   
-  handleClick = (value) => {
-    this.setState({open: false});
-    this.props.handleClick(value);
+  handleClick = event => {
+    this.setState({ open: false });
+    this.props.handleClick(event.target.innerText);
   };
 
-  handleButtonClick = (anchor) => {
+  handleButtonClick = anchor => {
     const { blockButton, handleHierarchyClick } = this.props;
     if (!blockButton) {
-      this.setState({open: true, anchorEl: anchor})
-    };
+      this.setState({ open: true, anchorEl: anchor })
+    }
     handleHierarchyClick();
   };
 
-  createTooltip(){
+  createTooltip (){
     const { disabled, blockButton } = this.props;
     if (disabled) {
       return "No section selected"
-    }
-    else {
+    } else {
       if (blockButton) {
         return "Explore mechanisms" 
-      }
-      else {
+      } else {
         return "Add new mechanism"
       }
     }
   }
 
-  createLabel(){
+  createLabel (){
     const { disabled, blockButton } = this.props;
     if (disabled) {
       return ""
-    }
-    else {
+    } else {
       if (blockButton) {
         return <NavigationMoreHoriz />
-      }
-      else {
+      } else {
         return <ContentAdd/>
       }
     }
   }
-  render() {
+  render () {
     const { disabled } = this.props;
     const { open, anchorEl, mechanisms } = this.state;
     
@@ -92,32 +87,33 @@ export default class NetPyNENewMechanism extends React.Component {
         data-tooltip={this.createTooltip()}
         id="newMechButton"
         className="gearAddButton"
-        iconStyle={{color: '#543a73'}}
+        color='primary'
         disabled={disabled}
         onClick={ e => this.handleButtonClick(e.currentTarget) }
       >
-        <FontIcon 
-          style={{position: 'absolute'}}
+        <i 
+          style={{ position: 'absolute', color: changeColor }}
           className="gpt-fullgear"
-          color={changeColor} 
-          hoverColor={hoverColor} 
         />
         { this.createLabel() }
       </IconButton>
 
-      <Popover
-        open={open}
+      <Menu 
+        open={open} 
         anchorEl={anchorEl}
-        anchorOrigin={styles.anchorOrigin}
-        targetOrigin={styles.anchorTarget}
-        onRequestClose={ () => this.setState({open: false}) }
+        onClose={ () => this.setState({ open: false }) }
       >
-        <Menu onChange={ (e, v) => this.handleClick(v) }>
-          {mechanisms.map( mechLabel => 
-            <MenuItem id={mechLabel} key={mechLabel} value={mechLabel} primaryText={mechLabel}/>)
-          }
-        </Menu>
-      </Popover>
+        {mechanisms.map( mechLabel => 
+          <MenuItem 
+            id={mechLabel}
+            key={mechLabel}
+            value={mechLabel}
+            onClick={ (event, index) => this.handleClick(event) }
+          >
+            {mechLabel}
+          </MenuItem>
+        )}
+      </Menu>
     </div>
-  };
-};
+  }
+}

@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from '@material-ui/icons/Add';
+import FloatingActionButton from '@material-ui/core/Fab';
 
 export default class NetPyNEAddNew extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
     this.handleClick = this.handleClick.bind(this);
-  };
+  }
 
-  handleClick() {
+  handleClick () {
     if (this.props.handleClick) {
       this.props.handleClick();
-    };
-  };
+    }
+  }
 
-  render() {
+  render () {
     return (
       <FloatingActionButton 
         id={this.props.id}
@@ -29,8 +28,8 @@ export default class NetPyNEAddNew extends React.Component {
         <ContentAdd />
       </FloatingActionButton>
     );
-  };
-};
+  }
+}
 
 
 const styles = {
