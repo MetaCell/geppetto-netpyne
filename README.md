@@ -1,3 +1,3 @@
-# geppetto-netpyne
+# geppetto-netpyne [DEPRECATED]
 
-This Geppetto extension configures a Geppetto deployment to be used for the [NetPyNE UI](https://github.com/MetaCell/NetPyNE-UI).
+geppetto-netpyne is now merged with the main repository: https://github.com/MetaCell/NetPyNE-UI
